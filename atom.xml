@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  
+  <title><![CDATA[Hc1m1]]></title>
+  <subtitle><![CDATA[Blog]]></subtitle>
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://lazysheep.cc//"/>
+  <updated>2015-07-18T18:15:28.000Z</updated>
+  <id>http://lazysheep.cc//</id>
+  
+  <author>
+    <name><![CDATA[Hcamael]]></name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[对于这次硬盘坏掉事件小记]]></title>
+    <link href="http://lazysheep.cc/2015/07/19/0x01/"/>
+    <id>http://lazysheep.cc/2015/07/19/0x01/</id>
+    <published>2015-07-18T17:17:46.000Z</published>
+    <updated>2015-07-18T18:15:28.000Z</updated>
+    <content type="html"><![CDATA[<p><img src="/img/jian.jpg" alt="图片"><br><a id="more"></a></p>
+<h2 id="起因">起因</h2><p>  强行拔移动硬盘。导致分区损坏。无法挂载。</p>
+<hr>
+<h2 id="Then">Then</h2><p>  就花了几天时间研究怎么修复，因为我很多重要的东西都放在移动硬盘上，就比如这个博客，还有我写的py脚本。。还有很多视频，文档之类的。<br>期间研究了有win上的分区修复软件。也有linux上的。因为硬盘有1TB。比较大，一次扫描就花了我很长时间</p>
+<hr>
+<h2 id="Final">Final</h2><p>  我硬盘上分了两个NTFS分区，成功恢复，文件没丢失，在移动硬盘上装了一个kali，一个backbox，也成功恢复，没有丢失，。。。。<br>  可是，这些都没有特别重要的东西。。。最重要的是，我分了一个ext4 + LUKS 分区，重要的文件（代码，博客）,全存在这了。。。。恢复失败。。。</p>
+<hr>
+<h2 id="Now">Now</h2><p>  我现在还是太年轻了，无法修复，，所以，，备份完之后，，，把硬盘格了，，以前的博客没法更新了。。所以我花了一晚重新搭博客，，本来是准备把博文一篇一篇从html手工转为md的。。。。<br>  不过我突发奇想，在md中加入了js跳转，这样我在新建一个站点，以前的站点就不用了，挂到子域名下：<a href="http://old.lazysheep.cc" target="_blank" rel="external">http://old.lazysheep.cc</a></p>
+<p>  下面一篇博文是传送门，点进去后会直接跳转到我前面的文章。。。。</p>
+<h2 id="Review">Review</h2><p>  对于这次事件，做一个检讨。。。</p>
+<blockquote>
+<ul>
+<li>没有做好备份工作。。。撸代码首先就是要学会备份，学会备份，学会备份。。。重要的事说三遍。。。。而我现在还是没养成备份的好习惯。。。。</li>
+<li>我又不是什么重要的人，也没什么重要的东西。。。别作死的搞LUKS……NTFS的我恢复了。。ext4的我也恢复了。。。。可是LUKS + ext4的就恢复不了。。。。如果我不作死的给这个分区加密。。。。早就恢复好了。。。</li>
+<li>事实证明。。没弹出USB设备进行强拔。。是会出问题的。会出问题的。出问题的。。。。。。。</li>
+</ul>
+</blockquote>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="/img/jian.jpg" alt="图片"><br>]]>
+    
+    </summary>
+    
+      <category term="检讨" scheme="http://lazysheep.cc/tags/%E6%A3%80%E8%AE%A8/"/>
+    
+      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[跳转到以前的博文]]></title>
+    <link href="http://lazysheep.cc/2015/07/19/0x00/"/>
+    <id>http://lazysheep.cc/2015/07/19/0x00/</id>
+    <published>2015-07-18T17:17:45.000Z</published>
+    <updated>2015-07-18T18:12:43.000Z</updated>
+    <content type="html"><![CDATA[<p><img src="/img/jump.png" alt="jump"><br><a id="more"></a></p>
+<script>window.location.href="http://old.lazysheep.cc"</script>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="/img/jump.png" alt="jump"><br>]]>
+    
+    </summary>
+    
+      <category term="Old博文" scheme="http://lazysheep.cc/tags/Old%E5%8D%9A%E6%96%87/"/>
+    
+      <category term="R-porter" scheme="http://lazysheep.cc/categories/R-porter/"/>
+    
+  </entry>
+  
+</feed>
