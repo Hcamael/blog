@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://lazysheep.cc//"/>
-  <updated>2015-07-18T18:15:28.000Z</updated>
+  <updated>2015-07-19T16:09:54.000Z</updated>
   <id>http://lazysheep.cc//</id>
   
   <author>
@@ -16,11 +16,46 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[对于硬盘事件的随想]]></title>
+    <link href="http://lazysheep.cc/2015/07/19/0x02/"/>
+    <id>http://lazysheep.cc/2015/07/19/0x02/</id>
+    <published>2015-07-19T14:38:44.000Z</published>
+    <updated>2015-07-19T16:09:54.000Z</updated>
+    <content type="html"><![CDATA[<p><img src="/img/brain.jpg" alt="brain"><br><a id="more"></a></p>
+<p>加密最初的目的就是让数据更安全，可是经过这次事件，我认为，加密本身就是一件不安全的事情</p>
+<hr>
+<p>加密的功能不是让别人无法读取我的信息，而是让不知道密码的人读取到信息，系统并不能检测你是否是本人，只能知道你输入的密码是否正确。</p>
+<pre><code>这就会导致一系列问题，比如，我把密码忘了，再比如，非法分子得到了我的密码。
+
+还有就是会跟我这次一样，加大了我修复分区的难度，假如我的那个重要的分区没有使用LUKS加密，那么我的分区就能修复，我的数据就不会丢失了。
+</code></pre><hr>
+<p>所以，就出现了现在的机器学习，支付宝9.0也是这个理念，取消图案解锁，让支付宝app去学习用户的行为，去辨认用户。但是，现在网络上大部分都是在喷支付宝的这个理念，我觉得根本就是因为支付宝技术上还没达到，就把这个理念拿出来实施了。</p>
+<p>我认为支付宝技术上还没达到的原因，一，就是网络上很多人对支付宝的测试，支付宝9.0没法通过用户的行为识别用户，二，就是我觉得，如果支付宝真的达到能让app自己去识别用户的水平，那么就会把所有密码取消掉了（至少留个登录密码，甚至连登录密码也不需要。），而不是现在只取消了图案解锁。</p>
+<p>所以我认为，机器学习应该就是现在的主流。。</p>
+<hr>
+<p>但是我觉得机器学习还不够，我认为最好的方案就是人工智能，机器能像人一样思考，而不是分析海量的数据。</p>
+<p>就比如，你去见你爸，一眼你就可以知道他是不是你爸爸，而不是需要他说一串密码，然后你进行确认，也不用去分析他的各种行为来进行确认。</p>
+<p>而人工智能引发的什么人类危机就不属于我考虑的范围了，我估计人工智能要等到下一次革命，不知道我能不能看到。</p>
+<hr>
+<p>PS: 以上只是无聊时的突发奇想而已。。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="/img/brain.jpg" alt="brain"><br>]]>
+    
+    </summary>
+    
+      <category term="随笔" scheme="http://lazysheep.cc/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+      <category term="S-essay" scheme="http://lazysheep.cc/categories/S-essay/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[对于这次硬盘坏掉事件小记]]></title>
     <link href="http://lazysheep.cc/2015/07/19/0x01/"/>
     <id>http://lazysheep.cc/2015/07/19/0x01/</id>
     <published>2015-07-18T17:17:46.000Z</published>
-    <updated>2015-07-18T18:15:28.000Z</updated>
+    <updated>2015-07-19T14:45:11.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/jian.jpg" alt="图片"><br><a id="more"></a></p>
 <h2 id="起因">起因</h2><p>  强行拔移动硬盘。导致分区损坏。无法挂载。</p>
 <hr>
@@ -55,7 +90,7 @@
     <link href="http://lazysheep.cc/2015/07/19/0x00/"/>
     <id>http://lazysheep.cc/2015/07/19/0x00/</id>
     <published>2015-07-18T17:17:45.000Z</published>
-    <updated>2015-07-18T18:12:43.000Z</updated>
+    <updated>2015-07-19T14:45:06.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/jump.png" alt="jump"><br><a id="more"></a></p>
 <script>window.location.href="http://old.lazysheep.cc"</script>
 ]]></content>
