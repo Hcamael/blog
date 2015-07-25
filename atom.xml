@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://lazysheep.cc//"/>
-  <updated>2015-07-19T16:11:10.000Z</updated>
+  <updated>2015-07-22T13:41:05.000Z</updated>
   <id>http://lazysheep.cc//</id>
   
   <author>
@@ -14,6 +14,79 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[git小记]]></title>
+    <link href="http://lazysheep.cc/2015/07/22/0x04/"/>
+    <id>http://lazysheep.cc/2015/07/22/0x04/</id>
+    <published>2015-07-22T12:30:25.000Z</published>
+    <updated>2015-07-22T13:41:05.000Z</updated>
+    <content type="html"><![CDATA[<p><img src="/img/git.jpg" alt="GIT"><br><a id="more"></a></p>
+<p>今天用git，把文件上传到服务器，然后下载下来，这些过了一遍。发现，在linux上git是最好用的。。。</p>
+<p>git不像svn一样分服务端客户端，git在linux只需要一句命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git</span><br></pre></td></tr></table></figure></p>
+<p>之后，既可以做服务端，可以做客户端。</p>
+<h1 id="服务端">服务端</h1><p>如果想使用git做服务端，第一步就是创建git用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo adduser git</span><br></pre></td></tr></table></figure>
+<p>然后就是创建版本库了，比如，我准备把仓库<code>test</code>放在<code>/home/wwwroot/</code>下，则<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /home/wwwroot</span><br><span class="line">$ mkdir <span class="built_in">test</span></span><br><span class="line">$ sudo git init --bare <span class="built_in">test</span> </span><br><span class="line">$ sudo chown -R git:git <span class="built_in">test</span>    <span class="comment">#这句要在创建仓库后再使用</span></span><br></pre></td></tr></table></figure></p>
+<p>这里有个要说明下，<code>--base</code> 参数是不把项目原文件放在仓库目录下，而是以另一种形式储存，也就是说，如果你把 <code>a.php</code> 文件上传到git仓库，则你在 <code>test</code> 文件夹中根本找不到 <code>a.php</code> 这个文件。</p>
+<p>如果不加 <code>--bare</code> 参数，会出现一系列问题，现在我还没研究透，待我研究透侧了，再来补充。</p>
+<p>这样服务端基本配置就好了，接下来就是客户端了。。</p>
+<h1 id="附">附</h1><p>这里先假设一些东西，</p>
+<blockquote>
+<ol>
+<li>服务器的ip是: 192.168.110.110</li>
+<li>客户端1把项目储存在 ‘/home/wwwroot/default/test’ 目录下</li>
+<li>把项目放在web服务器上 ‘/home/wwwroot/test.com’ 目录中，让外网访问<br>则</li>
+</ol>
+</blockquote>
+<h1 id="客户端1">客户端1</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /home/wwwroot/default</span><br><span class="line">$ git <span class="built_in">clone</span> git@<span class="number">192.168</span>.<span class="number">110.110</span>:/home/wwwroot/<span class="built_in">test</span></span><br><span class="line">   <span class="comment"># 输入密码（免输入密码的方法我加在结尾的Other中）</span></span><br></pre></td></tr></table></figure>
+<p>现在 <code>/home/wwwroot/default/test</code> 就是你的工作目录，或者可以把 <code>/test/.git</code>文件夹移到你的工作目录下。。</p>
+<p>然后就是在有 <code>.git</code> 文件夹下，输入下面命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add .                <span class="comment">#当前目录下的所以文件加入到版本库中，如果不像所有，可以 git add 具体文件</span></span><br><span class="line">$ git commit -m <span class="string">"这里你自己随便写"</span></span><br><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<p>上面这是在第一次提交文件，或者git仓库是空的情况下，假如是第二次提交，或者版本库中以有内容，则是。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git commit -am <span class="string">"自己随便写"</span></span><br><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<h1 id="web服务器">web服务器</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /home/wwwroot/test.com</span><br><span class="line">$ git <span class="built_in">clone</span> git@<span class="number">192.168</span>.<span class="number">110.110</span>:/home/wwwroot/<span class="built_in">test</span></span><br><span class="line"> <span class="comment"># 输入密码</span></span><br></pre></td></tr></table></figure>
+<p>当客户端1的项目更新提交了后，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git pull origin master</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Other">Other</h1><h2 id="免密码">免密码</h2><p>这里git文件传送使用的是ssh，所以其实也是ssh免输入密码的方式。<br>首先，编辑 <code>/etc/ssh/sshd_config</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ vim /etc/ssh/sshd_config</span><br><span class="line">AuthorizedKeysFile	.ssh/authorized_keys      <span class="comment">#这句前面的#号去了</span></span><br></pre></td></tr></table></figure>
+<p>在客户端上使用<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -P <span class="string">''</span></span><br><span class="line"> <span class="comment"># 则会在 ~/.ssh/ 目录下生产 id_rsa 和 id_rsa.pub..  这个就是传说中rsa加密的公钥和私钥</span></span><br></pre></td></tr></table></figure></p>
+<p>把 <code>id_rsa.pub</code> 文件中的内容复制，粘贴到服务端 <code>~/.ssh/authorized_keys</code> 中</p>
+<p><code>authorized_keys</code>文件的权限必须是644<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/.ssh</span><br><span class="line">$ ls -al</span><br><span class="line">-rw-r--r--. <span class="number">1</span> root root  authorized_keys</span><br></pre></td></tr></table></figure></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="/img/git.jpg" alt="GIT"><br>]]>
+    
+    </summary>
+    
+      <category term="GIT" scheme="http://lazysheep.cc/tags/GIT/"/>
+    
+      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[PHP代码审计小记]]></title>
+    <link href="http://lazysheep.cc/2015/07/21/0x03/"/>
+    <id>http://lazysheep.cc/2015/07/21/0x03/</id>
+    <published>2015-07-21T15:01:39.000Z</published>
+    <updated>2015-07-21T16:13:31.000Z</updated>
+    <content type="html"><![CDATA[<p><img src="/img/php.jpg" alt="php"><br><a id="more"></a><br>代码部分来自 <a href="https://code.google.com/p/pasc2at/wiki/SimplifiedChinese" target="_blank" rel="external">https://code.google.com/p/pasc2at/wiki/SimplifiedChinese</a></p>
+<h2 id="0x00_这种，现在应该没人会这么写吧？">0x00 这种，现在应该没人会这么写吧？</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="comment">//key.php?&lt;script&gt;alert(1);&lt;/script&gt;=1&amp;bbb=2</span></span><br><span class="line"><span class="comment">//print_R($_GET); </span></span><br><span class="line"> <span class="keyword">foreach</span> (<span class="variable">$_GET</span> <span class="keyword">AS</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>)</span><br><span class="line">&#123;</span><br><span class="line">        <span class="keyword">print</span> <span class="variable">$key</span>.<span class="string">"\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="0x01_变量覆盖，并不懂为啥有人会这么写">0x01 变量覆盖，并不懂为啥有人会这么写</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="comment">//var.php?a=fuck      </span></span><br><span class="line"><span class="variable">$a</span>=<span class="string">'hi'</span>;</span><br><span class="line"><span class="keyword">foreach</span>(<span class="variable">$_GET</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>) &#123;</span><br><span class="line">        <span class="variable">$$key</span> = <span class="variable">$value</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">print</span> <span class="variable">$a</span>;    <span class="comment">//输出fuck</span></span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="0x02_同样也是变量覆盖。。">0x02 同样也是变量覆盖。。</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//var.php?var=new</span></span><br><span class="line"><span class="variable">$var</span> = <span class="string">'init'</span>;                     </span><br><span class="line">parse_str(<span class="variable">$_SERVER</span>[<span class="string">'QUERY_STRING'</span>]);  <span class="comment">//$_SERVER['QUERY_STRING']的值为get参数</span></span><br><span class="line"><span class="comment">//parse_str(string,array) 设置变量的函数，array没设置就会覆盖已存在的变量</span></span><br><span class="line"><span class="keyword">print</span> <span class="variable">$var</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="0x03">0x03</h2>]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="/img/php.jpg" alt="php"><br>]]>
+    
+    </summary>
+    
+      <category term="PHP" scheme="http://lazysheep.cc/tags/PHP/"/>
+    
+      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[对于硬盘事件的随想]]></title>
