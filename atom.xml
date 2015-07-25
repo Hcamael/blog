@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://lazysheep.cc//"/>
-  <updated>2015-07-22T13:41:05.000Z</updated>
+  <updated>2015-07-22T13:47:45.000Z</updated>
   <id>http://lazysheep.cc//</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://lazysheep.cc/2015/07/22/0x04/"/>
     <id>http://lazysheep.cc/2015/07/22/0x04/</id>
     <published>2015-07-22T12:30:25.000Z</published>
-    <updated>2015-07-22T13:41:05.000Z</updated>
+    <updated>2015-07-22T13:47:45.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/git.jpg" alt="GIT"><br><a id="more"></a></p>
 <p>今天用git，把文件上传到服务器，然后下载下来，这些过了一遍。发现，在linux上git是最好用的。。。</p>
 <p>git不像svn一样分服务端客户端，git在linux只需要一句命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git</span><br></pre></td></tr></table></figure></p>
