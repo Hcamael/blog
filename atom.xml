@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://lazysheep.cc//"/>
-  <updated>2015-10-14T16:39:38.000Z</updated>
+  <updated>2015-10-15T01:43:51.000Z</updated>
   <id>http://lazysheep.cc//</id>
   
   <author>
@@ -20,12 +20,18 @@
     <link href="http://lazysheep.cc/2015/10/05/0x0A/"/>
     <id>http://lazysheep.cc/2015/10/05/0x0A/</id>
     <published>2015-10-05T13:30:11.000Z</published>
-    <updated>2015-10-14T16:39:38.000Z</updated>
+    <updated>2015-10-15T01:43:51.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/net.jpg" alt="network"><br><a id="more"></a><br>半年前, 我在博客里写下了 <a href="http://old.lazysheep.cc/2015/01/04/0x01/" target="_blank" rel="external">HOW TO STUDY NETWORK（一）</a> 和 <a href="http://old.lazysheep.cc/2015/01/04/0x02/" target="_blank" rel="external">HOW TO STUDY NETWORK (二)</a><br>如今回首看看, 有许多不足… 现在进行一些补充和总结, 所以有了之三..</p>
 <p>在我看来, 网络是安全的基础, 如果没有网络, 只需要多顾些保安就行了, 还有我们干的事? 哦, 逆向还有活路..</p>
 <p>跟以前不同, 现在我认为网络的学习可以分为三个方向,<br>第一，就是往网络工程师这个方向学习，关于这方面，我认为我的 <code>HOW TO STUDY NETWORK(一)</code> 里已经写的很清楚了，我觉得没啥需要补充的了。。对于这个方向需要达到的能力我觉得很简单，也很难 —&gt; 能按照要求搭建网络环境 &amp;&amp; 拥有故障排查能力。。<br>这个方向不是只要学CCNA就行的，考完CCNA之后就需要靠CCNP，就像标题说的一样，我写的只是基础入门的内容，而入门之后，你自己就会知道之后的道路了。。</p>
 <p>第二，网络协议开发。。。主要是开发应用层的协议（其他层的当然也会有），学网络（socket）编程？由于这方面我接触的少，就先略过。。</p>
-<p>第三，网络安全，有开发自然有安全，这应该是运维工程师学习的方向，</p>
+<p>第三，网络安全，有开发自然有安全，这应该是运维工程师学习的方向，这个方向上，网络作为必备的基础知识。有网络流量监控，审计之类。</p>
+<p>上面大致介绍了一下我分的方向，下面讲讲各个协议层。</p>
+<p>从低到高吧，第一层讲起。。</p>
+<h2 id="物理层">物理层</h2><p>这层算是最简单的了，这层要防御啥？应该就是物理攻击了。还需要会做网线。。</p>
+<h2 id="数据链路层">数据链路层</h2><p>这层貌似是最好玩的，有arp协议，和无线协议（802.11）</p>
+<h3 id="ARP协议">ARP协议</h3><p>利用ARP的特性，可以进行ARP攻击，这个网络上教程很多，就不细说了。。<br>至于防御，就需要靠网络工程师来做，要对内网进行VLAN划分。(VLAN是啥？先看CCNA去)</p>
+<h3 id="无线协议">无线协议</h3><p>主要是802.11之类的，最近发现，使用wireshark，把无线网卡设置为混杂模式，则可以对周围空间中的802.11数据包进行抓取。对于家用路由器，需要破获路由器密码才能查看数据包的明文，但是对于CMCC，ChinaNet之类免密码的无线数据，可以直接获取明文，这个ARP的区别在于，ARP可以进行中间人截获流量，然后进行更改，而无线流量只能查看，却不能更改。但相较于ARP，这种方式更隐蔽，更不容易让他人发觉。</p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p><img src="/img/net.jpg" alt="network"><br>]]>
