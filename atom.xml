@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://lazysheep.cc//"/>
-  <updated>2015-10-15T01:43:51.000Z</updated>
+  <updated>2015-10-31T13:32:24.000Z</updated>
   <id>http://lazysheep.cc//</id>
   
   <author>
@@ -14,6 +14,72 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[10.31新生培训]]></title>
+    <link href="http://lazysheep.cc/2015/10/31/0x0B/"/>
+    <id>http://lazysheep.cc/2015/10/31/0x0B/</id>
+    <published>2015-10-31T13:28:26.000Z</published>
+    <updated>2015-10-31T13:32:24.000Z</updated>
+    <content type="html"><![CDATA[<a id="more"></a>
+<h2 id="代码的调试之旅_——_Debug">代码的调试之旅 —— Debug</h2><ol>
+<li>VS2015<ul>
+<li>F10 step out</li>
+<li>F11 step into</li>
+</ul>
+</li>
+<li>codeblocks<ul>
+<li>shitf F7 step into</li>
+<li>F7 step </li>
+</ul>
+</li>
+<li>gdb<ul>
+<li>next 执行下一行语句</li>
+<li>step 同上，有函数则会进入函数</li>
+<li>run 运行到断点处</li>
+<li>breakpoint 下断点</li>
+<li>start 停在main的第一行语句前</li>
+<li>print 打印变量</li>
+<li>display 跟踪一个变量</li>
+<li>undisplay 取消跟踪</li>
+<li>info locals 查看局部变量</li>
+<li>list 列出最近十行代码</li>
+</ul>
+</li>
+</ol>
+<h2 id="BUG">BUG</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// error1.c</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span>&lt;stdio.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">index</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++) &#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Hello World!"</span>)；</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//error2.c</span></span><br><span class="line"><span class="preprocessor">#include&lt;stdio.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span>(<span class="params"><span class="keyword">void</span></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> a;</span><br><span class="line">	<span class="keyword">char</span> b[<span class="number">2</span>] = <span class="string">'ab'</span>;</span><br><span class="line"></span><br><span class="line">	a = <span class="string">"c"</span>;</span><br><span class="line"></span><br><span class="line">	printf(<span class="string">"b = %s and a = %c\n"</span>, b, a);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//error_last.c</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdlib.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> yue</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> num;</span><br><span class="line">	<span class="keyword">struct</span> yue *next;</span><br><span class="line">&#125;node;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> yue *creat(<span class="keyword">int</span> a)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">struct</span> yue *head, *pold, *p;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line"></span><br><span class="line">	p = head = pold;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">1</span>; i&lt;a; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		p = (<span class="keyword">struct</span> yue *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> yue));</span><br><span class="line">		p-&gt;num = i;</span><br><span class="line">		pold-&gt;next = p;</span><br><span class="line">		pold = p;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	p-&gt;num = a;</span><br><span class="line">	p-&gt;next = head;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> head;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">struct</span> yue *p1, <span class="keyword">int</span> b)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	node *p;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> n;</span><br><span class="line"></span><br><span class="line">	p = p1;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (n = <span class="number">1</span>; n&lt; b - <span class="number">1</span>; n++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%5d"</span>, p-&gt;num);</span><br><span class="line">		p = p-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	node *p2;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> x;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"input x:\n"</span>);</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;x);</span><br><span class="line"></span><br><span class="line">	p2 = creat(x);</span><br><span class="line">	print(p2, x);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="知识积淀_——_博客_OR_笔记">知识积淀 —— 博客 OR 笔记</h2><h3 id="For_yourself">For yourself</h3><pre><code>-<span class="ruby"> 作为知识的积淀
+</span>-<span class="ruby"> 你确定你真的掌握了吗？
+</span>-<span class="ruby"> 备忘</span>
+</code></pre><h3 id="For_others">For others</h3><pre><code>-<span class="ruby"> 分享
+</span>-<span class="ruby"> 面试时加分</span>
+</code></pre><h3 id="How_can_I_write?">How can I write?</h3><h3 id="第三方博客">第三方博客</h3><pre><code>-<span class="ruby"> <span class="symbol">http:</span>/<span class="regexp">/www.diandian.com/</span>
+</span>-<span class="ruby"> <span class="symbol">http:</span>/<span class="regexp">/blog.csdn.net/</span>
+</span>-<span class="ruby"> 百度、新浪 等等</span>
+</code></pre><h2 id="推荐文章">推荐文章</h2><ol>
+<li>前言: <a href="http://zhuanlan.zhihu.com/Evi1m0/19695848" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19695848</a></li>
+<li>因为所以 <a href="http://zhuanlan.zhihu.com/Evi1m0/19700177" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19700177</a></li>
+<li>黑客眼中的黑客 <a href="http://zhuanlan.zhihu.com/Evi1m0/19702939" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19702939</a></li>
+<li>学会使用搜索引擎 <a href="http://zhuanlan.zhihu.com/Evi1m0/19714051" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19714051</a></li>
+<li>首先，你需要先学会编程 <a href="http://zhuanlan.zhihu.com/Evi1m0/19733294" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19733294</a></li>
+<li>你们眼中的黑客 —— 脚本小子 <a href="http://zhuanlan.zhihu.com/Evi1m0/19773598" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19773598</a></li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<a id="more"></a>
+<h2 id="代码的调试之旅_——_Debug">代码的调试之旅 —— Debug</h2><ol>
+<li>VS2015<ul>
+<li>F10 step out</li>
+<li>F11 step into</li>
+</ul>
+</li]]>
+    </summary>
+    
+      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[网络基础学习之三]]></title>

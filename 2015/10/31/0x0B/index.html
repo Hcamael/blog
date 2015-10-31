@@ -30,7 +30,7 @@
 
 
 
-  <meta name="keywords" content="网络," />
+  <meta name="keywords" content="Hexo,Hc1m1,Hcamael" />
 
 
 
@@ -41,17 +41,70 @@
   <link rel="shorticon icon" type="image/x-icon" href="/img/favicon.png?v=0.4.4" />
 
 
-<meta name="description">
+<meta name="description" content="代码的调试之旅 —— Debug
+VS2015
+F10 step out
+F11 step into
+
+
+codeblocks
+shitf F7 step into
+F7 step 
+
+
+gdb
+next 执行下一行语句
+step 同上，有函数则会进入函数
+run 运行到断点处
+breakpoint 下断点
+start 停在main的第一行语句前
+print 打印变量
+display 跟踪一个变量">
 <meta property="og:type" content="article">
-<meta property="og:title" content="网络基础学习之三">
-<meta property="og:url" content="http://lazysheep.cc/2015/10/05/0x0A/index.html">
+<meta property="og:title" content="10.31新生培训">
+<meta property="og:url" content="http://lazysheep.cc/2015/10/31/0x0B/index.html">
 <meta property="og:site_name" content="Hc1m1">
-<meta property="og:description">
-<meta property="og:image" content="http://lazysheep.cc/img/net.jpg">
-<meta property="og:updated_time" content="2015-10-15T01:43:51.000Z">
+<meta property="og:description" content="代码的调试之旅 —— Debug
+VS2015
+F10 step out
+F11 step into
+
+
+codeblocks
+shitf F7 step into
+F7 step 
+
+
+gdb
+next 执行下一行语句
+step 同上，有函数则会进入函数
+run 运行到断点处
+breakpoint 下断点
+start 停在main的第一行语句前
+print 打印变量
+display 跟踪一个变量">
+<meta property="og:updated_time" content="2015-10-31T13:32:24.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="网络基础学习之三">
-<meta name="twitter:description">
+<meta name="twitter:title" content="10.31新生培训">
+<meta name="twitter:description" content="代码的调试之旅 —— Debug
+VS2015
+F10 step out
+F11 step into
+
+
+codeblocks
+shitf F7 step into
+F7 step 
+
+
+gdb
+next 执行下一行语句
+step 同上，有函数则会进入函数
+run 运行到断点处
+breakpoint 下断点
+start 停在main的第一行语句前
+print 打印变量
+display 跟踪一个变量">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -61,7 +114,7 @@
   };
 </script>
 
-    <title> 网络基础学习之三 // Hc1m1 </title>
+    <title> 10.31新生培训 // Hc1m1 </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="default">
 <!--[if lte IE 8]>
@@ -182,7 +235,7 @@
           
           
             
-              网络基础学习之三
+              10.31新生培训
             
           
         </h1>
@@ -191,8 +244,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2015-10-05T21:30:11+08:00" content="2015-10-05">
-            2015-10-05
+          <time itemprop="dateCreated" datetime="2015-10-31T21:28:26+08:00" content="2015-10-31">
+            2015-10-31
           </time>
         </span>
 
@@ -213,8 +266,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/10/05/0x0A/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/05/0x0A/" itemprop="commentsCount"></span>
+              <a href="/2015/10/31/0x0B/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/31/0x0B/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -228,41 +281,67 @@
       
 
       
-        <span itemprop="articleBody"><p><img src="/img/net.jpg" alt="network"><br><a id="more"></a><br>半年前, 我在博客里写下了 <a href="http://old.lazysheep.cc/2015/01/04/0x01/" target="_blank" rel="external">HOW TO STUDY NETWORK（一）</a> 和 <a href="http://old.lazysheep.cc/2015/01/04/0x02/" target="_blank" rel="external">HOW TO STUDY NETWORK (二)</a><br>如今回首看看, 有许多不足… 现在进行一些补充和总结, 所以有了之三..</p>
-<p>在我看来, 网络是安全的基础, 如果没有网络, 只需要多顾些保安就行了, 还有我们干的事? 哦, 逆向还有活路..</p>
-<p>跟以前不同, 现在我认为网络的学习可以分为三个方向,<br>第一，就是往网络工程师这个方向学习，关于这方面，我认为我的 <code>HOW TO STUDY NETWORK(一)</code> 里已经写的很清楚了，我觉得没啥需要补充的了。。对于这个方向需要达到的能力我觉得很简单，也很难 —&gt; 能按照要求搭建网络环境 &amp;&amp; 拥有故障排查能力。。<br>这个方向不是只要学CCNA就行的，考完CCNA之后就需要靠CCNP，就像标题说的一样，我写的只是基础入门的内容，而入门之后，你自己就会知道之后的道路了。。</p>
-<p>第二，网络协议开发。。。主要是开发应用层的协议（其他层的当然也会有），学网络（socket）编程？由于这方面我接触的少，就先略过。。</p>
-<p>第三，网络安全，有开发自然有安全，这应该是运维工程师学习的方向，这个方向上，网络作为必备的基础知识。有网络流量监控，审计之类。</p>
-<p>上面大致介绍了一下我分的方向，下面讲讲各个协议层。</p>
-<p>从低到高吧，第一层讲起。。</p>
-<h2 id="物理层">物理层</h2><p>这层算是最简单的了，这层要防御啥？应该就是物理攻击了。还需要会做网线。。</p>
-<h2 id="数据链路层">数据链路层</h2><p>这层貌似是最好玩的，有arp协议，和无线协议（802.11）</p>
-<h3 id="ARP协议">ARP协议</h3><p>利用ARP的特性，可以进行ARP攻击，这个网络上教程很多，就不细说了。。<br>至于防御，就需要靠网络工程师来做，要对内网进行VLAN划分。(VLAN是啥？先看CCNA去)</p>
-<h3 id="无线协议">无线协议</h3><p>主要是802.11之类的，最近发现，使用wireshark，把无线网卡设置为混杂模式，则可以对周围空间中的802.11数据包进行抓取。对于家用路由器，需要破获路由器密码才能查看数据包的明文，但是对于CMCC，ChinaNet之类免密码的无线数据，可以直接获取明文，这个ARP的区别在于，ARP可以进行中间人截获流量，然后进行更改，而无线流量只能查看，却不能更改。但相较于ARP，这种方式更隐蔽，更不容易让他人发觉。</p>
+        <span itemprop="articleBody"><a id="more"></a>
+<h2 id="代码的调试之旅_——_Debug">代码的调试之旅 —— Debug</h2><ol>
+<li>VS2015<ul>
+<li>F10 step out</li>
+<li>F11 step into</li>
+</ul>
+</li>
+<li>codeblocks<ul>
+<li>shitf F7 step into</li>
+<li>F7 step </li>
+</ul>
+</li>
+<li>gdb<ul>
+<li>next 执行下一行语句</li>
+<li>step 同上，有函数则会进入函数</li>
+<li>run 运行到断点处</li>
+<li>breakpoint 下断点</li>
+<li>start 停在main的第一行语句前</li>
+<li>print 打印变量</li>
+<li>display 跟踪一个变量</li>
+<li>undisplay 取消跟踪</li>
+<li>info locals 查看局部变量</li>
+<li>list 列出最近十行代码</li>
+</ul>
+</li>
+</ol>
+<h2 id="BUG">BUG</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// error1.c</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span>&lt;stdio.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">index</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++) &#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Hello World!"</span>)；</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//error2.c</span></span><br><span class="line"><span class="preprocessor">#include&lt;stdio.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span>(<span class="params"><span class="keyword">void</span></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> a;</span><br><span class="line">	<span class="keyword">char</span> b[<span class="number">2</span>] = <span class="string">'ab'</span>;</span><br><span class="line"></span><br><span class="line">	a = <span class="string">"c"</span>;</span><br><span class="line"></span><br><span class="line">	printf(<span class="string">"b = %s and a = %c\n"</span>, b, a);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//error_last.c</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdlib.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> yue</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> num;</span><br><span class="line">	<span class="keyword">struct</span> yue *next;</span><br><span class="line">&#125;node;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> yue *creat(<span class="keyword">int</span> a)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">struct</span> yue *head, *pold, *p;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line"></span><br><span class="line">	p = head = pold;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">1</span>; i&lt;a; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		p = (<span class="keyword">struct</span> yue *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> yue));</span><br><span class="line">		p-&gt;num = i;</span><br><span class="line">		pold-&gt;next = p;</span><br><span class="line">		pold = p;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	p-&gt;num = a;</span><br><span class="line">	p-&gt;next = head;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> head;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">struct</span> yue *p1, <span class="keyword">int</span> b)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	node *p;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> n;</span><br><span class="line"></span><br><span class="line">	p = p1;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (n = <span class="number">1</span>; n&lt; b - <span class="number">1</span>; n++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%5d"</span>, p-&gt;num);</span><br><span class="line">		p = p-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	node *p2;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> x;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"input x:\n"</span>);</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;x);</span><br><span class="line"></span><br><span class="line">	p2 = creat(x);</span><br><span class="line">	print(p2, x);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="知识积淀_——_博客_OR_笔记">知识积淀 —— 博客 OR 笔记</h2><h3 id="For_yourself">For yourself</h3><pre><code>-<span class="ruby"> 作为知识的积淀
+</span>-<span class="ruby"> 你确定你真的掌握了吗？
+</span>-<span class="ruby"> 备忘</span>
+</code></pre><h3 id="For_others">For others</h3><pre><code>-<span class="ruby"> 分享
+</span>-<span class="ruby"> 面试时加分</span>
+</code></pre><h3 id="How_can_I_write?">How can I write?</h3><h3 id="第三方博客">第三方博客</h3><pre><code>-<span class="ruby"> <span class="symbol">http:</span>/<span class="regexp">/www.diandian.com/</span>
+</span>-<span class="ruby"> <span class="symbol">http:</span>/<span class="regexp">/blog.csdn.net/</span>
+</span>-<span class="ruby"> 百度、新浪 等等</span>
+</code></pre><h2 id="推荐文章">推荐文章</h2><ol>
+<li>前言: <a href="http://zhuanlan.zhihu.com/Evi1m0/19695848" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19695848</a></li>
+<li>因为所以 <a href="http://zhuanlan.zhihu.com/Evi1m0/19700177" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19700177</a></li>
+<li>黑客眼中的黑客 <a href="http://zhuanlan.zhihu.com/Evi1m0/19702939" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19702939</a></li>
+<li>学会使用搜索引擎 <a href="http://zhuanlan.zhihu.com/Evi1m0/19714051" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19714051</a></li>
+<li>首先，你需要先学会编程 <a href="http://zhuanlan.zhihu.com/Evi1m0/19733294" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19733294</a></li>
+<li>你们眼中的黑客 —— 脚本小子 <a href="http://zhuanlan.zhihu.com/Evi1m0/19773598" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19773598</a></li>
+</ol>
 </span>
       
     </div>
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/网络/" rel="tag">#网络</a>
-          
-        </div>
-      
 
       
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/10/31/0x0B/" rel="prev">10.31新生培训</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/10/05/0x09/" rel="next">不使用select情况下的各种盲注</a>
+              <a href="/2015/10/05/0x0A/" rel="next">网络基础学习之三</a>
             
           </div>
         </div>
@@ -288,8 +367,8 @@
             
               <div class="comments" id="comments">
                 
-                  <div class="ds-thread" data-thread-key="2015/10/05/0x0A/"
-                       data-title="网络基础学习之三" data-url="http://lazysheep.cc/2015/10/05/0x0A/">
+                  <div class="ds-thread" data-thread-key="2015/10/31/0x0B/"
+                       data-title="10.31新生培训" data-url="http://lazysheep.cc/2015/10/31/0x0B/">
                   </div>
                 
               </div>
@@ -445,7 +524,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#物理层"><span class="nav-number">1.</span> <span class="nav-text">物理层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据链路层"><span class="nav-number">2.</span> <span class="nav-text">数据链路层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ARP协议"><span class="nav-number">2.1.</span> <span class="nav-text">ARP协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无线协议"><span class="nav-number">2.2.</span> <span class="nav-text">无线协议</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#代码的调试之旅_——_Debug"><span class="nav-number">1.</span> <span class="nav-text">代码的调试之旅 —— Debug</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BUG"><span class="nav-number">2.</span> <span class="nav-text">BUG</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#知识积淀_——_博客_OR_笔记"><span class="nav-number">3.</span> <span class="nav-text">知识积淀 —— 博客 OR 笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#For_yourself"><span class="nav-number">3.1.</span> <span class="nav-text">For yourself</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#For_others"><span class="nav-number">3.2.</span> <span class="nav-text">For others</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How_can_I_write?"><span class="nav-number">3.3.</span> <span class="nav-text">How can I write?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三方博客"><span class="nav-number">3.4.</span> <span class="nav-text">第三方博客</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#推荐文章"><span class="nav-number">4.</span> <span class="nav-text">推荐文章</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
