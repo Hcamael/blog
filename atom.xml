@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://lazysheep.cc//"/>
-  <updated>2015-10-31T13:41:04.000Z</updated>
+  <updated>2015-10-31T13:41:04.522Z</updated>
   <id>http://lazysheep.cc//</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://lazysheep.cc/2015/10/31/0x0B/"/>
     <id>http://lazysheep.cc/2015/10/31/0x0B/</id>
     <published>2015-10-31T13:28:26.000Z</published>
-    <updated>2015-10-31T13:41:04.000Z</updated>
+    <updated>2015-10-31T13:41:04.522Z</updated>
     <content type="html"><![CDATA[<p>10.31新生培训<br><a id="more"></a></p>
 <h2 id="代码的调试之旅_——_Debug">代码的调试之旅 —— Debug</h2><ol>
 <li>VS2015<ul>
@@ -84,7 +84,7 @@
     <link href="http://lazysheep.cc/2015/10/05/0x0A/"/>
     <id>http://lazysheep.cc/2015/10/05/0x0A/</id>
     <published>2015-10-05T13:30:11.000Z</published>
-    <updated>2015-10-15T01:43:51.000Z</updated>
+    <updated>2015-10-15T01:43:51.614Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/net.jpg" alt="network"><br><a id="more"></a><br>半年前, 我在博客里写下了 <a href="http://old.lazysheep.cc/2015/01/04/0x01/" target="_blank" rel="external">HOW TO STUDY NETWORK（一）</a> 和 <a href="http://old.lazysheep.cc/2015/01/04/0x02/" target="_blank" rel="external">HOW TO STUDY NETWORK (二)</a><br>如今回首看看, 有许多不足… 现在进行一些补充和总结, 所以有了之三..</p>
 <p>在我看来, 网络是安全的基础, 如果没有网络, 只需要多顾些保安就行了, 还有我们干的事? 哦, 逆向还有活路..</p>
 <p>跟以前不同, 现在我认为网络的学习可以分为三个方向,<br>第一，就是往网络工程师这个方向学习，关于这方面，我认为我的 <code>HOW TO STUDY NETWORK(一)</code> 里已经写的很清楚了，我觉得没啥需要补充的了。。对于这个方向需要达到的能力我觉得很简单，也很难 —&gt; 能按照要求搭建网络环境 &amp;&amp; 拥有故障排查能力。。<br>这个方向不是只要学CCNA就行的，考完CCNA之后就需要靠CCNP，就像标题说的一样，我写的只是基础入门的内容，而入门之后，你自己就会知道之后的道路了。。</p>
@@ -113,7 +113,7 @@
     <link href="http://lazysheep.cc/2015/10/05/0x09/"/>
     <id>http://lazysheep.cc/2015/10/05/0x09/</id>
     <published>2015-10-05T03:17:10.000Z</published>
-    <updated>2015-10-15T01:09:09.000Z</updated>
+    <updated>2015-10-15T01:09:09.824Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/sqli.jpg" alt="SQLI"><br><a id="more"></a><br>这次的XDCTF, 关于web1 400, 学到了很多666的姿势, 开一篇新博文, 记录这些姿势..</p>
 <p>原本我以为, 在select被过滤的情况下, 如果不能bypass, 就没法注入… 而这次看了writeup后, 不同的队, 姿势都不同, 大开眼界….</p>
 <p>这次题目的语句我猜测是 <code>select pic from table where ID=&quot;$i&quot;;</code><br>$i 则是可控点..</p>
@@ -138,7 +138,7 @@
     <link href="http://lazysheep.cc/2015/10/03/0x08/"/>
     <id>http://lazysheep.cc/2015/10/03/0x08/</id>
     <published>2015-10-03T06:11:30.000Z</published>
-    <updated>2015-10-15T01:09:05.000Z</updated>
+    <updated>2015-10-15T01:09:05.489Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/xdctf.png" alt="xdctf"><br><a id="more"></a><br>国庆两天, XDCTF, 质量和难度和上次的NSCTF都不是一个层次的…</p>
 <h2 id="web1_100">web1 100</h2><p><code>index.php~</code> 搞出源码:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="variable">$test</span>=<span class="variable">$_GET</span>[<span class="string">'test'</span>];</span><br><span class="line"><span class="variable">$test</span>=md5(<span class="variable">$test</span>); </span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$test</span>==<span class="string">'0'</span>) &#123; </span><br><span class="line">    <span class="keyword">print</span> <span class="string">"flag&#123;xxxxxx&#125;"</span>; </span><br><span class="line">&#125; <span class="keyword">else</span> </span><br><span class="line">    <span class="keyword">print</span> <span class="string">"you are falied!"</span>; </span><br><span class="line"><span class="keyword">print</span> <span class="variable">$test</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"tips:知道原理了，请不在当先服务器环境下测试，在本地测试好，在此测试poc即可，否则后果自负"</span>; </span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
 <p>这题黑魔法啊!!! 真是学习了<br><code>md5(&#39;240610708&#39;) = 0e462097431906509019562988736854</code><br>而 <code>&#39;0e462097431906509019562988736854&#39; == &#39;0&#39;</code></p>
@@ -168,7 +168,7 @@
     <link href="http://lazysheep.cc/2015/08/07/0x06/"/>
     <id>http://lazysheep.cc/2015/08/07/0x06/</id>
     <published>2015-08-07T09:01:53.000Z</published>
-    <updated>2015-10-15T01:08:56.000Z</updated>
+    <updated>2015-10-15T01:08:56.793Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/wechall.gif" alt="Wechall"><br><a id="more"></a></p>
 <p>年轻人, 要多撸题, 少打炮..</p>
 <h2 id="0x00_No_Escape">0x00 No Escape</h2><p>看源码, 是sql注入.<br>payload: <code>index.php?vote_for=bill</code>=111%23`</p>
@@ -202,7 +202,7 @@
     <link href="http://lazysheep.cc/2015/07/22/0x04/"/>
     <id>http://lazysheep.cc/2015/07/22/0x04/</id>
     <published>2015-07-22T12:30:25.000Z</published>
-    <updated>2015-10-15T01:08:20.000Z</updated>
+    <updated>2015-10-15T01:08:20.667Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/git.jpg" alt="GIT"><br><a id="more"></a></p>
 <p>今天用git，把文件上传到服务器，然后下载下来，这些过了一遍。发现，在linux上git是最好用的。。。</p>
 <p>git不像svn一样分服务端客户端，git在linux只需要一句命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git</span><br></pre></td></tr></table></figure></p>
@@ -253,7 +253,7 @@
     <link href="http://lazysheep.cc/2015/07/21/0x03/"/>
     <id>http://lazysheep.cc/2015/07/21/0x03/</id>
     <published>2015-07-21T15:01:39.000Z</published>
-    <updated>2015-09-28T05:39:27.000Z</updated>
+    <updated>2015-09-28T05:39:27.486Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/php.jpg" alt="php"><br><a id="more"></a><br>代码部分来自 <a href="https://code.google.com/p/pasc2at/wiki/SimplifiedChinese" target="_blank" rel="external">https://code.google.com/p/pasc2at/wiki/SimplifiedChinese</a></p>
 <h2 id="0x00_这种，现在应该没人会这么写吧？">0x00 这种，现在应该没人会这么写吧？</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="comment">//key.php?&lt;script&gt;alert(1);&lt;/script&gt;=1&amp;bbb=2</span></span><br><span class="line"><span class="comment">//print_R($_GET); </span></span><br><span class="line"> <span class="keyword">foreach</span> (<span class="variable">$_GET</span> <span class="keyword">AS</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>)</span><br><span class="line">&#123;</span><br><span class="line">        <span class="keyword">print</span> <span class="variable">$key</span>.<span class="string">"\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
 <h2 id="0x01_变量覆盖，并不懂为啥有人会这么写">0x01 变量覆盖，并不懂为啥有人会这么写</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="comment">//var.php?a=fuck      </span></span><br><span class="line"><span class="variable">$a</span>=<span class="string">'hi'</span>;</span><br><span class="line"><span class="keyword">foreach</span>(<span class="variable">$_GET</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>) &#123;</span><br><span class="line">        <span class="variable">$$key</span> = <span class="variable">$value</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">print</span> <span class="variable">$a</span>;    <span class="comment">//输出fuck</span></span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
@@ -281,7 +281,7 @@
     <link href="http://lazysheep.cc/2015/07/19/0x02/"/>
     <id>http://lazysheep.cc/2015/07/19/0x02/</id>
     <published>2015-07-19T14:38:44.000Z</published>
-    <updated>2015-07-19T16:11:10.000Z</updated>
+    <updated>2015-07-19T16:11:10.076Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/brain.jpg" alt="brain"><br><a id="more"></a></p>
 <p>加密最初的目的就是让数据更安全，可是经过这次事件，我认为，加密本身就是一件不安全的事情</p>
 <hr>
@@ -315,7 +315,7 @@
     <link href="http://lazysheep.cc/2015/07/19/0x01/"/>
     <id>http://lazysheep.cc/2015/07/19/0x01/</id>
     <published>2015-07-18T17:17:46.000Z</published>
-    <updated>2015-07-19T14:45:11.000Z</updated>
+    <updated>2015-07-19T14:45:11.829Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/jian.jpg" alt="图片"><br><a id="more"></a></p>
 <h2 id="起因">起因</h2><p>  强行拔移动硬盘。导致分区损坏。无法挂载。</p>
 <hr>
@@ -350,7 +350,7 @@
     <link href="http://lazysheep.cc/2015/07/19/0x00/"/>
     <id>http://lazysheep.cc/2015/07/19/0x00/</id>
     <published>2015-07-18T17:17:45.000Z</published>
-    <updated>2015-07-19T14:45:06.000Z</updated>
+    <updated>2015-07-19T14:45:06.461Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/jump.png" alt="jump"><br><a id="more"></a></p>
 <script>window.location.href="http://old.lazysheep.cc"</script>
 ]]></content>
