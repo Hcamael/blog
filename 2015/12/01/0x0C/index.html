@@ -1,0 +1,727 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+    
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.useso.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.4"/>
+
+
+    <meta name="description" content="水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会" />
+
+
+
+  <meta name="keywords" content="Python," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Hc1m1" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/img/favicon.png?v=0.4.4" />
+
+
+<meta name="description">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 的 BaseHTTPServer模块分析小结">
+<meta property="og:url" content="http://lazysheep.cc/2015/12/01/0x0C/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description">
+<meta property="og:image" content="http://lazysheep.cc/img/python.jpg">
+<meta property="og:image" content="http://lazysheep.cc/img/BaseHTTPServer.jpeg">
+<meta property="og:updated_time" content="2015-12-01T07:51:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python 的 BaseHTTPServer模块分析小结">
+<meta name="twitter:description">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+    <title> Python 的 BaseHTTPServer模块分析小结 // Hc1m1 </title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+<!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+<div class="container one-column page-post-detail">
+    <div class="headband"></div>
+    <header style="background: #f5f5f5;" id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">Hc1m1</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+        </div>
+    </header>
+
+    <main id="main" class="main">
+        <div class="main-inner">
+            <div id="content" class="content">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              Python 的 BaseHTTPServer模块分析小结
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2015-12-01T13:02:30+08:00" content="2015-12-01">
+            2015-12-01
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/H-blog/" itemprop="url" rel="index"><span itemprop="name">H-blog</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/12/01/0x0C/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/01/0x0C/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p><img src="/img/python.jpg" alt="Python"><br><a id="more"></a><br>已经好久没更新过博客了，因为最近开始用为知笔记了，感觉每次发到blog的都太零散了，好多都还没完成，所以现在决定，零散的写到笔记里去，然后有一个完整的内容再发到blog里来。</p>
+<p>这次是一篇完整的BaseHTTPServer模块分析，花了几天时间研究该模块，先放上我的思维导图，由于是第一次使用思维导图，所以弄得不是很满意。<br><img src="/img/BaseHTTPServer.jpeg" alt="BaseHTTPServer"></p>
+<p>分析该模块的起因是该反代程序：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> BaseHTTPServer</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> urllib2</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CacheHandler</span><span class="params">(BaseHTTPServer.BaseHTTPRequestHandler)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></span><br><span class="line">      m = hashlib.md5()</span><br><span class="line">      m.update(self.path)</span><br><span class="line">      cache_filename = m.hexdigest()</span><br><span class="line">      <span class="keyword">if</span> os.path.exists(cache_filename):</span><br><span class="line">          <span class="keyword">print</span> <span class="string">"Cache hit"</span></span><br><span class="line">          data = open(cache_filename).readlines()</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          <span class="keyword">print</span> <span class="string">"Cache miss"</span></span><br><span class="line">          data = urllib2.urlopen(<span class="string">"http://www.baidu.com"</span> + self.path).readlines()</span><br><span class="line">          open(cache_filename, <span class="string">'wb'</span>).writelines(data)</span><br><span class="line">      self.send_response(<span class="number">200</span>)</span><br><span class="line">      self.end_headers()</span><br><span class="line">      self.wfile.writelines(data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">()</span>:</span></span><br><span class="line">    server_address = (<span class="string">''</span>, <span class="number">9999</span>)</span><br><span class="line">    httpd = BaseHTTPServer.HTTPServer(server_address, CacheHandler)</span><br><span class="line">    httpd.serve_forever()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    run()</span><br></pre></td></tr></table></figure></p>
+<h1 id="BaseHTTPServer">BaseHTTPServer</h1><p>在该模块中定义了两个类</p>
+<ul>
+<li>HTTPServer</li>
+<li>BaseHTTPRequestHandler</li>
+</ul>
+<h2 id="HTTPServer(SocketServer-TCPServer)">HTTPServer(SocketServer.TCPServer)</h2><p>该类中为定义 <strong>init</strong>()初始化函数，所以跳到它继承的 <code>SocketServer.TCPServer</code>中去</p>
+<h3 id="TCPServer(BaseServer)">TCPServer(BaseServer)</h3><p><em>_init</em>_ 接收两个必填参数，和一个可选参数。<br>前两个参数到他继承的BaseServer中初始化<br>这两个参数一个是需要监听的地址和端口， 一个是类<br>然后就是建立一个socket链接 <code>self.socket = socket.socket(self.address_family, self.socket_type)</code><br>然后是<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">try:</span><br><span class="line">    self.<span class="function"><span class="title">server_bind</span><span class="params">()</span></span></span><br><span class="line">    self.<span class="function"><span class="title">server_activate</span><span class="params">()</span></span></span><br><span class="line">except:</span><br><span class="line">    self.<span class="function"><span class="title">server_close</span><span class="params">()</span></span></span><br><span class="line">    raise</span><br></pre></td></tr></table></figure></p>
+<p>如果传了第三个参数，值为False，则不执行上面的代码<br>然后，初始化完毕</p>
+<h4 id="server_bind(self)">server_bind(self)</h4><p>（这重名字就能猜到大概，所以说，编程是命名要有意义！）<br>根据前面初始化的地址，绑定地址端口。<br>也就是socket编程中的 <code>socket.bind()</code></p>
+<h4 id="server_activate(self)">server_activate(self)</h4><p>写过socket服务的就知道了，绑定完后就是监听了.<br>默认是5个客户端.<br>socket.listen(5)</p>
+<h4 id="get_request(self)">get_request(self)</h4><p>没啥好说的, 返回 socket.accept()</p>
+<h4 id="BaseServer">BaseServer</h4><p><em>_init_</em> 接收两个参数，然后赋值给self.</p>
+<h5 id="serve_forever(self,_poll_interval=0-5)">serve_forever(self, poll_interval=0.5)</h5><p>上面的反代程序中，初始化完后就是执行该方法，由于上面都没有定义过，所以就跑到这来执行了。<br>先是去执行 <code>select.select([self], [], [], 0.5)</code> (select还未研究透彻)<br>接着执行 <code>_handle_request_noblock()</code></p>
+<h5 id="_handle_request_noblock(self)">_handle_request_noblock(self)</h5><p>先是执行 <code>get_request()</code>(该类里竟然没有该方法，在TCPServer里有)<br>接着把accept返回的两个值传给 <code>process_request</code> 方法</p>
+<h5 id="process_request(self,_request,_client_address)">process_request(self, request, client_address)</h5><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">self.<span class="function"><span class="title">finish_request</span><span class="params">(request, client_address)</span></span></span><br><span class="line">self.<span class="function"><span class="title">shutdown_request</span><span class="params">(request)</span></span></span><br></pre></td></tr></table></figure>
+<h5 id="finish_request(self,_request,_client_address)">finish_request(self, request, client_address)</h5><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.<span class="function"><span class="title">RequestHandlerClass</span><span class="params">(request, client_address, self)</span></span></span><br></pre></td></tr></table></figure>
+<p>RequestHandlerClass 是初始化的时候传入的第二个类参数<br>所以HTTPServer类的主体部分基本结束了，接下来是运行传入的模块</p>
+<h5 id="shutdown_request(self,_request)">shutdown_request(self, request)</h5><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.<span class="function"><span class="title">close_request</span><span class="params">(request)</span></span></span><br></pre></td></tr></table></figure>
+<h5 id="close_request(self,_request)">close_request(self, request)</h5><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>上面反代的程序中，传入的是 CacheHandler类</p>
+<h1 id="CacheHandler(BaseHTTPServer-BaseHTTPRequestHandler)">CacheHandler(BaseHTTPServer.BaseHTTPRequestHandler)</h1><p>没有 <em>_init</em>_ 所以看它继承的类</p>
+<h2 id="BaseHTTPRequestHandler(SocketServer-StreamRequestHandler)">BaseHTTPRequestHandler(SocketServer.StreamRequestHandler)</h2><p>也没有<em>_init</em>_ 所以继续看它继承的类</p>
+<h3 id="handle(self)">handle(self)</h3><p>执行 handle_one_request()<br>有一个参数 <code>close_connection = 1</code> 但为0的时候循环执行上面这个方法</p>
+<h3 id="handle_one_request(self)">handle_one_request(self)</h3><p>该方法每执行一次，从文件中读取一行，接着超蛋疼！<br>因为它只读一行！本以为上面那个方法每次循环读一行，然后获取所有headers，但是实际上只获取<br><code>GET / HTTP/1.1</code><br>该类初始化赋值的时候，赋值了一个 <code>default_request_version = &quot;HTTP/0.9&quot;</code><br>但是却要该值 &gt;= HTTP/1.1 才把 <code>close_connection</code> 设置为0<br>接下来就是执行 <code>&#39;do_&#39; + method</code>, 啥意思？<br>比如上面的，<code>GET / HTTP/1.1</code> 代码会把这串字符串分成三部分，而GET就是method，所以说，如果是 <code>POST / HTTP/1.1</code>则是执行 <code>do_POST</code> 方法，但是由于该反代只写了 <code>do_GET</code> 所以只能接收GET方法</p>
+<h3 id="StreamRequestHandler(BaseRequestHandler)">StreamRequestHandler(BaseRequestHandler)</h3><p>还是没有 <em>_init</em>_ 接着看下去</p>
+<h4 id="setup(self)">setup(self)</h4><p>socket.accept() 返回的socket对象有个makefile方法，就是把收到的数据当成文件来读，返回的数据当文件来写，<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">self<span class="class">.rfile</span> = self<span class="class">.connection</span><span class="class">.makefile</span>(<span class="string">'rb'</span>, self.rbufsize)</span><br><span class="line">self<span class="class">.wfile</span> = self<span class="class">.connection</span><span class="class">.makefile</span>(<span class="string">'wb'</span>, self.wbufsize)</span><br></pre></td></tr></table></figure></p>
+<h4 id="finish(self)">finish(self)</h4><p>把上面打开的读写文件都关闭</p>
+<h4 id="BaseRequestHandler">BaseRequestHandler</h4><p>接收三个值，初始化给self， 然后执行<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">setup</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">handle</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">finish</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure></p>
+<p>这三个方法.</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag">#Python</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/31/0x0B/" rel="next">10.31新生培训</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+            </div>
+
+            
+
+            
+              <div class="comments" id="comments">
+                
+                  <div class="ds-thread" data-thread-key="2015/12/01/0x0C/"
+                       data-title="Python 的 BaseHTTPServer模块分析小结" data-url="http://lazysheep.cc/2015/12/01/0x0C/">
+                  </div>
+                
+              </div>
+            
+        </div>
+
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar" style="overflow:scroll">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/img/default_avatar.jpg" alt="Hcamael" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Hcamael</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="icon-archives" style="color:white"></span><span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+            <span class="icon-categories" style="color:white"></span>
+              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+            <span class="icon-tags" style="color:white"></span>
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate" style="text-align:center;" >
+              <i class="menu-item-icon icon-feed" ></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-github" ></span>
+                <a href="https://github.com/Hcamael" target="_blank">github</a>
+              </span>
+              <br>
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-twitter" ></span>
+                <a href="https://twitter.com/2_wat1r" target="_blank">twitter</a>
+              </span>
+              <br>
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-weibo" ></span>
+                <a href="http://weibo.com/hcamael" target="_blank">weibo</a>
+              </span>
+              <br>
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-zhihu" ></span>
+                <a href="http://www.zhihu.com/people/hcamael" target="_blank">zhihu</a>
+              </span>
+              <br>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://hduisa.cn" target="_blank">HDUISA</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://lightless.me" target="_blank">lightless</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://homeway.me" target="_blank">夏日小草</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://www.edwardl.xyz" target="_blank">Edward_L</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://evilddog.space" target="_blank">evilddog</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://aklis.info" target="_blank">Aklis</a>
+              </span>
+              <br>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#BaseHTTPServer"><span class="nav-number">1.</span> <span class="nav-text">BaseHTTPServer</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPServer(SocketServer-TCPServer)"><span class="nav-number">1.1.</span> <span class="nav-text">HTTPServer(SocketServer.TCPServer)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TCPServer(BaseServer)"><span class="nav-number">1.1.1.</span> <span class="nav-text">TCPServer(BaseServer)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#server_bind(self)"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">server_bind(self)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#server_activate(self)"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">server_activate(self)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#get_request(self)"><span class="nav-number">1.1.1.3.</span> <span class="nav-text">get_request(self)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BaseServer"><span class="nav-number">1.1.1.4.</span> <span class="nav-text">BaseServer</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#serve_forever(self,_poll_interval=0-5)"><span class="nav-number">1.1.1.4.1.</span> <span class="nav-text">serve_forever(self, poll_interval=0.5)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#_handle_request_noblock(self)"><span class="nav-number">1.1.1.4.2.</span> <span class="nav-text">_handle_request_noblock(self)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#process_request(self,_request,_client_address)"><span class="nav-number">1.1.1.4.3.</span> <span class="nav-text">process_request(self, request, client_address)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#finish_request(self,_request,_client_address)"><span class="nav-number">1.1.1.4.4.</span> <span class="nav-text">finish_request(self, request, client_address)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#shutdown_request(self,_request)"><span class="nav-number">1.1.1.4.5.</span> <span class="nav-text">shutdown_request(self, request)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#close_request(self,_request)"><span class="nav-number">1.1.1.4.6.</span> <span class="nav-text">close_request(self, request)</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CacheHandler(BaseHTTPServer-BaseHTTPRequestHandler)"><span class="nav-number">2.</span> <span class="nav-text">CacheHandler(BaseHTTPServer.BaseHTTPRequestHandler)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#BaseHTTPRequestHandler(SocketServer-StreamRequestHandler)"><span class="nav-number">2.1.</span> <span class="nav-text">BaseHTTPRequestHandler(SocketServer.StreamRequestHandler)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#handle(self)"><span class="nav-number">2.1.1.</span> <span class="nav-text">handle(self)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#handle_one_request(self)"><span class="nav-number">2.1.2.</span> <span class="nav-text">handle_one_request(self)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#StreamRequestHandler(BaseRequestHandler)"><span class="nav-number">2.1.3.</span> <span class="nav-text">StreamRequestHandler(BaseRequestHandler)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#setup(self)"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">setup(self)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#finish(self)"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">finish(self)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BaseRequestHandler"><span class="nav-number">2.1.3.3.</span> <span class="nav-text">BaseRequestHandler</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hcamael</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+        </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+</div>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hcamael"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.unstable.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.4"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.4"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.4" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/search-toggle.js"></script>
+
+
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if (isDesktop() && CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    });
+  </script>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (CONFIG.sidebar === 'always') {
+            displaySidebar();
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+<!-- lazyload -->
+<script type="text/javascript" src="/js/lazyload.js"></script>
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery("#posts img").lazyload({
+            placeholder: "/img/loading.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+</body>
+</html>

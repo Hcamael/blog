@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://lazysheep.cc//"/>
-  <updated>2015-10-31T13:41:04.522Z</updated>
+  <updated>2015-12-01T07:51:36.000Z</updated>
   <id>http://lazysheep.cc//</id>
   
   <author>
@@ -16,11 +16,62 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[Python 的 BaseHTTPServer模块分析小结]]></title>
+    <link href="http://lazysheep.cc/2015/12/01/0x0C/"/>
+    <id>http://lazysheep.cc/2015/12/01/0x0C/</id>
+    <published>2015-12-01T05:02:30.000Z</published>
+    <updated>2015-12-01T07:51:36.000Z</updated>
+    <content type="html"><![CDATA[<p><img src="/img/python.jpg" alt="Python"><br><a id="more"></a><br>已经好久没更新过博客了，因为最近开始用为知笔记了，感觉每次发到blog的都太零散了，好多都还没完成，所以现在决定，零散的写到笔记里去，然后有一个完整的内容再发到blog里来。</p>
+<p>这次是一篇完整的BaseHTTPServer模块分析，花了几天时间研究该模块，先放上我的思维导图，由于是第一次使用思维导图，所以弄得不是很满意。<br><img src="/img/BaseHTTPServer.jpeg" alt="BaseHTTPServer"></p>
+<p>分析该模块的起因是该反代程序：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> BaseHTTPServer</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> urllib2</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CacheHandler</span><span class="params">(BaseHTTPServer.BaseHTTPRequestHandler)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></span><br><span class="line">      m = hashlib.md5()</span><br><span class="line">      m.update(self.path)</span><br><span class="line">      cache_filename = m.hexdigest()</span><br><span class="line">      <span class="keyword">if</span> os.path.exists(cache_filename):</span><br><span class="line">          <span class="keyword">print</span> <span class="string">"Cache hit"</span></span><br><span class="line">          data = open(cache_filename).readlines()</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          <span class="keyword">print</span> <span class="string">"Cache miss"</span></span><br><span class="line">          data = urllib2.urlopen(<span class="string">"http://www.baidu.com"</span> + self.path).readlines()</span><br><span class="line">          open(cache_filename, <span class="string">'wb'</span>).writelines(data)</span><br><span class="line">      self.send_response(<span class="number">200</span>)</span><br><span class="line">      self.end_headers()</span><br><span class="line">      self.wfile.writelines(data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">()</span>:</span></span><br><span class="line">    server_address = (<span class="string">''</span>, <span class="number">9999</span>)</span><br><span class="line">    httpd = BaseHTTPServer.HTTPServer(server_address, CacheHandler)</span><br><span class="line">    httpd.serve_forever()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    run()</span><br></pre></td></tr></table></figure></p>
+<h1 id="BaseHTTPServer">BaseHTTPServer</h1><p>在该模块中定义了两个类</p>
+<ul>
+<li>HTTPServer</li>
+<li>BaseHTTPRequestHandler</li>
+</ul>
+<h2 id="HTTPServer(SocketServer-TCPServer)">HTTPServer(SocketServer.TCPServer)</h2><p>该类中为定义 <strong>init</strong>()初始化函数，所以跳到它继承的 <code>SocketServer.TCPServer</code>中去</p>
+<h3 id="TCPServer(BaseServer)">TCPServer(BaseServer)</h3><p><em>_init</em>_ 接收两个必填参数，和一个可选参数。<br>前两个参数到他继承的BaseServer中初始化<br>这两个参数一个是需要监听的地址和端口， 一个是类<br>然后就是建立一个socket链接 <code>self.socket = socket.socket(self.address_family, self.socket_type)</code><br>然后是<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">try:</span><br><span class="line">    self.<span class="function"><span class="title">server_bind</span><span class="params">()</span></span></span><br><span class="line">    self.<span class="function"><span class="title">server_activate</span><span class="params">()</span></span></span><br><span class="line">except:</span><br><span class="line">    self.<span class="function"><span class="title">server_close</span><span class="params">()</span></span></span><br><span class="line">    raise</span><br></pre></td></tr></table></figure></p>
+<p>如果传了第三个参数，值为False，则不执行上面的代码<br>然后，初始化完毕</p>
+<h4 id="server_bind(self)">server_bind(self)</h4><p>（这重名字就能猜到大概，所以说，编程是命名要有意义！）<br>根据前面初始化的地址，绑定地址端口。<br>也就是socket编程中的 <code>socket.bind()</code></p>
+<h4 id="server_activate(self)">server_activate(self)</h4><p>写过socket服务的就知道了，绑定完后就是监听了.<br>默认是5个客户端.<br>socket.listen(5)</p>
+<h4 id="get_request(self)">get_request(self)</h4><p>没啥好说的, 返回 socket.accept()</p>
+<h4 id="BaseServer">BaseServer</h4><p><em>_init_</em> 接收两个参数，然后赋值给self.</p>
+<h5 id="serve_forever(self,_poll_interval=0-5)">serve_forever(self, poll_interval=0.5)</h5><p>上面的反代程序中，初始化完后就是执行该方法，由于上面都没有定义过，所以就跑到这来执行了。<br>先是去执行 <code>select.select([self], [], [], 0.5)</code> (select还未研究透彻)<br>接着执行 <code>_handle_request_noblock()</code></p>
+<h5 id="_handle_request_noblock(self)">_handle_request_noblock(self)</h5><p>先是执行 <code>get_request()</code>(该类里竟然没有该方法，在TCPServer里有)<br>接着把accept返回的两个值传给 <code>process_request</code> 方法</p>
+<h5 id="process_request(self,_request,_client_address)">process_request(self, request, client_address)</h5><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">self.<span class="function"><span class="title">finish_request</span><span class="params">(request, client_address)</span></span></span><br><span class="line">self.<span class="function"><span class="title">shutdown_request</span><span class="params">(request)</span></span></span><br></pre></td></tr></table></figure>
+<h5 id="finish_request(self,_request,_client_address)">finish_request(self, request, client_address)</h5><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.<span class="function"><span class="title">RequestHandlerClass</span><span class="params">(request, client_address, self)</span></span></span><br></pre></td></tr></table></figure>
+<p>RequestHandlerClass 是初始化的时候传入的第二个类参数<br>所以HTTPServer类的主体部分基本结束了，接下来是运行传入的模块</p>
+<h5 id="shutdown_request(self,_request)">shutdown_request(self, request)</h5><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.<span class="function"><span class="title">close_request</span><span class="params">(request)</span></span></span><br></pre></td></tr></table></figure>
+<h5 id="close_request(self,_request)">close_request(self, request)</h5><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>上面反代的程序中，传入的是 CacheHandler类</p>
+<h1 id="CacheHandler(BaseHTTPServer-BaseHTTPRequestHandler)">CacheHandler(BaseHTTPServer.BaseHTTPRequestHandler)</h1><p>没有 <em>_init</em>_ 所以看它继承的类</p>
+<h2 id="BaseHTTPRequestHandler(SocketServer-StreamRequestHandler)">BaseHTTPRequestHandler(SocketServer.StreamRequestHandler)</h2><p>也没有<em>_init</em>_ 所以继续看它继承的类</p>
+<h3 id="handle(self)">handle(self)</h3><p>执行 handle_one_request()<br>有一个参数 <code>close_connection = 1</code> 但为0的时候循环执行上面这个方法</p>
+<h3 id="handle_one_request(self)">handle_one_request(self)</h3><p>该方法每执行一次，从文件中读取一行，接着超蛋疼！<br>因为它只读一行！本以为上面那个方法每次循环读一行，然后获取所有headers，但是实际上只获取<br><code>GET / HTTP/1.1</code><br>该类初始化赋值的时候，赋值了一个 <code>default_request_version = &quot;HTTP/0.9&quot;</code><br>但是却要该值 &gt;= HTTP/1.1 才把 <code>close_connection</code> 设置为0<br>接下来就是执行 <code>&#39;do_&#39; + method</code>, 啥意思？<br>比如上面的，<code>GET / HTTP/1.1</code> 代码会把这串字符串分成三部分，而GET就是method，所以说，如果是 <code>POST / HTTP/1.1</code>则是执行 <code>do_POST</code> 方法，但是由于该反代只写了 <code>do_GET</code> 所以只能接收GET方法</p>
+<h3 id="StreamRequestHandler(BaseRequestHandler)">StreamRequestHandler(BaseRequestHandler)</h3><p>还是没有 <em>_init</em>_ 接着看下去</p>
+<h4 id="setup(self)">setup(self)</h4><p>socket.accept() 返回的socket对象有个makefile方法，就是把收到的数据当成文件来读，返回的数据当文件来写，<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">self<span class="class">.rfile</span> = self<span class="class">.connection</span><span class="class">.makefile</span>(<span class="string">'rb'</span>, self.rbufsize)</span><br><span class="line">self<span class="class">.wfile</span> = self<span class="class">.connection</span><span class="class">.makefile</span>(<span class="string">'wb'</span>, self.wbufsize)</span><br></pre></td></tr></table></figure></p>
+<h4 id="finish(self)">finish(self)</h4><p>把上面打开的读写文件都关闭</p>
+<h4 id="BaseRequestHandler">BaseRequestHandler</h4><p>接收三个值，初始化给self， 然后执行<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">setup</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">handle</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">finish</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure></p>
+<p>这三个方法.</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="/img/python.jpg" alt="Python"><br>]]>
+    
+    </summary>
+    
+      <category term="Python" scheme="http://lazysheep.cc/tags/Python/"/>
+    
+      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[10.31新生培训]]></title>
     <link href="http://lazysheep.cc/2015/10/31/0x0B/"/>
     <id>http://lazysheep.cc/2015/10/31/0x0B/</id>
     <published>2015-10-31T13:28:26.000Z</published>
-    <updated>2015-10-31T13:41:04.522Z</updated>
+    <updated>2015-10-31T13:41:04.000Z</updated>
     <content type="html"><![CDATA[<p>10.31新生培训<br><a id="more"></a></p>
 <h2 id="代码的调试之旅_——_Debug">代码的调试之旅 —— Debug</h2><ol>
 <li>VS2015<ul>
@@ -84,7 +135,7 @@
     <link href="http://lazysheep.cc/2015/10/05/0x0A/"/>
     <id>http://lazysheep.cc/2015/10/05/0x0A/</id>
     <published>2015-10-05T13:30:11.000Z</published>
-    <updated>2015-10-15T01:43:51.614Z</updated>
+    <updated>2015-10-15T01:43:51.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/net.jpg" alt="network"><br><a id="more"></a><br>半年前, 我在博客里写下了 <a href="http://old.lazysheep.cc/2015/01/04/0x01/" target="_blank" rel="external">HOW TO STUDY NETWORK（一）</a> 和 <a href="http://old.lazysheep.cc/2015/01/04/0x02/" target="_blank" rel="external">HOW TO STUDY NETWORK (二)</a><br>如今回首看看, 有许多不足… 现在进行一些补充和总结, 所以有了之三..</p>
 <p>在我看来, 网络是安全的基础, 如果没有网络, 只需要多顾些保安就行了, 还有我们干的事? 哦, 逆向还有活路..</p>
 <p>跟以前不同, 现在我认为网络的学习可以分为三个方向,<br>第一，就是往网络工程师这个方向学习，关于这方面，我认为我的 <code>HOW TO STUDY NETWORK(一)</code> 里已经写的很清楚了，我觉得没啥需要补充的了。。对于这个方向需要达到的能力我觉得很简单，也很难 —&gt; 能按照要求搭建网络环境 &amp;&amp; 拥有故障排查能力。。<br>这个方向不是只要学CCNA就行的，考完CCNA之后就需要靠CCNP，就像标题说的一样，我写的只是基础入门的内容，而入门之后，你自己就会知道之后的道路了。。</p>
@@ -113,7 +164,7 @@
     <link href="http://lazysheep.cc/2015/10/05/0x09/"/>
     <id>http://lazysheep.cc/2015/10/05/0x09/</id>
     <published>2015-10-05T03:17:10.000Z</published>
-    <updated>2015-10-15T01:09:09.824Z</updated>
+    <updated>2015-10-15T01:09:09.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/sqli.jpg" alt="SQLI"><br><a id="more"></a><br>这次的XDCTF, 关于web1 400, 学到了很多666的姿势, 开一篇新博文, 记录这些姿势..</p>
 <p>原本我以为, 在select被过滤的情况下, 如果不能bypass, 就没法注入… 而这次看了writeup后, 不同的队, 姿势都不同, 大开眼界….</p>
 <p>这次题目的语句我猜测是 <code>select pic from table where ID=&quot;$i&quot;;</code><br>$i 则是可控点..</p>
@@ -138,7 +189,7 @@
     <link href="http://lazysheep.cc/2015/10/03/0x08/"/>
     <id>http://lazysheep.cc/2015/10/03/0x08/</id>
     <published>2015-10-03T06:11:30.000Z</published>
-    <updated>2015-10-15T01:09:05.489Z</updated>
+    <updated>2015-10-15T01:09:05.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/xdctf.png" alt="xdctf"><br><a id="more"></a><br>国庆两天, XDCTF, 质量和难度和上次的NSCTF都不是一个层次的…</p>
 <h2 id="web1_100">web1 100</h2><p><code>index.php~</code> 搞出源码:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="variable">$test</span>=<span class="variable">$_GET</span>[<span class="string">'test'</span>];</span><br><span class="line"><span class="variable">$test</span>=md5(<span class="variable">$test</span>); </span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$test</span>==<span class="string">'0'</span>) &#123; </span><br><span class="line">    <span class="keyword">print</span> <span class="string">"flag&#123;xxxxxx&#125;"</span>; </span><br><span class="line">&#125; <span class="keyword">else</span> </span><br><span class="line">    <span class="keyword">print</span> <span class="string">"you are falied!"</span>; </span><br><span class="line"><span class="keyword">print</span> <span class="variable">$test</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"tips:知道原理了，请不在当先服务器环境下测试，在本地测试好，在此测试poc即可，否则后果自负"</span>; </span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
 <p>这题黑魔法啊!!! 真是学习了<br><code>md5(&#39;240610708&#39;) = 0e462097431906509019562988736854</code><br>而 <code>&#39;0e462097431906509019562988736854&#39; == &#39;0&#39;</code></p>
@@ -168,7 +219,7 @@
     <link href="http://lazysheep.cc/2015/08/07/0x06/"/>
     <id>http://lazysheep.cc/2015/08/07/0x06/</id>
     <published>2015-08-07T09:01:53.000Z</published>
-    <updated>2015-10-15T01:08:56.793Z</updated>
+    <updated>2015-10-15T01:08:56.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/wechall.gif" alt="Wechall"><br><a id="more"></a></p>
 <p>年轻人, 要多撸题, 少打炮..</p>
 <h2 id="0x00_No_Escape">0x00 No Escape</h2><p>看源码, 是sql注入.<br>payload: <code>index.php?vote_for=bill</code>=111%23`</p>
@@ -202,7 +253,7 @@
     <link href="http://lazysheep.cc/2015/07/22/0x04/"/>
     <id>http://lazysheep.cc/2015/07/22/0x04/</id>
     <published>2015-07-22T12:30:25.000Z</published>
-    <updated>2015-10-15T01:08:20.667Z</updated>
+    <updated>2015-10-15T01:08:20.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/git.jpg" alt="GIT"><br><a id="more"></a></p>
 <p>今天用git，把文件上传到服务器，然后下载下来，这些过了一遍。发现，在linux上git是最好用的。。。</p>
 <p>git不像svn一样分服务端客户端，git在linux只需要一句命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git</span><br></pre></td></tr></table></figure></p>
@@ -253,7 +304,7 @@
     <link href="http://lazysheep.cc/2015/07/21/0x03/"/>
     <id>http://lazysheep.cc/2015/07/21/0x03/</id>
     <published>2015-07-21T15:01:39.000Z</published>
-    <updated>2015-09-28T05:39:27.486Z</updated>
+    <updated>2015-09-28T05:39:27.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/php.jpg" alt="php"><br><a id="more"></a><br>代码部分来自 <a href="https://code.google.com/p/pasc2at/wiki/SimplifiedChinese" target="_blank" rel="external">https://code.google.com/p/pasc2at/wiki/SimplifiedChinese</a></p>
 <h2 id="0x00_这种，现在应该没人会这么写吧？">0x00 这种，现在应该没人会这么写吧？</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="comment">//key.php?&lt;script&gt;alert(1);&lt;/script&gt;=1&amp;bbb=2</span></span><br><span class="line"><span class="comment">//print_R($_GET); </span></span><br><span class="line"> <span class="keyword">foreach</span> (<span class="variable">$_GET</span> <span class="keyword">AS</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>)</span><br><span class="line">&#123;</span><br><span class="line">        <span class="keyword">print</span> <span class="variable">$key</span>.<span class="string">"\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
 <h2 id="0x01_变量覆盖，并不懂为啥有人会这么写">0x01 变量覆盖，并不懂为啥有人会这么写</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="comment">//var.php?a=fuck      </span></span><br><span class="line"><span class="variable">$a</span>=<span class="string">'hi'</span>;</span><br><span class="line"><span class="keyword">foreach</span>(<span class="variable">$_GET</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>) &#123;</span><br><span class="line">        <span class="variable">$$key</span> = <span class="variable">$value</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">print</span> <span class="variable">$a</span>;    <span class="comment">//输出fuck</span></span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
@@ -281,7 +332,7 @@
     <link href="http://lazysheep.cc/2015/07/19/0x02/"/>
     <id>http://lazysheep.cc/2015/07/19/0x02/</id>
     <published>2015-07-19T14:38:44.000Z</published>
-    <updated>2015-07-19T16:11:10.076Z</updated>
+    <updated>2015-07-19T16:11:10.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/brain.jpg" alt="brain"><br><a id="more"></a></p>
 <p>加密最初的目的就是让数据更安全，可是经过这次事件，我认为，加密本身就是一件不安全的事情</p>
 <hr>
@@ -315,7 +366,7 @@
     <link href="http://lazysheep.cc/2015/07/19/0x01/"/>
     <id>http://lazysheep.cc/2015/07/19/0x01/</id>
     <published>2015-07-18T17:17:46.000Z</published>
-    <updated>2015-07-19T14:45:11.829Z</updated>
+    <updated>2015-07-19T14:45:11.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/jian.jpg" alt="图片"><br><a id="more"></a></p>
 <h2 id="起因">起因</h2><p>  强行拔移动硬盘。导致分区损坏。无法挂载。</p>
 <hr>
@@ -350,7 +401,7 @@
     <link href="http://lazysheep.cc/2015/07/19/0x00/"/>
     <id>http://lazysheep.cc/2015/07/19/0x00/</id>
     <published>2015-07-18T17:17:45.000Z</published>
-    <updated>2015-07-19T14:45:06.461Z</updated>
+    <updated>2015-07-19T14:45:06.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/jump.png" alt="jump"><br><a id="more"></a></p>
 <script>window.location.href="http://old.lazysheep.cc"</script>
 ]]></content>
