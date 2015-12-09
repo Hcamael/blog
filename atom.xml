@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://lazysheep.cc//"/>
-  <updated>2015-12-09T01:34:26.000Z</updated>
+  <updated>2015-12-09T01:35:04.000Z</updated>
   <id>http://lazysheep.cc//</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="http://lazysheep.cc/2015/12/08/0x0D/"/>
     <id>http://lazysheep.cc/2015/12/08/0x0D/</id>
     <published>2015-12-08T06:49:13.000Z</published>
-    <updated>2015-12-09T01:34:26.000Z</updated>
+    <updated>2015-12-09T01:35:04.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/hctf.png" alt="HCTF"><br><a id="more"></a></p>
-<p>这次HCTF，我负责黑吃黑这题的出题和运维，最终只要六星一个队日穿了该题。</p>
+<p>这次HCTF，我负责黑吃黑这题的出题和运维，最终只有六星一个队日穿了该题。</p>
 <hr>
 <p><strong>题目名称</strong>：Black eat black(300不足，200有余)<br><strong>题目描述</strong>：使用该DNS(180.153.47.182)后，你会被劫持哦～<br><strong>分值</strong>：300<br><strong>开题金币</strong>：300<br><strong>奖励金币</strong>：400</p>
 <hr>
