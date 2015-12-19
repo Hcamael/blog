@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://lazysheep.cc//"/>
-  <updated>2015-12-09T01:36:20.000Z</updated>
+  <updated>2015-12-19T10:16:12.000Z</updated>
   <id>http://lazysheep.cc//</id>
   
   <author>
@@ -14,6 +14,56 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[12.19网络方向培训]]></title>
+    <link href="http://lazysheep.cc/2015/12/19/0x0E/"/>
+    <id>http://lazysheep.cc/2015/12/19/0x0E/</id>
+    <published>2015-12-19T02:36:07.000Z</published>
+    <updated>2015-12-19T10:16:12.000Z</updated>
+    <content type="html"><![CDATA[<p><img src="/img/isa.png" alt="ISA"><br><a id="more"></a></p>
+<h1 id="OSI七层模型(Open_System_Interconnect_开放系统互连参考模型)">OSI七层模型(Open System Interconnect 开放系统互连参考模型)</h1><p>国际标准化组织(ISO)和国际电报电话咨询委员会(CCITT)联合制定的开放系统互连参考模型</p>
+<p><img src="/img/osi.jpg" alt="osi"></p>
+<h1 id="TCP/IP_协议族">TCP/IP 协议族</h1><p><img src="/img/TCPIP.png" alt="TCP/IP"></p>
+<h2 id="协议">协议</h2><p>协议族</p>
+<p><img src="/img/pro.png" alt="协议族"></p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line">import <span class="keyword">socket</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">s</span> = <span class="keyword">socket</span>.<span class="keyword">socket</span>(<span class="keyword">socket</span>.AF_INET, <span class="keyword">socket</span>.SOCK_STREAM)</span><br><span class="line"></span><br><span class="line">add = (<span class="string">'127.0.0.1'</span>, <span class="number">8888</span>)</span><br><span class="line"><span class="keyword">s</span>.<span class="keyword">bind</span>(add)</span><br><span class="line"><span class="keyword">s</span>.<span class="keyword">listen</span>(<span class="number">1</span>)</span><br><span class="line"><span class="keyword">while</span> True:</span><br><span class="line">	conn, addr = <span class="keyword">s</span>.<span class="keyword">accept</span>();</span><br><span class="line">	<span class="keyword">print</span> addr</span><br><span class="line">	buf = conn.<span class="keyword">recv</span>(<span class="number">1024</span>)</span><br><span class="line">	<span class="keyword">print</span> buf</span><br><span class="line">	conn.sendall(<span class="string">"HTTP/1.1 200 OK\n\r\n\n"</span>)</span><br><span class="line">	conn.<span class="keyword">close</span>()</span><br></pre></td></tr></table></figure>
+<h2 id="端口">端口</h2><p>大小：16bits  (0-65535)</p>
+<p>保留端口号：0-1024</p>
+<p>默认端口:<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">21</span>     <span class="keyword">ftp</span></span><br><span class="line"><span class="number">22</span>     ssh</span><br><span class="line"><span class="number">23</span>     telnet</span><br><span class="line"><span class="number">80</span>     <span class="keyword">http</span></span><br><span class="line"><span class="number">443</span>   <span class="keyword">https</span></span><br><span class="line"><span class="number">3306</span> mysql</span><br></pre></td></tr></table></figure></p>
+<h2 id="IPv4">IPv4</h2><p>大小: 32bits (0.0.0.0-255.255.255.255)</p>
+<p>子网掩码： 把IP分为网络地址和主机地址</p>
+<p>特殊地址：</p>
+<p>1.整个子网，主机地址全为0</p>
+<p>2.子网广播地址，主机地址全为1的地址</p>
+<p>3.三段内网地址<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10<span class="class">.0</span><span class="class">.0</span><span class="class">.0-10</span><span class="class">.255</span><span class="class">.255</span><span class="class">.255</span></span><br><span class="line">172<span class="class">.16</span><span class="class">.0</span><span class="class">.0-172</span><span class="class">.31</span><span class="class">.255</span><span class="class">.255</span></span><br><span class="line">192<span class="class">.168</span><span class="class">.0</span><span class="class">.0-192</span><span class="class">.168</span><span class="class">.255</span><span class="class">.255</span></span><br></pre></td></tr></table></figure></p>
+<p>4.环回地址 <code>127.0.0.1 - 127.255.255.255</code></p>
+<p>5.本机地址 <code>0.0.0.0</code></p>
+<p>6.广播地址 <code>255.255.255.255</code><br>公网地址全球唯一</p>
+<h2 id="MAC（Media_Access_Control）地址">MAC（Media Access Control）地址</h2><p>大小：48bits (00:00:00:00:00:00-FF:FF:FF:FF:FF:FF)</p>
+<p>网卡出产时写死在硬件中。相当于网卡的身份证，具有全球唯一性</p>
+<h1 id="浏览器访问HTTP服务详解">浏览器访问HTTP服务详解</h1><h3 id="DNS（Domain_Name_System，域名系统）">DNS（Domain Name System，域名系统）</h3><pre><code>域名  &lt;--&gt;  <span class="type">IP</span>地址
+</code></pre><h2 id="应用层">应用层</h2><p>封装HTTP包</p>
+<h2 id="传输层">传输层</h2><ul>
+<li>TCP</li>
+<li>UDP</li>
+</ul>
+<p>封装TCP包</p>
+<h2 id="网络层">网络层</h2><p>封装IP包</p>
+<h2 id="数据链路层">数据链路层</h2><p>封装MAC包</p>
+<h2 id="物理层">物理层</h2><p>转换成二进制，通过网卡，网线进行数据传输</p>
+<p>数据发送过去后，然后反过来解封</p>
+<h2 id="安全问题">安全问题</h2><h3 id="arp">arp</h3><h3 id="SYN">SYN</h3><h3 id="DNS">DNS</h3>]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="/img/isa.png" alt="ISA"><br>]]>
+    
+    </summary>
+    
+      <category term="网络" scheme="http://lazysheep.cc/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[HCTF之Black-Eat-Black总结]]></title>
@@ -192,35 +242,6 @@
     <![CDATA[<p>10.31新生培训<br>]]>
     
     </summary>
-    
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[网络基础学习之三]]></title>
-    <link href="http://lazysheep.cc/2015/10/05/0x0A/"/>
-    <id>http://lazysheep.cc/2015/10/05/0x0A/</id>
-    <published>2015-10-05T13:30:11.000Z</published>
-    <updated>2015-10-15T01:43:51.000Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/net.jpg" alt="network"><br><a id="more"></a><br>半年前, 我在博客里写下了 <a href="http://old.lazysheep.cc/2015/01/04/0x01/" target="_blank" rel="external">HOW TO STUDY NETWORK（一）</a> 和 <a href="http://old.lazysheep.cc/2015/01/04/0x02/" target="_blank" rel="external">HOW TO STUDY NETWORK (二)</a><br>如今回首看看, 有许多不足… 现在进行一些补充和总结, 所以有了之三..</p>
-<p>在我看来, 网络是安全的基础, 如果没有网络, 只需要多顾些保安就行了, 还有我们干的事? 哦, 逆向还有活路..</p>
-<p>跟以前不同, 现在我认为网络的学习可以分为三个方向,<br>第一，就是往网络工程师这个方向学习，关于这方面，我认为我的 <code>HOW TO STUDY NETWORK(一)</code> 里已经写的很清楚了，我觉得没啥需要补充的了。。对于这个方向需要达到的能力我觉得很简单，也很难 —&gt; 能按照要求搭建网络环境 &amp;&amp; 拥有故障排查能力。。<br>这个方向不是只要学CCNA就行的，考完CCNA之后就需要靠CCNP，就像标题说的一样，我写的只是基础入门的内容，而入门之后，你自己就会知道之后的道路了。。</p>
-<p>第二，网络协议开发。。。主要是开发应用层的协议（其他层的当然也会有），学网络（socket）编程？由于这方面我接触的少，就先略过。。</p>
-<p>第三，网络安全，有开发自然有安全，这应该是运维工程师学习的方向，这个方向上，网络作为必备的基础知识。有网络流量监控，审计之类。</p>
-<p>上面大致介绍了一下我分的方向，下面讲讲各个协议层。</p>
-<p>从低到高吧，第一层讲起。。</p>
-<h2 id="物理层">物理层</h2><p>这层算是最简单的了，这层要防御啥？应该就是物理攻击了。还需要会做网线。。</p>
-<h2 id="数据链路层">数据链路层</h2><p>这层貌似是最好玩的，有arp协议，和无线协议（802.11）</p>
-<h3 id="ARP协议">ARP协议</h3><p>利用ARP的特性，可以进行ARP攻击，这个网络上教程很多，就不细说了。。<br>至于防御，就需要靠网络工程师来做，要对内网进行VLAN划分。(VLAN是啥？先看CCNA去)</p>
-<h3 id="无线协议">无线协议</h3><p>主要是802.11之类的，最近发现，使用wireshark，把无线网卡设置为混杂模式，则可以对周围空间中的802.11数据包进行抓取。对于家用路由器，需要破获路由器密码才能查看数据包的明文，但是对于CMCC，ChinaNet之类免密码的无线数据，可以直接获取明文，这个ARP的区别在于，ARP可以进行中间人截获流量，然后进行更改，而无线流量只能查看，却不能更改。但相较于ARP，这种方式更隐蔽，更不容易让他人发觉。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p><img src="/img/net.jpg" alt="network"><br>]]>
-    
-    </summary>
-    
-      <category term="网络" scheme="http://lazysheep.cc/tags/%E7%BD%91%E7%BB%9C/"/>
     
       <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
     

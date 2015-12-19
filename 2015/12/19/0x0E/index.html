@@ -30,7 +30,7 @@
 
 
 
-  <meta name="keywords" content="Hexo,Hc1m1,Hcamael" />
+  <meta name="keywords" content="网络," />
 
 
 
@@ -41,16 +41,20 @@
   <link rel="shorticon icon" type="image/x-icon" href="/img/favicon.png?v=0.4.4" />
 
 
-<meta name="description" content="10.31新生培训">
+<meta name="description">
 <meta property="og:type" content="article">
-<meta property="og:title" content="10.31新生培训">
-<meta property="og:url" content="http://lazysheep.cc/2015/10/31/0x0B/index.html">
+<meta property="og:title" content="12.19网络方向培训">
+<meta property="og:url" content="http://lazysheep.cc/2015/12/19/0x0E/index.html">
 <meta property="og:site_name" content="Hc1m1">
-<meta property="og:description" content="10.31新生培训">
-<meta property="og:updated_time" content="2015-10-31T13:41:04.000Z">
+<meta property="og:description">
+<meta property="og:image" content="http://lazysheep.cc/img/isa.png">
+<meta property="og:image" content="http://lazysheep.cc/img/osi.jpg">
+<meta property="og:image" content="http://lazysheep.cc/img/TCPIP.png">
+<meta property="og:image" content="http://lazysheep.cc/img/pro.png">
+<meta property="og:updated_time" content="2015-12-19T10:16:12.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="10.31新生培训">
-<meta name="twitter:description" content="10.31新生培训">
+<meta name="twitter:title" content="12.19网络方向培训">
+<meta name="twitter:description">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -60,7 +64,7 @@
   };
 </script>
 
-    <title> 10.31新生培训 // Hc1m1 </title>
+    <title> 12.19网络方向培训 // Hc1m1 </title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="default">
 <!--[if lte IE 8]>
@@ -181,7 +185,7 @@
           
           
             
-              10.31新生培训
+              12.19网络方向培训
             
           
         </h1>
@@ -190,8 +194,8 @@
       <div class="post-meta">
         <span class="post-time">
           Posted on
-          <time itemprop="dateCreated" datetime="2015-10-31T21:28:26+08:00" content="2015-10-31">
-            2015-10-31
+          <time itemprop="dateCreated" datetime="2015-12-19T10:36:07+08:00" content="2015-12-19">
+            2015-12-19
           </time>
         </span>
 
@@ -212,8 +216,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/10/31/0x0B/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/31/0x0B/" itemprop="commentsCount"></span>
+              <a href="/2015/12/19/0x0E/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/19/0x0E/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -227,72 +231,60 @@
       
 
       
-        <span itemprop="articleBody"><p>10.31新生培训<br><a id="more"></a></p>
-<h2 id="代码的调试之旅_——_Debug">代码的调试之旅 —— Debug</h2><ol>
-<li>VS2015<ul>
-<li>F10 step out</li>
-<li>F11 step into</li>
+        <span itemprop="articleBody"><p><img src="/img/isa.png" alt="ISA"><br><a id="more"></a></p>
+<h1 id="OSI七层模型(Open_System_Interconnect_开放系统互连参考模型)">OSI七层模型(Open System Interconnect 开放系统互连参考模型)</h1><p>国际标准化组织(ISO)和国际电报电话咨询委员会(CCITT)联合制定的开放系统互连参考模型</p>
+<p><img src="/img/osi.jpg" alt="osi"></p>
+<h1 id="TCP/IP_协议族">TCP/IP 协议族</h1><p><img src="/img/TCPIP.png" alt="TCP/IP"></p>
+<h2 id="协议">协议</h2><p>协议族</p>
+<p><img src="/img/pro.png" alt="协议族"></p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line">import <span class="keyword">socket</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">s</span> = <span class="keyword">socket</span>.<span class="keyword">socket</span>(<span class="keyword">socket</span>.AF_INET, <span class="keyword">socket</span>.SOCK_STREAM)</span><br><span class="line"></span><br><span class="line">add = (<span class="string">'127.0.0.1'</span>, <span class="number">8888</span>)</span><br><span class="line"><span class="keyword">s</span>.<span class="keyword">bind</span>(add)</span><br><span class="line"><span class="keyword">s</span>.<span class="keyword">listen</span>(<span class="number">1</span>)</span><br><span class="line"><span class="keyword">while</span> True:</span><br><span class="line">	conn, addr = <span class="keyword">s</span>.<span class="keyword">accept</span>();</span><br><span class="line">	<span class="keyword">print</span> addr</span><br><span class="line">	buf = conn.<span class="keyword">recv</span>(<span class="number">1024</span>)</span><br><span class="line">	<span class="keyword">print</span> buf</span><br><span class="line">	conn.sendall(<span class="string">"HTTP/1.1 200 OK\n\r\n\n"</span>)</span><br><span class="line">	conn.<span class="keyword">close</span>()</span><br></pre></td></tr></table></figure>
+<h2 id="端口">端口</h2><p>大小：16bits  (0-65535)</p>
+<p>保留端口号：0-1024</p>
+<p>默认端口:<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">21</span>     <span class="keyword">ftp</span></span><br><span class="line"><span class="number">22</span>     ssh</span><br><span class="line"><span class="number">23</span>     telnet</span><br><span class="line"><span class="number">80</span>     <span class="keyword">http</span></span><br><span class="line"><span class="number">443</span>   <span class="keyword">https</span></span><br><span class="line"><span class="number">3306</span> mysql</span><br></pre></td></tr></table></figure></p>
+<h2 id="IPv4">IPv4</h2><p>大小: 32bits (0.0.0.0-255.255.255.255)</p>
+<p>子网掩码： 把IP分为网络地址和主机地址</p>
+<p>特殊地址：</p>
+<p>1.整个子网，主机地址全为0</p>
+<p>2.子网广播地址，主机地址全为1的地址</p>
+<p>3.三段内网地址<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10<span class="class">.0</span><span class="class">.0</span><span class="class">.0-10</span><span class="class">.255</span><span class="class">.255</span><span class="class">.255</span></span><br><span class="line">172<span class="class">.16</span><span class="class">.0</span><span class="class">.0-172</span><span class="class">.31</span><span class="class">.255</span><span class="class">.255</span></span><br><span class="line">192<span class="class">.168</span><span class="class">.0</span><span class="class">.0-192</span><span class="class">.168</span><span class="class">.255</span><span class="class">.255</span></span><br></pre></td></tr></table></figure></p>
+<p>4.环回地址 <code>127.0.0.1 - 127.255.255.255</code></p>
+<p>5.本机地址 <code>0.0.0.0</code></p>
+<p>6.广播地址 <code>255.255.255.255</code><br>公网地址全球唯一</p>
+<h2 id="MAC（Media_Access_Control）地址">MAC（Media Access Control）地址</h2><p>大小：48bits (00:00:00:00:00:00-FF:FF:FF:FF:FF:FF)</p>
+<p>网卡出产时写死在硬件中。相当于网卡的身份证，具有全球唯一性</p>
+<h1 id="浏览器访问HTTP服务详解">浏览器访问HTTP服务详解</h1><h3 id="DNS（Domain_Name_System，域名系统）">DNS（Domain Name System，域名系统）</h3><pre><code>域名  &lt;--&gt;  <span class="type">IP</span>地址
+</code></pre><h2 id="应用层">应用层</h2><p>封装HTTP包</p>
+<h2 id="传输层">传输层</h2><ul>
+<li>TCP</li>
+<li>UDP</li>
 </ul>
-</li>
-<li>codeblocks<ul>
-<li>shitf F7 step into</li>
-<li>F7 step </li>
-</ul>
-</li>
-<li>gdb<ul>
-<li>next 执行下一行语句</li>
-<li>step 同上，有函数则会进入函数</li>
-<li>run 运行到断点处</li>
-<li>breakpoint 下断点</li>
-<li>start 停在main的第一行语句前</li>
-<li>print 打印变量</li>
-<li>display 跟踪一个变量</li>
-<li>undisplay 取消跟踪</li>
-<li>info locals 查看局部变量</li>
-<li>list 列出最近十行代码</li>
-</ul>
-</li>
-</ol>
-<h2 id="BUG">BUG</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// error1.c</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span>&lt;stdio.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">index</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">2</span>; i++) &#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"Hello World!"</span>)；</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//error2.c</span></span><br><span class="line"><span class="preprocessor">#include&lt;stdio.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span>(<span class="params"><span class="keyword">void</span></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> a;</span><br><span class="line">	<span class="keyword">char</span> b[<span class="number">2</span>] = <span class="string">'ab'</span>;</span><br><span class="line"></span><br><span class="line">	a = <span class="string">"c"</span>;</span><br><span class="line"></span><br><span class="line">	printf(<span class="string">"b = %s and a = %c\n"</span>, b, a);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//error_last.c</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdio.h&gt;</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> &lt;stdlib.h&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> yue</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">int</span> num;</span><br><span class="line">	<span class="keyword">struct</span> yue *next;</span><br><span class="line">&#125;node;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> yue *creat(<span class="keyword">int</span> a)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">struct</span> yue *head, *pold, *p;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line"></span><br><span class="line">	p = head = pold;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">1</span>; i&lt;a; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		p = (<span class="keyword">struct</span> yue *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> yue));</span><br><span class="line">		p-&gt;num = i;</span><br><span class="line">		pold-&gt;next = p;</span><br><span class="line">		pold = p;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	p-&gt;num = a;</span><br><span class="line">	p-&gt;next = head;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> head;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">struct</span> yue *p1, <span class="keyword">int</span> b)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	node *p;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> n;</span><br><span class="line"></span><br><span class="line">	p = p1;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (n = <span class="number">1</span>; n&lt; b - <span class="number">1</span>; n++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">"%5d"</span>, p-&gt;num);</span><br><span class="line">		p = p-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	node *p2;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> x;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"input x:\n"</span>);</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">"%d"</span>, &amp;x);</span><br><span class="line"></span><br><span class="line">	p2 = creat(x);</span><br><span class="line">	print(p2, x);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="知识积淀_——_博客_OR_笔记">知识积淀 —— 博客 OR 笔记</h2><h3 id="For_yourself">For yourself</h3><pre><code>-<span class="ruby"> 作为知识的积淀，记录了你的成长
-</span>-<span class="ruby"> 你确定你真的掌握了吗？如果你能把该知识点用文字描述出来，那么你就算是真的掌握了
-</span>-<span class="ruby"> 备忘</span>
-</code></pre><h3 id="For_others">For others</h3><pre><code>-<span class="ruby"> 知识分享
-</span>-<span class="ruby"> 交友
-</span>-<span class="ruby"> 面试时加分</span>
-</code></pre><h3 id="How_can_I_write?">How can I write?</h3><pre><code>就想写日记一样， 多写，多看就知道怎么写了
-</code></pre><h3 id="第三方博客">第三方博客</h3><pre><code>-<span class="ruby"> <span class="symbol">http:</span>/<span class="regexp">/www.diandian.com/</span>
-</span>-<span class="ruby"> <span class="symbol">http:</span>/<span class="regexp">/blog.csdn.net/</span>
-</span>-<span class="ruby"> 百度、新浪 等等</span>
-</code></pre><p><em>PS: 可以从我博客的友情链接中发现协会其他人的博客</em></p>
-<h2 id="推荐文章">推荐文章</h2><ol>
-<li>前言: <a href="http://zhuanlan.zhihu.com/Evi1m0/19695848" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19695848</a></li>
-<li>因为所以 <a href="http://zhuanlan.zhihu.com/Evi1m0/19700177" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19700177</a></li>
-<li>黑客眼中的黑客 <a href="http://zhuanlan.zhihu.com/Evi1m0/19702939" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19702939</a></li>
-<li>学会使用搜索引擎 <a href="http://zhuanlan.zhihu.com/Evi1m0/19714051" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19714051</a></li>
-<li>首先，你需要先学会编程 <a href="http://zhuanlan.zhihu.com/Evi1m0/19733294" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19733294</a></li>
-<li>你们眼中的黑客 —— 脚本小子 <a href="http://zhuanlan.zhihu.com/Evi1m0/19773598" target="_blank" rel="external">http://zhuanlan.zhihu.com/Evi1m0/19773598</a></li>
-</ol>
-</span>
+<p>封装TCP包</p>
+<h2 id="网络层">网络层</h2><p>封装IP包</p>
+<h2 id="数据链路层">数据链路层</h2><p>封装MAC包</p>
+<h2 id="物理层">物理层</h2><p>转换成二进制，通过网卡，网线进行数据传输</p>
+<p>数据发送过去后，然后反过来解封</p>
+<h2 id="安全问题">安全问题</h2><h3 id="arp">arp</h3><h3 id="SYN">SYN</h3><h3 id="DNS">DNS</h3></span>
       
     </div>
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/网络/" rel="tag">#网络</a>
+          
+        </div>
       
 
       
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/12/01/0x0C/" rel="prev">Python 的 BaseHTTPServer模块分析小结</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/10/05/0x09/" rel="next">不使用select情况下的各种盲注</a>
+              <a href="/2015/12/08/0x0D/" rel="next">HCTF之Black-Eat-Black总结</a>
             
           </div>
         </div>
@@ -318,8 +310,8 @@
             
               <div class="comments" id="comments">
                 
-                  <div class="ds-thread" data-thread-key="2015/10/31/0x0B/"
-                       data-title="10.31新生培训" data-url="http://lazysheep.cc/2015/10/31/0x0B/">
+                  <div class="ds-thread" data-thread-key="2015/12/19/0x0E/"
+                       data-title="12.19网络方向培训" data-url="http://lazysheep.cc/2015/12/19/0x0E/">
                   </div>
                 
               </div>
@@ -475,7 +467,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#代码的调试之旅_——_Debug"><span class="nav-number">1.</span> <span class="nav-text">代码的调试之旅 —— Debug</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BUG"><span class="nav-number">2.</span> <span class="nav-text">BUG</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#知识积淀_——_博客_OR_笔记"><span class="nav-number">3.</span> <span class="nav-text">知识积淀 —— 博客 OR 笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#For_yourself"><span class="nav-number">3.1.</span> <span class="nav-text">For yourself</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#For_others"><span class="nav-number">3.2.</span> <span class="nav-text">For others</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How_can_I_write?"><span class="nav-number">3.3.</span> <span class="nav-text">How can I write?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三方博客"><span class="nav-number">3.4.</span> <span class="nav-text">第三方博客</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#推荐文章"><span class="nav-number">4.</span> <span class="nav-text">推荐文章</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OSI七层模型(Open_System_Interconnect_开放系统互连参考模型)"><span class="nav-number">1.</span> <span class="nav-text">OSI七层模型(Open System Interconnect 开放系统互连参考模型)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP/IP_协议族"><span class="nav-number">2.</span> <span class="nav-text">TCP/IP 协议族</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#协议"><span class="nav-number">2.1.</span> <span class="nav-text">协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#端口"><span class="nav-number">2.2.</span> <span class="nav-text">端口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IPv4"><span class="nav-number">2.3.</span> <span class="nav-text">IPv4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MAC（Media_Access_Control）地址"><span class="nav-number">2.4.</span> <span class="nav-text">MAC（Media Access Control）地址</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#浏览器访问HTTP服务详解"><span class="nav-number">3.</span> <span class="nav-text">浏览器访问HTTP服务详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS（Domain_Name_System，域名系统）"><span class="nav-number">3.0.1.</span> <span class="nav-text">DNS（Domain Name System，域名系统）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用层"><span class="nav-number">3.1.</span> <span class="nav-text">应用层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#传输层"><span class="nav-number">3.2.</span> <span class="nav-text">传输层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络层"><span class="nav-number">3.3.</span> <span class="nav-text">网络层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据链路层"><span class="nav-number">3.4.</span> <span class="nav-text">数据链路层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#物理层"><span class="nav-number">3.5.</span> <span class="nav-text">物理层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安全问题"><span class="nav-number">3.6.</span> <span class="nav-text">安全问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#arp"><span class="nav-number">3.6.1.</span> <span class="nav-text">arp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SYN"><span class="nav-number">3.6.2.</span> <span class="nav-text">SYN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS"><span class="nav-number">3.6.3.</span> <span class="nav-text">DNS</span></a></li></ol></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
