@@ -82,7 +82,6 @@ baidu_analytics: 4b6b8b9a09d24f4d4e26c50bd1707fd7
 theme: next
 plugins:
   - hexo-generator-feed
-	- hexo-math
 
 
 # 
