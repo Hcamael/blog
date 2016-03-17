@@ -1,7 +1,7 @@
 if (typeof DUOSHUO !== 'undefined') {
 	hook_duoshuo_templates();
 } else {
-	$('[src="http://static.duoshuo.com/embed.js"]')[0].onload = hook_duoshuo_templates;
+	$('[src="http://static.duoshuo.com/embed.unstable.js"]')[0].onload = hook_duoshuo_templates;
 }
 var is_hook_duoshuo = false;
 
@@ -11,8 +11,8 @@ function hook_duoshuo_templates() {
 	} else {
 		is_hook_duoshuo = true;
 	}
-	var _D_post = DUOSHUO.templates.post;
-	DUOSHUO.templates.post = function(e, t) {
+	var _D_post = DUOSHUO.API.post;
+	DUOSHUO.API.post = function(e, t) {
 		var rs = _D_post(e, t);
 		var is_admin;
 		if (e.post.author.user_id && (e.post.author.user_id == duoshuo_user_ID)) {
