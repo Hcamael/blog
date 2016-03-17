@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://lazysheep.cc//"/>
-  <updated>2016-03-15T03:10:47.000Z</updated>
+  <updated>2016-03-17T14:37:08.000Z</updated>
   <id>http://lazysheep.cc//</id>
   
   <author>
@@ -14,6 +14,103 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[0CTF RSA?总结 || RSA学习笔记]]></title>
+    <link href="http://lazysheep.cc/2016/03/17/0x14/"/>
+    <id>http://lazysheep.cc/2016/03/17/0x14/</id>
+    <published>2016-03-17T01:18:02.000Z</published>
+    <updated>2016-03-17T14:37:08.000Z</updated>
+    <content type="html"><![CDATA[<p><img src="" alt=""><br><a id="more"></a><br><em>果然不是信息安全专业的，只是自学会有很多技能点的缺失。</em><br>该题用的是中国剩余定理，顺便学了一遍RSA，发现了数学技能点的缺失</p>
+<p>(PS: ^表示为次方，xor才是异或，％和mod为求余，/表示为整除)</p>
+<h1 id="RSA学习笔记">RSA学习笔记</h1><p>先来学学前置技能</p>
+<h2 id="前置技能">前置技能</h2><h3 id="学前符号助记">学前符号助记</h3><p>$ x = y\ (mod\ n) $         可以看成是        $ x \% n = y$<br>$ x \equiv y\ (mod\ n)$      可以看成是        $ x \% n = y \% n$</p>
+<h3 id="欧拉函数">欧拉函数</h3><p>$$\phi(q) = \prod_{k=1}^∞ (1 - q^k)$$</p>
+<p>然后在RSA中用到的性质： </p>
+<blockquote>
+<p>m是素数时，有 $\phi(m) = m - 1$</p>
+<p>当m, n互质时，有 $\phi(m*n) = \phi(m) * \phi(n)$</p>
+</blockquote>
+<h3 id="欧拉定理">欧拉定理</h3><blockquote>
+<p>设p和q互质，则 $q^{p-1} \equiv 1\ (mod\ p)$</p>
+</blockquote>
+<p>根据前面这说的该公式的意义为： $q^{p-1} \% p = 1 \% p$<br>所以最后可以得出：$q^{p-1} \% p = 1$</p>
+<h3 id="模反元素">模反元素</h3><p>设x为q的模反元素，则x必须满足：</p>
+<blockquote>
+<p>$q * x \equiv 1\ (mod\ p) \Longrightarrow (q*x) \% p = 1$</p>
+</blockquote>
+<p>性质：</p>
+<blockquote>
+<p>x为q的模反元素，则$x + kp$ 都是q的模反元素(k为整数)</p>
+</blockquote>
+<h3 id="模逆元">模逆元</h3><p>也就是上面说的模反元素的公式：$q * x \equiv 1\ (mod\ p)$等同于$x^{-1} \equiv q\ (mod\ p)$</p>
+<h3 id="中国剩余定理之Gauss’s_algorithm">中国剩余定理之Gauss’s algorithm</h3><p>对于$e = 3$然后存在三个$n =&gt; n_1, n_2, n_3$</p>
+<blockquote>
+<p>$N = n_1 * n_2 * n_3$<br>$N_1 = N / n_1 = n_2 * n_3$<br>$N_2 = N / n_2 = n_1 * n_3$<br>$N_3 = N / n_3 = n_2 * n_1$<br>$d_1 = N^{-1}_1 (mod\ n_1)$<br>$d_2 = N^{-1}_2 (mod\ n_2)$<br>$d_3 = N^{-1}_3 (mod\ n_3)$</p>
+</blockquote>
+<p>有明文m，可得</p>
+<blockquote>
+<p>$c_1 = m \% n_1$<br>$c_2 = m \% n_2$<br>$c_3 = m \% n_3$<br>$x = m^3$</p>
+</blockquote>
+<p>然后：<br>$$x \equiv (c_1N_1d_1 + c_2N_2d_2 + c_3N_3d_3) (mod\ N)$$</p>
+<h3 id="Other">Other</h3><p>经常看到的两个定义：</p>
+<blockquote>
+<p>$lcm(x, y)$     x和y的最小公倍数<br>$gcd(e, l)$      e和l的最大公约数</p>
+</blockquote>
+<h2 id="RSA密钥生成">RSA密钥生成</h2><p>前置技能学完了，开始研究RSA了<br>在密钥中包含了两个数据：<br>公钥：(N, e)<br>私钥：(N, d)<br>下面来看看怎么求N, e, d这三个数</p>
+<ul>
+<li>搞出两个超大的互质数设为p和q<blockquote>
+<p>p和q互质</p>
+</blockquote>
+</li>
+<li>p和q相乘得出密钥长度N<blockquote>
+<p>$N = p * q$</p>
+</blockquote>
+</li>
+<li>计算N的欧拉函数<blockquote>
+<p>$\phi(N) = \phi(p*q) = \phi(p) * \phi(q) = (p - 1) * (q - 1)$</p>
+</blockquote>
+</li>
+<li>然后通过随机数生成方法随机出一个e，必须满足两个条件<blockquote>
+<p>$1 &lt; e &lt; \phi(N)$ 还有 e和$\phi(n)$为互质数</p>
+</blockquote>
+</li>
+<li>再随机出一个d, 为e的模反元素<blockquote>
+<p>$e * d \% \phi(N) = 1$</p>
+</blockquote>
+</li>
+</ul>
+<p>好了，三个值求出来了，现在来看看加解密<br>加解密都是对字符的二进制进行计算<br>假设明文是字符串<code>mingwen</code>则被加密的<br>$m = 0b01101101011010010110111001100111011101110110010101101110 = 30796695364658542$ </p>
+<h3 id="加密">加密</h3><p>加密公式：密文$c = m^e \% N$</p>
+<h3 id="解密">解密</h3><p>解密公式：明文$m = c^d \% N$</p>
+<h3 id="openssl简单用法小记">openssl简单用法小记</h3><p>再来用openssl来生成个公钥私钥对</p>
+<h4 id="先生成私钥">先生成私钥</h4><figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ openssl genrsa <span class="attribute">-out</span> <span class="keyword">private</span><span class="built_in">.</span>pem <span class="number">1024</span></span><br><span class="line">Generating RSA <span class="keyword">private</span> key, <span class="number">1024</span> bit long modulus</span><br><span class="line"><span class="attribute">...</span><span class="attribute">...</span><span class="built_in">.</span><span class="subst">++++++</span></span><br><span class="line"><span class="attribute">...</span><span class="attribute">...</span><span class="built_in">..</span><span class="subst">++++++</span></span><br><span class="line">e is <span class="number">65537</span> (<span class="number">0x10001</span>)</span><br></pre></td></tr></table></figure>
+<p>这里的e就是上面计算中的e，1024为上面计算中N的bits长度<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cat <span class="keyword">private</span>.pem </span><br><span class="line">-----BEGIN RSA <span class="keyword">PRIVATE</span> <span class="keyword">KEY</span>-----</span><br><span class="line">xxxxxxxxxxxxxxxxxxxxxxxxxxx</span><br><span class="line">-----<span class="keyword">END</span> RSA <span class="keyword">PRIVATE</span> <span class="keyword">KEY</span>-----</span><br></pre></td></tr></table></figure></p>
+<p>这就是私钥</p>
+<h4 id="再生成公钥">再生成公钥</h4><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ openssl rsa -<span class="keyword">in</span> <span class="keyword">private</span>.pem -pubout -out <span class="keyword">public</span>.pem</span><br><span class="line">writing RSA <span class="keyword">key</span></span><br><span class="line">$ cat <span class="keyword">public</span>.pem </span><br><span class="line">-----BEGIN <span class="keyword">PUBLIC</span> <span class="keyword">KEY</span>-----</span><br><span class="line">xxxxxxxxxxxxxxxxxxxxxxxxx</span><br><span class="line">-----<span class="keyword">END</span> <span class="keyword">PUBLIC</span> <span class="keyword">KEY</span>-----</span><br></pre></td></tr></table></figure>
+<h4 id="查看密钥信息">查看密钥信息</h4><p>查看公钥信息<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ openssl rsa -<span class="keyword">in</span> <span class="keyword">public</span>.pem -pubin -<span class="keyword">text</span></span><br><span class="line"><span class="keyword">Public</span>-<span class="keyword">Key</span>: (<span class="number">1024</span> bit)</span><br><span class="line">Modulus:</span><br><span class="line">    xxxxxxxxxxxxx</span><br><span class="line">Exponent: <span class="number">65537</span> (<span class="number">0x10001</span>)</span><br><span class="line">writing RSA <span class="keyword">key</span></span><br><span class="line">-----BEGIN <span class="keyword">PUBLIC</span> <span class="keyword">KEY</span>-----</span><br><span class="line">xxxxxxxxxxxx</span><br><span class="line">-----<span class="keyword">END</span> <span class="keyword">PUBLIC</span> <span class="keyword">KEY</span>-----</span><br></pre></td></tr></table></figure></p>
+<p>Modulus就是上面计算过程中的N，e为0x10001<br>查看私钥信息<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ openssl rsa -<span class="keyword">in</span> <span class="keyword">private</span>.pem -text</span><br><span class="line">Private-<span class="string">Key:</span> (<span class="number">1024</span> bit)</span><br><span class="line"><span class="string">modulus:</span></span><br><span class="line">    xxxxxxxxxxx</span><br><span class="line"><span class="string">publicExponent:</span> <span class="number">65537</span> (<span class="number">0x10001</span>)</span><br><span class="line"><span class="string">privateExponent:</span></span><br><span class="line">    xxxxxxxxxxx</span><br><span class="line"><span class="string">prime1:</span></span><br><span class="line">    xxxxxxxxxxxxxx</span><br><span class="line"><span class="string">prime2:</span></span><br><span class="line">    xxxxxxxxxxxx</span><br><span class="line"><span class="string">exponent1:</span></span><br><span class="line">    xxxxxxxxxxxx</span><br><span class="line"><span class="string">exponent2:</span></span><br><span class="line">    xxxxxxxxxxx</span><br><span class="line"><span class="string">coefficient:</span></span><br><span class="line">    xxxxxxxxxx</span><br><span class="line">writing RSA key</span><br><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">xxxxxxxxxxxx</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure></p>
+<p>私钥藏了所有的信息啊。。所以说如果私钥泄露了。。就GG了。。<br>$modulus = N$<br>$publicExponent = e$<br>$privateExponent = d$<br>$prime1 = p$<br>$prime2 = q$<br>$exponent1 = d \% (p-1)$<br>$exponent2 = d \% (q-1)$<br>$coefficient = q^{-1} \% p$</p>
+<h1 id="RSA?">RSA?</h1><p>然后来扯0CTF的RSA?这题，首先查看公钥的信息：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ openssl rsa -<span class="keyword">in</span> <span class="keyword">public</span>.pem -pubin -text</span><br><span class="line">Public-<span class="string">Key:</span> (<span class="number">314</span> bit)</span><br><span class="line"><span class="string">Modulus:</span></span><br><span class="line"><span class="label">    02:</span><span class="string">ca:</span><span class="string">a9:</span><span class="string">c0:</span><span class="number">9</span><span class="string">d:</span><span class="string">c1:</span><span class="number">06</span>:<span class="number">1</span><span class="string">e:</span><span class="number">50</span>:<span class="number">7</span><span class="string">e:</span><span class="number">5</span><span class="string">b:</span><span class="number">7</span><span class="string">f:</span><span class="number">39</span>:<span class="string">dd:</span><span class="string">e3:</span></span><br><span class="line"><span class="label">    45:</span><span class="number">5</span><span class="string">f:</span><span class="string">cf:</span><span class="string">e1:</span><span class="number">27</span>:<span class="string">a2:</span><span class="string">c6:</span><span class="number">9</span><span class="string">b:</span><span class="number">62</span>:<span class="number">1</span><span class="string">c:</span><span class="number">83</span>:<span class="string">fd:</span><span class="number">9</span><span class="string">d:</span><span class="number">3</span><span class="string">d:</span><span class="number">3</span><span class="string">e:</span></span><br><span class="line"><span class="label">    aa:</span><span class="number">3</span><span class="string">a:</span><span class="string">ac:</span><span class="number">42</span>:<span class="number">14</span>:<span class="number">7</span><span class="string">c:</span><span class="string">d7:</span><span class="number">18</span>:<span class="number">8</span><span class="string">c:</span><span class="number">53</span></span><br><span class="line"><span class="string">Exponent:</span> <span class="number">3</span> (<span class="number">0x3</span>)</span><br><span class="line">writing RSA key</span><br><span class="line">-----BEGIN PUBLIC KEY-----</span><br><span class="line">MEEwDQYJKoZIhvcNAQEBBQADMAAwLQIoAsqpwJ3BBh5Qflt<span class="regexp">/Od3jRV/</span>P4Seixpti</span><br><span class="line">HIP9nT0+qjqsQhR81xiMUwIBAw==</span><br><span class="line">-----END PUBLIC KEY-----</span><br></pre></td></tr></table></figure></p>
+<p>从这里可以得到<br>$N = 0x2CAA9C09DC1061E507E5B7F39DDE3455FCFE127A2C69B621C83FD9D3D3EAA3AAC42147CD7188C53$<br>$e = 3$</p>
+<p>然后wp中用一个叫YAFU的软件因式分解出了三个值<br>$p = 26440615366395242196516853423447$<br>$q = 27038194053540661979045656526063$<br>$r = 32581479300404876772405716877547$</p>
+<p>接下来：<br>$\phi(p*q*r) = \phi(N) = \phi(q) * \phi(p) * \phi(r) = (p-1) * (q-1) * (r-1)$<br>$\phi(N) = 2329271097867038040364127327000042742184870900536 0280557445800298810723014218767619832560713992$</p>
+<p>但是这时候出问题了，上面说了e和$\phi(N)$ 要互质数，但是 $\phi(N) \% e = 0$<br>所以这时候就要用到中国剩余定理了，参考文档<a href="http://www.di-mgt.com.au/crt.html#gaussalg" target="_blank" rel="external">http://www.di-mgt.com.au/crt.html#gaussalg</a>, 原谅我数学不行，只能把结论拿来用了。。</p>
+<p>在本题中，$e = 3$，N分解出了$p, q, r$分别对应$n_1, n_2, n_3$<br>然后$d_i$使用扩展欧几里德可以算出</p>
+<h3 id="欧几里德算法">欧几里德算法</h3><p>已知a, b 求 $ax + by = gcd(a, b) = d$中的x, y<br>公式：<br>$$gcd(a,b) = gcd(b, a\ mod\ b)$$<br>Python实现该算法：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gcd</span><span class="params">(a, b)</span>:</span></span><br><span class="line">    <span class="keyword">while</span> b:</span><br><span class="line">        a, b = b, a % b</span><br><span class="line">    <span class="keyword">return</span> a</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gcd</span><span class="params">(a, b)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> b == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> a</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> gcd(b, a%b)</span><br></pre></td></tr></table></figure></p>
+<p>扩展算法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">extended_gcd</span><span class="params">(aa, bb)</span>:</span></span><br><span class="line">    lastremainder, remainder = abs(aa), abs(bb)</span><br><span class="line">    x, lastx, y, lasty = <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> remainder:</span><br><span class="line">        lastremainder, (quotient, remainder) = remainder, divmod(lastremainder, remainder)</span><br><span class="line">        x, lastx = lastx - quotient * x, x</span><br><span class="line">        y, lasty = lasty - quotient * y, y</span><br><span class="line">    <span class="keyword">return</span> lastremainder, lastx * (-<span class="number">1</span> <span class="keyword">if</span> aa &lt; <span class="number">0</span> <span class="keyword">else</span> <span class="number">1</span>), lasty * (-<span class="number">1</span> <span class="keyword">if</span> bb &lt; <span class="number">0</span> <span class="keyword">else</span> <span class="number">1</span>）</span><br></pre></td></tr></table></figure>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><img src="" alt=""><br>]]>
+    
+    </summary>
+    
+      <category term="Crypto" scheme="http://lazysheep.cc/tags/Crypto/"/>
+    
+      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[This is AliCTF?]]></title>
@@ -46,10 +143,6 @@
     <![CDATA[<p><img src="/img/alictf0.png" alt="alictf0"><br>]]>
     
     </summary>
-    
-      <category term="CTF" scheme="http://lazysheep.cc/tags/CTF/"/>
-    
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
     
   </entry>
   
@@ -84,10 +177,6 @@
     
     </summary>
     
-      <category term="CTF" scheme="http://lazysheep.cc/tags/CTF/"/>
-    
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
-    
   </entry>
   
   <entry>
@@ -115,10 +204,6 @@
     <![CDATA[<p><img src="/img/re.jpg" alt="re"><br>]]>
     
     </summary>
-    
-      <category term="RE" scheme="http://lazysheep.cc/tags/RE/"/>
-    
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
     
   </entry>
   
@@ -222,10 +307,6 @@
     
     </summary>
     
-      <category term="PWN" scheme="http://lazysheep.cc/tags/PWN/"/>
-    
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
-    
   </entry>
   
   <entry>
@@ -271,10 +352,6 @@
     <![CDATA[<p><img src="/img/isa.png" alt="ISA"><br>]]>
     
     </summary>
-    
-      <category term="网络" scheme="http://lazysheep.cc/tags/%E7%BD%91%E7%BB%9C/"/>
-    
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
     
   </entry>
   
@@ -339,10 +416,6 @@
     
     </summary>
     
-      <category term="CTF" scheme="http://lazysheep.cc/tags/CTF/"/>
-    
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
-    
   </entry>
   
   <entry>
@@ -389,10 +462,6 @@
     <![CDATA[<p><img src="/img/python.jpg" alt="Python"><br>]]>
     
     </summary>
-    
-      <category term="Python" scheme="http://lazysheep.cc/tags/Python/"/>
-    
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
     
   </entry>
   
@@ -456,8 +525,6 @@
     
     </summary>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
-    
   </entry>
   
   <entry>
@@ -478,10 +545,6 @@
     <![CDATA[<p><img src="/img/sqli.jpg" alt="SQLI"><br>]]>
     
     </summary>
-    
-      <category term="SQLi" scheme="http://lazysheep.cc/tags/SQLi/"/>
-    
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
     
   </entry>
   
@@ -508,10 +571,6 @@
     <![CDATA[<p><img src="/img/xdctf.png" alt="xdctf"><br>]]>
     
     </summary>
-    
-      <category term="CTF" scheme="http://lazysheep.cc/tags/CTF/"/>
-    
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
     
   </entry>
   
@@ -542,10 +601,6 @@
     <![CDATA[<p><img src="/img/wechall.gif" alt="Wechall"><br>]]>
     
     </summary>
-    
-      <category term="Wechall" scheme="http://lazysheep.cc/tags/Wechall/"/>
-    
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
     
   </entry>
   
@@ -594,38 +649,6 @@
     
     </summary>
     
-      <category term="GIT" scheme="http://lazysheep.cc/tags/GIT/"/>
-    
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[PHP代码审计小记]]></title>
-    <link href="http://lazysheep.cc/2015/07/21/0x03/"/>
-    <id>http://lazysheep.cc/2015/07/21/0x03/</id>
-    <published>2015-07-21T15:01:39.000Z</published>
-    <updated>2015-09-28T05:39:27.000Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/php.jpg" alt="php"><br><a id="more"></a><br>代码部分来自 <a href="https://code.google.com/p/pasc2at/wiki/SimplifiedChinese" target="_blank" rel="external">https://code.google.com/p/pasc2at/wiki/SimplifiedChinese</a></p>
-<h2 id="0x00_这种，现在应该没人会这么写吧？">0x00 这种，现在应该没人会这么写吧？</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="comment">//key.php?&lt;script&gt;alert(1);&lt;/script&gt;=1&amp;bbb=2</span></span><br><span class="line"><span class="comment">//print_R($_GET); </span></span><br><span class="line"> <span class="keyword">foreach</span> (<span class="variable">$_GET</span> <span class="keyword">AS</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>)</span><br><span class="line">&#123;</span><br><span class="line">        <span class="keyword">print</span> <span class="variable">$key</span>.<span class="string">"\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
-<h2 id="0x01_变量覆盖，并不懂为啥有人会这么写">0x01 变量覆盖，并不懂为啥有人会这么写</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="comment">//var.php?a=fuck      </span></span><br><span class="line"><span class="variable">$a</span>=<span class="string">'hi'</span>;</span><br><span class="line"><span class="keyword">foreach</span>(<span class="variable">$_GET</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>) &#123;</span><br><span class="line">        <span class="variable">$$key</span> = <span class="variable">$value</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">print</span> <span class="variable">$a</span>;    <span class="comment">//输出fuck</span></span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
-<h2 id="0x02_同样也是变量覆盖。。">0x02 同样也是变量覆盖。。</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//var.php?var=new</span></span><br><span class="line"><span class="variable">$var</span> = <span class="string">'init'</span>;                     </span><br><span class="line">parse_str(<span class="variable">$_SERVER</span>[<span class="string">'QUERY_STRING'</span>]);  <span class="comment">//$_SERVER['QUERY_STRING']的值为get参数</span></span><br><span class="line"><span class="comment">//parse_str(string,array) 设置变量的函数，array没设置就会覆盖已存在的变量</span></span><br><span class="line"><span class="keyword">print</span> <span class="variable">$var</span>;</span><br></pre></td></tr></table></figure>
-<h2 id="0x03_代码执行漏洞">0x03 代码执行漏洞</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//how to exp this code</span></span><br><span class="line"><span class="variable">$sort_by</span>=<span class="variable">$_GET</span>[<span class="string">'sort_by'</span>];</span><br><span class="line"><span class="variable">$sorter</span>=<span class="string">'strnatcasecmp'</span>;</span><br><span class="line"><span class="variable">$databases</span>=<span class="keyword">array</span>(<span class="string">'test'</span>,<span class="string">'test'</span>);</span><br><span class="line"><span class="variable">$sort_function</span> = <span class="string">'  return 1 * '</span> . <span class="variable">$sorter</span> . <span class="string">'($a["'</span> . <span class="variable">$sort_by</span> . <span class="string">'"], $b["'</span> . <span class="variable">$sort_by</span> . <span class="string">'"]); '</span>;</span><br><span class="line">usort(<span class="variable">$databases</span>, create_function(<span class="string">'$a, $b'</span>, <span class="variable">$sort_function</span>));</span><br></pre></td></tr></table></figure>
-<p>这个我研究了下, 有点屌啊~~</p>
-<p>首先, 漏洞永远在于用户的可控点上, 所以上面的代码漏洞只可能存在于 <code>$sort_function = &#39;  return 1 * &#39; . $sorter . &#39;($a[&quot;&#39; . $sort_by . &#39;&quot;], $b[&quot;&#39; . $sort_by . &#39;&quot;]); &#39;;</code> 之中</p>
-<p>payload:<br><code>sort_by=1&quot;],$b[&quot;2&quot;]) * system(&quot;echo &#39;&lt;?php phpinfo(); &#39; &gt; a.php &quot;);//</code></p>
-<p>只要权限够, 就能写入一句话, 然后get webshell..</p>
-<p>类似的函数还有:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">assert</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">call_user_func</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">call_user_func_array</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">create_function</span><span class="params">()</span></span></span><br><span class="line">变量函数</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p><img src="/img/php.jpg" alt="php"><br>]]>
-    
-    </summary>
-    
-      <category term="PHP" scheme="http://lazysheep.cc/tags/PHP/"/>
-    
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
-    
   </entry>
   
   <entry>
@@ -655,10 +678,6 @@
     <![CDATA[<p><img src="/img/brain.jpg" alt="brain"><br>]]>
     
     </summary>
-    
-      <category term="随笔" scheme="http://lazysheep.cc/tags/%E9%9A%8F%E7%AC%94/"/>
-    
-      <category term="S-essay" scheme="http://lazysheep.cc/categories/S-essay/"/>
     
   </entry>
   
@@ -691,10 +710,6 @@
     
     </summary>
     
-      <category term="检讨" scheme="http://lazysheep.cc/tags/%E6%A3%80%E8%AE%A8/"/>
-    
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
-    
   </entry>
   
   <entry>
@@ -710,10 +725,6 @@
     <![CDATA[<p><img src="/img/jump.png" alt="jump"><br>]]>
     
     </summary>
-    
-      <category term="Old博文" scheme="http://lazysheep.cc/tags/Old%E5%8D%9A%E6%96%87/"/>
-    
-      <category term="R-porter" scheme="http://lazysheep.cc/categories/R-porter/"/>
     
   </entry>
   

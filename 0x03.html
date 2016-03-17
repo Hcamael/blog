@@ -30,7 +30,7 @@
 
 
 
-  <meta name="keywords" content="PHP," />
+  <meta name="keywords" content=",,," />
 
 
 
@@ -42,9 +42,9 @@
 
 
 <meta name="description">
-<meta property="og:type" content="article">
+<meta property="og:type" content="website">
 <meta property="og:title" content="PHP代码审计小记">
-<meta property="og:url" content="http://lazysheep.cc/2015/07/21/0x03/index.html">
+<meta property="og:url" content="http://lazysheep.cc/0x03.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description">
 <meta property="og:image" content="http://lazysheep.cc/img/php.jpg">
@@ -61,7 +61,13 @@
   };
 </script>
 
-    <title> PHP代码审计小记 // Hc1m1 </title>
+    <title>
+  
+
+  
+    PHP代码审计小记 // Hc1m1
+  
+</title>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage" lang="default">
 <!--[if lte IE 8]>
@@ -87,7 +93,7 @@
 
 
 
-<div class="container one-column page-post-detail">
+<div class="container one-column ">
     <div class="headband"></div>
     <header style="background: #f5f5f5;" id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
         <div class="header-inner"><h1 class="site-meta">
@@ -172,63 +178,8 @@
 
   <div id="posts" class="posts-expand">
     
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              PHP代码审计小记
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2015-07-21T23:01:39+08:00" content="2015-07-21">
-            2015-07-21
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/H-blog/" itemprop="url" rel="index"><span itemprop="name">H-blog</span></a></span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2015/07/21/0x03/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/07/21/0x03/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        <span itemprop="articleBody"><p><img src="/img/php.jpg" alt="php"><br><a id="more"></a><br>代码部分来自 <a href="https://code.google.com/p/pasc2at/wiki/SimplifiedChinese" target="_blank" rel="external">https://code.google.com/p/pasc2at/wiki/SimplifiedChinese</a></p>
+    
+      <p><img src="/img/php.jpg" alt="php"><br><a id="more"></a><br>代码部分来自 <a href="https://code.google.com/p/pasc2at/wiki/SimplifiedChinese" target="_blank" rel="external">https://code.google.com/p/pasc2at/wiki/SimplifiedChinese</a></p>
 <h2 id="0x00_这种，现在应该没人会这么写吧？">0x00 这种，现在应该没人会这么写吧？</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="comment">//key.php?&lt;script&gt;alert(1);&lt;/script&gt;=1&amp;bbb=2</span></span><br><span class="line"><span class="comment">//print_R($_GET); </span></span><br><span class="line"> <span class="keyword">foreach</span> (<span class="variable">$_GET</span> <span class="keyword">AS</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>)</span><br><span class="line">&#123;</span><br><span class="line">        <span class="keyword">print</span> <span class="variable">$key</span>.<span class="string">"\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
 <h2 id="0x01_变量覆盖，并不懂为啥有人会这么写">0x01 变量覆盖，并不懂为啥有人会这么写</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="comment">//var.php?a=fuck      </span></span><br><span class="line"><span class="variable">$a</span>=<span class="string">'hi'</span>;</span><br><span class="line"><span class="keyword">foreach</span>(<span class="variable">$_GET</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>) &#123;</span><br><span class="line">        <span class="variable">$$key</span> = <span class="variable">$value</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">print</span> <span class="variable">$a</span>;    <span class="comment">//输出fuck</span></span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
 <h2 id="0x02_同样也是变量覆盖。。">0x02 同样也是变量覆盖。。</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//var.php?var=new</span></span><br><span class="line"><span class="variable">$var</span> = <span class="string">'init'</span>;                     </span><br><span class="line">parse_str(<span class="variable">$_SERVER</span>[<span class="string">'QUERY_STRING'</span>]);  <span class="comment">//$_SERVER['QUERY_STRING']的值为get参数</span></span><br><span class="line"><span class="comment">//parse_str(string,array) 设置变量的函数，array没设置就会覆盖已存在的变量</span></span><br><span class="line"><span class="keyword">print</span> <span class="variable">$var</span>;</span><br></pre></td></tr></table></figure>
@@ -238,45 +189,8 @@
 <p>payload:<br><code>sort_by=1&quot;],$b[&quot;2&quot;]) * system(&quot;echo &#39;&lt;?php phpinfo(); &#39; &gt; a.php &quot;);//</code></p>
 <p>只要权限够, 就能写入一句话, 然后get webshell..</p>
 <p>类似的函数还有:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">assert</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">call_user_func</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">call_user_func_array</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="title">create_function</span><span class="params">()</span></span></span><br><span class="line">变量函数</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
-</span>
-      
-    </div>
 
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/PHP/" rel="tag">#PHP</a>
-          
-        </div>
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/07/22/0x04/" rel="prev">git小记</a>
-            
-          </div>
-
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2015/07/19/0x02/" rel="next">对于硬盘事件的随想</a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
+    
   </div>
 
 
@@ -287,8 +201,8 @@
             
               <div class="comments" id="comments">
                 
-                  <div class="ds-thread" data-thread-key="2015/07/21/0x03/"
-                       data-title="PHP代码审计小记" data-url="http://lazysheep.cc/2015/07/21/0x03/">
+                  <div class="ds-thread" data-thread-key="0x03.html"
+                       data-title="PHP代码审计小记" data-url="http://lazysheep.cc/0x03.html">
                   </div>
                 
               </div>
@@ -308,15 +222,6 @@
   <aside id="sidebar" class="sidebar" style="overflow:scroll">
     <div class="sidebar-inner">
 
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Table Of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            Overview
-          </li>
-        </ul>
       
 
       <section class="site-overview">
@@ -344,7 +249,7 @@
           <div class="site-state-item site-state-tags">
             <a href="/tags">
             <span class="icon-tags" style="color:white"></span>
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">1</span>
               <span class="site-state-item-name">tags</span>
               </a>
           </div>
@@ -433,22 +338,17 @@
               </span>
               <br>
             
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://libc.pw" target="_blank">Explorer</a>
+              </span>
+              <br>
+            
           
         </div>
 
       </section>
 
-      
-        <section class="post-toc-wrap sidebar-panel-active">
-          <div class="post-toc-indicator-top post-toc-indicator"></div>
-          <div class="post-toc">
-            
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#0x00_这种，现在应该没人会这么写吧？"><span class="nav-number">1.</span> <span class="nav-text">0x00 这种，现在应该没人会这么写吧？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x01_变量覆盖，并不懂为啥有人会这么写"><span class="nav-number">2.</span> <span class="nav-text">0x01 变量覆盖，并不懂为啥有人会这么写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x02_同样也是变量覆盖。。"><span class="nav-number">3.</span> <span class="nav-text">0x02 同样也是变量覆盖。。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#0x03_代码执行漏洞"><span class="nav-number">4.</span> <span class="nav-text">0x03 代码执行漏洞</span></a></li></ol></div>
-            
-          </div>
-          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
-        </section>
       
 
     </div>
@@ -537,144 +437,6 @@
   <script type="text/javascript" src="/js/search-toggle.js"></script>
 
 
-  
-<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
-
-
-<script type="text/javascript" id="sidebar.toc.highlight">
-  $(document).ready(function () {
-    var tocSelector = '.post-toc';
-    var $tocSelector = $(tocSelector);
-    var activeCurrentSelector = '.active-current';
-
-    $tocSelector
-      .on('activate.bs.scrollspy', function () {
-        var $currentActiveElement = $(tocSelector + ' .active').last();
-
-        removeCurrentActiveClass();
-        $currentActiveElement.addClass('active-current');
-
-        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
-      })
-      .on('clear.bs.scrollspy', function () {
-        removeCurrentActiveClass();
-      });
-
-    function removeCurrentActiveClass () {
-      $(tocSelector + ' ' + activeCurrentSelector)
-        .removeClass(activeCurrentSelector.substring(1));
-    }
-
-    function processTOC () {
-      getTOCMaxHeight();
-      toggleTOCOverflowIndicators();
-    }
-
-    function getTOCMaxHeight () {
-      var height = $('.sidebar').height() -
-                   $tocSelector.position().top -
-                   $('.post-toc-indicator-bottom').height();
-
-      $tocSelector.css('height', height);
-
-      return height;
-    }
-
-    function toggleTOCOverflowIndicators () {
-      tocOverflowIndicator(
-        '.post-toc-indicator-top',
-        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
-      );
-
-      tocOverflowIndicator(
-        '.post-toc-indicator-bottom',
-        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
-      )
-    }
-
-    $(document).on('sidebar.motion.complete', function () {
-      processTOC();
-    });
-
-    $('body').scrollspy({ target: tocSelector });
-    $(window).on('resize', function () {
-      if ( $('.sidebar').hasClass('sidebar-active') ) {
-        processTOC();
-      }
-    });
-
-    onScroll($tocSelector);
-
-    function onScroll (element) {
-      element.on('mousewheel DOMMouseScroll', function (event) {
-          var oe = event.originalEvent;
-          var delta = oe.wheelDelta || -oe.detail;
-          var self = this;
-
-          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
-          event.preventDefault();
-
-          toggleTOCOverflowIndicators();
-      });
-    }
-
-    function tocOverflowIndicator (indicator, action) {
-      $(indicator).velocity('stop').velocity({
-        opacity: action === 'show' ? 0.4 : 0
-      }, { duration: 100 });
-    }
-
-  });
-</script>
-
-
-  <script type="text/javascript" id="sidebar.nav">
-    $(document).ready(function () {
-      var html = $('html');
-
-      $('.sidebar-nav li').on('click', function () {
-        var item = $(this);
-        var activeTabClassName = 'sidebar-nav-active';
-        var activePanelClassName = 'sidebar-panel-active';
-        if (item.hasClass(activeTabClassName)) {
-          return;
-        }
-
-        var currentTarget = $('.' + activePanelClassName);
-        var target = $('.' + item.data('target'));
-
-        currentTarget.velocity('transition.slideUpOut', 200, function () {
-          target
-            .velocity('stop')
-            .velocity('transition.slideDownIn', 200)
-            .addClass(activePanelClassName);
-        });
-
-        item.siblings().removeClass(activeTabClassName);
-        item.addClass(activeTabClassName);
-      });
-
-      $('.post-toc a').on('click', function (e) {
-        e.preventDefault();
-        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
-        html.velocity('stop').velocity('scroll', {
-          offset: offset  + 'px',
-          mobileHA: false
-        });
-      });
-
-      // Expand sidebar on post detail page by default, when post has a toc.
-      var $tocContent = $('.post-toc-content');
-      if (isDesktop() && CONFIG.sidebar === 'post') {
-        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
-          displaySidebar();
-        }
-      }
-    });
-  </script>
-
-
-
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -701,5 +463,23 @@
         });
     });
 </script>
+
+<!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
 </body>
 </html>
