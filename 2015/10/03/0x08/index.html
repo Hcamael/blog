@@ -11,8 +11,8 @@
 <meta property="og:url" content="http://0x48.pw/2015/10/03/0x08/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description">
-<meta property="og:image" content="http://0x48.pw/img/xdctf.png">
-<meta property="og:updated_time" content="2015-10-15T01:09:05.489Z">
+<meta property="og:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-xdctf.png">
+<meta property="og:updated_time" content="2016-03-28T10:23:11.950Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2015XDCTF低分web题writeup">
 <meta name="twitter:description">
@@ -303,7 +303,9 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p><img src="/img/xdctf.png" alt="xdctf"><br><a id="more"></a><br>国庆两天, XDCTF, 质量和难度和上次的NSCTF都不是一个层次的…</p>
+        <p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-xdctf.png" alt="xdctf"></p>
+<a id="more"></a>
+<p>国庆两天, XDCTF, 质量和难度和上次的NSCTF都不是一个层次的…</p>
 <h2 id="web1_100">web1 100</h2><p><code>index.php~</code> 搞出源码:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="variable">$test</span>=<span class="variable">$_GET</span>[<span class="string">'test'</span>];</span><br><span class="line"><span class="variable">$test</span>=md5(<span class="variable">$test</span>); </span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$test</span>==<span class="string">'0'</span>) &#123; </span><br><span class="line">    <span class="keyword">print</span> <span class="string">"flag&#123;xxxxxx&#125;"</span>; </span><br><span class="line">&#125; <span class="keyword">else</span> </span><br><span class="line">    <span class="keyword">print</span> <span class="string">"you are falied!"</span>; </span><br><span class="line"><span class="keyword">print</span> <span class="variable">$test</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"tips:知道原理了，请不在当先服务器环境下测试，在本地测试好，在此测试poc即可，否则后果自负"</span>; </span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
 <p>这题黑魔法啊!!! 真是学习了<br><code>md5(&#39;240610708&#39;) = 0e462097431906509019562988736854</code><br>而 <code>&#39;0e462097431906509019562988736854&#39; == &#39;0&#39;</code></p>
 <h2 id="web1_200">web1 200</h2><p>这题是大JAVA的题目,  可惜并不会,, 就是有个一个SessionExample界面, 可以进行设置session, (为啥需要这种东西?)<br>然后设置, login=true, user=Administrator</p>
@@ -326,7 +328,7 @@
         <p><span>本文标题:</span><a href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2015-10-03, 14:11:30</p>
-        <p><span>最后更新:</span>2015-10-15, 09:09:05</p>
+        <p><span>最后更新:</span>2016-03-28, 18:23:11</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2015/10/03/0x08/" title="2015XDCTF低分web题writeup">http://0x48.pw/2015/10/03/0x08/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2015/10/03/0x08/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

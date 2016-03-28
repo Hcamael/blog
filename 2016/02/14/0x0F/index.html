@@ -5,19 +5,18 @@
   
   <title>Nebula Writeup | Hc1m1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
+  <meta name="description" content="这份writeup可能水分很大，因为第一次玩这类的题目，所以一边看别人的writeup一边玩才玩的出来，不过还会有自己的总结。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nebula Writeup">
 <meta property="og:url" content="http://0x48.pw/2016/02/14/0x0F/index.html">
 <meta property="og:site_name" content="Hc1m1">
-<meta property="og:description">
-<meta property="og:image" content="http://0x48.pw/img/exploit.jpg">
-<meta property="og:image" content="http://0x48.pw/img/tcpl.png">
-<meta property="og:image" content="http://0x48.pw/img/tcpl2.png">
-<meta property="og:updated_time" content="2016-03-11T07:20:45.184Z">
+<meta property="og:description" content="这份writeup可能水分很大，因为第一次玩这类的题目，所以一边看别人的writeup一边玩才玩的出来，不过还会有自己的总结。">
+<meta property="og:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-tcpl.png">
+<meta property="og:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-tcpl2.png">
+<meta property="og:updated_time" content="2016-03-28T10:20:07.726Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nebula Writeup">
-<meta name="twitter:description">
+<meta name="twitter:description" content="这份writeup可能水分很大，因为第一次玩这类的题目，所以一边看别人的writeup一边玩才玩的出来，不过还会有自己的总结。">
   
     <link rel="alternative" href="/atom.xml" title="Hc1m1" type="application/atom+xml">
   
@@ -305,8 +304,10 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p><img src="/img/exploit.jpg" alt="exploit"><br><a id="more"></a></p>
-<p><em>这份writeup可能水分很大，因为第一次玩这类的题目，所以一边看别人的writeup一边玩才玩的出来，不过还会有自己的总结。</em></p>
+        <blockquote>
+<p>这份writeup可能水分很大，因为第一次玩这类的题目，所以一边看别人的writeup一边玩才玩的出来，不过还会有自己的总结。</p>
+</blockquote>
+<a id="more"></a>
 <h1 id="附">附</h1><p>这游戏一开始我是直接在虚拟机中玩，后面发现自己傻的可以，虚拟机中各种不方便，不能粘贴复制之类，没有鼠标etc。</p>
 <p>后面发现，特么我只要设置下虚拟机的网络，就可以用本机shell，ssh连上去啊！</p>
 <h1 id="Level00">Level00</h1><p>第0题就是在告诉我们这系列的题目要怎么玩了，如何才算做出来。</p>
@@ -353,9 +354,9 @@
 <p>这是最简单的方法，因为这题的目的就是让我们getflag, 不过还可以进行提高，怎么getshell呢？去看LL菊苣的wp吧。。。。我没做出来。。thttpd一直报400错误。。</p>
 <h1 id="Level08">Level08</h1><p>这题是流量审计，在 <code>/home/flag08</code> 里面有一个pcap文件，拖到本地用Wireshark，然后发现全是TCP包，然后有些是包含一些不全的数据，这时候可以使用wireshark跟踪tcp流的功能</p>
 <blockquote>
-<p>右击任意一个TCP包，点击Follow TCP Stream<br><img src="/img/tcpl.png" alt="tcpl"></p>
+<p>右击任意一个TCP包，点击Follow TCP Stream<br><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-tcpl.png" alt="tcpl"></p>
 </blockquote>
-<p>然后查看密码的十六进制<br><img src="/img/tcpl2.png" alt="tcpl"></p>
+<p>然后查看密码的十六进制<br><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-tcpl2.png" alt="tcpl"></p>
 <p>可知中间跟了几个0x7f(DEL)，所以密码是 <code>backd00Rmate</code></p>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>ssh flag08<span class="variable">@nebula</span></span><br><span class="line">flag08<span class="variable">@nebula</span><span class="symbol">:~</span><span class="variable">$ </span>getflag</span><br><span class="line"><span class="constant">You </span>have successfully executed getflag on a target account</span><br></pre></td></tr></table></figure>
 <h1 id="Level09">Level09</h1><p>这题是php代码审计:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">spam</span><span class="params">(<span class="variable">$email</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="variable">$email</span> = preg_replace(<span class="string">"/\./"</span>, <span class="string">" dot "</span>, <span class="variable">$email</span>);</span><br><span class="line">  <span class="variable">$email</span> = preg_replace(<span class="string">"/@/"</span>, <span class="string">" AT "</span>, <span class="variable">$email</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="variable">$email</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">markup</span><span class="params">(<span class="variable">$filename</span>, <span class="variable">$use_me</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="variable">$contents</span> = file_get_contents(<span class="variable">$filename</span>);</span><br><span class="line"></span><br><span class="line">  <span class="variable">$contents</span> = preg_replace(<span class="string">"/(\[email (.*)\])/e"</span>, <span class="string">"spam(\"\\2\")"</span>, <span class="variable">$contents</span>);</span><br><span class="line">  <span class="variable">$contents</span> = preg_replace(<span class="string">"/\[/"</span>, <span class="string">"&lt;"</span>, <span class="variable">$contents</span>);</span><br><span class="line">  <span class="variable">$contents</span> = preg_replace(<span class="string">"/\]/"</span>, <span class="string">"&gt;"</span>, <span class="variable">$contents</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="variable">$contents</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$output</span> = markup(<span class="variable">$argv</span>[<span class="number">1</span>], <span class="variable">$argv</span>[<span class="number">2</span>]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="variable">$output</span>;</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
@@ -404,7 +405,7 @@
         <p><span>本文标题:</span><a href="/2016/02/14/0x0F/">Nebula Writeup</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2016-02-14, 10:16:46</p>
-        <p><span>最后更新:</span>2016-03-11, 15:20:45</p>
+        <p><span>最后更新:</span>2016-03-28, 18:20:07</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/02/14/0x0F/" title="Nebula Writeup">http://0x48.pw/2016/02/14/0x0F/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/02/14/0x0F/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

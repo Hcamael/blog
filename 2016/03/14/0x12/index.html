@@ -5,17 +5,16 @@
   
   <title>0CTF总结 | Hc1m1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
+  <meta name="description" content="这次的0CTF我们投机取巧派被学院派教做人。。然后发现自己，不会js，不会php。不会python。web题看了两题，都差一点出来。。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="0CTF总结">
 <meta property="og:url" content="http://0x48.pw/2016/03/14/0x12/index.html">
 <meta property="og:site_name" content="Hc1m1">
-<meta property="og:description">
-<meta property="og:image" content="http://0x48.pw/img/0ctf.png">
-<meta property="og:updated_time" content="2016-03-15T10:02:54.000Z">
+<meta property="og:description" content="这次的0CTF我们投机取巧派被学院派教做人。。然后发现自己，不会js，不会php。不会python。web题看了两题，都差一点出来。。">
+<meta property="og:updated_time" content="2016-03-28T10:19:17.570Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="0CTF总结">
-<meta name="twitter:description">
+<meta name="twitter:description" content="这次的0CTF我们投机取巧派被学院派教做人。。然后发现自己，不会js，不会php。不会python。web题看了两题，都差一点出来。。">
   
     <link rel="alternative" href="/atom.xml" title="Hc1m1" type="application/atom+xml">
   
@@ -303,8 +302,10 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p><img src="/img/0ctf.png" alt="0ctf"><br><a id="more"></a></p>
+        <blockquote>
 <p>这次的0CTF我们投机取巧派被学院派教做人。。然后发现自己，不会js，不会php。不会python。web题看了两题，都差一点出来。。</p>
+</blockquote>
+<a id="more"></a>
 <h1 id="rand_2">rand_2</h1><p>题目源码：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span>(<span class="string">'config.php'</span>);</span><br><span class="line">session_start();</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$_SESSION</span>[<span class="string">'time'</span>] &amp;&amp; time() - <span class="variable">$_SESSION</span>[<span class="string">'time'</span>] &gt; <span class="number">60</span>) &#123;</span><br><span class="line">	session_destroy();</span><br><span class="line">	<span class="keyword">die</span>(<span class="string">'timeout'</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="variable">$_SESSION</span>[<span class="string">'time'</span>] = time();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> rand();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">'go'</span>])) &#123;</span><br><span class="line">	<span class="variable">$_SESSION</span>[<span class="string">'rand'</span>] = <span class="keyword">array</span>();</span><br><span class="line">	<span class="variable">$i</span> = <span class="number">5</span>;</span><br><span class="line">	<span class="variable">$d</span> = <span class="string">''</span>;</span><br><span class="line">	<span class="keyword">while</span>(<span class="variable">$i</span>--)&#123;</span><br><span class="line">		<span class="variable">$r</span> = (string)rand();</span><br><span class="line">                <span class="variable">$_SESSION</span>[<span class="string">'rand'</span>][] = <span class="variable">$r</span>;</span><br><span class="line">                <span class="variable">$d</span> .= <span class="variable">$r</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">echo</span> md5(<span class="variable">$d</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">'check'</span>])) &#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="variable">$_GET</span>[<span class="string">'check'</span>] === <span class="variable">$_SESSION</span>[<span class="string">'rand'</span>]) &#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="variable">$flag</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">'die'</span>;</span><br><span class="line">		session_destroy();</span><br><span class="line">	&#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
 <p>这题看了国外的论文后知道了通过rand()随机出来的伪随机数有一个规律：<code>r[i] = r[i-3] + r[i-31]</code></p>
 <p>这里有一个需要注意的地方，题目服务器是ubuntu<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">php&gt; echo <span class="function"><span class="title">getrandmax</span><span class="params">()</span></span> </span><br><span class="line"><span class="number">2147483647</span></span><br></pre></td></tr></table></figure></p>
@@ -333,7 +334,7 @@
         <p><span>本文标题:</span><a href="/2016/03/14/0x12/">0CTF总结</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2016-03-14, 10:25:27</p>
-        <p><span>最后更新:</span>2016-03-15, 18:02:54</p>
+        <p><span>最后更新:</span>2016-03-28, 18:19:17</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/03/14/0x12/" title="0CTF总结">http://0x48.pw/2016/03/14/0x12/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/03/14/0x12/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

