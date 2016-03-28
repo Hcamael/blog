@@ -20,11 +20,13 @@
     <link rel="alternative" href="/atom.xml" title="Hc1m1" type="application/atom+xml">
   
   
-    <link rel="icon" href="http://0x48.pw/img/favicon.png">
+    <link rel="icon" href="http://0x48.pw//img/favicon.png">
   
   
       <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css" type="text/css">
   
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
   
   
       <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
@@ -33,7 +35,7 @@
   <link rel="stylesheet" href="/css/style.css" type="text/css">
   
   <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
-  <link rel="apple-touch-icon" href="http://0x48.pw/apple-touch-icon.png">
+  <link rel="apple-touch-icon" href="http://0x48.pw//apple-touch-icon.png">
   
   
     <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
@@ -54,10 +56,20 @@
 
   
       <script>
-          yiliaConfig.rootUrl = http://0x48.pw;
+          yiliaConfig.rootUrl = "http://0x48.pw/";
       </script>
   
 
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script>
   
 </head>
 <body>
@@ -67,7 +79,7 @@
 <div class="intrude-less">
     <header id="header" class="inner">
         <a href="/" class="profilepic">
-            <img src="http://0x48.pw/img/author.jpg" class="animated zoomIn">
+            <img src="http://0x48.pw//img/author.jpg" class="animated zoomIn">
         </a>
         <hgroup>
           <h1 class="header-author"><a href="/">Hcamael</a></h1>
@@ -127,13 +139,13 @@
                     <nav class="header-menu">
                         <ul>
                         
-                            <li><a href="http://0x48.pw/">主页</a></li>
+                            <li><a href="http://0x48.pw//">主页</a></li>
                         
-                            <li><a href="http://0x48.pw/archives/">所有文章</a></li>
+                            <li><a href="http://0x48.pw//archives/">所有文章</a></li>
                         
-                            <li><a href="http://0x48.pw/tags/">标签云</a></li>
+                            <li><a href="http://0x48.pw//tags/">标签云</a></li>
                         
-                            <li><a href="http://0x48.pw/about/">关于我</a></li>
+                            <li><a href="http://0x48.pw//about/">关于我</a></li>
                         
                         </ul>
                     </nav>
@@ -207,7 +219,7 @@
     <div class="intrude-less">
         <header id="header" class="inner">
             <a href="/" class="profilepic">
-                <img src="http://0x48.pw/img/author.jpg" class="animated zoomIn">
+                <img src="http://0x48.pw//img/author.jpg" class="animated zoomIn">
             </a>
             <hgroup>
               <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
@@ -513,7 +525,7 @@
             }
             else {
                 var backgroundnum = 5;
-                var backgroundimg = "url(http://0x48.pw/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
                 $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
             }
         })
@@ -527,6 +539,8 @@
     <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
     <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
 </div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
 
 <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
