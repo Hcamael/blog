@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://0x48.pw//"/>
-  <updated>2016-04-02T04:42:25.358Z</updated>
+  <updated>2016-04-02T04:44:10.638Z</updated>
   <id>http://0x48.pw//</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="http://0x48.pw/2016/04/01/0x16/"/>
     <id>http://0x48.pw/2016/04/01/0x16/</id>
     <published>2016-04-01T11:57:39.000Z</published>
-    <updated>2016-04-02T04:42:25.358Z</updated>
+    <updated>2016-04-02T04:44:10.638Z</updated>
     <content type="html"><![CDATA[<p>关于前篇求模运算的修正<br><a id="more"></a></p>
-<p>今天突然对模运算开窍了，这是上篇RSA总结中关于求模的内容：<br><del></del></p>
+<p>今天突然对模运算开窍了，这是上篇RSA总结中我对同余式的理解：<br><del></del></p>
 <blockquote>
 <p>x = y (mod n)   可以看成是   x % n = y<br>x $\equiv$ y (mod n)   可以看成是   x % n = y % n<br></p>
 </blockquote>
