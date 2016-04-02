@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://0x48.pw//"/>
-  <updated>2016-04-01T13:14:07.592Z</updated>
+  <updated>2016-04-02T04:42:25.358Z</updated>
   <id>http://0x48.pw//</id>
   
   <author>
@@ -20,9 +20,12 @@
     <link href="http://0x48.pw/2016/04/01/0x16/"/>
     <id>http://0x48.pw/2016/04/01/0x16/</id>
     <published>2016-04-01T11:57:39.000Z</published>
-    <updated>2016-04-01T13:14:07.592Z</updated>
+    <updated>2016-04-02T04:42:25.358Z</updated>
     <content type="html"><![CDATA[<p>关于前篇求模运算的修正<br><a id="more"></a></p>
-<p>今天突然对模运算开窍了，这是上篇RSA总结中关于求模的内容：<br><del>x = y (mod n)   可以看成是   x % n = y</del><br><del>x $\equiv$ y (mod n)   可以看成是   x % n = y % n</del></p>
+<p>今天突然对模运算开窍了，这是上篇RSA总结中关于求模的内容：<br><del></del></p>
+<blockquote>
+<p>x = y (mod n)   可以看成是   x % n = y<br>x $\equiv$ y (mod n)   可以看成是   x % n = y % n<br></p>
+</blockquote>
 <p><strong>是错误的！！！</strong></p>
 <p>其实三等还是两等，都是一样的，比如，对于 $A\ \%\ N = B$,<br>我们可以很容易得到<br>$$x_1N + B = A$$<br>也可以是<br>$$x_2N + A = B$$<br>然后这两个式子就会给我们一个错觉推出，<br>$$x_1N + B = A  \Longrightarrow  A\ \%\ N = B\ (B = A\ (mod\ N))$$<br>$$x_2N + A = B \Longrightarrow  B\ \%\ N = A\ (A = B\ (mod\ N))$$</p>
 <p><strong>看着好像没错的样子，其实错了一半！</strong></p>
