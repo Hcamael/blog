@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>CRYPTO技能修正 | Hc1m1</title>
+  <title>Python 使用dpkt分析数据包 | Hc1m1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="关于前篇求模运算的修正">
+  <meta name="description" content="上周Lightless放了一题数据包分析的题，挺有意思的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CRYPTO技能修正">
-<meta property="og:url" content="http://0x48.pw/2016/04/01/0x16/index.html">
+<meta property="og:title" content="Python 使用dpkt分析数据包">
+<meta property="og:url" content="http://0x48.pw/2016/04/04/0x17/index.html">
 <meta property="og:site_name" content="Hc1m1">
-<meta property="og:description" content="关于前篇求模运算的修正">
-<meta property="og:updated_time" content="2016-04-02T04:44:10.638Z">
+<meta property="og:description" content="上周Lightless放了一题数据包分析的题，挺有意思的">
+<meta property="og:updated_time" content="2016-04-04T15:29:28.216Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CRYPTO技能修正">
-<meta name="twitter:description" content="关于前篇求模运算的修正">
+<meta name="twitter:title" content="Python 使用dpkt分析数据包">
+<meta name="twitter:description" content="上周Lightless放了一题数据包分析的题，挺有意思的">
   
     <link rel="alternative" href="/atom.xml" title="Hc1m1" type="application/atom+xml">
   
@@ -244,11 +244,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-0x16" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-0x17" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/04/01/0x16/" class="article-date">
-      <time datetime="2016-04-01T11:57:39.000Z" itemprop="datePublished">2016-04-01</time>
+      <a href="/2016/04/04/0x17/" class="article-date">
+      <time datetime="2016-04-04T14:50:47.000Z" itemprop="datePublished">2016-04-04</time>
 </a>
     </div>
   
@@ -261,7 +261,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      CRYPTO技能修正
+      Python 使用dpkt分析数据包
     </h1>
   
 
@@ -276,7 +276,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/密码学/">密码学</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -286,18 +286,18 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>关于前篇求模运算的修正<br><a id="more"></a></p>
-<p>今天突然对模运算开窍了，这是上篇RSA总结中我对同余式的理解：<br><del></del></p>
-<blockquote>
-<p>x = y (mod n)   可以看成是   x % n = y<br>x $\equiv$ y (mod n)   可以看成是   x % n = y % n<br></p>
-</blockquote>
-<p><strong>是错误的！！！</strong></p>
-<p>其实三等还是两等，都是一样的，比如，对于 $A\ \%\ N = B$,<br>我们可以很容易得到<br>$$x_1N + B = A$$<br>也可以是<br>$$x_2N + A = B$$<br>然后这两个式子就会给我们一个错觉推出，<br>$$x_1N + B = A  \Longrightarrow  A\ \%\ N = B\ (B = A\ (mod\ N))$$<br>$$x_2N + A = B \Longrightarrow  B\ \%\ N = A\ (A = B\ (mod\ N))$$</p>
-<p><strong>看着好像没错的样子，其实错了一半！</strong></p>
-<p>如果我们已知 $A\ \%\ N = B$, 我们可以推出$xN + B = A$没错，但是我们不能从而得到 <del>B % N = A</del>，可是上面推的貌似没问题？不，有问题！</p>
-<p>$$xN + A = B\ \ \nRightarrow \ \ B\ \%\ N = A$$<br>这个推导是错误的！正确的应该是<br>$$xN + A = B \Longrightarrow B\ \%\ N = A\ \%\ N$$</p>
-<p>这不就是同余式么: $A \equiv B(mod\ N)$</p>
-<p>这里暗藏了一个等式，当我们已知$A\ \%\ N = B$ 时，我们可以确定$B = B\ \%\ N$, 所以这个时候就可以从 $xN + B = A$ 推导出 $A\ \%\ N = B$, 但是A却不一定等于$A\ \%\ N$, 所以并不能得到$B\ \%\ N = A$</p>
+        <p>上周Lightless放了一题数据包分析的题，挺有意思的</p>
+<a id="more"></a>
+<p>题目地址: <a href="http://7xscw6.com1.z0.glb.clouddn.com/hahaha.pcapng" target="_blank" rel="external">http://7xscw6.com1.z0.glb.clouddn.com/hahaha.pcapng</a></p>
+<p>数据包分析这部分很简单，随便看看可以看出来这是个用sqlmap去艹服务器的数据包，然后flag使用盲注注出来的.</p>
+<p>最简单的方法就是手工把盲注的包提取出来，手工分析得到flag.</p>
+<p>不过我觉得手工太low了，所以有了这篇文章，使用Python的dpkt包对pcap包进行分析.</p>
+<p>直接先贴代码：<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> dpkt.ethernet <span class="keyword">import</span> <span class="type">Ethernet</span></span><br><span class="line"><span class="keyword">import</span> dpkt</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line"><span class="literal">result</span> = []</span><br><span class="line">f = file(<span class="string">"test.pcapng"</span>)</span><br><span class="line">pcap = dpkt.pcapng.<span class="type">Reader</span>(f)</span><br><span class="line">(ts, buf) = pcap.next()</span><br><span class="line"><span class="keyword">while</span> <span class="type">True</span>:</span><br><span class="line">    http_data = <span class="type">Ethernet</span>(buf).data.data.data</span><br><span class="line">    request = dpkt.http.<span class="type">Request</span>(http_data)</span><br><span class="line">    (ts, buf) = pcap.next()</span><br><span class="line">    http_data = <span class="type">Ethernet</span>(buf).data.data.data</span><br><span class="line">    response = dpkt.http.<span class="type">Response</span>(http_data)</span><br><span class="line">    payload = urllib.unquote(request.uri)</span><br><span class="line">    entity_body = response.entity_body</span><br><span class="line">    <span class="keyword">if</span> <span class="string">"ctf.flag "</span> <span class="keyword">in</span> payload:</span><br><span class="line">        <span class="keyword">if</span> <span class="string">"123456"</span> <span class="keyword">in</span> entity_body:</span><br><span class="line">            <span class="literal">result</span>.append(&#123;<span class="string">"payload"</span>: payload, <span class="string">"result"</span>: <span class="type">True</span>&#125;)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="literal">result</span>.append(&#123;<span class="string">"payload"</span>: payload, <span class="string">"result"</span>: <span class="type">False</span>&#125;)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        (ts, buf) = pcap.next()</span><br><span class="line">    <span class="keyword">except</span> <span class="type">StopIteration</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">number = <span class="number">1</span></span><br><span class="line">flag = <span class="string">""</span></span><br><span class="line">c = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> y <span class="keyword">in</span> <span class="literal">result</span>:</span><br><span class="line">    [(x, h)] = re.findall(<span class="string">"1\),(\d+).+&gt;(\d+)"</span>, y['payload'])</span><br><span class="line">    x, h = <span class="type">int</span>(x), <span class="type">int</span>(h)</span><br><span class="line">    <span class="keyword">if</span> x &gt; number:</span><br><span class="line">        number = x</span><br><span class="line">        flag += chr(c)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">if</span> y['<span class="literal">result</span>']:</span><br><span class="line">            c = h + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">print flag</span><br></pre></td></tr></table></figure></p>
+<p>因为dpkt包的setfilter方法是没用的，感觉是作者还没把dpkt写完<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">setfilter</span><span class="params">(self, value, optimize=<span class="number">1</span>)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> NotImplementedError</span><br></pre></td></tr></table></figure></p>
+<p>所以我用wireshark过滤出了http包：<a href="http://7xscw6.com1.z0.glb.clouddn.com/test.pcapng" target="_blank" rel="external">http://7xscw6.com1.z0.glb.clouddn.com/test.pcapng</a></p>
+<p>然后由于http包实体内容使用了gzip压缩，所以我魔改了<code>http.py</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Response</span><span class="params">(Message)</span>:</span></span><br><span class="line">    <span class="string">"""Hypertext Transfer Protocol Response."""</span></span><br><span class="line">    __hdr_defaults__ = &#123;</span><br><span class="line">        <span class="string">'version'</span>: <span class="string">'1.0'</span>,</span><br><span class="line">        <span class="string">'status'</span>: <span class="string">'200'</span>,</span><br><span class="line">        <span class="string">'reason'</span>: <span class="string">'OK'</span></span><br><span class="line">    &#125;</span><br><span class="line">    __proto = <span class="string">'HTTP'</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line">        Message.__init__(self, *args, **kwargs)</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            entity = gzip.Gzip(self.body)</span><br><span class="line">            self.entity_body = gzip.Gzip.decompress(entity)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            self.entity_body = <span class="string">""</span></span><br></pre></td></tr></table></figure></p>
+<p>加了一个<code>__init__</code></p>
+<p>然后，代码短，也容易看懂，不过还有需要优化的地方，不过跑这题确是没问题的</p>
 
       
     </div>
@@ -306,13 +306,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/04/01/0x16/">CRYPTO技能修正</a></p>
+        <p><span>本文标题:</span><a href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
-        <p><span>发布时间:</span>2016-04-01, 19:57:39</p>
-        <p><span>最后更新:</span>2016-04-02, 12:44:10</p>
+        <p><span>发布时间:</span>2016-04-04, 22:50:47</p>
+        <p><span>最后更新:</span>2016-04-04, 23:29:28</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/04/01/0x16/" title="CRYPTO技能修正">http://0x48.pw/2016/04/01/0x16/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/04/01/0x16/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/04/04/0x17/" title="Python 使用dpkt分析数据包">http://0x48.pw/2016/04/04/0x17/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/04/04/0x17/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -325,16 +325,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/04/04/0x17/">
-                    Python 使用dpkt分析数据包
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/03/21/0x15/">
-                    Pentester Lab Writeup
+                <a href="/2016/04/01/0x16/">
+                    CRYPTO技能修正
                 </a>
             </div>
         
@@ -407,7 +401,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/04/01/0x16/" data-title="CRYPTO技能修正" data-url="http://0x48.pw/2016/04/01/0x16/"></div>
+    <div class="ds-thread" data-thread-key="2016/04/04/0x17/" data-title="Python 使用dpkt分析数据包" data-url="http://0x48.pw/2016/04/04/0x17/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -431,15 +425,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/04/04/0x17/" title="上一篇: Python 使用dpkt分析数据包">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/03/21/0x15/" title="下一篇: Pentester Lab Writeup">
+            <a href="/2016/04/01/0x16/" title="下一篇: CRYPTO技能修正">
                 <i class="fa fa-angle-right"></i>
             </a>
         
@@ -521,23 +513,5 @@
 <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
   </div>
-
-<!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
-</script>
-
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for(i=0; i < all.length; i += 1) {
-            all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-    });
-</script>
-
-<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
-<!-- End: Injected MathJax -->
 </body>
 </html>
