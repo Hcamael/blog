@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://0x48.pw/2016/04/17/0x19/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="这周的PCTF撸了两道Crypto, 果然我只是民科….(ノಠ益ಠ)ノ彡┻━┻">
-<meta property="og:updated_time" content="2016-04-19T07:36:55.563Z">
+<meta property="og:updated_time" content="2016-04-19T07:38:01.035Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="How old are Crypto?">
 <meta name="twitter:description" content="这周的PCTF撸了两道Crypto, 果然我只是民科….(ノಠ益ಠ)ノ彡┻━┻">
@@ -329,7 +329,7 @@
 <p>简单的来说，对于一个RSA加密：<br>$m^e\ mod\ N = c$ 乘以 $2^e\ mod\ N = c_2$<br>得到<br>$$(2<em>m)^e\ mod\ N = c </em> c_2\ mod\ N = CC$$<br>然后把CC拿去解密<br>$$CC^d\ mod\ N = (2 <em> m)^{e</em>d}\ mod\ N = 2*m\ mod\ N = MM$$</p>
 <p>从上面的结论我们可以得出:<br>$$\begin{cases}<br>if MM is {odd} then 2<em>m &gt; N\\<br>if MM is {even} then 2</em>m &lt; N<br>\end{cases}<br>$$</p>
 <p>本题就是利用这样的方法来确定出flag的范围，然后逐渐缩小范围，到最后确定值，我再多推一步，这一步理解了就可以全部理解了<br>下一步用$m^e\ mod\ N = c$ 乘以 $4^e\ mod\ N = c<em>2$<br>得到<br>$$(4<em>m)^e\ mod\ N = c </em> c_2\ mod\ N = CC_2$$<br>然后把$CC_2$拿去解密<br>$$CC</em>{2}^{d}\ mod\ N = (4 <em> m)^{e</em>d}\ mod\ N = 4*m\ mod\ N = MM_2$$<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> MM is odd:</span><br><span class="line">    <span class="keyword">if</span> <span class="label">$MM_2</span>$ is odd:</span><br><span class="line">        3N &lt; 4 * <span class="keyword">m</span> &lt; 4N</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        2N &lt; 4 * <span class="keyword">m</span> &lt; 3N</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">if</span> <span class="label">$MM_2</span>$ is odd:</span><br><span class="line">        <span class="keyword">N</span> &lt; 4 * <span class="keyword">m</span> &lt; 2N</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        0 &lt; 4 * <span class="keyword">m</span> &lt; <span class="keyword">N</span></span><br></pre></td></tr></table></figure></p>
-<p>这题从头到尾我都想错了方法，而且我只是自己一个人蒙头苦算</p>
+<p>这题从头到尾我都想错了方法，而且我只是自己一个人蒙头苦算，注意收集和脚本中的信息，去google搜索，也许这题就能撸出来了.</p>
 
       
     </div>
@@ -341,7 +341,7 @@
         <p><span>本文标题:</span><a href="/2016/04/17/0x19/">How old are Crypto?</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2016-04-17, 22:01:46</p>
-        <p><span>最后更新:</span>2016-04-19, 15:36:55</p>
+        <p><span>最后更新:</span>2016-04-19, 15:38:01</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/04/17/0x19/" title="How old are Crypto?">http://0x48.pw/2016/04/17/0x19/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/04/17/0x19/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
