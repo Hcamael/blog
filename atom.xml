@@ -5,7 +5,7 @@
   <subtitle><![CDATA[Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://0x48.pw//"/>
-  <updated>2016-06-17T08:35:30.451Z</updated>
+  <updated>2016-06-22T03:47:00.686Z</updated>
   <id>http://0x48.pw//</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[三个白帽之招聘又开始了，你怕了吗？]]></title>
+    <title><![CDATA[三个白帽之招聘又开始了，你怕了吗？-Writeup]]></title>
     <link href="http://0x48.pw/2016/06/17/0x1C/"/>
     <id>http://0x48.pw/2016/06/17/0x1C/</id>
     <published>2016-06-17T07:14:27.000Z</published>
-    <updated>2016-06-17T08:35:30.451Z</updated>
+    <updated>2016-06-22T03:47:00.686Z</updated>
     <content type="html"><![CDATA[<p>这周的三个白帽题听说是前几天ALICTF的招聘题延续，上次两题都没撸出来，这次给了源码终于撸出来了。<br><a id="more"></a></p>
 <p>该渗透题有三个大坑</p>
 <h1 id="坑1:_CBC攻击">坑1: CBC攻击</h1><p>很简单的CBC攻击，上次google ctf中出现过，我也写过wp:<a href="http://0x48.pw/2016/05/03/0x1A/">http://0x48.pw/2016/05/03/0x1A/</a></p>
