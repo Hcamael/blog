@@ -11,8 +11,10 @@
 <meta property="og:url" content="http://0x48.pw/2016/06/27/0x1D/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="三个白帽之寻找来自星星的你第二期WP，这期的题目我觉得应该放在Linux逆向分类中…">
+<meta property="og:image" content="http://0x48.pw/img/baimao2.png">
+<meta property="og:image" content="http://0x48.pw/img/baimao3.png">
 <meta property="og:image" content="http://0x48.pw/img/baimao1.png">
-<meta property="og:updated_time" content="2016-06-27T06:35:38.867Z">
+<meta property="og:updated_time" content="2016-06-30T06:16:06.843Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="寻找来自星星的你第二期Writeup">
 <meta name="twitter:description" content="三个白帽之寻找来自星星的你第二期WP，这期的题目我觉得应该放在Linux逆向分类中…">
@@ -289,6 +291,9 @@
           
         <p>三个白帽之寻找来自星星的你第二期WP，这期的题目我觉得应该放在Linux逆向分类中…</p>
 <a id="more"></a>
+<p>IDA静态+GDB动态可以降低本地难度，通过IDA发现还需要有一个<code>server.cfg</code>文件，被读入了32bytes，路径在<code>server.bin</code>的上一层，创建完<code>server.cfg</code>文件后，随便输入32个<code>A</code>，然后允许该脚本：<code>$ ./server.bin 8888 ./</code>, 该进程将会在后台运行，使用<code>$ nc 127.0.0.1 8888</code>，后通过<code>$ ps aux|grep server.bin</code>查看子进程号(将会有两个server.bin进程，一个是主进程一个子进程，注意区分), 然后使用<code>$ gdb a 进程号</code> attach进程进行动态调试<br><img src="/img/baimao2.png" alt="baimao2"></p>
+<p><img src="/img/baimao3.png" alt="baimao3"></p>
+<p>不过使用nc不能输入非可显字符，所以建议用pwntools.</p>
 <p>本题的入口在<code>sub_401B08</code>函数，不过对解本题没啥帮助，所以可以跳到子进程的入口点<code>sub_4014D3</code>, 所以我们应该从该函数看起.</p>
 <figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="params">( !strncasecmp<span class="params">(::s1, <span class="string">"GET /server.bin"</span>, <span class="number">0</span>xFuLL)</span> )</span></span><br><span class="line">&#123;</span><br><span class="line">	file = <span class="string">"/server.bin"</span>;</span><br><span class="line">	v11 = <span class="params">(__int64)</span><span class="string">"image/bin"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>第一个判断，也就是下载本题二进制文件，没啥好说的，主要是从后面开始有几个重要的判断，首先<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( strncasecmp(::s1, <span class="string">"GET"</span>, <span class="number">3u</span>LL) )</span><br><span class="line">	sub_40133B(<span class="number">2</span>, <span class="number">4202955L</span>L, <span class="number">4202720L</span>L, a1);</span><br><span class="line"><span class="comment">// 输入的前三个字符串要是GET，不区分大小写</span></span><br></pre></td></tr></table></figure></p>
@@ -328,7 +333,7 @@
         <p><span>本文标题:</span><a href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2016-06-27, 20:11:37</p>
-        <p><span>最后更新:</span>2016-06-27, 14:35:38</p>
+        <p><span>最后更新:</span>2016-06-30, 14:16:06</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/06/27/0x1D/" title="寻找来自星星的你第二期Writeup">http://0x48.pw/2016/06/27/0x1D/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/06/27/0x1D/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -532,5 +537,23 @@
 <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
   </div>
+
+<!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//qn.lazysheep.cc/js/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
 </body>
 </html>
