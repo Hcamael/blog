@@ -87,9 +87,9 @@ plugins:
 
 #
 feed:
-  type: atom
-  path: atom.xml
-  limit: 20
+  type: rss2
+  path: rss.xml
+  limit: 2
 
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
