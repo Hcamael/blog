@@ -95,5 +95,5 @@ feed:
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@git.coding.net:hcamael/Hc1m1.git
-  branch: coding-pages
+  repo: git@github.com:Hcamael/blog.git
+  branch: master
