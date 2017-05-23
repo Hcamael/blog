@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>2016 HCTF Crypto 出题总结 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="今年犯懒了所以只出了3题RSA的密码学题目, 出题思路来源于协会上一届的学长 @Mystery Of Panda 关于RSA后门的毕业设计.">
+<meta name="keywords" content="CTF,Crypto">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2016 HCTF Crypto 出题总结">
+<meta property="og:url" content="http://0x48.pw/2016/11/28/0x28/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="今年犯懒了所以只出了3题RSA的密码学题目, 出题思路来源于协会上一届的学长 @Mystery Of Panda 关于RSA后门的毕业设计.">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/hctf_rsa_1.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/hctf_rsa1_2.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/hctf_rsa2_1.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/hctf_rsa2_2.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/hctf_rsa_keng2.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/hctf_rsa_keng1.png">
+<meta property="og:updated_time" content="2017-01-17T12:16:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2016 HCTF Crypto 出题总结">
+<meta name="twitter:description" content="今年犯懒了所以只出了3题RSA的密码学题目, 出题思路来源于协会上一届的学长 @Mystery Of Panda 关于RSA后门的毕业设计.">
+<meta name="twitter:image" content="http://qn.lazysheep.cc/img/hctf_rsa_1.png">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x28" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/28/0x28/" class="article-date">
+      <time datetime="2016-11-28T12:26:26.000Z" itemprop="datePublished">2016-11-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      2016 HCTF Crypto 出题总结
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CTF/">CTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Crypto/">Crypto</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>今年犯懒了所以只出了3题RSA的密码学题目, 出题思路来源于协会上一届的学长 @Mystery Of Panda 关于RSA后门的毕业设计.</p>
+<a id="more"></a>
+<h1 id="Crypto-So-Interesting"><a href="#Crypto-So-Interesting" class="headerlink" title="Crypto So Interesting"></a>Crypto So Interesting</h1><p>题目: <a href="https://github.com/Hcamael/ctf-library/tree/master/RSA1" target="_blank" rel="external">https://github.com/Hcamael/ctf-library/tree/master/RSA1</a><br>payload: <a href="https://github.com/Hcamael/ctf-library/blob/master/RSA1/rsa1_payload.py" target="_blank" rel="external">https://github.com/Hcamael/ctf-library/blob/master/RSA1/rsa1_payload.py</a></p>
+<p>出题时预测的分数在300分左右, 不过看完选手的wp后发现这题出现了重大失误, 现在来看, 这题只值150分左右, 但是实际情况只有23个队解出了该题.</p>
+<p>本题思路来源: 基于隐藏指数的RSA-HSDβ算法, 全称为隐藏小私有指数δ的RSA后门密钥生成算法.</p>
+<p>该算法依赖于<a href="https://github.com/pablocelayes/rsa-wiener-attack" target="_blank" rel="external">wiener</a>小指数攻击方法</p>
+<p>后门生成流程:</p>
+<p><img src="http://qn.lazysheep.cc/img/hctf_rsa_1.png" alt="hctf_rsa1"></p>
+<p>其中<code>β</code>是在<code>2^(k-1) ± 2^(k/2)</code>范围内的素数, 转置函数的作用是在<code>β</code>非常大的情况下, 返回值可以认为是PRP(Pseudo-Random Permutation). 转置函数可以有好几种形式, 我选取的是一种比较简单的转置函数.</p>
+<p>从上面的流程可以看出这题非常的简单, 要逆向也是很容易的, 所以该题为本届HCTF密码学的签到题</p>
+<p>逆向思路:</p>
+<p><img src="http://qn.lazysheep.cc/img/hctf_rsa1_2.png" alt="hctf_rsa1_2"></p>
+<p>从上图可以看出本题只涉及到了wiener算法, 难度差不多是150左右</p>
+<hr>
+<p>出题时本来是准备考两种算法的, 一种是wiener算法, 一种是<a href="https://www.cs.cmu.edu/~glmiller/Publications/Papers/Mi76.pdf" target="_blank" rel="external">Riemann’s hypothesis and tests for primality</a>, payload中的<code>divide_pq</code>函数, 已知e, d, n质因数分解p和q(<a href="http://www.di-mgt.com.au/rsa_factorize_n.html" target="_blank" rel="external">http://www.di-mgt.com.au/rsa_factorize_n.html</a>)</p>
+<p>原本设计着算出<code>(ϵ, δ)</code>后, 根据<code>(ϵ, δ, n)</code>分解出<code>q</code>和<code>p</code>, 但是出题失误, 导致只需要wiener算法就能getflag</p>
+<p>PS1: 不过还是出现了非预期, ROIS的dalao利用wiener算法分解出<code>p</code>和<code>q</code>, <a href="https://github.com/Hcamael/ctf-library/blob/master/RSA1/rsa_s.py" target="_blank" rel="external">https://github.com/Hcamael/ctf-library/blob/master/RSA1/rsa_s.py</a></p>
+<p>PS2: 基于隐藏指数的RSA后门生成算法除了本题涉及的还有<code>RSA-HSPEβ</code>和<code>RSA-HSEβ</code></p>
+<h1 id="Crypto-So-Cool"><a href="#Crypto-So-Cool" class="headerlink" title="Crypto So Cool"></a>Crypto So Cool</h1><p>题目: <a href="https://github.com/Hcamael/ctf-library/tree/master/RSA2" target="_blank" rel="external">https://github.com/Hcamael/ctf-library/tree/master/RSA2</a><br>payload:</p>
+<ul>
+<li><a href="https://github.com/Hcamael/ctf-library/blob/master/RSA2/rsa2_payload.py" target="_blank" rel="external">https://github.com/Hcamael/ctf-library/blob/master/RSA2/rsa2_payload.py</a></li>
+<li><a href="https://github.com/Hcamael/ctf-library/blob/master/RSA2/rsa2_payload.sage" target="_blank" rel="external">https://github.com/Hcamael/ctf-library/blob/master/RSA2/rsa2_payload.sage</a></li>
+</ul>
+<p>出题时预测的分数在400分左右, 实际情况只有7个队解出了该题. 和预测差不多, 最后放了一波hint, 要不然可能会更少.</p>
+<p>本题思路来源: 基于隐藏素数因子的RSA-HPβ算法</p>
+<p>该后门算法依赖于<code>Coppersmith partial information attack</code>算法, <a href="http://inaz2.hatenablog.com/entries/2016/01/20" target="_blank" rel="external">sage实现该算法</a></p>
+<p>后门生成流程:<br><img src="http://qn.lazysheep.cc/img/hctf_rsa2_1.png" alt="hctf_rsa2_1"></p>
+<p>该算法的核心在于把p的前半部分比特隐写到n中</p>
+<p>τ的长度为k/16比特</p>
+<p>μ的长度为5k/16比特</p>
+<p>λ的长度为5k/8比特</p>
+<p>所以n的长度为k比特</p>
+<p><code>p * (q xor random(k/8比特长度))</code>的前3k/8比特的值是不变的</p>
+<p>所以可以成功把τ, μ隐写到n中</p>
+<p>逆向思路:</p>
+<p><img src="http://qn.lazysheep.cc/img/hctf_rsa2_2.png" alt="hctf_rsa2_2"></p>
+<p>该题的难点主要在于<code>Coppersmith partial information attack</code>算法, 能在放hint前做出的队伍都是在github上找到了该算法的脚本<a href="https://github.com/Gao-Chuan/RSA-and-LLL-attacks" target="_blank" rel="external">https://github.com/Gao-Chuan/RSA-and-LLL-attacks</a></p>
+<h1 id="Crypto-So-Amazing"><a href="#Crypto-So-Amazing" class="headerlink" title="Crypto So Amazing"></a>Crypto So Amazing</h1><p>题目: <a href="https://github.com/Hcamael/ctf-library/tree/master/RSA3" target="_blank" rel="external">https://github.com/Hcamael/ctf-library/tree/master/RSA3</a><br>payload:</p>
+<ul>
+<li><a href="https://github.com/Hcamael/ctf-library/blob/master/RSA3/rsa3_payload.py" target="_blank" rel="external">https://github.com/Hcamael/ctf-library/blob/master/RSA3/rsa3_payload.py</a></li>
+<li><a href="https://github.com/Hcamael/ctf-library/blob/master/RSA3/rsa3.sage" target="_blank" rel="external">https://github.com/Hcamael/ctf-library/blob/master/RSA3/rsa3.sage</a></li>
+</ul>
+<p>出题时预测的分数在450分左右, 不过却没有能做出来, 我知道的几个队都是被上一题的脚本给坑了</p>
+<p>本题思路来源: 基于有限域F(2^m)上椭圆曲线的RSA后门生成算法</p>
+<p>流程图懒得画了, 上一题的后门算法看懂了, 这题去看代码也不难, 主要是通过<code>Diffie–Hellman key exchange</code>算法生成私钥作为种子生成伪随机数, 私钥很好求, 本题的难点跟上题一样同样在于<code>Coppersmith partial information attack</code>算法</p>
+<p>上一题我故意改简单了, 已知p的前640比特, 所以可以很容易通过<a href="https://github.com/Gao-Chuan/RSA-and-LLL-attacks" target="_blank" rel="external">https://github.com/Gao-Chuan/RSA-and-LLL-attacks</a>这个脚本恢复出完整的p</p>
+<p>但是这题已知p的前576bit, github上的那个脚本就跑不出来了</p>
+<p>这部分是出题时无意间挖出的坑, 因为我并不知道github上的这个脚本, 在我预想中能做出rsa2的基本都是能做出rsa3的</p>
+<p>这题还有一个坑点</p>
+<p><img src="http://qn.lazysheep.cc/img/hctf_rsa_keng2.png" alt="hctf_rsa_keng2"><br><img src="http://qn.lazysheep.cc/img/hctf_rsa_keng1.png" alt="hctf_rsa_keng1"></p>
+<p>sage和python 用相同的seed生成的随机数不一样, 所以在payload中我使用了python生成随机数</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本届HCTF的Crypto计划的考点是<code>Coppersmith partial information attack</code>算法和<code>Riemann&#39;s hypothesis and tests for primality</code>算法, 不过无奈由于出题失误第二个算法没考成</p>
+<p>RSA后门相关的论文可参考: </p>
+<ul>
+<li>Crépeau C, Slakmon A. Simple backdoors for RSA key generation[J]. Topics in Cryptology—CT-RSA 2003, 2003, 2612: 403-416.</li>
+<li>Young, A., Yung, M. A Space Efficient Backdoor in RSA and its Applications[J]. Preneel, B., Tavares, S. (eds.) SAC 2005, 2005, 3897: 128-143.</li>
+<li>Tzung-Her Chen, Tsung-Hao Hung. A Comprehensive Study of Backdoors f or RSA Key Generation[R]. Cryptology and Information Security Conference, 2010.</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-11-28, 20:26:26</p>
+        <p><span>最后更新:</span>2017-01-17, 20:16:42</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/11/28/0x28/" title="2016 HCTF Crypto 出题总结">http://0x48.pw/2016/11/28/0x28/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/11/28/0x28/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/12/28/0x29/">
+                    phpmailer RCE 分析
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/11/21/0x27/">
+                    PWN学习总结之基础栈溢出2
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Crypto-So-Interesting"><span class="toc-number">1.</span> <span class="toc-text">Crypto So Interesting</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Crypto-So-Cool"><span class="toc-number">2.</span> <span class="toc-text">Crypto So Cool</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Crypto-So-Amazing"><span class="toc-number">3.</span> <span class="toc-text">Crypto So Amazing</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/12/28/0x29/" title="上一篇: phpmailer RCE 分析">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/11/21/0x27/" title="下一篇: PWN学习总结之基础栈溢出2">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

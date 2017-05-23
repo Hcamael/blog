@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>unholy Writeup | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这周末和小伙伴们一起打BKPCTF，我一个web狗，竟然撸逆向停不下来。。。撸了两个晚上。。。终于撸出来了。。">
+<meta name="keywords" content="RE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="unholy Writeup">
+<meta property="og:url" content="http://0x48.pw/2016/03/07/0x11/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="这周末和小伙伴们一起打BKPCTF，我一个web狗，竟然撸逆向停不下来。。。撸了两个晚上。。。终于撸出来了。。">
+<meta property="og:updated_time" content="2016-03-28T10:19:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="unholy Writeup">
+<meta name="twitter:description" content="这周末和小伙伴们一起打BKPCTF，我一个web狗，竟然撸逆向停不下来。。。撸了两个晚上。。。终于撸出来了。。">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x11" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/07/0x11/" class="article-date">
+      <time datetime="2016-03-07T02:16:46.000Z" itemprop="datePublished">2016-03-07</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      unholy Writeup
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RE/">RE</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>这周末和小伙伴们一起打BKPCTF，我一个web狗，竟然撸逆向停不下来。。。撸了两个晚上。。。终于撸出来了。。</p>
+</blockquote>
+<a id="more"></a>
+<p>unholy这题说是ruby+python，其实我觉得主要还是逆C。。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">main.rb</div><div class="line">require_relative 'unholy'</div><div class="line">include UnHoly</div><div class="line">python_hi</div><div class="line">puts ruby_hi</div><div class="line">puts "Programming Skills: PRIMARILY RUBY AND PYTHON BUT I CAN <span class="keyword">USE</span> <span class="keyword">ANY</span> <span class="keyword">TYPE</span> <span class="keyword">OF</span> GEM <span class="keyword">TO</span> CONTROL <span class="keyword">ANY</span> <span class="keyword">TYPE</span> <span class="keyword">OF</span> SNAKE<span class="string">"</span></div><div class="line">puts "give me your flag<span class="string">"</span></div><div class="line">flag = gets.chomp!</div><div class="line">arr = flag.unpack("V*<span class="string">")</span></div><div class="line">is_key_correct? arr</div></pre></td></tr></table></figure></p>
+<p>一个很简单的ruby脚本，不过这里需要装libruby2.1才能跑。。。（自己装装就知道了，国内装libruby2.1有点坑)<br>然后重点在于unholy.so，丢到ida中逆向看看，有几个重要的地方，主要是<code>method_check_key</code>函数，也就是ruby里的is_key_correct?<br>这个函数规定了只能传入长度为９的int型数组<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mov     [rsp+<span class="number">13E8</span>h+matrix+<span class="number">24</span>h], <span class="number">61735320</span>h　；　matrix[<span class="number">9</span>] = <span class="number">0x61735320</span></div></pre></td></tr></table></figure></p>
+<p>形成长度为10的数组，然后经过如下算法<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">loc_BFC:</span>                                <span class="comment">; CODE XREF: method_check_key+112j</span></div><div class="line"><span class="symbol">.text:</span>0000000000000BFC block = <span class="built_in">rdx</span>                             <span class="comment">; uint32_t[2]</span></div><div class="line"><span class="symbol">.text:</span>0000000000000BFC                 <span class="keyword">mov</span>     <span class="built_in">rax</span>, [<span class="built_in">rbx</span>+<span class="built_in">rdi</span>]</div><div class="line"><span class="symbol">.text:</span>0000000000000C00 block = <span class="built_in">rax</span>                             <span class="comment">; uint32_t[2]</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C00                 <span class="keyword">xor</span>     <span class="built_in">r8d</span>, <span class="built_in">r8d</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C03                 <span class="keyword">mov</span>     <span class="built_in">edx</span>, <span class="built_in">eax</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C05                 <span class="keyword">shr</span>     block, <span class="number">20h</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C09</div><div class="line"><span class="symbol">loc_C09:</span>                                <span class="comment">; CODE XREF: method_check_key+FDj</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C09                 <span class="keyword">mov</span>     <span class="built_in">ecx</span>, <span class="built_in">r8d</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C0C                 <span class="keyword">mov</span>     <span class="built_in">esi</span>, <span class="built_in">eax</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C0E                 <span class="keyword">and</span>     <span class="built_in">ecx</span>, <span class="number">3</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C11                 <span class="keyword">shr</span>     <span class="built_in">esi</span>, <span class="number">5</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C14                 <span class="keyword">mov</span>     <span class="built_in">r9d</span>, [<span class="built_in">rsp</span>+<span class="built_in">rcx</span>*<span class="number">4</span>+<span class="number">13E8h</span>+key]</div><div class="line"><span class="symbol">.text:</span>0000000000000C19                 <span class="keyword">mov</span>     <span class="built_in">ecx</span>, <span class="built_in">eax</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C1B                 <span class="keyword">shl</span>     <span class="built_in">ecx</span>, <span class="number">4</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C1E                 <span class="keyword">xor</span>     <span class="built_in">esi</span>, <span class="built_in">ecx</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C20                 <span class="keyword">lea</span>     <span class="built_in">ecx</span>, [<span class="built_in">rsi</span>+<span class="built_in">rax</span>]</div><div class="line"><span class="symbol">.text:</span>0000000000000C23                 <span class="keyword">add</span>     <span class="built_in">r9d</span>, <span class="built_in">r8d</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C26                 <span class="keyword">sub</span>     <span class="built_in">r8d</span>, <span class="number">61C88647h</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C2D                 <span class="keyword">xor</span>     <span class="built_in">ecx</span>, <span class="built_in">r9d</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C30                 <span class="keyword">add</span>     <span class="built_in">edx</span>, <span class="built_in">ecx</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C32                 <span class="keyword">mov</span>     <span class="built_in">ecx</span>, <span class="built_in">r8d</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C35                 <span class="keyword">shr</span>     <span class="built_in">ecx</span>, <span class="number">0Bh</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C38                 <span class="keyword">mov</span>     <span class="built_in">esi</span>, <span class="built_in">edx</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C3A                 <span class="keyword">and</span>     <span class="built_in">ecx</span>, <span class="number">3</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C3D                 <span class="keyword">shr</span>     <span class="built_in">esi</span>, <span class="number">5</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C40                 <span class="keyword">mov</span>     <span class="built_in">r9d</span>, [<span class="built_in">rsp</span>+<span class="built_in">rcx</span>*<span class="number">4</span>+<span class="number">13E8h</span>+key]</div><div class="line"><span class="symbol">.text:</span>0000000000000C45                 <span class="keyword">mov</span>     <span class="built_in">ecx</span>, <span class="built_in">edx</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C47                 <span class="keyword">shl</span>     <span class="built_in">ecx</span>, <span class="number">4</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C4A                 <span class="keyword">xor</span>     <span class="built_in">esi</span>, <span class="built_in">ecx</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C4C                 <span class="keyword">lea</span>     <span class="built_in">ecx</span>, [<span class="built_in">rsi</span>+<span class="built_in">rdx</span>]</div><div class="line"><span class="symbol">.text:</span>0000000000000C4F                 <span class="keyword">add</span>     <span class="built_in">r9d</span>, <span class="built_in">r8d</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C52                 <span class="keyword">xor</span>     <span class="built_in">ecx</span>, <span class="built_in">r9d</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C55                 <span class="keyword">add</span>     <span class="built_in">eax</span>, <span class="built_in">ecx</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C57                 <span class="keyword">cmp</span>     <span class="built_in">r8d</span>, <span class="number">0C6EF3720h</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C5E                 <span class="keyword">jnz</span>     short loc_C09</div><div class="line"><span class="symbol">.text:</span>0000000000000C60                 <span class="keyword">shl</span>     <span class="built_in">rax</span>, <span class="number">20h</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C64 block = <span class="built_in">rdx</span>                             <span class="comment">; uint32_t[2]</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C64                 <span class="keyword">or</span>      <span class="built_in">rax</span>, block</div><div class="line"><span class="symbol">.text:</span>0000000000000C67                 <span class="keyword">mov</span>     [<span class="built_in">rbx</span>+<span class="built_in">rdi</span>], <span class="built_in">rax</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C6B                 <span class="keyword">add</span>     <span class="built_in">rdi</span>, <span class="number">8</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C6F                 <span class="keyword">cmp</span>     <span class="built_in">rdi</span>, <span class="number">28h</span></div><div class="line"><span class="symbol">.text:</span>0000000000000C73                 <span class="keyword">jnz</span>     short loc_BFC</div></pre></td></tr></table></figure></p>
+<p>这个算法转换用python写是：<br><figure class="highlight sqf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="built_in">in</span> xrange(<span class="number">0</span>, <span class="number">10</span>, <span class="number">2</span>):</div><div class="line">	<span class="built_in">flag</span> = <span class="number">0</span></div><div class="line">	<span class="keyword">while</span> <span class="built_in">flag</span> != <span class="number">0</span>xC6EF3720:</div><div class="line">		arry[i] += (<span class="built_in">flag</span> + key[(<span class="built_in">flag</span>)&amp;<span class="number">3</span>])^(arry[i+<span class="number">1</span>] * <span class="number">16</span> ^ (arry[i+<span class="number">1</span>] / <span class="number">32</span>) + arry[i+<span class="number">1</span>])</div><div class="line">		<span class="built_in">flag</span> = ctypes.c_uint32(<span class="built_in">flag</span> - <span class="number">0</span>x61C88647).value</div><div class="line">		arry[i+<span class="number">1</span>] += (<span class="built_in">flag</span> + key[(<span class="built_in">flag</span> / <span class="number">2048</span>)&amp;<span class="number">3</span>])^(((arry[i] * <span class="number">16</span>) ^ (arry[i] / <span class="number">32</span>)) + arry[i]);</div></pre></td></tr></table></figure></p>
+<p>最后输出的数组<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cmp     [rsp+<span class="number">13E8</span>h+matrix+<span class="number">24</span>h], <span class="number">4</span>DE3F9FDh ;           matrix[<span class="number">9</span>] == <span class="number">0x4DE3F9FD</span></div></pre></td></tr></table></figure></p>
+<p>如果第十个数的值为0x4DE3F9FD, 则把前9个值传入下面的python脚本<br><figure class="highlight mel"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">import struct</div><div class="line">import sys</div><div class="line">X=[</div><div class="line">	[%d,%d,%d],</div><div class="line">	[%d,%d,%d],</div><div class="line">	[%d,%d,%d] </div><div class="line">]</div><div class="line">Y = [</div><div class="line">	[<span class="number">383212</span>,<span class="number">38297</span>,<span class="number">8201833</span>],</div><div class="line">	[<span class="number">382494</span> ,<span class="number">348234985</span>,<span class="number">3492834886</span>],</div><div class="line">	[<span class="number">3842947</span> ,<span class="number">984328</span>,<span class="number">38423942839</span>]</div><div class="line">]</div><div class="line">n=[<span class="number">5034563854941868</span>,<span class="number">252734795015555591</span>,<span class="number">55088063485350767967</span>,</div><div class="line"><span class="number">-2770438152229037</span>,<span class="number">142904135684288795</span>,<span class="number">-33469734302639376803</span>,</div><div class="line"><span class="number">-3633507310795117</span>,<span class="number">195138776204250759</span>,<span class="number">-34639402662163370450</span>]</div><div class="line">y=[</div><div class="line">	[<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>],</div><div class="line">	[<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>],</div><div class="line">	[<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>]</div><div class="line">]</div><div class="line">A=[<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>]</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>):</div><div class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">3</span>):</div><div class="line">		<span class="keyword">for</span> k <span class="keyword">in</span> range(<span class="number">3</span>):</div><div class="line">			y[i][j]+=X[i][k]*Y[k][j]</div><div class="line">c=<span class="number">0</span></div><div class="line"><span class="keyword">for</span> r <span class="keyword">in</span> y:</div><div class="line">	<span class="keyword">for</span> x <span class="keyword">in</span> r:</div><div class="line">		<span class="keyword">if</span> x!=n[c]:</div><div class="line">			<span class="keyword">print</span> <span class="string">"dang..."</span></div><div class="line">			sys.exit(<span class="number">47</span>)</div><div class="line">		c=c+<span class="number">1</span></div><div class="line"><span class="keyword">print</span> <span class="string">":)"</span></div></pre></td></tr></table></figure></p>
+<p>然后算出X<br><figure class="highlight dns"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">X=[</div><div class="line">	[-<span class="number">1304886577</span>,<span class="number">722035088</span>,<span class="number">1368334760</span>],</div><div class="line">	[<span class="number">1473172750</span>,<span class="number">412774077</span>,-<span class="number">908901225</span>],</div><div class="line">	[-<span class="number">490967005</span>,<span class="number">563111828</span>,-<span class="number">952589187</span>] </div><div class="line">]</div></pre></td></tr></table></figure></p>
+<p>所以上面那个算法的输出要为:<br><figure class="highlight dns"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">matrix = [-<span class="number">1304886577</span>,<span class="number">722035088</span>,<span class="number">1368334760</span>,<span class="number">1473172750</span>,<span class="number">412774077</span>,-<span class="number">908901225</span>,-<span class="number">490967005</span>,<span class="number">563111828</span>,-<span class="number">952589187</span>, <span class="number">1306786301</span>]</div></pre></td></tr></table></figure></p>
+<p>然后逆向算法最后得出脚本<br><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"># reserve.py</div><div class="line">#!/usr/bin/env python</div><div class="line">#-*- coding:utf-<span class="number">8</span> -*-</div><div class="line"></div><div class="line">import ctypes</div><div class="line"></div><div class="line">arry =<span class="string">[-1304886577,722035088,1368334760, 1473172750,412774077,-908901225, -490967005,563111828,-952589187, 1306786301]</span></div><div class="line">key = <span class="string">[1952540791, 1768908659, 1852794734, 1701995880]</span></div><div class="line">for x in range(len(arry)):</div><div class="line">	arry<span class="string">[x]</span> = ctypes.c_uint32(arry<span class="string">[x]</span>).value</div><div class="line"></div><div class="line">for i in xrange(<span class="number">0</span>, <span class="number">10</span>, <span class="number">2</span>):</div><div class="line">	flag = 0xC6EF3720</div><div class="line">	while flag != <span class="number">0</span>:</div><div class="line">		v12 = flag + key<span class="string">[(flag / 2048)&amp;3]</span></div><div class="line">		ecx4 = ((arry<span class="string">[i]</span> * <span class="number">16</span>) ^ (arry<span class="string">[i]</span> / <span class="number">32</span>)) + arry<span class="string">[i]</span></div><div class="line">		x = v12^ecx4</div><div class="line">		arry<span class="string">[i+1]</span> = arry<span class="string">[i+1]</span> - x</div><div class="line">		arry<span class="string">[i+1]</span> = ctypes.c_uint32(arry<span class="string">[i+1]</span>).value</div><div class="line"></div><div class="line">		flag = ctypes.c_uint32(flag + 0x61C88647).value</div><div class="line"></div><div class="line">		v11 = flag + key<span class="string">[flag&amp;3]</span></div><div class="line">		ecx2 = ((arry<span class="string">[i+1]</span> * <span class="number">16</span>) ^ (arry<span class="string">[i+1]</span> / <span class="number">32</span>)) + arry<span class="string">[i+1]</span></div><div class="line">		y = v11^ecx2</div><div class="line">		arry<span class="string">[i]</span> = arry<span class="string">[i]</span> - y</div><div class="line">		arry<span class="string">[i]</span> = ctypes.c_uint32(arry<span class="string">[i]</span>).value</div><div class="line"></div><div class="line">for x in range(len(arry)):</div><div class="line">	arry<span class="string">[x]</span> = ctypes.c_int32(arry<span class="string">[x]</span>).value</div><div class="line">print arry</div></pre></td></tr></table></figure></p>
+<p>这里有几个重要的地方，坑了我好久，一个是优先级的问题，比如<code>x ^ y + z</code>这个其实是 <code>x ^ (y + z)</code><br>还有一个，就是python不需要定义变量类型，而matrix十个值为uint_32, 所以python 就要通过ctypes进行转换，还有flag也需要进行转换.</p>
+<p>最后得出<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[<span class="number">1129335618</span>, <span class="number">1752909396</span>, <span class="number">544042349</span>, <span class="number">2036889439</span>, <span class="number">1684628512</span>, <span class="number">1696622880</span>, <span class="number">544105846</span>, <span class="number">1948282724</span>, <span class="number">2104715624</span>, <span class="number">1634947872</span>]</div></pre></td></tr></table></figure></p>
+<p>这个数组就是flag<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">flag = <span class="string">""</span></div><div class="line"><span class="keyword">for</span> x <span class="keyword">in</span> arry:</div><div class="line">	tem_hex = hex(x)[<span class="number">2</span>:]</div><div class="line">	tem_list = []</div><div class="line">	<span class="keyword">for</span> y <span class="keyword">in</span> <span class="built_in">xrange</span>(<span class="number">0</span>, len(tem_hex), <span class="number">2</span>):</div><div class="line">		tem_list.<span class="built_in">append</span>(chr(int(tem_hex[y:y+<span class="number">2</span>], <span class="number">16</span>)))</div><div class="line">	tem_list.<span class="built_in">reverse</span>()</div><div class="line">	flag += <span class="string">""</span>.<span class="built_in">join</span>(tem_list)</div><div class="line"></div><div class="line"><span class="built_in">print</span> flag</div><div class="line"># BKPCTF&#123;hmmm _why did i <span class="built_in">even</span> <span class="keyword">do</span> this&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/03/07/0x11/">unholy Writeup</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-03-07, 10:16:46</p>
+        <p><span>最后更新:</span>2016-03-28, 18:19:25</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/03/07/0x11/" title="unholy Writeup">http://0x48.pw/2016/03/07/0x11/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/03/07/0x11/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/03/14/0x12/">
+                    0CTF总结
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/02/14/0x0F/">
+                    Nebula Writeup
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/03/14/0x12/" title="上一篇: 0CTF总结">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/02/14/0x0F/" title="下一篇: Nebula Writeup">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

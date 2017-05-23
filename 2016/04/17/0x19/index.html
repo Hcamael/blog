@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>How old are Crypto? | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这周的PCTF撸了两道Crypto, 果然我只是民科….(ノಠ益ಠ)ノ彡┻━┻">
+<meta name="keywords" content="CTF,Crypto">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How old are Crypto?">
+<meta property="og:url" content="http://0x48.pw/2016/04/17/0x19/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="这周的PCTF撸了两道Crypto, 果然我只是民科….(ノಠ益ಠ)ノ彡┻━┻">
+<meta property="og:updated_time" content="2016-09-19T09:46:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="How old are Crypto?">
+<meta name="twitter:description" content="这周的PCTF撸了两道Crypto, 果然我只是民科….(ノಠ益ಠ)ノ彡┻━┻">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x19" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/17/0x19/" class="article-date">
+      <time datetime="2016-04-17T14:01:46.000Z" itemprop="datePublished">2016-04-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      How old are Crypto?
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CTF/">CTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Crypto/">Crypto</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>这周的PCTF撸了两道Crypto, 果然我只是民科….(ノಠ益ಠ)ノ彡┻━┻</p>
+<a id="more"></a>
+<h1 id="tonnerre"><a href="#tonnerre" class="headerlink" title="tonnerre"></a>tonnerre</h1><blockquote>
+<p>Describe: We were pretty sure the service at tonnerre.pwning.xxx:8561 <a href="https://github.com/Hcamael/ctf-library/blob/master/tonnerre/public_server_ea2e768e20e89fb1aafbbc547cdb4636.py" target="_blank" rel="external">source</a> was totally secure. But then we came across this website and now we’re having second thoughts… We think they store the service users in the same database?</p>
+</blockquote>
+<p>给了一个服务，和代码，然后一个使用了相同数据库的网站.</p>
+<p>网站有SQLi, 很简单，直接用sqlmap跑就行了得到:<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">salt,user,verifier</div><div class="line">D<span class="number">14058</span>efb<span class="number">3</span>f<span class="number">49</span>bd<span class="number">1</span>f<span class="number">1</span><span class="keyword">c</span><span class="number">68</span>de<span class="number">447393855e004103</span>d<span class="number">432</span>fa<span class="number">61849</span>f<span class="number">0e5262</span>d<span class="number">0</span>d<span class="number">9e8663</span><span class="keyword">c</span><span class="number">0</span>dfcb<span class="number">877</span>d<span class="number">40</span>ea<span class="number">6</span>de<span class="number">6</span>b<span class="number">78</span>efd<span class="number">064</span>bdd<span class="number">02</span>f<span class="number">6555</span>a<span class="number">90</span>d<span class="number">92</span>a<span class="number">8</span>a<span class="number">5</span><span class="keyword">c</span><span class="number">76</span>b<span class="number">28</span>b<span class="number">9</span>a<span class="number">785</span>fd<span class="number">861348</span>af<span class="number">8</span>a<span class="number">7014</span>f<span class="number">4497</span>a<span class="number">5</span>de<span class="number">5</span>d<span class="number">0</span>d<span class="number">703</span>a<span class="number">24</span>ff<span class="number">9</span>ec<span class="number">9</span>b<span class="number">5</span><span class="keyword">c</span><span class="number">1</span>ff<span class="number">8051e3825</span>a<span class="number">0</span>fc<span class="number">8</span>a<span class="number">433296</span>d<span class="number">31</span>cf<span class="number">0</span>bd<span class="number">5</span>d<span class="number">21</span>b<span class="number">09</span><span class="keyword">c</span><span class="number">8</span>cd<span class="number">7e658</span>f<span class="number">2272744</span>b<span class="number">4</span>d<span class="number">2</span>fb<span class="number">63</span>d<span class="number">4</span>bccff<span class="number">8</span>f<span class="number">921932</span>a<span class="number">2e81813</span>,get_flag,ebedd<span class="number">14</span>b<span class="number">5</span>bf<span class="number">7</span>d<span class="number">5</span>fd<span class="number">88</span>eebb<span class="number">057</span>af<span class="number">43803</span>b<span class="number">6</span>f<span class="number">88e42</span>f<span class="number">7</span>ce<span class="number">2</span>a<span class="number">4445</span>fdbbe<span class="number">69</span>a<span class="number">9</span>ad<span class="number">7e7</span>a<span class="number">76</span>b<span class="number">7</span>df<span class="number">4</span>a<span class="number">4e79</span>cefd<span class="number">61</span>ea<span class="number">0</span><span class="keyword">c</span><span class="number">4</span>f<span class="number">426</span><span class="keyword">c</span><span class="number">0261</span>acf<span class="number">5</span>becb<span class="number">5</span>f<span class="number">79</span>cdf<span class="number">916</span>d<span class="number">684667</span>b<span class="number">6</span>b<span class="number">0940</span>b<span class="number">4</span>ac<span class="number">2</span>f<span class="number">885590648</span>fbf<span class="number">2</span>d<span class="number">107707</span>acb<span class="number">38382</span>a<span class="number">95</span>bea<span class="number">9</span>a<span class="number">89</span>fb<span class="number">943</span>a<span class="number">5</span><span class="keyword">c</span><span class="number">1</span>ef<span class="number">6e6</span>d<span class="number">064084</span>f<span class="number">8225</span>eb<span class="number">323</span>f<span class="number">668e2</span><span class="keyword">c</span><span class="number">3174</span>ab<span class="number">7</span>b<span class="number">1</span>dbfce<span class="number">831507</span>b<span class="number">33e413</span>b<span class="number">56</span>a<span class="number">41528</span>b<span class="number">1</span><span class="keyword">c</span><span class="number">850e59</span></div><div class="line"># salt 并没发现有啥用</div></pre></td></tr></table></figure></p>
+<p>然后这段代码拿去sage跑出x<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">N = 168875487862812718103814022843977235420637243601057780595044400667893046269140421123766817420546087076238158376401194506102667350322281734359552897112157094231977097740554793824701009850244904160300597684567190792283984299743604213533036681794114720417437224509607536413793425411636411563321303444740798477587</div><div class="line">g = 9797766621314684873895700802803279209044463565243731922466831101232640732633100491228823617617764419367505179450247842283955649007454149170085442756585554871624752266571753841250508572690789992495054848</div><div class="line">v = 165674960298677315369642561867883496091624769292792204074150337092614964752287803122621876963359715780971900093578962850132496591192295131510624917204670192364009271723089444839548606533268832368676268405764377988005323809734321470184299186127132537376393324213965008025487569799622831466701444653263068925529</div><div class="line">A = g ** 2 % N</div><div class="line">(aa, bb, cc) = xgcd(v/A, N)</div><div class="line">x = (bb * A) mod N</div></pre></td></tr></table></figure></p>
+<p>python版:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">from gmpy2 import invert</div><div class="line">N = 168875487862812718103814022843977235420637243601057780595044400667893046269140421123766817420546087076238158376401194506102667350322281734359552897112157094231977097740554793824701009850244904160300597684567190792283984299743604213533036681794114720417437224509607536413793425411636411563321303444740798477587</div><div class="line">g = 9797766621314684873895700802803279209044463565243731922466831101232640732633100491228823617617764419367505179450247842283955649007454149170085442756585554871624752266571753841250508572690789992495054848</div><div class="line">v = 165674960298677315369642561867883496091624769292792204074150337092614964752287803122621876963359715780971900093578962850132496591192295131510624917204670192364009271723089444839548606533268832368676268405764377988005323809734321470184299186127132537376393324213965008025487569799622831466701444653263068925529</div><div class="line">A = g ** 2 % N</div><div class="line">k = invert(A, N)</div><div class="line">x = invert(k*v, N)</div></pre></td></tr></table></figure></p>
+<p>payload:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line">from pwn import *</div><div class="line">from Crypto.Hash import SHA256</div><div class="line"></div><div class="line">x = <span class="string">"e2a218006a120b096d7836bf397e7dbb1a8f8f6cedb87c20fe3d4a2b99fc9f6661777bbe804b82e9c17a0ad2d508b97031d146934479076a4c11c199322e0dc9724d2cdac24480c6decae4e547f020273f3a2849f9d068cb8c774e029a747fc7c726a1bad2b9f9a7c091096002c364f018f2f1157ad492d42c00305d84f37db7"</span></div><div class="line">v = 165674960298677315369642561867883496091624769292792204074150337092614964752287803122621876963359715780971900093578962850132496591192295131510624917204670192364009271723089444839548606533268832368676268405764377988005323809734321470184299186127132537376393324213965008025487569799622831466701444653263068925529</div><div class="line">N = 168875487862812718103814022843977235420637243601057780595044400667893046269140421123766817420546087076238158376401194506102667350322281734359552897112157094231977097740554793824701009850244904160300597684567190792283984299743604213533036681794114720417437224509607536413793425411636411563321303444740798477587L</div><div class="line"></div><div class="line"><span class="comment"># context.log_level = "debug"</span></div><div class="line">def H(P):</div><div class="line">    h = SHA256.new()</div><div class="line">    h.update(P)</div><div class="line">    return h.hexdigest()</div><div class="line"></div><div class="line">def tostr(A):</div><div class="line">    return hex(A)[2:].strip('L')</div><div class="line"></div><div class="line">s = remote(<span class="string">"tonnerre.pwning.xxx"</span>, 8561)</div><div class="line">print s.recv()</div><div class="line">s.sendline(<span class="string">"get_flag"</span>)</div><div class="line">s.sendline(x)</div><div class="line"></div><div class="line">salt = s.recv().strip()</div><div class="line">residue = s.recv().strip()</div><div class="line">re = int(residue, 16)</div><div class="line"></div><div class="line">session_secret = (((re - v) % N) ** 2) % N</div><div class="line">session_key = H(tostr(session_secret))</div><div class="line"></div><div class="line">answer = residue + session_key</div><div class="line">s.sendline(H(answer))</div><div class="line">print s.recv()</div></pre></td></tr></table></figure></p>
+<p>这题很简单，我这菜鸡都能做出来，本来不准备写分析了，不过估计我过段时间又忘光了，还是写写分析吧.</p>
+<p>从代码中已知<code>N</code>, <code>g</code>，我们可控的<code>public_client</code>设为<code>x</code>，从数据库得到<code>verifier</code>设为<code>v</code>，从代码中可得$c = (x * v)\ mod\ N$</p>
+<p>每次随机一个<code>random_server</code>设为<code>r</code>, <code>public_server</code>设为<code>p_s</code>的值为$p_s = g^r\ mod\ N$</p>
+<p>服务器每次会返回给我们一个<code>residue</code>设为<code>re</code>，值为$re = (p_s + v)\ mod\ N$</p>
+<p>接着，$session\_secret = c^r\ mod\ N$</p>
+<p>需要我们输入一个<code>proof</code>要满足下面的条件才能GetFlag.<br>$$SHA256(re+SHA256(session\_secret)) == proof$$</p>
+<p>推论其实很简单, <code>session_secret</code>中只有<code>r</code>未知，但是我们知道<br>$$re = ((g^r\ mod\ N) + v)\ mod\ N$$<br>可以推出<br>$$(re - v)\ mod\ N = g^r\ mod\ N$$</p>
+<p>如果我们能算出一个<code>x</code> =&gt; $(x * v)\ mod\ N = c = g$</p>
+<p>这样就出来了，不过代码中却有限定条件，<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> c <span class="keyword">in</span> [N-g, N-<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, g]:</div><div class="line">    req.sendall(<span class="symbol">'Sorry</span>, <span class="keyword">not</span> permitted.\n')</div><div class="line">    req.close()</div><div class="line">    <span class="keyword">return</span></div></pre></td></tr></table></figure></p>
+<p>不过并没啥影响，我们仍然能继续构造一个<code>x</code>使得<br>$$(x * v)\ mod\ N = c = g^2$$<br>接着就可以推出<br>$$session\_secret = g^{2*r}\ mod\ N = (g^r\ mod\ N)^2\ mod\ N$$</p>
+<p>然后现在的问题是怎么算<code>x</code>，就用上面构造的等式<br>$$(x * v)\ mod\ N = g^2$$<br>可以得出<br>$$(x * v * g^{-2})\ mod\ N = 1$$</p>
+<p>这个就用扩展欧几里德算呗，不过这里有一个知识点</p>
+<p>假设$A = g^2$，那么$A^{-1}$值为啥？A明显是大整数，数论是研究整数性质的学科，所以不可能有分数参与计算，所以就有了这个推论<br>$$(x * v * A^{-1})\ mod\ N = ((x * v)\ mod\ N) * (A^{-1}\ mod\ N)\ mod\ N$$<br>假设$A^{-1}\ mod\ N \equiv k$<br>这不就模逆元么，可得$A * k \equiv 1\ (mod\ N)$<br>这不就可以用扩展欧几里德算出k么，所以最后是<br>$$x * (v * k) \equiv 1\ (mod\ N)$$<br>又是通过扩展欧几里德算出<code>x</code></p>
+<h1 id="rabit"><a href="#rabit" class="headerlink" title="rabit"></a>rabit</h1><blockquote>
+<p>Describe: Just give me a bit, the least significant’s <a href="https://github.com/Hcamael/ctf-library/tree/master/rabit" target="_blank" rel="external">enough</a>. Just a second we’re not broken, just very, very insecure. Running at rabit.pwning.xxx:7763</p>
+</blockquote>
+<p>已知$N = p * q$, <code>N</code>的值可以得到，<code>p和q</code>却是未知</p>
+<p>我们还知道<code>c</code>的值，$c = flag^2\ mod\ N$</p>
+<p>我们可控设为<code>x</code>, 当<br>$$x^{\frac{\phi(q)}{2}}\ mod\ q = 1$$<br>$$x^{\frac{\phi(p)}{2}}\ mod\ p = 1$$<br>同时成立时，<br>$$x^{\frac{\phi(N)+4}{8}}\ mod\ N = m$$<br>我们可得知<code>m</code>的奇偶性</p>
+<p>然后我数学还是太菜，没撸出来，等看了WP后再来更新</p>
+<h2 id="UPDATA-4-19"><a href="#UPDATA-4-19" class="headerlink" title="UPDATA: 4/19"></a><em>UPDATA: 4/19</em></h2><p>这题用的是rabin算法，使用的是 <a href="https://www.google.com/?gws_rd=ssl#q=rsa+lsb+oracle+attack" target="_blank" rel="external">rsa lsb oracle attack</a></p>
+<p>首先要求N是一个Blum integer:</p>
+<blockquote>
+<p>$N = p * q$ =&gt; p和q是两个不相等的随机素数，且$q \equiv 3\ (mod\ 4)$和$p \equiv 3\ (mod\ 4)$同时满足</p>
+</blockquote>
+<p>当N为Blum Integer时，会有下面推论:<br>$$C = X^2\ mod\ N$$<br>$$X = C^{\frac{\phi(N)+4}{8}}\ mod\ N$$</p>
+<p>就可以进行rabin加解密了</p>
+<p>根据勒让德符号的公式，可控的<code>x</code>，要满足</p>
+<p>存在一个 $a_1$ , 使得<br>$$a_{1}^{2} \equiv x\ (mod\ q)$$</p>
+<p>存在一个 $a_2$ , 使得<br>$$a_{2}^{2} \equiv x\ (mod\ p)$$</p>
+<p>写了个本地测试脚本:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> GCD, bytes_to_long, long_to_bytes</div><div class="line"><span class="keyword">import</span> math</div><div class="line"></div><div class="line">FLAG = <span class="string">"testtesttesttesttesttest"</span></div><div class="line">p = <span class="number">9106955210961894382213398084695411548991508552135116475739483485343599066229167723931080143408618040894126850992819734177810259561241614741757319165906087L</span></div><div class="line">q = <span class="number">10285773789873373607105204107746706058912747747297377854417892145690734334799058020026041693440549801695363225930871791013981165203481480366182233263169487L</span></div><div class="line">N = p * q</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">legendreSymbol</span><span class="params">(a, p)</span>:</span></div><div class="line">    <span class="keyword">return</span> pow(a, (p<span class="number">-1</span>)/<span class="number">2</span>, p)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">decrypt</span><span class="params">(c, p, q)</span>:</span></div><div class="line">    <span class="keyword">if</span> GCD(c, p*q) != <span class="number">1</span>:</div><div class="line">        <span class="keyword">print</span> <span class="string">"bad1"</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line">    <span class="keyword">if</span> legendreSymbol(c, p) != <span class="number">1</span>:</div><div class="line">        <span class="keyword">print</span> <span class="string">"bad2"</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line">    <span class="keyword">if</span> legendreSymbol(c, q) != <span class="number">1</span>:</div><div class="line">        <span class="keyword">print</span> <span class="string">"bad3"</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line">    <span class="keyword">return</span> pow(c, ((p<span class="number">-1</span>)*(q<span class="number">-1</span>) + <span class="number">4</span>) / <span class="number">8</span>, p*q)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">encrypt</span><span class="params">(m, N)</span>:</span></div><div class="line">    <span class="keyword">return</span> pow(m, <span class="number">2</span>, N)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">pad</span><span class="params">(s)</span>:</span></div><div class="line">    <span class="keyword">assert</span>(len(s) &lt; N.bit_length() / <span class="number">8</span>)</div><div class="line">    padded = bytes_to_long(s.ljust(N.bit_length()/<span class="number">8</span>, <span class="string">"0"</span>))</div><div class="line">    <span class="keyword">while</span> decrypt(padded, p, q) == <span class="keyword">None</span>:</div><div class="line">        padded += <span class="number">1</span></div><div class="line">    <span class="keyword">return</span> padded</div><div class="line"></div><div class="line">msg = <span class="string">"""Welcome to the LSB oracle! N = &#123;&#125;\n"""</span>.format(N)</div><div class="line"><span class="keyword">print</span> msg</div><div class="line">padded = pad(FLAG)</div><div class="line"><span class="keyword">print</span> padded</div><div class="line">enc_flag = encrypt(padded, N)</div><div class="line"><span class="keyword">assert</span> long_to_bytes(padded)[:len(FLAG)] == FLAG</div><div class="line"><span class="keyword">assert</span> decrypt(enc_flag, p, q) == padded</div><div class="line"><span class="keyword">assert</span> decrypt(<span class="number">2</span>, p, q) != <span class="keyword">None</span></div><div class="line"></div><div class="line"><span class="keyword">print</span> <span class="string">"Encrypted Flag: &#123;&#125;\n"</span>.format(enc_flag)</div><div class="line"></div><div class="line">m = decrypt(enc_flag, p, q)</div><div class="line"></div><div class="line"><span class="comment"># while True:</span></div><div class="line"><span class="comment">#   x = raw_input("Give a ciphertext: ")</span></div><div class="line"><span class="comment">#   x = long(x)</span></div><div class="line"><span class="comment">#   m = decrypt(x, p, q)</span></div><div class="line"><span class="comment">#   # print m</span></div><div class="line"><span class="comment">#   if m is None:</span></div><div class="line"><span class="comment">#       m = 0</span></div><div class="line"><span class="comment">#   print "lsb is &#123;&#125;\n".format(m % 2)</span></div><div class="line"></div><div class="line">flag_lower_bound = <span class="number">0</span></div><div class="line">flag_upper_bound = N</div><div class="line">mult = <span class="number">0</span></div><div class="line">c = enc_flag</div><div class="line">iter_count = math.log(N, <span class="number">2</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">0</span>, long(math.ceil(long(iter_count)))):</div><div class="line">    c = ((encrypt(<span class="number">2</span>, N) * c) % N)</div><div class="line">    mult += <span class="number">1</span></div><div class="line">    print(<span class="string">"upper = %d"</span> % flag_upper_bound)</div><div class="line">    print(<span class="string">"upper flag = %s"</span> % long_to_bytes(flag_upper_bound))</div><div class="line">    print(<span class="string">"lower = %d"</span> % flag_lower_bound)</div><div class="line">    print(<span class="string">"lower flag = %s"</span> % long_to_bytes(flag_lower_bound))</div><div class="line">    print(<span class="string">"multiplier = %d"</span> % mult)</div><div class="line">    mm = decrypt(c, p, q)</div><div class="line">    <span class="keyword">if</span> mm <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">        mm = <span class="number">0</span></div><div class="line">    <span class="keyword">if</span> mm % <span class="number">2</span> == <span class="number">0</span>:</div><div class="line">        flag_upper_bound = (flag_upper_bound + flag_lower_bound) / <span class="number">2</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        flag_lower_bound = (flag_upper_bound + flag_lower_bound) / <span class="number">2</span></div></pre></td></tr></table></figure></p>
+<h2 id="LSB-oracle-attack"><a href="#LSB-oracle-attack" class="headerlink" title="LSB oracle attack"></a>LSB oracle attack</h2><p>因为N是Blum Integer, 所以 $p\ mod\ 4 = 3\ \&amp;\&amp;\ q\ mod\ 4 = 3$</p>
+<p>可以得出: $N\ mod\ 4 = 1$，或者$N\ mod\ 2 = 1$，所以N是odd<br>设ev为even, 我们可得出结论:<br>$$\begin{cases}<br>if\ ev &lt; N\ then\ ev\ mod\ N = \{even\}\\<br>if\ 2N &gt; ev &gt; N\ then\ ev\ mod\ N = \{odd\}\\<br>if\ 3N &gt; ev &gt; 2N\ then\ ev\ mod\ N = \{even\}\\<br>\ldots<br>\end{cases}<br>$$</p>
+<p>简单的来说，对于一个RSA加密：<br>$m^e\ mod\ N = c$ 乘以 $2^e\ mod\ N = c_2$<br>得到<br>$$(2*m)^e\ mod\ N = c * c_2\ mod\ N = CC$$<br>然后把CC拿去解密<br>$$CC^d\ mod\ N = (2 * m)^{e*d}\ mod\ N = 2*m\ mod\ N = MM$$</p>
+<p>从上面的结论我们可以得出:<br>$$\begin{cases}<br>if\ MM\ is\ \{odd\}\ then\ 2*m &gt; N\\<br>if\ MM\ is\ \{even\}\ then\ 2*m &lt; N<br>\end{cases}<br>$$</p>
+<p>本题就是利用这样的方法来确定出flag的范围，然后逐渐缩小范围，到最后确定值，我再多推一步，这一步理解了就可以全部理解了<br>下一步用$m^e\ mod\ N = c$ 乘以 $4^e\ mod\ N = c_2$<br>得到<br>$$(4*m)^e\ mod\ N = c * c_2\ mod\ N = CC_2$$</p>
+<p>然后把$CC_2$拿去解密<br>$$CC_{2}^{d}\ mod\ N = (4 * m)^{e*d}\ mod\ N = 4*m\ mod\ N = MM_2$$</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> MM <span class="built_in">is</span> <span class="built_in">odd</span>:</div><div class="line">    <span class="keyword">if</span> $MM_2$ <span class="built_in">is</span> <span class="built_in">odd</span>:</div><div class="line">        3N &lt; <span class="number">4</span> * m &lt; 4N</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        2N &lt; <span class="number">4</span> * m &lt; 3N</div><div class="line"><span class="keyword">else</span>:</div><div class="line">    <span class="keyword">if</span> $MM_2$ <span class="built_in">is</span> <span class="built_in">odd</span>:</div><div class="line">        N &lt; <span class="number">4</span> * m &lt; 2N</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="number">0</span> &lt; <span class="number">4</span> * m &lt; N</div></pre></td></tr></table></figure>
+<p>这题从头到尾我都想错了方法，而且我只是自己一个人蒙头苦算，注意收集和脚本中的信息，去google搜索，也许这题就能撸出来了.</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/04/17/0x19/">How old are Crypto?</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-04-17, 22:01:46</p>
+        <p><span>最后更新:</span>2016-09-19, 17:46:45</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/04/17/0x19/" title="How old are Crypto?">http://0x48.pw/2016/04/17/0x19/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/04/17/0x19/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/05/03/0x1A/">
+                    GGCTF的对称密码学
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/04/08/0x18/">
+                    MySQLi-Error Injection
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#tonnerre"><span class="toc-number">1.</span> <span class="toc-text">tonnerre</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#rabit"><span class="toc-number">2.</span> <span class="toc-text">rabit</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#UPDATA-4-19"><span class="toc-number">2.1.</span> <span class="toc-text">UPDATA: 4/19</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LSB-oracle-attack"><span class="toc-number">2.2.</span> <span class="toc-text">LSB oracle attack</span></a></li></ol></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/05/03/0x1A/" title="上一篇: GGCTF的对称密码学">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/04/08/0x18/" title="下一篇: MySQLi-Error Injection">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

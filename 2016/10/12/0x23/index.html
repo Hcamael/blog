@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>2016 HITCON Crypto -- PAKE(++) | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前几天的HITCON是我最近参加过质量最高的CTF了, 里面的题目够我研究几周了, 而且大部分都有源码, 本地也是很容易复现">
+<meta name="keywords" content="CTF,Crypto">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2016 HITCON Crypto -- PAKE(++)">
+<meta property="og:url" content="http://0x48.pw/2016/10/12/0x23/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="前几天的HITCON是我最近参加过质量最高的CTF了, 里面的题目够我研究几周了, 而且大部分都有源码, 本地也是很容易复现">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/pake1.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/pake2.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/pake3.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/pake4.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/pake5.png">
+<meta property="og:updated_time" content="2016-10-12T10:03:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2016 HITCON Crypto -- PAKE(++)">
+<meta name="twitter:description" content="前几天的HITCON是我最近参加过质量最高的CTF了, 里面的题目够我研究几周了, 而且大部分都有源码, 本地也是很容易复现">
+<meta name="twitter:image" content="http://qn.lazysheep.cc/img/pake1.png">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x23" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/12/0x23/" class="article-date">
+      <time datetime="2016-10-12T02:29:08.000Z" itemprop="datePublished">2016-10-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      2016 HITCON Crypto -- PAKE(++)
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CTF/">CTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Crypto/">Crypto</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>前几天的HITCON是我最近参加过质量最高的CTF了, 里面的题目够我研究几周了, 而且大部分都有源码, 本地也是很容易复现</p>
+<a id="more"></a>
+<p>Reference: <a href="http://mslc.ctf.su/wp/hitcon-ctf-quals-2016-pake-pake-crypto-250-150/?utm_campaign=our_twitter&amp;utm_medium=twitter&amp;utm_source=twitter" target="_blank" rel="external">writeup</a></p>
+<h1 id="PAKE-Crypto-250"><a href="#PAKE-Crypto-250" class="headerlink" title="PAKE(Crypto 250)"></a>PAKE(Crypto 250)</h1><p><img src="http://qn.lazysheep.cc/img/pake1.png" alt="pake1"></p>
+<p>[源码]<a href="https://github.com/Hcamael/CTF_repo/blob/master/HITCON/PAKE(250)/pake1.rb_c077fdcc6ed6488b53504bc8ad0069e8281ad21a" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/blob/master/HITCON/PAKE(250)/pake1.rb_c077fdcc6ed6488b53504bc8ad0069e8281ad21a</a></p>
+<h2 id="原题复现"><a href="#原题复现" class="headerlink" title="原题复现"></a>原题复现</h2><p>源码已经有了, 还缺两个文件, <code>passwords</code>和<code>flag1.txt</code>, 本地搭环境这两个自己随便设置就好了</p>
+<p>我的如下<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># passwords</div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">15</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">15</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">13</span></div><div class="line"><span class="number">11</span></div><div class="line"><span class="number">10</span></div><div class="line"><span class="number">15</span></div><div class="line"><span class="number">4</span></div><div class="line"># flag1.txt</div><div class="line">hitcon&#123;<span class="number">73</span>n_w34k_p455w0rd5_c0mb1n3d_4r3_571ll_wE4k_QQ&#125;</div></pre></td></tr></table></figure></p>
+<p>这样可以在本地复现环境了<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> chmod +x pake1.rb</span></div><div class="line"><span class="meta">$</span><span class="bash"> socat TCP4-LISTEN:10001,fork EXEC:./pake1.rb</span></div></pre></td></tr></table></figure></p>
+<h2 id="分析源码"><a href="#分析源码" class="headerlink" title="分析源码"></a>分析源码</h2><p>第一部分先是跑proof:<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">x = SecureRandom.random_bytes(<span class="number">6</span>)</div><div class="line">puts <span class="string">'Robot test'</span></div><div class="line">puts <span class="string">"prefix: <span class="subst">#&#123;[x].pack(<span class="string">'m0'</span>)&#125;</span>"</span></div><div class="line">r = gets.strip.unpack(<span class="string">'m0'</span>)[<span class="number">0</span>]</div><div class="line">r = <span class="symbol">Digest:</span><span class="symbol">:SHA1</span>.digest(x + r)</div><div class="line"><span class="comment"># We want the digest to begin with 23 bits of zero.</span></div><div class="line"><span class="comment"># [0..15]</span></div><div class="line"><span class="keyword">unless</span> r.start_with?(<span class="string">"\0\0"</span>)</div><div class="line">  puts <span class="string">'FAIL! GO AWAY!'</span></div><div class="line">  exit</div><div class="line"><span class="keyword">end</span></div><div class="line">c = r[<span class="number">2</span>].ord</div><div class="line">r, s = c / <span class="number">2</span>, c % <span class="number">2</span></div><div class="line"><span class="comment"># r: [16..22], s: [23]</span></div><div class="line"><span class="keyword">unless</span> r == <span class="number">0</span></div><div class="line">  puts <span class="string">'FAIL! GO AWAY!'</span></div><div class="line">  exit</div><div class="line"><span class="keyword">end</span></div><div class="line">print <span class="string">'Good job! '</span></div></pre></td></tr></table></figure></p>
+<p>很简单的证明, 为了减小跑这部分脚本的时间, 把倒数2-5行注释了</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">x = SecureRandom.random_bytes(<span class="number">6</span>)</div><div class="line">puts <span class="string">'Robot test'</span></div><div class="line">puts <span class="string">"prefix: #&#123;[x].pack('m0')&#125;"</span></div><div class="line">r = gets.strip.unpack(<span class="string">'m0'</span>)[<span class="number">0</span>]</div><div class="line">r = Digest::SHA1.digest(x + r)</div><div class="line"><span class="meta"># We want the digest to begin with 23 bits of zero.</span></div><div class="line"><span class="meta"># [0..15]</span></div><div class="line">unless r.start_with?(<span class="string">"\0\0"</span>)</div><div class="line">  puts <span class="string">'FAIL! GO AWAY!'</span></div><div class="line">  exit</div><div class="line">end</div><div class="line">c = r[<span class="number">2</span>].ord</div><div class="line">r, s = c / <span class="number">2</span>, c % <span class="number">2</span></div><div class="line"><span class="meta"># r: [16..22], s: [23]</span></div><div class="line"><span class="meta"># unless r == 0</span></div><div class="line"><span class="meta">#   puts 'FAIL! GO AWAY!'</span></div><div class="line"><span class="meta">#   exit</span></div><div class="line"><span class="meta"># end</span></div><div class="line">print <span class="string">'Good job! '</span></div></pre></td></tr></table></figure>
+<p>写了个proof.py脚本<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> hashlib</div><div class="line"><span class="keyword">import</span> itertools</div><div class="line"><span class="keyword">import</span> base64</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> threading</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool</div><div class="line"></div><div class="line">fuzzing = <span class="string">"abcdefghijklmnopqrstuvwxyz0123456789QWERTYUIOPASDFGHJKLZXCVBNM"</span></div><div class="line"><span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">255</span>):</div><div class="line">	fuzzing += chr(x)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">md5_proof</span><span class="params">(fuzz, prefix, verify)</span>:</span></div><div class="line">	y = len(verify)</div><div class="line">	<span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">		<span class="keyword">try</span>:</div><div class="line">			padd = <span class="string">""</span>.join(fuzz.next())</div><div class="line">		<span class="keyword">except</span> StopIteration:</div><div class="line">			<span class="keyword">break</span></div><div class="line">		r = hashlib.md5(prefix + padd).hexdigest()</div><div class="line">		<span class="keyword">if</span> r[:y] == verify:</div><div class="line">			<span class="keyword">return</span> padd</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">sha1_proof</span><span class="params">(fuzz, prefix, verify)</span>:</span></div><div class="line">	y = len(verify)</div><div class="line">	<span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">		<span class="keyword">try</span>:</div><div class="line">			padd = <span class="string">""</span>.join(fuzz.next())</div><div class="line">		<span class="keyword">except</span> StopIteration:</div><div class="line">			<span class="keyword">break</span></div><div class="line">		r = hashlib.sha1(prefix + padd).hexdigest()</div><div class="line">		<span class="keyword">if</span> r[:y] == verify:</div><div class="line">			<span class="keyword">return</span> padd</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">proof</span><span class="params">(s, verify=<span class="string">"0000"</span>, method=<span class="string">"sha1"</span>)</span>:</span></div><div class="line">	<span class="string">'''</span></div><div class="line">	目前只提供md5与sha1</div><div class="line">	'''</div><div class="line">	fuzz = itertools.permutations(fuzzing, <span class="number">5</span>)</div><div class="line">	<span class="keyword">if</span> method == <span class="string">'md5'</span>:</div><div class="line">		result = md5_proof(fuzz, s, verify)</div><div class="line">	<span class="keyword">else</span>:</div><div class="line">		result = sha1_proof(fuzz, s, verify)</div><div class="line"></div><div class="line">	<span class="keyword">assert</span> result != <span class="string">""</span></div><div class="line">	<span class="keyword">return</span> result</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">	t1 = time.time()</div><div class="line">	p = Pool(<span class="number">2</span>)</div><div class="line">	p.map(proof, [<span class="string">"3f4sd4y5ydfgs"</span>,<span class="string">"ertwd4t32354ffcd"</span>])</div><div class="line">	<span class="keyword">print</span> time.time() - t1</div><div class="line">	<span class="comment">#md5_proof(s, verify)</span></div></pre></td></tr></table></figure></p>
+<p>接下来就是正文了</p>
+<p>本题的逻辑不难懂, 仔细读读源码应该就能看懂了, 就不在这多说了.</p>
+<p>本题的重点在于<code>passwords</code>， 如果能知道其值, 则该题就很容易就出来了, 每轮输入$sha512(password[i])^2\ mod\ q$, 然后$flag = enc\_flag\ xor\ sha512(bb)$</p>
+<p>比赛期间我能想到的只有爆破, 虽然passwords的值很小, 但是也要遍历最多$16^{11}$次, 不现实.</p>
+<p>这题就像是题目名一样, 涉及到了PAKE原理:</p>
+<p>已知:<br>$$<br>x^a\ mod\ q = A\\<br>x^b\ mod\ q = B<br>$$<br>则:<br>$$<br>A^b\ mod\ q = B^a\ mod\ q<br>$$</p>
+<p>这个逻辑应该很容易理解, 也不难推导.</p>
+<p>当初我也想过, 可以建立两个连接, 两个连接每一轮都有一个相同password[i], 和q, 每轮返回的值我们按照源码里称为bb<br>每轮:</p>
+<p>$$<br>password[i]^{2 * b_1}\ mod\ q = bb_1\\<br>password[i]^{2 * b_2}\ mod\ q = bb_2<br>$$<br>如果我们把连接1的$bb_1$ 发送给连接2, $bb_2$发送给连接1<br>则在源码中每轮和flag进行xor的k相等</p>
+<p>$$<br>k_1 = bb_2^{b_1}\ mod\ p\\<br>k_2 = bb_1^{b_2}\ mod\ p\\<br>k_1 == k_2<br>$$</p>
+<p>虽然得出了这个结论, 但好像对解出flag并没有帮助, 当时我就是卡在这里了.</p>
+<p>之后看了wp才明白, 这一步的作用可以用来爆破password, 不需要要像最开始想的那样需要爆破$16^{11}$次, 现在最多只需要<code>16*11</code>次</p>
+<p>根据上述结论, 我们可以很容易的得到, 如果建立两个连接, 11轮都互相交换$bb_i$, 则最后得到<code>enc_flag</code>是相等的.</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">enc_flag</span> = flag xor sha512(ki)</div></pre></td></tr></table></figure>
+<p>根据PAKE原理, 每轮的k都相等, flag相等, 所以最后得到的<code>enc_flag</code>也相等</p>
+<p>现在, 我们假设<code>password[0] = 1</code></p>
+<p>然后我们第一轮, 两个链接都传入$sha512(1)^2\ mod\ q$, 然后之后的所有轮都通过PAKE原理让k相等, </p>
+<p>我们可以推导出来, 两个连接最后输出的<code>enc_flag</code>, 肯定不想等, 但是分别xor自己那个连接的第一轮的<code>sha512(k)</code>后, 值就相等了.</p>
+<p>见下图:<br>PS: 在理解逻辑的情况下sha512暂时省去</p>
+<p><img src="http://qn.lazysheep.cc/img/pake2.png" alt="pake2"></p>
+<p>那么两个连接的第一轮的k怎么得到? 就比如在上面这种情况下, $k_1 = bb_1$, 但是如果我们传入的不是$sha512(1)^2\ mod\ q$, 则$k_1 \neq bb_1$</p>
+<p>所以说, 在我们猜中password的情况下, 我们可以预知到k, 能预知到k, 我们可以和enc_flag进行异或后使其值相等, 如果猜错password的值, 则我们预知的k值是错误的, xor后的结果不相等</p>
+<p>这样, 每个password最多只要跑16次, 有11轮, 每个password之间互不干扰, 所以最多只要爆破$16*11$次, 就可以得到所有的password</p>
+<p>payload:<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div></pre></td><td class="code"><pre><div class="line"># pake1_payload.py</div><div class="line">#! /usr/<span class="keyword">bin/env </span>python</div><div class="line"># -*- coding: utf-<span class="number">8</span> -*-</div><div class="line"></div><div class="line"><span class="symbol">from</span> <span class="keyword">multiprocessing </span><span class="meta">import</span> Pool as ThreadPool</div><div class="line"><span class="symbol">from</span> Crypto.Util.number <span class="meta">import</span> long_to_bytes, <span class="keyword">bytes_to_long</span></div><div class="line"><span class="symbol">from</span> proof <span class="meta">import</span> proof</div><div class="line"><span class="symbol">import</span> hashlib</div><div class="line"><span class="symbol">from</span> pwn <span class="meta">import</span> *</div><div class="line"></div><div class="line"><span class="symbol">context.log_level</span> = <span class="string">"CRITICAL"</span></div><div class="line"><span class="symbol">pool</span> = ThreadPool(<span class="number">2</span>)</div><div class="line"><span class="symbol">pp</span> = <span class="number">285370232948523998980902649176998223002378361587332218493775786752826166161423082436982297888443231240619463576886971476889906175870272573060319231258784649665194518832695848032181036303102119334432612172767710672560390596241136280678425624046988433310588364872005613290545811367950034187020564546262381876467</span></div><div class="line"></div><div class="line"><span class="symbol">def</span> guess_password(password):</div><div class="line">	for x in xrange(len(password)):</div><div class="line">		<span class="meta">if</span> password[x] != None:</div><div class="line">			continue</div><div class="line">		for gn in xrange(<span class="number">1</span>, <span class="number">17</span>):</div><div class="line">			g_num = pow(<span class="keyword">bytes_to_long(hashlib.sha512(str(gn)).digest()), </span><span class="number">2</span>, pp)</div><div class="line">			<span class="built_in">p1</span> = remote(<span class="string">"127.0.0.1"</span>, <span class="number">10001</span>)</div><div class="line">			<span class="built_in">p2</span> = remote(<span class="string">"127.0.0.1"</span>, <span class="number">10001</span>)</div><div class="line">			<span class="built_in">p1</span>.readuntil(<span class="string">"prefix: "</span>)</div><div class="line">			<span class="built_in">p2</span>.readuntil(<span class="string">"prefix: "</span>)</div><div class="line">			prefix1 = <span class="built_in">p1</span>.readline().decode(<span class="string">'base64'</span>)</div><div class="line">			prefix2 = <span class="built_in">p2</span>.readline().decode(<span class="string">'base64'</span>)</div><div class="line">			solve1, solve2 = pool.map(proof, [prefix1, prefix2])</div><div class="line">			<span class="built_in">p1</span>.sendline(solve1.encode(<span class="string">'base64'</span>).<span class="keyword">strip())</span></div><div class="line">			<span class="built_in">p2</span>.sendline(solve2.encode(<span class="string">'base64'</span>).<span class="keyword">strip())</span></div><div class="line">			</div><div class="line">			diff_num1 = <span class="number">0</span></div><div class="line">			diff_num2 = <span class="number">0</span></div><div class="line">			for y in xrange(len(password)):</div><div class="line">				<span class="built_in">p1</span>.readuntil(<span class="string">"Server send "</span>)</div><div class="line">				<span class="built_in">p2</span>.readuntil(<span class="string">"Server send "</span>)</div><div class="line">				tmp_num1 = <span class="built_in">p1</span>.readline().<span class="keyword">strip()</span></div><div class="line">				tmp_num2 = <span class="built_in">p2</span>.readline().<span class="keyword">strip()</span></div><div class="line">				<span class="meta">if</span> y == x:</div><div class="line">					<span class="built_in">p1</span>.sendline(<span class="keyword">str(g_num))</span></div><div class="line">					<span class="built_in">p2</span>.sendline(<span class="keyword">str(g_num))</span></div><div class="line">					diff_num1 = <span class="keyword">bytes_to_long(hashlib.sha512(tmp_num1).digest())</span></div><div class="line">					diff_num2 = <span class="keyword">bytes_to_long(hashlib.sha512(tmp_num2).digest())</span></div><div class="line"><span class="symbol">				else:</span></div><div class="line">					<span class="built_in">p1</span>.sendline(tmp_num2)</div><div class="line">					<span class="built_in">p2</span>.sendline(tmp_num1)</div><div class="line">			<span class="built_in">p1</span>.readuntil(<span class="string">"Flag is (of course after encryption :D): "</span>)</div><div class="line">			<span class="built_in">p2</span>.readuntil(<span class="string">"Flag is (of course after encryption :D): "</span>)</div><div class="line"></div><div class="line">			enc_flag1 = int(<span class="built_in">p1</span>.readline().<span class="keyword">strip())</span></div><div class="line">			enc_flag2 = int(<span class="built_in">p2</span>.readline().<span class="keyword">strip())</span></div><div class="line">			<span class="built_in">p1</span>.close()</div><div class="line">			<span class="built_in">p2</span>.close()</div><div class="line">			<span class="meta">if</span> (enc_flag1^diff_num1) == (enc_flag2^diff_num2):</div><div class="line">				password[x] = gn</div><div class="line">				print <span class="string">"find! %s"</span> %gn</div><div class="line">				print password</div><div class="line">				<span class="keyword">break</span></div><div class="line">	return password</div><div class="line"></div><div class="line"><span class="symbol">def</span> getflag(password):</div><div class="line">	p = remote(<span class="string">"127.0.0.1"</span>, <span class="number">10001</span>)</div><div class="line">	p.readuntil(<span class="string">"prefix: "</span>)</div><div class="line">	prefix = p.readline().decode(<span class="string">'base64'</span>)</div><div class="line">	solve = proof(prefix)</div><div class="line">	p.sendline(solve.encode(<span class="string">'base64'</span>).<span class="keyword">strip())</span></div><div class="line">	tmp_num = []</div><div class="line">	for x in password:</div><div class="line">		send_num = pow(<span class="keyword">bytes_to_long(hashlib.sha512(str(x)).digest()), </span><span class="number">2</span>, pp)</div><div class="line">		p.readuntil(<span class="string">"Server send "</span>)</div><div class="line">		tmp_num.append(p.readline().<span class="keyword">strip())</span></div><div class="line">		p.sendline(<span class="keyword">str(send_num))</span></div><div class="line"></div><div class="line">	p.readuntil(<span class="string">"Flag is (of course after encryption :D): "</span>)</div><div class="line">	enc_flag = int(p.readline().<span class="keyword">strip())</span></div><div class="line">	flag = enc_flag</div><div class="line">	for x in tmp_num:</div><div class="line">		flag ^= <span class="keyword">bytes_to_long(hashlib.sha512(x).digest())</span></div><div class="line">	print long_to_bytes(flag)</div><div class="line"></div><div class="line"><span class="symbol">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">	password = [None] * <span class="number">11</span></div><div class="line">	# password = [<span class="number">8</span>, <span class="number">15</span>, <span class="number">9</span>, <span class="number">15</span>, <span class="number">7</span>, <span class="number">7</span>, <span class="number">13</span>, <span class="number">11</span>, <span class="number">10</span>, <span class="number">15</span>, <span class="number">4</span>]</div><div class="line">	password = guess_password(password)</div><div class="line">	getflag(password)</div></pre></td></tr></table></figure></p>
+<p><img src="http://qn.lazysheep.cc/img/pake3.png" alt="pake3"></p>
+<h1 id="PAKE-Crypto-150"><a href="#PAKE-Crypto-150" class="headerlink" title="PAKE++(Crypto 150)"></a>PAKE++(Crypto 150)</h1><p><img src="http://qn.lazysheep.cc/img/pake4.png" alt="pake4"></p>
+<p>[源码]<a href="https://github.com/Hcamael/CTF_repo/blob/master/HITCON/PAKE%2B%2B(150)/pake2.rb_3a9fcc07faff2d8ff6f48c5636c52209fa2f8e51" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/blob/master/HITCON/PAKE%2B%2B(150)/pake2.rb_3a9fcc07faff2d8ff6f48c5636c52209fa2f8e51</a></p>
+<p>本地环境搭建同上, 同样注释那4行, 减少我们跑脚本的时间</p>
+<p>同样需要两个文件<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"> password2</span></div><div class="line">7ygvnht567ujmkihgfdR</div><div class="line"><span class="meta">#</span><span class="bash"> flag2.txt</span></div><div class="line">hitcon&#123;m17m_f0r_pr0f1t_bu7_S71ll_d035n7_kn0w_p455w0rd&#125;</div></pre></td></tr></table></figure></p>
+<p>和上题不同, 分值降低了, 难度应该也降低了, 循环变2轮了, 但是q变多了, 每轮从8个q中随机选取一个</p>
+<p>跟上题相比, 这回的password是固定的值, 如果能得到, 那就能做出来了, 但是这回password根据代码可以知道</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">fail unless password =~ /<span class="tag">\<span class="name">A</span><span class="string">[a-zA-Z0-9]</span><span class="string">&#123;20&#125;</span></span><span class="tag">\<span class="name">z</span></span>/</div></pre></td></tr></table></figure>
+<p>如果爆破的话, 需要$62^{20}$次, 明显不现实</p>
+<p>所以上题先求password的方法在这题不可行了, 但是我们能借鉴下上题的思路</p>
+<p>这回我们引入第三个连接：<br>$$<br>enc\_flag1 = flag \bigotimes k1_1 \bigotimes k1_2\\<br>enc\_flag2 = flag \bigotimes k2_1 \bigotimes k2_2\\<br>enc\_flag3 = flag \bigotimes k3_1 \bigotimes k3_2<br>$$</p>
+<p>按照前面PAKE的思路, 使得<br>$$<br>k1_1 = k2_1\\<br>k3_1 = k1_2\\<br>k2_2 = k3_2<br>$$</p>
+<p>然后再把三个enc_flag进行异或运算, 最后得到就是flag</p>
+<p>不过这有个小问题, 根据PAKE的原理, 要求p要相等, 但是这题的p是从8个中随机出一个</p>
+<p>这个问题不大, 毕竟只有8个, 完全可进行爆破, 在q相等的情况下进行</p>
+<p>payload:<br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div></pre></td><td class="code"><pre><div class="line">#! /usr/<span class="keyword">bin/env </span>python</div><div class="line"># -*- coding: utf-<span class="number">8</span> -*-</div><div class="line"></div><div class="line"><span class="symbol">from</span> pwn <span class="meta">import</span> *</div><div class="line"><span class="symbol">from</span> proof <span class="meta">import</span> proof</div><div class="line"><span class="symbol">import</span> hashlib</div><div class="line"><span class="symbol">from</span> <span class="keyword">multiprocessing </span><span class="meta">import</span> Pool as ThreadPool</div><div class="line"><span class="symbol">from</span> Crypto.Util.number <span class="meta">import</span> long_to_bytes</div><div class="line"></div><div class="line"># context.log_level = <span class="string">"debug"</span></div><div class="line"><span class="symbol">pool</span> = ThreadPool(<span class="number">2</span>)</div><div class="line"></div><div class="line"><span class="symbol">p1</span> = remote(<span class="string">"127.0.0.1"</span>, <span class="number">10001</span>)</div><div class="line"><span class="symbol">p2</span> = remote(<span class="string">"127.0.0.1"</span>, <span class="number">10001</span>)</div><div class="line"><span class="symbol">p1.readuntil</span>(<span class="string">"prefix: "</span>)</div><div class="line"><span class="symbol">p2.readuntil</span>(<span class="string">"prefix: "</span>)</div><div class="line"><span class="symbol">prefix1</span> = <span class="built_in">p1</span>.readline().decode(<span class="string">'base64'</span>)</div><div class="line"><span class="symbol">prefix2</span> = <span class="built_in">p2</span>.readline().decode(<span class="string">'base64'</span>)</div><div class="line"><span class="symbol">solve1</span>, solve2 = pool.map(proof, [prefix1, prefix2])</div><div class="line"><span class="symbol">p1.sendline</span>(solve1.encode(<span class="string">'base64'</span>).<span class="keyword">strip())</span></div><div class="line"><span class="symbol">p2.sendline</span>(solve2.encode(<span class="string">'base64'</span>).<span class="keyword">strip())</span></div><div class="line"><span class="symbol">p1.readuntil</span>(<span class="string">"p = "</span>)</div><div class="line"><span class="symbol">p2.readuntil</span>(<span class="string">"p = "</span>)</div><div class="line"></div><div class="line"><span class="symbol">prime1</span> = <span class="built_in">p1</span>.readline()</div><div class="line"><span class="symbol">prime2</span> = <span class="built_in">p2</span>.readline()</div><div class="line"></div><div class="line"><span class="symbol">while</span> prime1 != prime2:</div><div class="line">	<span class="built_in">p2</span>.close()</div><div class="line">	<span class="built_in">p2</span> = remote(<span class="string">"127.0.0.1"</span>, <span class="number">10001</span>)</div><div class="line">	<span class="built_in">p2</span>.readuntil(<span class="string">"prefix: "</span>)</div><div class="line">	prefix2 = <span class="built_in">p2</span>.readline().decode(<span class="string">'base64'</span>)</div><div class="line">	solve2 = proof(prefix2)</div><div class="line">	<span class="built_in">p2</span>.sendline(solve2.encode(<span class="string">'base64'</span>).<span class="keyword">strip())</span></div><div class="line">	<span class="built_in">p2</span>.readuntil(<span class="string">"p = "</span>)</div><div class="line">	prime2 = <span class="built_in">p2</span>.readline()</div><div class="line"></div><div class="line"><span class="symbol">p1.readuntil</span>(<span class="string">"Server send "</span>)</div><div class="line"><span class="symbol">p2.readuntil</span>(<span class="string">"Server send "</span>)</div><div class="line"><span class="symbol">p1_r1_num</span> = <span class="built_in">p1</span>.readline()</div><div class="line"><span class="symbol">p2_r1_num</span> = <span class="built_in">p2</span>.readline()</div><div class="line"><span class="symbol">p1.send</span>(p2_r1_num)</div><div class="line"><span class="symbol">p2.send</span>(p1_r1_num)</div><div class="line"></div><div class="line"><span class="symbol">p1.readuntil</span>(<span class="string">"p = "</span>)</div><div class="line"><span class="symbol">p2.readuntil</span>(<span class="string">"p = "</span>)</div><div class="line"><span class="symbol">r2_prime1</span> = <span class="built_in">p1</span>.readline()</div><div class="line"><span class="symbol">r2_prime2</span> = <span class="built_in">p2</span>.readline()</div><div class="line"><span class="symbol">p1.readuntil</span>(<span class="string">"Server send "</span>)</div><div class="line"><span class="symbol">p2.readuntil</span>(<span class="string">"Server send "</span>)</div><div class="line"><span class="symbol">p1_r2_num</span> = <span class="built_in">p1</span>.readline()</div><div class="line"><span class="symbol">p2_r2_num</span> = <span class="built_in">p2</span>.readline()</div><div class="line"></div><div class="line"><span class="symbol">while</span> True:</div><div class="line">	<span class="built_in">p3</span> = remote(<span class="string">"127.0.0.1"</span>, <span class="number">10001</span>)</div><div class="line">	<span class="built_in">p3</span>.readuntil(<span class="string">"prefix: "</span>)</div><div class="line">	prefix3 = <span class="built_in">p3</span>.readline().decode(<span class="string">'base64'</span>)</div><div class="line">	solve3 = proof(prefix3)</div><div class="line">	<span class="built_in">p3</span>.sendline(solve3.encode(<span class="string">'base64'</span>).<span class="keyword">strip())</span></div><div class="line">	<span class="built_in">p3</span>.readuntil(<span class="string">"p = "</span>)</div><div class="line">	prime3 = <span class="built_in">p3</span>.readline()</div><div class="line">	<span class="built_in">p3</span>.readuntil(<span class="string">"Server send "</span>)</div><div class="line">	p3_r1_num = <span class="built_in">p3</span>.readline()</div><div class="line">	<span class="meta">if</span> prime3 == r2_prime1:</div><div class="line">		<span class="built_in">p3</span>.send(p1_r2_num)</div><div class="line">	<span class="meta">elif</span> prime3 == r2_prime2:</div><div class="line">		<span class="built_in">p3</span>.send(p2_r2_num)</div><div class="line"><span class="symbol">	else:</span></div><div class="line">		<span class="built_in">p3</span>.close()</div><div class="line">		continue</div><div class="line">	<span class="built_in">p3</span>.readuntil(<span class="string">"p = "</span>)</div><div class="line">	r2_prime3 = <span class="built_in">p3</span>.readline()</div><div class="line">	<span class="built_in">p3</span>.readuntil(<span class="string">"Server send "</span>)</div><div class="line">	p3_r2_num = <span class="built_in">p3</span>.readline()</div><div class="line">	<span class="meta">if</span> prime3 == r2_prime1 <span class="keyword">and </span>r2_prime3 == r2_prime2:</div><div class="line">		<span class="built_in">p3</span>.send(p2_r2_num)</div><div class="line">		<span class="built_in">p1</span>.send(p3_r1_num)</div><div class="line">		<span class="built_in">p2</span>.send(p3_r2_num)</div><div class="line">	<span class="meta">elif</span> prime3 == r2_prime2 <span class="keyword">and </span>r2_prime3 == r2_prime1:</div><div class="line">		<span class="built_in">p3</span>.send(p1_r2_num)</div><div class="line">		<span class="built_in">p2</span>.send(p3_r1_num)</div><div class="line">		<span class="built_in">p1</span>.send(p3_r2_num)</div><div class="line"><span class="symbol">	else:</span></div><div class="line">		<span class="built_in">p3</span>.close()</div><div class="line">		continue</div><div class="line">	<span class="keyword">break</span></div><div class="line"></div><div class="line"><span class="symbol">p1.readuntil</span>(<span class="string">"Flag is (of course after encryption :D): "</span>)</div><div class="line"><span class="symbol">p2.readuntil</span>(<span class="string">"Flag is (of course after encryption :D): "</span>)</div><div class="line"><span class="symbol">p3.readuntil</span>(<span class="string">"Flag is (of course after encryption :D): "</span>)</div><div class="line"><span class="symbol">enc1</span> = <span class="built_in">p1</span>.readline()</div><div class="line"><span class="symbol">enc2</span> = <span class="built_in">p2</span>.readline()</div><div class="line"><span class="symbol">enc3</span> = <span class="built_in">p3</span>.readline()</div><div class="line"><span class="symbol">p1.close</span>()</div><div class="line"><span class="symbol">p2.close</span>()</div><div class="line"><span class="symbol">p3.close</span>()</div><div class="line"><span class="symbol">flag</span> = int(enc1) ^ int(enc2) ^ int(enc3)</div><div class="line"></div><div class="line"><span class="symbol">print</span> long_to_bytes(flag)</div></pre></td></tr></table></figure></p>
+<p><img src="http://qn.lazysheep.cc/img/pake5.png" alt="pake5"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这次的HITCON我一共看了四道密码学, 都挺有意思, 不过我还是太菜, 一道也没撸出来, 这里放了两道, 之后还会写一片OTP的分析, 关于随机数预测的CVE, RSA的目前还没发现wp, 然后还有几道我做了的web题的分析</p>
+<p>总的来说这次HITCON收益良多, 有时间还会分析下bin的题</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-10-12, 10:29:08</p>
+        <p><span>最后更新:</span>2016-10-12, 18:03:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/10/12/0x23/" title="2016 HITCON Crypto -- PAKE(++)">http://0x48.pw/2016/10/12/0x23/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/10/12/0x23/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/10/14/0x24/">
+                    HITCON 2016 web 总结
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/09/13/0x22/">
+                    php bugs 72663分析(CVE-2016-7124)
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PAKE-Crypto-250"><span class="toc-number">1.</span> <span class="toc-text">PAKE(Crypto 250)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#原题复现"><span class="toc-number">1.1.</span> <span class="toc-text">原题复现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析源码"><span class="toc-number">1.2.</span> <span class="toc-text">分析源码</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PAKE-Crypto-150"><span class="toc-number">2.</span> <span class="toc-text">PAKE++(Crypto 150)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/10/14/0x24/" title="上一篇: HITCON 2016 web 总结">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/09/13/0x22/" title="下一篇: php bugs 72663分析(CVE-2016-7124)">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

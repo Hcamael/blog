@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="LNMP: https://lnmp.org/phpenv-installer: https://github.com/rogeriopradoj/phpenv-installer">
+<meta name="keywords" content="php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP">
+<meta property="og:url" content="http://0x48.pw/2016/08/16/0x20/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="LNMP: https://lnmp.org/phpenv-installer: https://github.com/rogeriopradoj/phpenv-installer">
+<meta property="og:updated_time" content="2017-01-17T12:16:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP">
+<meta name="twitter:description" content="LNMP: https://lnmp.org/phpenv-installer: https://github.com/rogeriopradoj/phpenv-installer">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x20" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/08/16/0x20/" class="article-date">
+      <time datetime="2016-08-16T15:31:44.000Z" itemprop="datePublished">2016-08-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>LNMP: <a href="https://lnmp.org/" target="_blank" rel="external">https://lnmp.org/</a><br>phpenv-installer: <a href="https://github.com/rogeriopradoj/phpenv-installer" target="_blank" rel="external">https://github.com/rogeriopradoj/phpenv-installer</a></p>
+<a id="more"></a>
+<p>LNMP是Linux平台下一键安装Mysql + PHP + Nginx服务的一键安装包，傻瓜式安装环境，没啥好说的。</p>
+<p>然后是使用phpenv-installer去安装phpenv</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>curl -L <span class="symbol">http:</span>/<span class="regexp">/git.io/phpenv</span>-installer | bash</div></pre></td></tr></table></figure>
+<p>然后把写下这段写入<code>~/.bashrc</code><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> PHPENV_ROOT=<span class="string">"/root/.phpenv"</span></div><div class="line"><span class="keyword">if</span> [ <span class="_">-d</span> <span class="string">"<span class="variable">$&#123;PHPENV_ROOT&#125;</span>"</span> ]; <span class="keyword">then</span></div><div class="line">  <span class="built_in">export</span> PATH=<span class="string">"<span class="variable">$&#123;PHPENV_ROOT&#125;</span>/bin:<span class="variable">$&#123;PATH&#125;</span>"</span></div><div class="line">  <span class="built_in">eval</span> <span class="string">"<span class="variable">$(phpenv init -)</span>"</span></div><div class="line"><span class="keyword">fi</span></div></pre></td></tr></table></figure></p>
+<p>然后<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">source</span> .bashrc</span></div><div class="line"><span class="meta">$</span><span class="bash"> phpenv update</span></div><div class="line"><span class="meta">$</span><span class="bash"> phpenv install <span class="_">-l</span>  <span class="comment">#可以查看可安装的php版本</span></span></div><div class="line"><span class="meta">$</span><span class="bash"> phpenv install 5.6.0  <span class="comment"># 使用phpenv install 版本号   安装相应版本的php</span></span></div></pre></td></tr></table></figure></p>
+<p>因为是测试环境, 我使用的都是root用户, phpenv是安装在<code>/root/.phpenv</code></p>
+<p>然后刚才安装5.6.0版本的php, 安装目录在 <code>/root/.phpenv/versions/5.6.0</code></p>
+<p>安装过程需要一系列函数库, 如果你电脑里没有则会报错</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash">以下是我服务器需要的函数库</span></div><div class="line"><span class="meta">$</span><span class="bash"> sudo apt install libreadline6-dev libtidy-dev libxslt1-dev</span></div></pre></td></tr></table></figure>
+<p>然后还会报如下错误:<br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ext/xmlrpc/libxmlrpc/.libs/encodings.o: <span class="keyword">In</span> <span class="keyword">function</span> `convert<span class="comment">':</span></div><div class="line">/tmp/php-build/source/<span class="number">5.6</span><span class="number">.0</span>/ext/xmlrpc/libxmlrpc/encodings.c:<span class="number">73</span>: undefined reference <span class="keyword">to</span> `libiconv_open<span class="comment">'</span></div><div class="line">/tmp/php-build/source/<span class="number">5.6</span><span class="number">.0</span>/ext/xmlrpc/libxmlrpc/encodings.c:<span class="number">81</span>: undefined reference <span class="keyword">to</span> `libiconv<span class="comment">'</span></div><div class="line">/tmp/php-build/source/<span class="number">5.6</span><span class="number">.0</span>/ext/xmlrpc/libxmlrpc/encodings.c:<span class="number">101</span>: undefined reference <span class="keyword">to</span> `libiconv_close<span class="comment">'</span></div><div class="line">/tmp/php-build/source/<span class="number">5.6</span><span class="number">.0</span>/ext/xmlrpc/libxmlrpc/encodings.c:<span class="number">101</span>: undefined reference <span class="keyword">to</span> `libiconv_close<span class="comment">'</span></div></pre></td></tr></table></figure></p>
+<p>查到的导致该错误的原因：<a href="http://tonybai.com/2013/04/25/a-libiconv-linkage-problem/" target="_blank" rel="external">http://tonybai.com/2013/04/25/a-libiconv-linkage-problem/</a><br>没有啥好的解决方法，临时解决方法是把<code>/usr/local/lib/libiconv.so</code>删除<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ mv /usr/local/include/iconv<span class="selector-class">.h</span> /usr/local/include/iconv<span class="selector-class">.h</span><span class="selector-class">.bak</span></div></pre></td></tr></table></figure></p>
+<p>然后改编了一下<code>php-fpm</code>:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div></pre></td><td class="code"><pre><div class="line">$ cp /etc/init.d/php-fpm ./php-fpm.sh</div><div class="line">$ cat php-fpm.sh</div><div class="line"></div><div class="line"><span class="meta">#! /bin/sh</span></div><div class="line"></div><div class="line"><span class="comment">### BEGIN INIT INFO</span></div><div class="line"><span class="comment"># Provides:          php-fpm</span></div><div class="line"><span class="comment"># Required-Start:    $remote_fs $network</span></div><div class="line"><span class="comment"># Required-Stop:     $remote_fs $network</span></div><div class="line"><span class="comment"># Default-Start:     2 3 4 5</span></div><div class="line"><span class="comment"># Default-Stop:      0 1 6</span></div><div class="line"><span class="comment"># Short-Description: starts php-fpm</span></div><div class="line"><span class="comment"># Description:       starts the PHP FastCGI Process Manager daemon</span></div><div class="line"><span class="comment">### END INIT INFO</span></div><div class="line"></div><div class="line">prefix=/root/.phpenv/versions/<span class="variable">$2</span></div><div class="line">exec_prefix=<span class="variable">$&#123;prefix&#125;</span></div><div class="line"></div><div class="line">php_fpm_BIN=<span class="variable">$&#123;exec_prefix&#125;</span>/sbin/php-fpm</div><div class="line">php_fpm_CONF=<span class="variable">$&#123;prefix&#125;</span>/etc/php-fpm.conf</div><div class="line">php_fpm_PID=<span class="variable">$&#123;prefix&#125;</span>/var/run/php-fpm.pid</div><div class="line"></div><div class="line"></div><div class="line">php_opts=<span class="string">"--fpm-config <span class="variable">$php_fpm_CONF</span> --pid <span class="variable">$php_fpm_PID</span>"</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="title">wait_for_pid</span></span> () &#123;</div><div class="line">	try=0</div><div class="line"></div><div class="line">	<span class="keyword">while</span> <span class="built_in">test</span> <span class="variable">$try</span> <span class="_">-lt</span> 35 ; <span class="keyword">do</span></div><div class="line"></div><div class="line">		<span class="keyword">case</span> <span class="string">"<span class="variable">$1</span>"</span> <span class="keyword">in</span></div><div class="line">			<span class="string">'created'</span>)</div><div class="line">			<span class="keyword">if</span> [ <span class="_">-f</span> <span class="string">"<span class="variable">$2</span>"</span> ] ; <span class="keyword">then</span></div><div class="line">				try=<span class="string">''</span></div><div class="line">				<span class="built_in">break</span></div><div class="line">			<span class="keyword">fi</span></div><div class="line">			;;</div><div class="line"></div><div class="line">			<span class="string">'removed'</span>)</div><div class="line">			<span class="keyword">if</span> [ ! <span class="_">-f</span> <span class="string">"<span class="variable">$2</span>"</span> ] ; <span class="keyword">then</span></div><div class="line">				try=<span class="string">''</span></div><div class="line">				<span class="built_in">break</span></div><div class="line">			<span class="keyword">fi</span></div><div class="line">			;;</div><div class="line">		<span class="keyword">esac</span></div><div class="line"></div><div class="line">		<span class="built_in">echo</span> -n .</div><div class="line">		try=`expr <span class="variable">$try</span> + 1`</div><div class="line">		sleep 1</div><div class="line"></div><div class="line">	<span class="keyword">done</span></div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">case</span> <span class="string">"<span class="variable">$1</span>"</span> <span class="keyword">in</span></div><div class="line">	start)</div><div class="line">		<span class="built_in">echo</span> -n <span class="string">"Starting php-fpm "</span></div><div class="line"></div><div class="line">		<span class="variable">$php_fpm_BIN</span> --daemonize <span class="variable">$php_opts</span></div><div class="line"></div><div class="line">		<span class="keyword">if</span> [ <span class="string">"$?"</span> != 0 ] ; <span class="keyword">then</span></div><div class="line">			<span class="built_in">echo</span> <span class="string">" failed"</span></div><div class="line">			<span class="built_in">exit</span> 1</div><div class="line">		<span class="keyword">fi</span></div><div class="line"></div><div class="line">		wait_for_pid created <span class="variable">$php_fpm_PID</span></div><div class="line"></div><div class="line">		<span class="keyword">if</span> [ -n <span class="string">"<span class="variable">$try</span>"</span> ] ; <span class="keyword">then</span></div><div class="line">			<span class="built_in">echo</span> <span class="string">" failed"</span></div><div class="line">			<span class="built_in">exit</span> 1</div><div class="line">		<span class="keyword">else</span></div><div class="line">			<span class="built_in">echo</span> <span class="string">" done"</span></div><div class="line">		<span class="keyword">fi</span></div><div class="line">	;;</div><div class="line"></div><div class="line">	stop)</div><div class="line">		<span class="built_in">echo</span> -n <span class="string">"Gracefully shutting down php-fpm "</span></div><div class="line"></div><div class="line">		<span class="keyword">if</span> [ ! -r <span class="variable">$php_fpm_PID</span> ] ; <span class="keyword">then</span></div><div class="line">			<span class="built_in">echo</span> <span class="string">"warning, no pid file found - php-fpm is not running ?"</span></div><div class="line">			<span class="built_in">exit</span> 1</div><div class="line">		<span class="keyword">fi</span></div><div class="line"></div><div class="line">		<span class="built_in">kill</span> -QUIT `cat <span class="variable">$php_fpm_PID</span>`</div><div class="line"></div><div class="line">		wait_for_pid removed <span class="variable">$php_fpm_PID</span></div><div class="line"></div><div class="line">		<span class="keyword">if</span> [ -n <span class="string">"<span class="variable">$try</span>"</span> ] ; <span class="keyword">then</span></div><div class="line">			<span class="built_in">echo</span> <span class="string">" failed. Use force-quit"</span></div><div class="line">			<span class="built_in">exit</span> 1</div><div class="line">		<span class="keyword">else</span></div><div class="line">			<span class="built_in">echo</span> <span class="string">" done"</span></div><div class="line">		<span class="keyword">fi</span></div><div class="line">	;;</div><div class="line"></div><div class="line">	status)</div><div class="line">		<span class="keyword">if</span> [ ! -r <span class="variable">$php_fpm_PID</span> ] ; <span class="keyword">then</span></div><div class="line">			<span class="built_in">echo</span> <span class="string">"php-fpm is stopped"</span></div><div class="line">			<span class="built_in">exit</span> 0</div><div class="line">		<span class="keyword">fi</span></div><div class="line"></div><div class="line">		PID=`cat <span class="variable">$php_fpm_PID</span>`</div><div class="line">		<span class="keyword">if</span> ps -p <span class="variable">$PID</span> | grep -q <span class="variable">$PID</span>; <span class="keyword">then</span></div><div class="line">			<span class="built_in">echo</span> <span class="string">"php-fpm (pid <span class="variable">$PID</span>) is running..."</span></div><div class="line">		<span class="keyword">else</span></div><div class="line">			<span class="built_in">echo</span> <span class="string">"php-fpm dead but pid file exists"</span></div><div class="line">		<span class="keyword">fi</span></div><div class="line">	;;</div><div class="line"></div><div class="line">	force-quit)</div><div class="line">		<span class="built_in">echo</span> -n <span class="string">"Terminating php-fpm "</span></div><div class="line"></div><div class="line">		<span class="keyword">if</span> [ ! -r <span class="variable">$php_fpm_PID</span> ] ; <span class="keyword">then</span></div><div class="line">			<span class="built_in">echo</span> <span class="string">"warning, no pid file found - php-fpm is not running ?"</span></div><div class="line">			<span class="built_in">exit</span> 1</div><div class="line">		<span class="keyword">fi</span></div><div class="line"></div><div class="line">		<span class="built_in">kill</span> -TERM `cat <span class="variable">$php_fpm_PID</span>`</div><div class="line"></div><div class="line">		wait_for_pid removed <span class="variable">$php_fpm_PID</span></div><div class="line"></div><div class="line">		<span class="keyword">if</span> [ -n <span class="string">"<span class="variable">$try</span>"</span> ] ; <span class="keyword">then</span></div><div class="line">			<span class="built_in">echo</span> <span class="string">" failed"</span></div><div class="line">			<span class="built_in">exit</span> 1</div><div class="line">		<span class="keyword">else</span></div><div class="line">			<span class="built_in">echo</span> <span class="string">" done"</span></div><div class="line">		<span class="keyword">fi</span></div><div class="line">	;;</div><div class="line"></div><div class="line">	restart)</div><div class="line">		<span class="variable">$0</span> stop <span class="variable">$2</span></div><div class="line">		<span class="variable">$0</span> start <span class="variable">$2</span></div><div class="line">	;;</div><div class="line"></div><div class="line">	reload)</div><div class="line"></div><div class="line">		<span class="built_in">echo</span> -n <span class="string">"Reload service php-fpm "</span></div><div class="line"></div><div class="line">		<span class="keyword">if</span> [ ! -r <span class="variable">$php_fpm_PID</span> ] ; <span class="keyword">then</span></div><div class="line">			<span class="built_in">echo</span> <span class="string">"warning, no pid file found - php-fpm is not running ?"</span></div><div class="line">			<span class="built_in">exit</span> 1</div><div class="line">		<span class="keyword">fi</span></div><div class="line"></div><div class="line">		<span class="built_in">kill</span> -USR2 `cat <span class="variable">$php_fpm_PID</span>`</div><div class="line"></div><div class="line">		<span class="built_in">echo</span> <span class="string">" done"</span></div><div class="line">	;;</div><div class="line"></div><div class="line">	configtest)</div><div class="line">		<span class="variable">$php_fpm_BIN</span> -t</div><div class="line">	;;</div><div class="line"></div><div class="line">	*)</div><div class="line">		<span class="built_in">echo</span> <span class="string">"Usage: <span class="variable">$0</span> &#123;start|stop|force-quit|restart|reload|status|configtest&#125;"</span></div><div class="line">		<span class="built_in">exit</span> 1</div><div class="line">	;;</div><div class="line"></div><div class="line"><span class="keyword">esac</span></div></pre></td></tr></table></figure></p>
+<p>参加以前虚拟主机的一键脚本需要改改<code>/bin/lnmp</code><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">cat &gt;<span class="regexp">/usr/local</span><span class="regexp">/nginx/conf</span><span class="regexp">/vhost/</span><span class="variable">$&#123;</span>domain&#125;.conf&lt;&lt;EOF</div><div class="line">server</div><div class="line">    &#123;</div><div class="line">        listen <span class="number">80</span>;</div><div class="line">        <span class="comment"># listen [::]:80;</span></div><div class="line">        server_name <span class="variable">$&#123;</span>domain&#125;<span class="variable">$&#123;</span>moredomainame&#125;;</div><div class="line">        index index.html index.htm index.php default.html default.htm default.php;</div><div class="line">        root  <span class="variable">$&#123;</span>vhostdir&#125;;</div><div class="line"></div><div class="line">        <span class="keyword">include</span> <span class="variable">$&#123;</span>rewrite&#125;.conf;</div><div class="line">        <span class="comment"># error_page   404   /404.html;</span></div><div class="line">        <span class="comment"># include enable-php.conf;</span></div><div class="line"></div><div class="line">        location ~ [^<span class="regexp">/]\.php(/</span>|<span class="variable">$)</span></div><div class="line">        &#123;</div><div class="line">            <span class="comment"># comment try_files \$uri =404; to enable pathinfo</span></div><div class="line">            try_files \<span class="variable">$uri</span> =<span class="number">404</span>;</div><div class="line">            fastcgi_pass  <span class="symbol">unix:</span>/tmp/php-cgi.sock;</div><div class="line">            fastcgi_index index.php;</div><div class="line">            <span class="keyword">include</span> fastcgi.conf;</div><div class="line">            <span class="comment"># include pathinfo.conf;</span></div><div class="line">        &#125;</div><div class="line">        location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)<span class="variable">$</span></div><div class="line">        &#123;</div><div class="line">            expires      <span class="number">30</span>d;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        location ~ .*\.(js|css)?<span class="variable">$</span></div><div class="line">        &#123;</div><div class="line">            expires      <span class="number">12</span>h;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="variable">$&#123;</span>al&#125;</div><div class="line">    &#125;</div><div class="line">EOF</div></pre></td></tr></table></figure></p>
+<p>然后写了一个一键生成相应php版本的虚拟主机: <code>diff_php_vhost_add.sh</code><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line"><span class="keyword">if</span> [ ! -n <span class="string">"<span class="variable">$1</span>"</span> ];<span class="keyword">then</span></div><div class="line">        <span class="built_in">echo</span> <span class="string">"Please enter vhost name"</span>;</div><div class="line">        <span class="built_in">exit</span> 1</div><div class="line"><span class="keyword">fi</span></div><div class="line"><span class="keyword">if</span> [ ! -n <span class="string">"<span class="variable">$2</span>"</span> ];<span class="keyword">then</span></div><div class="line">        <span class="built_in">echo</span> <span class="string">"Please enter php version"</span>;</div><div class="line">        <span class="built_in">exit</span> 1</div><div class="line"><span class="keyword">fi</span></div><div class="line">groupadd <span class="variable">$1</span></div><div class="line">useradd <span class="variable">$1</span> -M <span class="_">-s</span> /sbin/nologin -g <span class="variable">$1</span></div><div class="line"></div><div class="line">cat &gt;/root/.phpenv/versions/<span class="variable">$2</span>/etc/php-fpm.conf&lt;&lt;EOF</div><div class="line">[global]</div><div class="line">pid = /root/.phpenv/versions/<span class="variable">$2</span>/var/run/php-fpm.pid</div><div class="line">error_log = /root/.phpenv/versions/<span class="variable">$2</span>/var/<span class="built_in">log</span>/php-fpm.log</div><div class="line">log_level = notice</div><div class="line"></div><div class="line">[<span class="variable">$1</span>]</div><div class="line">listen = /tmp/php-cgi-<span class="variable">$2</span>.sock</div><div class="line"><span class="comment">#listen = 127.0.0.1:9000</span></div><div class="line">listen.backlog = -1</div><div class="line">listen.allowed_clients = 127.0.0.1</div><div class="line">listen.owner = <span class="variable">$1</span></div><div class="line">listen.group = <span class="variable">$1</span></div><div class="line">listen.mode = 0666</div><div class="line">user = <span class="variable">$1</span></div><div class="line">group = <span class="variable">$1</span></div><div class="line">pm = dynamic</div><div class="line">;pm = static</div><div class="line">pm.max_children = 10</div><div class="line">pm.start_servers = 2</div><div class="line">pm.min_spare_servers = 1</div><div class="line">pm.max_spare_servers = 6</div><div class="line">request_terminate_timeout = 100</div><div class="line">request_slowlog_timeout = 0</div><div class="line">slowlog = var/<span class="built_in">log</span>/slow-<span class="variable">$2</span>.log</div><div class="line">EOF</div><div class="line"></div><div class="line"><span class="built_in">echo</span> <span class="variable">$1</span> | lnmp vhost add</div><div class="line">chown <span class="variable">$1</span>:<span class="variable">$1</span> -R /home/wwwroot/<span class="variable">$1</span></div><div class="line">sed -i <span class="string">"s/php-cgi/php-cgi-<span class="variable">$2</span>/g"</span> /usr/<span class="built_in">local</span>/nginx/conf/vhost/<span class="variable">$1</span>.conf</div><div class="line"></div><div class="line">/root/php-fpm.sh restart <span class="variable">$2</span></div><div class="line">/etc/init.d/nginx restart</div></pre></td></tr></table></figure></p>
+<p>好了。。前期准备工作就好了, 以后增加特定版本php的虚拟主机只要两句命令<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> phpenv install [version]     <span class="comment"># 安装相应版本的php</span></span></div><div class="line"><span class="meta">$</span><span class="bash"> ./diff_php_vhost_add.sh [vhost] [version]  <span class="comment">#有两个参数, 第一个是虚拟主机名, 第二个是php版本号, 必需得已经使用phpenv安装成功的</span></span></div></pre></td></tr></table></figure></p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>我的一键脚本路径都是写死的, 已经我是用来做测试的, 所以都放在<code>/root</code>目录下, 如果不用root的, 自己把脚本里的路径改成相应路径<br>下次有空自己写个和一键配合的lnmp脚本</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-08-16, 23:31:44</p>
+        <p><span>最后更新:</span>2017-01-17, 20:16:42</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/08/16/0x20/" title="LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP">http://0x48.pw/2016/08/16/0x20/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/08/16/0x20/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/08/31/0x21/">
+                    Cisco ASA RCE 环境搭建
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/08/10/0x1F/">
+                    CVE-2016-6174漏洞分析
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#最后"><span class="toc-number">1.</span> <span class="toc-text">最后</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/08/31/0x21/" title="上一篇: Cisco ASA RCE 环境搭建">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/08/10/0x1F/" title="下一篇: CVE-2016-6174漏洞分析">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

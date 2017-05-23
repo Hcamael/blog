@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Triton学习笔记(一) | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="因为毕设的原因要学习Pin的使用，但是实在不想写C/C++，所以找到Triton，可以使用Python调用pin，第一篇准备介绍下Triton的一些简单的用法">
+<meta name="keywords" content="Binary">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Triton学习笔记(一)">
+<meta property="og:url" content="http://0x48.pw/2017/04/02/0x30/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="因为毕设的原因要学习Pin的使用，但是实在不想写C/C++，所以找到Triton，可以使用Python调用pin，第一篇准备介绍下Triton的一些简单的用法">
+<meta property="og:updated_time" content="2017-04-02T07:59:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Triton学习笔记(一)">
+<meta name="twitter:description" content="因为毕设的原因要学习Pin的使用，但是实在不想写C/C++，所以找到Triton，可以使用Python调用pin，第一篇准备介绍下Triton的一些简单的用法">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x30" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/04/02/0x30/" class="article-date">
+      <time datetime="2017-04-02T06:49:19.000Z" itemprop="datePublished">2017-04-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Triton学习笔记(一)
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Binary/">Binary</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>因为毕设的原因要学习Pin的使用，但是实在不想写C/C++，所以找到Triton，可以使用Python调用pin，第一篇准备介绍下Triton的一些简单的用法</p>
+<a id="more"></a>
+<p>Triton: <a href="https://github.com/JonathanSalwan/Triton" target="_blank" rel="external">https://github.com/JonathanSalwan/Triton</a></p>
+<p>安装没啥问题，需要装z3和pin，按照官方文档可以顺利的安装成功</p>
+<p>正常情况下是需要导入两个库:<br><figure class="highlight capnproto"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> triton  <span class="keyword">import</span> *</div><div class="line"><span class="keyword">from</span> pintool <span class="keyword">import</span> *</div></pre></td></tr></table></figure></p>
+<p>其中, <code>pintool</code>导入的时候会报错提示没有这个模块，这是因为需要使用<code>triton</code>来运行python脚本</p>
+<p>也就是说: <code>python xxx.py bin</code>是找不到<code>pintool</code>模块的，需要<code>triton xxx.py bin</code></p>
+<p>来个简单的示例:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// test1.c</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> i;</div><div class="line">	i = <span class="number">0</span>;</div><div class="line">	<span class="keyword">return</span> i;</div><div class="line">&#125;</div><div class="line"><span class="comment">// gcc test1.c -o test1</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># test.py</span></div><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">from</span> triton <span class="keyword">import</span> *</div><div class="line"><span class="keyword">from</span> pintool <span class="keyword">import</span> *</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">before</span><span class="params">(ins)</span>:</span></div><div class="line">	<span class="keyword">print</span> ins</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">	setArchitecture(ARCH.X86_64)</div><div class="line">	startAnalysisFromSymbol(<span class="string">"main"</span>)</div><div class="line">	insertCall(before, INSERT_POINT.BEFORE)</div><div class="line">	runProgram()</div></pre></td></tr></table></figure>
+<p><code>test1</code>的<code>main</code>函数反汇编代码是:<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ objdump -d /tmp/test1 -M inte</div><div class="line">...</div><div class="line">080483<span class="built_in">db</span> &lt;main&gt;:</div><div class="line"> 80483<span class="built_in">db</span>:	<span class="number">55</span>                   	<span class="keyword">push</span>   <span class="built_in">ebp</span></div><div class="line"> 80483dc:	<span class="number">89</span> e5                	<span class="keyword">mov</span>    <span class="built_in">ebp</span>,<span class="built_in">esp</span></div><div class="line"> 80483de:	<span class="number">83</span> ec <span class="number">10</span>             	<span class="keyword">sub</span>    <span class="built_in">esp</span>,<span class="number">0x10</span></div><div class="line"> 80483e1:	c7 <span class="number">45</span> fc <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> 	<span class="keyword">mov</span>    <span class="built_in">DWORD</span> <span class="built_in">PTR</span> [<span class="built_in">ebp</span>-<span class="number">0x4</span>],<span class="number">0x0</span></div><div class="line"> 80483e8:	8b <span class="number">45</span> fc             	<span class="keyword">mov</span>    <span class="built_in">eax</span>,<span class="built_in">DWORD</span> <span class="built_in">PTR</span> [<span class="built_in">ebp</span>-<span class="number">0x4</span>]</div><div class="line"> 80483eb:	c9                   	<span class="keyword">leave</span></div><div class="line"> 80483ec:	c3                   	<span class="keyword">ret</span></div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>测试脚本的运行结果是:<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ build/triton /tmp/test1.py /tmp/test1</div><div class="line"><span class="number">0x4004d6</span>: <span class="keyword">push</span> <span class="built_in">rbp</span></div><div class="line"><span class="number">0x4004d7</span>: <span class="keyword">mov</span> <span class="built_in">rbp</span>, <span class="built_in">rsp</span></div><div class="line"><span class="number">0x4004da</span>: <span class="keyword">mov</span> <span class="built_in">dword</span> <span class="built_in">ptr</span> [<span class="built_in">rbp</span> - <span class="number">4</span>], <span class="number">0</span></div><div class="line"><span class="number">0x4004e1</span>: <span class="keyword">mov</span> <span class="built_in">eax</span>, <span class="built_in">dword</span> <span class="built_in">ptr</span> [<span class="built_in">rbp</span> - <span class="number">4</span>]</div></pre></td></tr></table></figure></p>
+<p>这里来解释下脚本:</p>
+<ul>
+<li>setArchitecture(ARCH.X86_64)<br>初始化架构，讲道理这里应该是设置输入的二进制的架构，是32还是64位，但是如果我改成<code>ARCH.x86</code>却会报错:<figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">E:</span> Unable to load pin<span class="regexp">/source/</span>tools<span class="regexp">/Triton/</span>build<span class="regexp">/src/</span>tracer<span class="regexp">/pin/</span>libpintool.so.  Check the architecture type.</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>查看发现<code>libpintool.so</code>是64位的so库，所以不能加载是正常的，所以是你编译的时候是啥架构，这里只能填啥架构(感觉可以去提个issue)</p>
+<ul>
+<li>startAnalysisFromSymbol(“main”)<br>这句就简单了，从符号表<code>main</code>开始分析，说简单点就是，只分析哪个函数<br>除此之外还有<figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="literal">void</span> startAnalysisFromAddress(<span class="built_in">integer</span> addr)    <span class="comment">//从某个地址开始分析</span></div><div class="line"><span class="literal">void</span> startAnalysisFromEntry(<span class="literal">void</span>)              <span class="comment">//从_start函数开始分析</span></div><div class="line"><span class="literal">void</span> startAnalysisFromOffset(<span class="built_in">integer</span> offset)   <span class="comment">//这个没试过，从bin的某个偏移地址开始分析</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>有开始的当然还有结束的<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">stopAnalysisFromAddress</span><span class="params">(integer addr)</span></span></div><div class="line"><span class="function"><span class="title">stopAnalysisFromOffset</span><span class="params">(integer offset)</span></span></div></pre></td></tr></table></figure></p>
+<ul>
+<li>insertCall(before, INSERT_POINT.BEFORE)<br>该函数的定义为: <code>void insertCall(function, INSERT_POINT type)</code></li>
+</ul>
+<p>作用就是，在啥情况下插入回调函数，我写的这句的含义就是在每句指令执行之前先跑一遍回调函数<code>before</code>，而每种类型传给回调函数的参数也不同，比如<code>INSERT_POINT.BEFORE</code>传入的就是将要执行的指令类，没错，是一个类，而不是字符串，这个类都有啥属性之后会研究</p>
+<p>除此之外的类型还有:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">INSERT_POINT<span class="selector-class">.AFTER</span>                <span class="comment">//每句指令结束之后，返回的也是执行结束的那个指令类</span></div><div class="line">INSERT_POINT<span class="selector-class">.BEFORE_SYMPROC</span>       <span class="comment">//跟BEFORE基本一样，发现的唯一的不同就是这个类型可以跟踪污点传播</span></div><div class="line">INSERT_POINT<span class="selector-class">.FINI</span>                 <span class="comment">//程序结束之后，好像是不传入参数</span></div><div class="line">INSERT_POINT<span class="selector-class">.ROUTINE_ENTRY</span>        <span class="comment">//进入一个函数时，返回的参数是线程id</span></div><div class="line">INSERT_POINT<span class="selector-class">.ROUTINE_EXIT</span>         <span class="comment">//退出一个函数时，返回参数同上</span></div><div class="line">INSERT_POINT<span class="selector-class">.IMAGE_LOAD</span>           <span class="comment">//暂时没用到还不知道，官方文档说的还不理解</span></div><div class="line">INSERT_POINT<span class="selector-class">.SIGNALS</span>              <span class="comment">//当接收到信号时，返回值是线程id和信号id，暂时也还没用到过这个类型</span></div><div class="line">INSERT_POINT<span class="selector-class">.SYSCALL_ENTRY</span>        <span class="comment">//这个好理解，系统调用时，返回参数是线程id加上一个std类，可以获取到标准输出，输入，错误等信息</span></div><div class="line">INSERT_POINT<span class="selector-class">.SYSCALL_EXIT</span>         <span class="comment">//系统调用结束时，同上</span></div></pre></td></tr></table></figure></p>
+<ul>
+<li><p>runProgram()<br>当所有要设置的都设置好后，使用该函数运行二进制程序</p>
+</li>
+<li><p>before()<br>这个回调函数的作用就是输出传入的指令参数</p>
+</li>
+</ul>
+<p>看看官方文档和例子其实还挺简单的…但是功能挺屌的</p>
+<p>比如我可以使用<code>startAnalysisFromEntry()</code>来查看一个程序从头到尾执行的指令，对学习一个二进制的加载和结束过程很有帮助，比如我可以得知一个程序其实是从<code>_start</code>函数开始跑的，期间还会跳到libc库中，然后还要跳到<code>__libc_csu_init</code>函数中，后面才轮到<code>main</code>函数，然后程序也不是<code>return 0</code>之后就结束了，还要运行一通其他玩意.</p>
+<p>但是同样,这里也有一个坑点,上面我写的代码少所以看不出来，如果改一改调用个<code>malloc</code>或者其他系统函数，或者:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> i;</div><div class="line">	i = <span class="number">100000</span>;</div><div class="line">	<span class="keyword">while</span>(i)</div><div class="line">	&#123;</div><div class="line">		i--;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> i;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>然后使用<code>htop</code>查看系统内存情况，你会发现内存会一直增长，直到程序停止，如果内存小的话直接GG, 一般是Pin会自动杀死进程，报一个<code>out of memory</code>的错误，或者直接死机，我给虚拟机配了6G的内存，不够跑完一个<code>malloc</code>函数的</p>
+<p>解决办法有两个:<br><figure class="highlight lasso"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="literal">void</span> setupImageBlacklist(<span class="meta">[</span><span class="built_in">string</span>, <span class="params">...</span><span class="meta">]</span>)</div><div class="line">// eg:</div><div class="line">// setupImageBlacklist(<span class="meta">[</span><span class="string">"libc"</span>, <span class="string">"ld-linux"</span><span class="meta">]</span>)</div></pre></td></tr></table></figure></p>
+<p>很简单的第一个思路，不跟进libc库中不就好了</p>
+<p>但是解决不了我上面写的这种情况，你写的指令要跑几万条呢?<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">void enableMode(<span class="name">MODE</span> mode, bool flag)</div><div class="line">// enableMode(<span class="name">MODE</span>.ONLY_ON_SYMBOLIZED, True)</div></pre></td></tr></table></figure></p>
+<p>使用这个函数设置一个<code>ONLY_ON_SYMBOLIZED</code>模式，内存就不会跟着跟踪指令而无限增长了，有啥含义…还没明白，有待研究….</p>
+<p>第一篇就讲讲简单的使用….</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/04/02/0x30/">Triton学习笔记(一)</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2017-04-02, 14:49:19</p>
+        <p><span>最后更新:</span>2017-04-02, 15:59:06</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/04/02/0x30/" title="Triton学习笔记(一)">http://0x48.pw/2017/04/02/0x30/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/04/02/0x30/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/04/03/0x31/">
+                    Triton学习笔记(二)
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/03/20/0x2f/">
+                    记一次手撸CPython bytecode
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/04/03/0x31/" title="上一篇: Triton学习笔记(二)">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/03/20/0x2f/" title="下一篇: 记一次手撸CPython bytecode">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

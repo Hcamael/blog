@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Python 的 BaseHTTPServer模块分析小结 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="已经好久没更新过博客了，因为最近开始用为知笔记了，感觉每次发到blog的都太零散了，好多都还没完成，所以现在决定，零散的写到笔记里去，然后有一个完整的内容再发到blog里来。">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 的 BaseHTTPServer模块分析小结">
+<meta property="og:url" content="http://0x48.pw/2015/12/01/0x0C/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="已经好久没更新过博客了，因为最近开始用为知笔记了，感觉每次发到blog的都太零散了，好多都还没完成，所以现在决定，零散的写到笔记里去，然后有一个完整的内容再发到blog里来。">
+<meta property="og:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-BaseHTTPServer.jpeg">
+<meta property="og:updated_time" content="2016-03-28T10:21:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python 的 BaseHTTPServer模块分析小结">
+<meta name="twitter:description" content="已经好久没更新过博客了，因为最近开始用为知笔记了，感觉每次发到blog的都太零散了，好多都还没完成，所以现在决定，零散的写到笔记里去，然后有一个完整的内容再发到blog里来。">
+<meta name="twitter:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-BaseHTTPServer.jpeg">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x0C" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/01/0x0C/" class="article-date">
+      <time datetime="2015-12-01T05:02:30.000Z" itemprop="datePublished">2015-12-01</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Python 的 BaseHTTPServer模块分析小结
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>已经好久没更新过博客了，因为最近开始用为知笔记了，感觉每次发到blog的都太零散了，好多都还没完成，所以现在决定，零散的写到笔记里去，然后有一个完整的内容再发到blog里来。</p>
+</blockquote>
+<a id="more"></a>
+<p>这次是一篇完整的BaseHTTPServer模块分析，花了几天时间研究该模块，先放上我的思维导图，由于是第一次使用思维导图，所以弄得不是很满意。<br><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-BaseHTTPServer.jpeg" alt="BaseHTTPServer"></p>
+<p>分析该模块的起因是该反代程序：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment">#-*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> BaseHTTPServer</div><div class="line"><span class="keyword">import</span> hashlib</div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> urllib2</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">CacheHandler</span><span class="params">(BaseHTTPServer.BaseHTTPRequestHandler)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></div><div class="line">      m = hashlib.md5()</div><div class="line">      m.update(self.path)</div><div class="line">      cache_filename = m.hexdigest()</div><div class="line">      <span class="keyword">if</span> os.path.exists(cache_filename):</div><div class="line">          <span class="keyword">print</span> <span class="string">"Cache hit"</span></div><div class="line">          data = open(cache_filename).readlines()</div><div class="line">      <span class="keyword">else</span>:</div><div class="line">          <span class="keyword">print</span> <span class="string">"Cache miss"</span></div><div class="line">          data = urllib2.urlopen(<span class="string">"http://www.baidu.com"</span> + self.path).readlines()</div><div class="line">          open(cache_filename, <span class="string">'wb'</span>).writelines(data)</div><div class="line">      self.send_response(<span class="number">200</span>)</div><div class="line">      self.end_headers()</div><div class="line">      self.wfile.writelines(data)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">()</span>:</span></div><div class="line">    server_address = (<span class="string">''</span>, <span class="number">9999</span>)</div><div class="line">    httpd = BaseHTTPServer.HTTPServer(server_address, CacheHandler)</div><div class="line">    httpd.serve_forever()</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    run()</div></pre></td></tr></table></figure></p>
+<h1 id="BaseHTTPServer"><a href="#BaseHTTPServer" class="headerlink" title="BaseHTTPServer"></a>BaseHTTPServer</h1><p>在该模块中定义了两个类</p>
+<ul>
+<li>HTTPServer</li>
+<li>BaseHTTPRequestHandler</li>
+</ul>
+<h2 id="HTTPServer-SocketServer-TCPServer"><a href="#HTTPServer-SocketServer-TCPServer" class="headerlink" title="HTTPServer(SocketServer.TCPServer)"></a>HTTPServer(SocketServer.TCPServer)</h2><p>该类中为定义 <strong>init</strong>()初始化函数，所以跳到它继承的 <code>SocketServer.TCPServer</code>中去</p>
+<h3 id="TCPServer-BaseServer"><a href="#TCPServer-BaseServer" class="headerlink" title="TCPServer(BaseServer)"></a>TCPServer(BaseServer)</h3><p>_<em>init</em>_ 接收两个必填参数，和一个可选参数。<br>前两个参数到他继承的BaseServer中初始化<br>这两个参数一个是需要监听的地址和端口， 一个是类<br>然后就是建立一个socket链接 <code>self.socket = socket.socket(self.address_family, self.socket_type)</code><br>然后是<br><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>:</div><div class="line">    <span class="keyword">self</span>.server_bind()</div><div class="line">    <span class="keyword">self</span>.server_activate()</div><div class="line"><span class="keyword">except</span>:</div><div class="line">    <span class="keyword">self</span>.server_close()</div><div class="line">    <span class="keyword">raise</span></div></pre></td></tr></table></figure></p>
+<p>如果传了第三个参数，值为False，则不执行上面的代码<br>然后，初始化完毕</p>
+<h4 id="server-bind-self"><a href="#server-bind-self" class="headerlink" title="server_bind(self)"></a>server_bind(self)</h4><p>（这重名字就能猜到大概，所以说，编程是命名要有意义！）<br>根据前面初始化的地址，绑定地址端口。<br>也就是socket编程中的 <code>socket.bind()</code></p>
+<h4 id="server-activate-self"><a href="#server-activate-self" class="headerlink" title="server_activate(self)"></a>server_activate(self)</h4><p>写过socket服务的就知道了，绑定完后就是监听了.<br>默认是5个客户端.<br>socket.listen(5)</p>
+<h4 id="get-request-self"><a href="#get-request-self" class="headerlink" title="get_request(self)"></a>get_request(self)</h4><p>没啥好说的, 返回 socket.accept()</p>
+<h4 id="BaseServer"><a href="#BaseServer" class="headerlink" title="BaseServer"></a>BaseServer</h4><p>__init__ 接收两个参数，然后赋值给self.</p>
+<h5 id="serve-forever-self-poll-interval-0-5"><a href="#serve-forever-self-poll-interval-0-5" class="headerlink" title="serve_forever(self, poll_interval=0.5)"></a>serve_forever(self, poll_interval=0.5)</h5><p>上面的反代程序中，初始化完后就是执行该方法，由于上面都没有定义过，所以就跑到这来执行了。<br>先是去执行 <code>select.select([self], [], [], 0.5)</code> (select还未研究透彻)<br>接着执行 <code>_handle_request_noblock()</code></p>
+<h5 id="handle-request-noblock-self"><a href="#handle-request-noblock-self" class="headerlink" title="_handle_request_noblock(self)"></a>_handle_request_noblock(self)</h5><p>先是执行 <code>get_request()</code>(该类里竟然没有该方法，在TCPServer里有)<br>接着把accept返回的两个值传给 <code>process_request</code> 方法</p>
+<h5 id="process-request-self-request-client-address"><a href="#process-request-self-request-client-address" class="headerlink" title="process_request(self, request, client_address)"></a>process_request(self, request, client_address)</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">self</span>.finish_request(request, client_address)</div><div class="line"><span class="keyword">self</span>.shutdown_request(request)</div></pre></td></tr></table></figure>
+<h5 id="finish-request-self-request-client-address"><a href="#finish-request-self-request-client-address" class="headerlink" title="finish_request(self, request, client_address)"></a>finish_request(self, request, client_address)</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">self</span>.RequestHandlerClass(request, client_address, <span class="keyword">self</span>)</div></pre></td></tr></table></figure>
+<p>RequestHandlerClass 是初始化的时候传入的第二个类参数<br>所以HTTPServer类的主体部分基本结束了，接下来是运行传入的模块</p>
+<h5 id="shutdown-request-self-request"><a href="#shutdown-request-self-request" class="headerlink" title="shutdown_request(self, request)"></a>shutdown_request(self, request)</h5><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">self</span>.close_request(request)</div></pre></td></tr></table></figure>
+<h5 id="close-request-self-request"><a href="#close-request-self-request" class="headerlink" title="close_request(self, request)"></a>close_request(self, request)</h5><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">pass</span></div></pre></td></tr></table></figure>
+<hr>
+<p>上面反代的程序中，传入的是 CacheHandler类</p>
+<h1 id="CacheHandler-BaseHTTPServer-BaseHTTPRequestHandler"><a href="#CacheHandler-BaseHTTPServer-BaseHTTPRequestHandler" class="headerlink" title="CacheHandler(BaseHTTPServer.BaseHTTPRequestHandler)"></a>CacheHandler(BaseHTTPServer.BaseHTTPRequestHandler)</h1><p>没有 _<em>init</em>_ 所以看它继承的类</p>
+<h2 id="BaseHTTPRequestHandler-SocketServer-StreamRequestHandler"><a href="#BaseHTTPRequestHandler-SocketServer-StreamRequestHandler" class="headerlink" title="BaseHTTPRequestHandler(SocketServer.StreamRequestHandler)"></a>BaseHTTPRequestHandler(SocketServer.StreamRequestHandler)</h2><p>也没有_<em>init</em>_ 所以继续看它继承的类</p>
+<h3 id="handle-self"><a href="#handle-self" class="headerlink" title="handle(self)"></a>handle(self)</h3><p>执行 handle_one_request()<br>有一个参数 <code>close_connection = 1</code> 但为0的时候循环执行上面这个方法</p>
+<h3 id="handle-one-request-self"><a href="#handle-one-request-self" class="headerlink" title="handle_one_request(self)"></a>handle_one_request(self)</h3><p>该方法每执行一次，从文件中读取一行，接着超蛋疼！<br>因为它只读一行！本以为上面那个方法每次循环读一行，然后获取所有headers，但是实际上只获取<br><code>GET / HTTP/1.1</code><br>该类初始化赋值的时候，赋值了一个 <code>default_request_version = &quot;HTTP/0.9&quot;</code><br>但是却要该值 &gt;= HTTP/1.1 才把 <code>close_connection</code> 设置为0<br>接下来就是执行 <code>&#39;do_&#39; + method</code>, 啥意思？<br>比如上面的，<code>GET / HTTP/1.1</code> 代码会把这串字符串分成三部分，而GET就是method，所以说，如果是 <code>POST / HTTP/1.1</code>则是执行 <code>do_POST</code> 方法，但是由于该反代只写了 <code>do_GET</code> 所以只能接收GET方法</p>
+<h3 id="StreamRequestHandler-BaseRequestHandler"><a href="#StreamRequestHandler-BaseRequestHandler" class="headerlink" title="StreamRequestHandler(BaseRequestHandler)"></a>StreamRequestHandler(BaseRequestHandler)</h3><p>还是没有 _<em>init</em>_ 接着看下去</p>
+<h4 id="setup-self"><a href="#setup-self" class="headerlink" title="setup(self)"></a>setup(self)</h4><p>socket.accept() 返回的socket对象有个makefile方法，就是把收到的数据当成文件来读，返回的数据当文件来写，<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">self<span class="selector-class">.rfile</span> = self<span class="selector-class">.connection</span><span class="selector-class">.makefile</span>(<span class="string">'rb'</span>, self.rbufsize)</div><div class="line">self<span class="selector-class">.wfile</span> = self<span class="selector-class">.connection</span><span class="selector-class">.makefile</span>(<span class="string">'wb'</span>, self.wbufsize)</div></pre></td></tr></table></figure></p>
+<h4 id="finish-self"><a href="#finish-self" class="headerlink" title="finish(self)"></a>finish(self)</h4><p>把上面打开的读写文件都关闭</p>
+<h4 id="BaseRequestHandler"><a href="#BaseRequestHandler" class="headerlink" title="BaseRequestHandler"></a>BaseRequestHandler</h4><p>接收三个值，初始化给self， 然后执行<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">setup</span><span class="params">()</span></span></div><div class="line"><span class="function"><span class="title">handle</span><span class="params">()</span></span></div><div class="line"><span class="function"><span class="title">finish</span><span class="params">()</span></span></div></pre></td></tr></table></figure></p>
+<p>这三个方法.</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2015-12-01, 13:02:30</p>
+        <p><span>最后更新:</span>2016-03-28, 18:21:45</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2015/12/01/0x0C/" title="Python 的 BaseHTTPServer模块分析小结">http://0x48.pw/2015/12/01/0x0C/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2015/12/01/0x0C/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2015/12/08/0x0D/">
+                    HCTF之Black-Eat-Black总结
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2015/10/31/0x0B/">
+                    10.31新生培训
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#BaseHTTPServer"><span class="toc-number">1.</span> <span class="toc-text">BaseHTTPServer</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTPServer-SocketServer-TCPServer"><span class="toc-number">1.1.</span> <span class="toc-text">HTTPServer(SocketServer.TCPServer)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCPServer-BaseServer"><span class="toc-number">1.1.1.</span> <span class="toc-text">TCPServer(BaseServer)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#server-bind-self"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">server_bind(self)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#server-activate-self"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">server_activate(self)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#get-request-self"><span class="toc-number">1.1.1.3.</span> <span class="toc-text">get_request(self)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BaseServer"><span class="toc-number">1.1.1.4.</span> <span class="toc-text">BaseServer</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#serve-forever-self-poll-interval-0-5"><span class="toc-number">1.1.1.4.1.</span> <span class="toc-text">serve_forever(self, poll_interval=0.5)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#handle-request-noblock-self"><span class="toc-number">1.1.1.4.2.</span> <span class="toc-text">_handle_request_noblock(self)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#process-request-self-request-client-address"><span class="toc-number">1.1.1.4.3.</span> <span class="toc-text">process_request(self, request, client_address)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#finish-request-self-request-client-address"><span class="toc-number">1.1.1.4.4.</span> <span class="toc-text">finish_request(self, request, client_address)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#shutdown-request-self-request"><span class="toc-number">1.1.1.4.5.</span> <span class="toc-text">shutdown_request(self, request)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#close-request-self-request"><span class="toc-number">1.1.1.4.6.</span> <span class="toc-text">close_request(self, request)</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CacheHandler-BaseHTTPServer-BaseHTTPRequestHandler"><span class="toc-number">2.</span> <span class="toc-text">CacheHandler(BaseHTTPServer.BaseHTTPRequestHandler)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#BaseHTTPRequestHandler-SocketServer-StreamRequestHandler"><span class="toc-number">2.1.</span> <span class="toc-text">BaseHTTPRequestHandler(SocketServer.StreamRequestHandler)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#handle-self"><span class="toc-number">2.1.1.</span> <span class="toc-text">handle(self)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#handle-one-request-self"><span class="toc-number">2.1.2.</span> <span class="toc-text">handle_one_request(self)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#StreamRequestHandler-BaseRequestHandler"><span class="toc-number">2.1.3.</span> <span class="toc-text">StreamRequestHandler(BaseRequestHandler)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#setup-self"><span class="toc-number">2.1.3.1.</span> <span class="toc-text">setup(self)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#finish-self"><span class="toc-number">2.1.3.2.</span> <span class="toc-text">finish(self)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#BaseRequestHandler"><span class="toc-number">2.1.3.3.</span> <span class="toc-text">BaseRequestHandler</span></a></li></ol></li></ol></li></ol></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2015/12/08/0x0D/" title="上一篇: HCTF之Black-Eat-Black总结">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2015/10/31/0x0B/" title="下一篇: 10.31新生培训">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

