@@ -8,7 +8,7 @@ subtitle: Blog
 description: "水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会"
 author: Hcamael
 language: default
-timezone:
+timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
@@ -31,7 +31,7 @@ skip_render:
 duoshuo_share: 
 
 # 多说帐号
-duoshuo_shortname: hcamael
+duoshuo_shortname: 
 
 # Social links
 #social:
@@ -81,8 +81,8 @@ pagination_dir: page
 ## Themes: http://hexo.io/themes/
 theme: yelee
 plugins:
-  - hexo-generator-feed
-  - hexo-math
+  hexo-generator-feed
+  hexo-math
 
 
 #
