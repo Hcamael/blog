@@ -8,7 +8,7 @@
     <atom:link href="/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description>水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会</description>
-    <pubDate>Tue, 23 May 2017 15:44:44 GMT</pubDate>
+    <pubDate>Sun, 28 May 2017 04:21:09 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
@@ -43,6 +43,8 @@
 <p>但是却没有这个ROP，需要用</p>
 <figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">$</span> <span class="comment">ROPgadget</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">binary</span> <span class="comment">RCalc</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">depth</span> <span class="comment">11</span></div></pre></td></tr></table></figure>
 <p>才有第二句ROP，而第一句还是没有。。所以我发现，我在找ROP上还是太菜了….</p>
+<h2 id="UPDATE-20170528"><a href="#UPDATE-20170528" class="headerlink" title="UPDATE 20170528"></a><em>UPDATE 20170528</em></h2><p>经过大佬教育，原来这是64位程序中存在的一个万能ROP，这两句ROP在同一个函数里，而这个函数是gcc编译进程序中去的</p>
+<hr>
 <p>其实，当时我已经基本可以做到调用任意函数了，但是关键点还是第二点。</p>
 <p>使用:</p>
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">leave</span>  ; <span class="attribute">ret</span> ;</div></pre></td></tr></table></figure>
