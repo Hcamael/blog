@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>对虚拟机进行磁盘扩容🐥 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="昨天傻逼了一下午，来记录下我从傻逼到醒悟到解决问题的过程">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对虚拟机进行磁盘扩容🐥">
+<meta property="og:url" content="http://0x48.pw/2017/07/12/0x34/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="昨天傻逼了一下午，来记录下我从傻逼到醒悟到解决问题的过程">
+<meta property="og:updated_time" content="2017-07-12T04:31:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="对虚拟机进行磁盘扩容🐥">
+<meta name="twitter:description" content="昨天傻逼了一下午，来记录下我从傻逼到醒悟到解决问题的过程">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Binary/" style="font-size: 16px;">Binary</a> <a href="/tags/CBC-Padding-Oracle-Attack/" style="font-size: 10px;">CBC Padding Oracle Attack</a> <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 18px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Old博文/" style="font-size: 10px;">Old博文</a> <a href="/tags/PWN/" style="font-size: 14px;">PWN</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Pwn/" style="font-size: 12px;">Pwn</a> <a href="/tags/Python/" style="font-size: 14px;">Python</a> <a href="/tags/RE/" style="font-size: 10px;">RE</a> <a href="/tags/Re/" style="font-size: 10px;">Re</a> <a href="/tags/SHA1-Length-Extension-Attack/" style="font-size: 10px;">SHA1 Length Extension Attack</a> <a href="/tags/SQLi/" style="font-size: 12px;">SQLi</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Wechall/" style="font-size: 10px;">Wechall</a> <a href="/tags/php/" style="font-size: 14px;">php</a> <a href="/tags/安全研究/" style="font-size: 12px;">安全研究</a> <a href="/tags/密码学/" style="font-size: 10px;">密码学</a> <a href="/tags/检讨/" style="font-size: 10px;">检讨</a> <a href="/tags/环境搭建/" style="font-size: 10px;">环境搭建</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x34" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/07/12/0x34/" class="article-date">
+      <time datetime="2017-07-12T02:30:39.000Z" itemprop="datePublished">2017-07-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      对虚拟机进行磁盘扩容🐥
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>昨天傻逼了一下午，来记录下我从傻逼到醒悟到解决问题的过程</p>
+<a id="more"></a>
+<p>在给虚拟机装系统的时候，磁盘只有15G，昨天觉得少了，然后加到了30G，但是这只是增加了磁盘的容量，并没有影响到分区，系统的分区还是装系统的时候状态，只有15G。</p>
+<p>这里提下，系统是Ubuntu 16.04 64位，使用LVM类型。</p>
+<p>然后我做的第一件傻逼的事就是没对虚拟机做快照，就去修改分区.然后改错了，无法启动了……绝望了一段时间，还好后面修改回来了，所以第一个建议是，在修改分区之前，先做快照….这样改错了后还可以恢复回来….</p>
+<p>然后傻逼的第二件事就是对分区理解错了，原本是有三个分区，一个<code>/dev/sda1</code>作为启动分区，挂载<code>/boot</code>，没啥问题，第二个是扩展分区<code>/dev/sda2</code>，有15.2G，然后第三个是<code>/dev/sda5</code>，为逻辑分区，也是有15.2G，最开始，我以为是sda2+sda5一共30G左右，然后踩坑了，使用<code>fdisk /dev/sda</code>进行分区，把<code>sda2</code>删除，然后新建一个主分区<code>sda2</code>，然后<code>sda5</code>就没有了，就剩一个30G的<code>sda2</code>。</p>
+<p>我一开始理解成是原本的<code>sda2+sda5</code>合在一起，形成了一个有30G的<code>sda2</code>，现在想想，我当时好傻逼啊…..</p>
+<p>因为好久没弄这些了，知识点都忘光了，一个硬盘是有自己寻址模式的，起始有一块地方专门记载分区的地址，而这块地方只能记载4个地址，而在这个地方指向的分区都叫做主分区，但是后来，有些人说4个不够用啊，所以又出现了扩展分区和逻辑分区，也就是说，可以把写主分区地址的地方写上扩展分区的地址，而扩展分区的开头和硬盘类似，有一块放地址的空间，指向逻辑分区。</p>
+<p>所以说，扩展分区实际上是不拿来用，是用来放逻辑分区地址的，或者可以想象成扩展分区是在一块磁盘上虚拟出的一块虚拟硬盘。</p>
+<p>SATA硬盘是可以有11个逻辑分区的，从<code>sda5-sda15</code></p>
+<p>所以开始看到的分区状态，磁盘只分了15G的内存出来给了逻辑分区，还要15G是没有被分区的，当把扩展分区删除了后，逻辑分区自然也没了，磁盘剩余空间就变30G了，所以分个主分区有30G。</p>
+<p>好了，概念讲完后，说说我最后是怎么解决的吧。</p>
+<p>因为写blog之前我已经成功扩容了，所以我现在分区已经有30G了，我现在把它扩容到40G，首先是我虚拟机现在的状态：</p>
+<p>首先是分区情况：</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># fdisk -l</span></div><div class="line">Disk /dev/sda:<span class="number"> 30 </span>GiB,<span class="number"> 32212254720 </span>bytes,<span class="number"> 62914560 </span>sectors</div><div class="line">.....</div><div class="line">Device     Boot    Start      End  Sectors  Size Id Type</div><div class="line">/dev/sda1  *       <span class="number"> 2048 </span> <span class="number"> 999423 </span> <span class="number"> 997376 </span> 487M<span class="number"> 83 </span>Linux</div><div class="line">/dev/sda2       <span class="number"> 1001470 </span>62890625<span class="number"> 61889156 </span>29.5G <span class="number"> 5 </span>Extended</div><div class="line">/dev/sda5       <span class="number"> 1001472 </span>33552383<span class="number"> 32550912 </span>15.5G 8e Linux LVM</div><div class="line">/dev/sda6      <span class="number"> 33554432 </span>62890625<span class="number"> 29336194 </span>  14G 8e Linux LVM</div><div class="line">....</div></pre></td></tr></table></figure>
+<p>然后是挂载情况:</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># df -h</span></div><div class="line"><span class="string">...</span></div><div class="line"><span class="string">/dev/mapper/ubuntu--vg-root</span>   28G  3.3G   24G  13% /</div><div class="line"><span class="string">...</span></div></pre></td></tr></table></figure>
+<p>因为使用的是LVM，所以挂载的不是<code>/dev/sdax</code>到根目录，而是<code>/dev/mapper/ubuntu--vg-root</code></p>
+<p>其中<code>ubuntu--vg</code>称为<code>volumn group</code>，然后<code>ubuntu--ng-root</code>称为<code>logic volumn</code>，可以这么想，<code>group</code>相当于一块硬盘，<code>logic volumn</code>是这块硬的分区。</p>
+<p>比如还有一个<code>logic volumn</code>是<code>ubuntu--ng-swap</code>，作为交换分区。</p>
+<p>现在我们先设置虚拟机，把硬盘加到40G，然后重启虚拟机查看下：</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># fdisk -l</span></div><div class="line">Disk /dev/sda:<span class="number"> 40 </span>GiB,<span class="number"> 42949672960 </span>bytes,<span class="number"> 83886080 </span>sectors</div><div class="line">.....</div><div class="line">Device     Boot    Start      End  Sectors  Size Id Type</div><div class="line">/dev/sda1  *       <span class="number"> 2048 </span> <span class="number"> 999423 </span> <span class="number"> 997376 </span> 487M<span class="number"> 83 </span>Linux</div><div class="line">/dev/sda2       <span class="number"> 1001470 </span>62890625<span class="number"> 61889156 </span>29.5G <span class="number"> 5 </span>Extended</div><div class="line">/dev/sda5       <span class="number"> 1001472 </span>33552383<span class="number"> 32550912 </span>15.5G 8e Linux LVM</div><div class="line">/dev/sda6      <span class="number"> 33554432 </span>62890625<span class="number"> 29336194 </span>  14G 8e Linux LVM</div></pre></td></tr></table></figure>
+<p>首先对扩展分区进行扩容，使用的命令是<code>parted</code></p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"># parted</div><div class="line">root@ubuntu:~# parted</div><div class="line">GNU Parted 3.2</div><div class="line">Using /dev/sda</div><div class="line">Welcome to GNU Parted! Type 'help' to view a list of commands.</div><div class="line">(parted) help</div><div class="line">  align-check TYPE N                        check partition N for TYPE(min|opt) alignment</div><div class="line">  help [COMMAND]                           print general help, or help on COMMAND</div><div class="line">  mklabel,mktable LABEL-TYPE               <span class="keyword">create</span> a new disklabel (<span class="keyword">partition</span> table)</div><div class="line">  mkpart PART-<span class="built_in">TYPE</span> [FS-<span class="built_in">TYPE</span>] <span class="keyword">START</span> <span class="keyword">END</span>     make a <span class="keyword">partition</span></div><div class="line">  name <span class="keyword">NUMBER</span> NAME                         name <span class="keyword">partition</span> <span class="keyword">NUMBER</span> <span class="keyword">as</span> NAME</div><div class="line">  print [devices|free|list,<span class="keyword">all</span>|<span class="keyword">NUMBER</span>]     display the <span class="keyword">partition</span> table, available devices, free space, <span class="keyword">all</span> found partitions, <span class="keyword">or</span> a particular <span class="keyword">partition</span></div><div class="line">  quit                                     exit program</div><div class="line">  rescue <span class="keyword">START</span> <span class="keyword">END</span>                         rescue a lost <span class="keyword">partition</span> near <span class="keyword">START</span> <span class="keyword">and</span> <span class="keyword">END</span></div><div class="line">  resizepart <span class="keyword">NUMBER</span> <span class="keyword">END</span>                    resize <span class="keyword">partition</span> <span class="keyword">NUMBER</span></div><div class="line">  rm <span class="keyword">NUMBER</span>                                <span class="keyword">delete</span> <span class="keyword">partition</span> <span class="keyword">NUMBER</span></div><div class="line">  <span class="keyword">select</span> DEVICE                            choose the device <span class="keyword">to</span> edit</div><div class="line">  disk_set FLAG STATE                      change the FLAG <span class="keyword">on</span> selected device</div><div class="line">  disk_toggle [FLAG]                       toggle the state of FLAG <span class="keyword">on</span> selected device</div><div class="line">  <span class="keyword">set</span> <span class="keyword">NUMBER</span> FLAG STATE                    change the FLAG <span class="keyword">on</span> <span class="keyword">partition</span> <span class="keyword">NUMBER</span></div><div class="line">  toggle [<span class="keyword">NUMBER</span> [FLAG]]                   toggle the state of FLAG <span class="keyword">on</span> <span class="keyword">partition</span> <span class="keyword">NUMBER</span></div><div class="line">  unit UNIT                                <span class="keyword">set</span> the default unit <span class="keyword">to</span> UNIT</div><div class="line">  version                                  display the version <span class="keyword">number</span> <span class="keyword">and</span> copyright information of GNU Parted</div><div class="line">(parted) print</div><div class="line"> Model: VMware Virtual disk (scsi)</div><div class="line">Disk /dev/sda: <span class="number">42.9</span>GB</div><div class="line">Sector size (logical/physical): <span class="number">512</span>B/<span class="number">512</span>B</div><div class="line"><span class="keyword">Partition</span> Table: msdos</div><div class="line">Disk Flags:</div><div class="line"></div><div class="line"><span class="keyword">Number</span>  <span class="keyword">Start</span>   <span class="keyword">End</span>     Size    <span class="built_in">Type</span>      File <span class="keyword">system</span>  Flags</div><div class="line"> <span class="number">1</span>      <span class="number">1049</span>kB  <span class="number">512</span>MB   <span class="number">511</span>MB   <span class="keyword">primary</span>   ext2         boot</div><div class="line"> <span class="number">2</span>      <span class="number">513</span>MB   <span class="number">32.2</span>GB  <span class="number">31.7</span>GB  extended</div><div class="line"> <span class="number">5</span>      <span class="number">513</span>MB   <span class="number">17.2</span>GB  <span class="number">16.7</span>GB  logical                lvm</div><div class="line"> <span class="number">6</span>      <span class="number">17.2</span>GB  <span class="number">32.2</span>GB  <span class="number">15.0</span>GB  logical                lvm</div><div class="line">(parted) resizepart <span class="number">2</span> <span class="number">42.9</span>G</div><div class="line">(parted) print</div><div class="line">Model: VMware Virtual disk (scsi)</div><div class="line">Disk /dev/sda: <span class="number">42.9</span>GB</div><div class="line">Sector size (logical/physical): <span class="number">512</span>B/<span class="number">512</span>B</div><div class="line"><span class="keyword">Partition</span> Table: msdos</div><div class="line">Disk Flags:</div><div class="line"></div><div class="line"><span class="keyword">Number</span>  <span class="keyword">Start</span>   <span class="keyword">End</span>     Size    <span class="built_in">Type</span>      File <span class="keyword">system</span>  Flags</div><div class="line"> <span class="number">1</span>      <span class="number">1049</span>kB  <span class="number">512</span>MB   <span class="number">511</span>MB   <span class="keyword">primary</span>   ext2         boot</div><div class="line"> <span class="number">2</span>      <span class="number">513</span>MB   <span class="number">42.9</span>GB  <span class="number">42.4</span>GB  extended</div><div class="line"> <span class="number">5</span>      <span class="number">513</span>MB   <span class="number">17.2</span>GB  <span class="number">16.7</span>GB  logical                lvm</div><div class="line"> <span class="number">6</span>      <span class="number">17.2</span>GB  <span class="number">32.2</span>GB  <span class="number">15.0</span>GB  logical                lvm</div><div class="line">(parted) quit</div><div class="line">Information: You may need <span class="keyword">to</span> <span class="keyword">update</span> /etc/fstab.</div><div class="line"></div><div class="line"># fdisk -l</div><div class="line">....</div><div class="line">Device     Boot    <span class="keyword">Start</span>      <span class="keyword">End</span>  Sectors  Size Id <span class="built_in">Type</span></div><div class="line">/dev/sda1  *        <span class="number">2048</span>   <span class="number">999423</span>   <span class="number">997376</span>  <span class="number">487</span>M <span class="number">83</span> Linux</div><div class="line">/dev/sda2        <span class="number">1001470</span> <span class="number">83789062</span> <span class="number">82787593</span> <span class="number">39.5</span>G  <span class="number">5</span> Extended</div><div class="line">/dev/sda5        <span class="number">1001472</span> <span class="number">33552383</span> <span class="number">32550912</span> <span class="number">15.5</span>G <span class="number">8</span><span class="built_in">e</span> Linux LVM</div><div class="line">/dev/sda6       <span class="number">33554432</span> <span class="number">62890625</span> <span class="number">29336194</span>   <span class="number">14</span>G <span class="number">8</span><span class="built_in">e</span> Linux LVM</div><div class="line">....</div></pre></td></tr></table></figure>
+<p>然后可以从扩展分区中再分出一个逻辑分区，因为<code>sda6</code>是我之前分出来的，还没有啥文件，所以所准备试试扩展下<code>sda6</code>分区，所以，首先是删除<code>sda6</code>分区，然后再新建：</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"># fdisk /dev/sda</div><div class="line">Welcome <span class="keyword">to</span> fdisk (util-linux <span class="number">2.27</span>.<span class="number">1</span>).</div><div class="line">Changes will remain <span class="keyword">in</span> memory only, <span class="keyword">until</span> you decide <span class="keyword">to</span> <span class="keyword">write</span> them.</div><div class="line">Be careful before <span class="keyword">using</span> the <span class="keyword">write</span> command.</div><div class="line"></div><div class="line"></div><div class="line">Command (m <span class="keyword">for</span> help): d</div><div class="line">Partition number (<span class="number">1</span>,<span class="number">2</span>,<span class="number">5</span>,<span class="number">6</span>, <span class="keyword">default</span> <span class="number">6</span>): <span class="number">6</span></div><div class="line"></div><div class="line">Partition <span class="number">6</span> <span class="keyword">has</span> been deleted.</div><div class="line"></div><div class="line">Command (m <span class="keyword">for</span> help): n</div><div class="line">Partition <span class="keyword">type</span></div><div class="line">   p   primary (<span class="number">1</span> primary, <span class="number">1</span> extended, <span class="number">2</span> free)</div><div class="line">   l   logical (numbered <span class="keyword">from</span> <span class="number">5</span>)</div><div class="line"><span class="keyword">Select</span> (<span class="keyword">default</span> p): l</div><div class="line"></div><div class="line">Adding logical partition <span class="number">6</span></div><div class="line">First sector (<span class="number">33554432</span>-<span class="number">83789062</span>, <span class="keyword">default</span> <span class="number">33554432</span>):</div><div class="line">Last sector, +sectors <span class="keyword">or</span> +size<span class="comment">&#123;K,M,G,T,P&#125;</span> (<span class="number">33554432</span>-<span class="number">83789062</span>, <span class="keyword">default</span> <span class="number">83789062</span>):</div><div class="line"></div><div class="line">Created a <span class="keyword">new</span> partition <span class="number">6</span> <span class="keyword">of</span> <span class="keyword">type</span> <span class="string">'Linux'</span> <span class="keyword">and</span> <span class="keyword">of</span> size <span class="number">24</span> GiB.</div><div class="line"></div><div class="line">Command (m <span class="keyword">for</span> help): w</div><div class="line">The partition table <span class="keyword">has</span> been altered.</div><div class="line">Calling ioctl() <span class="keyword">to</span> re-<span class="keyword">read</span> partition table.</div><div class="line">Re-reading the partition table failed.: Device <span class="keyword">or</span> resource busy</div><div class="line"></div><div class="line">The kernel still <span class="keyword">uses</span> the <span class="keyword">old</span> table. The <span class="keyword">new</span> table will be used at the next reboot <span class="keyword">or</span> after you run partprobe(<span class="number">8</span>) <span class="keyword">or</span> kpartx(<span class="number">8</span>).</div><div class="line"></div><div class="line"># fdisk -l</div><div class="line">.....</div><div class="line">Device     Boot    Start      <span class="keyword">End</span>  Sectors  Size Id <span class="keyword">Type</span></div><div class="line">/dev/sda1  *        <span class="number">2048</span>   <span class="number">999423</span>   <span class="number">997376</span>  <span class="number">487</span>M <span class="number">83</span> Linux</div><div class="line">/dev/sda2        <span class="number">1001470</span> <span class="number">83789062</span> <span class="number">82787593</span> <span class="number">39.5</span>G  <span class="number">5</span> Extended</div><div class="line">/dev/sda5        <span class="number">1001472</span> <span class="number">33552383</span> <span class="number">32550912</span> <span class="number">15.5</span>G <span class="number">8</span>e Linux LVM</div><div class="line">/dev/sda6       <span class="number">33554432</span> <span class="number">83789062</span> <span class="number">50234631</span>   <span class="number">24</span>G <span class="number">83</span> Linux</div><div class="line">.....</div></pre></td></tr></table></figure>
+<p>然后就是扩展卷组了</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># pvs</span></div><div class="line">  PV         VG        Fmt  Attr PSize  PFree</div><div class="line">  /dev/sda5  ubuntu-vg lvm2 <span class="keyword">a</span><span class="comment">--  15.52g    0</span></div><div class="line">  /dev/sda6  ubuntu-vg lvm2 <span class="keyword">a</span><span class="comment">--  13.98g    0</span></div><div class="line"><span class="comment"># pvresize /dev/sda6 +10G</span></div><div class="line">  Failed <span class="built_in">to</span> find device <span class="keyword">for</span> physical volume <span class="string">"+10G"</span>.</div><div class="line">  Physical volume <span class="string">"/dev/sda6"</span> changed</div><div class="line">  <span class="number">1</span> physical volume(s) resized / <span class="number">0</span> physical volume(s) <span class="keyword">not</span> resized</div><div class="line"><span class="comment"># pvs</span></div><div class="line">  PV         VG        Fmt  Attr PSize  PFree</div><div class="line">  /dev/sda5  ubuntu-vg lvm2 <span class="keyword">a</span><span class="comment">--  15.52g    0</span></div><div class="line">  /dev/sda6  ubuntu-vg lvm2 <span class="keyword">a</span><span class="comment">--  23.95g 9.96g</span></div><div class="line"><span class="comment"># vgs</span></div><div class="line">  VG        <span class="comment">#PV #LV #SN Attr   VSize  VFree</span></div><div class="line">  ubuntu-vg   <span class="number">2</span>   <span class="number">2</span>   <span class="number">0</span> wz<span class="comment">--n- 39.47g 9.96g</span></div><div class="line"><span class="comment"># lvs</span></div><div class="line">  LV     VG        Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert</div><div class="line">  root   ubuntu-vg -wi-ao<span class="comment">---- 28.50g</span></div><div class="line">  swap_1 ubuntu-vg -wi-ao<span class="comment">----  1.00g</span></div><div class="line"><span class="comment"># lvresize -l +100%FREE /dev/mapper/ubuntu--vg-root</span></div><div class="line">  Size <span class="keyword">of</span> logical volume ubuntu-vg/root changed <span class="built_in">from</span> <span class="number">28.50</span> GiB (<span class="number">7297</span> <span class="built_in">extents</span>) <span class="built_in">to</span> <span class="number">38.47</span> GiB (<span class="number">9848</span> <span class="built_in">extents</span>).</div><div class="line">  Logical volume root successfully resized.</div><div class="line"><span class="comment"># lvs</span></div><div class="line">  LV     VG        Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert</div><div class="line">  root   ubuntu-vg -wi-ao<span class="comment">---- 38.47g</span></div><div class="line">  swap_1 ubuntu-vg -wi-ao<span class="comment">----  1.00g</span></div><div class="line"><span class="comment"># df -h</span></div><div class="line">Filesystem                   Size  Used Avail Use% Mounted <span class="keyword">on</span></div><div class="line">......</div><div class="line">/dev/mapper/ubuntu<span class="comment">--vg-root   28G  3.3G   24G  13% /</span></div><div class="line">......</div><div class="line"><span class="comment"># resize2fs -p /dev/mapper/ubuntu--vg-root</span></div><div class="line">resize2fs <span class="number">1.42</span><span class="number">.13</span> (<span class="number">17</span>-May<span class="number">-2015</span>)</div><div class="line">Filesystem <span class="keyword">at</span> /dev/mapper/ubuntu<span class="comment">--vg-root is mounted on /; on-line resizing required</span></div><div class="line">old_desc_blocks = <span class="number">2</span>, new_desc_blocks = <span class="number">3</span></div><div class="line">The filesystem <span class="keyword">on</span> /<span class="title">dev</span>/<span class="title">mapper</span>/<span class="title">ubuntu--vg-root</span> <span class="title">is</span> <span class="title">now</span> <span class="title">10084352</span> (<span class="title">4k</span>) <span class="title">blocks</span> <span class="title">long</span>.</div><div class="line"></div><div class="line"><span class="comment"># df -h</span></div><div class="line">Filesystem                   Size  Used Avail Use% Mounted <span class="keyword">on</span></div><div class="line">......</div><div class="line">/dev/mapper/ubuntu<span class="comment">--vg-root   38G  3.3G   33G   9% /</span></div><div class="line">......</div><div class="line"><span class="comment"># reboot</span></div></pre></td></tr></table></figure>
+<p>好了，现在，根目录的容量扩展好了</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/07/12/0x34/">对虚拟机进行磁盘扩容🐥</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2017-07-12, 10:30:39</p>
+        <p><span>最后更新:</span>2017-07-12, 12:31:20</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/07/12/0x34/" title="对虚拟机进行磁盘扩容🐥">http://0x48.pw/2017/07/12/0x34/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/07/12/0x34/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/05/23/0x33/">
+                    ROP小结
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/05/23/0x33/" title="下一篇: ROP小结">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/07/12/0x34/">对虚拟机进行磁盘扩容🐥</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
