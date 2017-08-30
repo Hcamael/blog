@@ -3,21 +3,19 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>12.19网络方向培训 | Hc1m1</title>
+  <title>HITB CTF 2017 Pwn题研究🙉 | Hc1m1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="keywords" content="network">
+  <meta name="description" content="上周的HITB CTF 2017看了两道Pwn题，可是都没做出来，看了writeup后，发现又学到了新姿势了…..">
+<meta name="keywords" content="bin">
 <meta property="og:type" content="article">
-<meta property="og:title" content="12.19网络方向培训">
-<meta property="og:url" content="http://0x48.pw/2015/12/19/0x0E/index.html">
+<meta property="og:title" content="HITB CTF 2017 Pwn题研究🙉">
+<meta property="og:url" content="http://0x48.pw/2017/08/29/0x49/index.html">
 <meta property="og:site_name" content="Hc1m1">
-<meta property="og:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-isa.png">
-<meta property="og:image" content="http://0x48.pw/img/osi.jpg">
-<meta property="og:image" content="http://0x48.pw/img/TCPIP.png">
-<meta property="og:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-pro.png">
-<meta property="og:updated_time" content="2017-07-26T03:25:11.000Z">
+<meta property="og:description" content="上周的HITB CTF 2017看了两道Pwn题，可是都没做出来，看了writeup后，发现又学到了新姿势了…..">
+<meta property="og:updated_time" content="2017-08-29T11:43:16.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="12.19网络方向培训">
-<meta name="twitter:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-isa.png">
+<meta name="twitter:title" content="HITB CTF 2017 Pwn题研究🙉">
+<meta name="twitter:description" content="上周的HITB CTF 2017看了两道Pwn题，可是都没做出来，看了writeup后，发现又学到了新姿势了…..">
   
     <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
   
@@ -255,11 +253,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-0x0E" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-0x49" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/12/19/0x0E/" class="article-date">
-      <time datetime="2015-12-19T02:36:07.000Z" itemprop="datePublished">2015-12-19</time>
+      <a href="/2017/08/29/0x49/" class="article-date">
+      <time datetime="2017-08-29T11:11:04.000Z" itemprop="datePublished">2017-08-29</time>
 </a>
     </div>
   
@@ -272,7 +270,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      12.19网络方向培训
+      HITB CTF 2017 Pwn题研究🙉
     </h1>
   
 
@@ -283,7 +281,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/network/">network</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bin/">bin</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -293,40 +291,16 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-isa.png" alt="ISA"></p>
+        <p>上周的HITB CTF 2017看了两道Pwn题，可是都没做出来，看了writeup后，发现又学到了新姿势了…..</p>
 <a id="more"></a>
-<h1 id="OSI七层模型-Open-System-Interconnect-开放系统互连参考模型"><a href="#OSI七层模型-Open-System-Interconnect-开放系统互连参考模型" class="headerlink" title="OSI七层模型(Open System Interconnect 开放系统互连参考模型)"></a>OSI七层模型(Open System Interconnect 开放系统互连参考模型)</h1><p>国际标准化组织(ISO)和国际电报电话咨询委员会(CCITT)联合制定的开放系统互连参考模型</p>
-<p><img src="/img/osi.jpg" alt="osi"></p>
-<h1 id="TCP-IP-协议族"><a href="#TCP-IP-协议族" class="headerlink" title="TCP/IP 协议族"></a>TCP/IP 协议族</h1><p><img src="/img/TCPIP.png" alt="TCP/IP"></p>
-<h2 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h2><p>协议族</p>
-<p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-pro.png" alt="协议族"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python</div><div class="line">#-*- coding:utf-8 -*-</div><div class="line"></div><div class="line">import socket</div><div class="line"></div><div class="line">s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</div><div class="line"></div><div class="line">add = (&apos;127.0.0.1&apos;, 8888)</div><div class="line">s.bind(add)</div><div class="line">s.listen(1)</div><div class="line">while True:</div><div class="line">	conn, addr = s.accept();</div><div class="line">	print addr</div><div class="line">	buf = conn.recv(1024)</div><div class="line">	print buf</div><div class="line">	conn.sendall(&quot;HTTP/1.1 200 OK\n\r\n\n&quot;)</div><div class="line">	conn.close()</div></pre></td></tr></table></figure>
-<h2 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h2><p>大小：16bits  (0-65535)</p>
-<p>保留端口号：0-1024</p>
-<p>默认端口:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">21     ftp</div><div class="line">22     ssh</div><div class="line">23     telnet</div><div class="line">80     http</div><div class="line">443   https</div><div class="line">3306 mysql</div></pre></td></tr></table></figure></p>
-<h2 id="IPv4"><a href="#IPv4" class="headerlink" title="IPv4"></a>IPv4</h2><p>大小: 32bits (0.0.0.0-255.255.255.255)</p>
-<p>子网掩码： 把IP分为网络地址和主机地址</p>
-<p>特殊地址：</p>
-<p>1.整个子网，主机地址全为0</p>
-<p>2.子网广播地址，主机地址全为1的地址</p>
-<p>3.三段内网地址<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">10.0.0.0-10.255.255.255</div><div class="line">172.16.0.0-172.31.255.255</div><div class="line">192.168.0.0-192.168.255.255</div></pre></td></tr></table></figure></p>
-<p>4.环回地址 <code>127.0.0.1 - 127.255.255.255</code></p>
-<p>5.本机地址 <code>0.0.0.0</code></p>
-<p>6.广播地址 <code>255.255.255.255</code><br>公网地址全球唯一</p>
-<h2 id="MAC（Media-Access-Control）地址"><a href="#MAC（Media-Access-Control）地址" class="headerlink" title="MAC（Media Access Control）地址"></a>MAC（Media Access Control）地址</h2><p>大小：48bits (00:00:00:00:00:00-FF:FF:FF:FF:FF:FF)</p>
-<p>网卡出产时写死在硬件中。相当于网卡的身份证，具有全球唯一性</p>
-<h1 id="浏览器访问HTTP服务详解"><a href="#浏览器访问HTTP服务详解" class="headerlink" title="浏览器访问HTTP服务详解"></a>浏览器访问HTTP服务详解</h1><h3 id="DNS（Domain-Name-System，域名系统）"><a href="#DNS（Domain-Name-System，域名系统）" class="headerlink" title="DNS（Domain Name System，域名系统）"></a>DNS（Domain Name System，域名系统）</h3><pre><code>域名  &lt;--&gt;  IP地址
-</code></pre><h2 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h2><p>封装HTTP包</p>
-<h2 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h2><ul>
-<li>TCP</li>
-<li>UDP</li>
-</ul>
-<p>封装TCP包</p>
-<h2 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h2><p>封装IP包</p>
-<h2 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h2><p>封装MAC包</p>
-<h2 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h2><p>转换成二进制，通过网卡，网线进行数据传输</p>
-<p>数据发送过去后，然后反过来解封</p>
-<h2 id="安全问题"><a href="#安全问题" class="headerlink" title="安全问题"></a>安全问题</h2><h3 id="arp"><a href="#arp" class="headerlink" title="arp"></a>arp</h3><h3 id="SYN"><a href="#SYN" class="headerlink" title="SYN"></a>SYN</h3><h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3>
+<p>题目在我GitHub上有：🔞<xxxxx></xxxxx></p>
+<h1 id="1000levels"><a href="#1000levels" class="headerlink" title="1000levels"></a>1000levels</h1><p>这题是一道栈溢出的题目，溢出点也很容易找到，但问题是开了EIP，当时的思路是想可能有啥骚操作可以让hint函数泄露出system地址……可惜一直想错了，最主要有一个知识点我不知道</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> cat /proc/self/maps</span></div><div class="line">ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]</div></pre></td></tr></table></figure>
+<p>以前从来没注意到过，linux下的每个程序都有一个这样的虚拟地址，而且不管开没开EIP，这段地址都是不变的。</p>
+<p>再开看看这段地址是啥指令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pwndbg&gt; x/5i 0xffffffffff600000</div><div class="line">   0xffffffffff600000:	mov    rax,0x60</div><div class="line">   0xffffffffff600007:	syscall </div><div class="line">   0xffffffffff600009:	ret</div></pre></td></tr></table></figure>
+<p>就是一个不知道啥的系统调用然后ret，然后查了一些资料，这段地址是内核映射出来让程序调用内核一些功能的。而这段有用的指令就是一个ret，那么通过这个ret我们能进行怎样的骚操作？</p>
+
       
     </div>
     
@@ -334,13 +308,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2015/12/19/0x0E/">12.19网络方向培训</a></p>
+        <p><span>本文标题:</span><a href="/2017/08/29/0x49/">HITB CTF 2017 Pwn题研究🙉</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
-        <p><span>发布时间:</span>2015-12-19, 10:36:07</p>
-        <p><span>最后更新:</span>2017-07-26, 11:25:11</p>
+        <p><span>发布时间:</span>2017-08-29, 19:11:04</p>
+        <p><span>最后更新:</span>2017-08-29, 19:43:16</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2015/12/19/0x0E/" title="12.19网络方向培训">http://0x48.pw/2015/12/19/0x0E/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2015/12/19/0x0E/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/08/29/0x49/" title="HITB CTF 2017 Pwn题研究🙉">http://0x48.pw/2017/08/29/0x49/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/08/29/0x49/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -353,16 +327,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/02/14/0x0F/">
-                    Nebula Writeup
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2015/12/08/0x0D/">
-                    HCTF之Black-Eat-Black总结
+                <a href="/2017/08/29/0x38/">
+                    Pwnhub之奇妙的巨蟒 Writeup
                 </a>
             </div>
         
@@ -373,7 +341,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#OSI七层模型-Open-System-Interconnect-开放系统互连参考模型"><span class="toc-number">1.</span> <span class="toc-text">OSI七层模型(Open System Interconnect 开放系统互连参考模型)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TCP-IP-协议族"><span class="toc-number">2.</span> <span class="toc-text">TCP/IP 协议族</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#协议"><span class="toc-number">2.1.</span> <span class="toc-text">协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#端口"><span class="toc-number">2.2.</span> <span class="toc-text">端口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IPv4"><span class="toc-number">2.3.</span> <span class="toc-text">IPv4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MAC（Media-Access-Control）地址"><span class="toc-number">2.4.</span> <span class="toc-text">MAC（Media Access Control）地址</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#浏览器访问HTTP服务详解"><span class="toc-number">3.</span> <span class="toc-text">浏览器访问HTTP服务详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS（Domain-Name-System，域名系统）"><span class="toc-number">3.0.1.</span> <span class="toc-text">DNS（Domain Name System，域名系统）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用层"><span class="toc-number">3.1.</span> <span class="toc-text">应用层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#传输层"><span class="toc-number">3.2.</span> <span class="toc-text">传输层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#网络层"><span class="toc-number">3.3.</span> <span class="toc-text">网络层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据链路层"><span class="toc-number">3.4.</span> <span class="toc-text">数据链路层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#物理层"><span class="toc-number">3.5.</span> <span class="toc-text">物理层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安全问题"><span class="toc-number">3.6.</span> <span class="toc-text">安全问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#arp"><span class="toc-number">3.6.1.</span> <span class="toc-text">arp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SYN"><span class="toc-number">3.6.2.</span> <span class="toc-text">SYN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS"><span class="toc-number">3.6.3.</span> <span class="toc-text">DNS</span></a></li></ol></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1000levels"><span class="toc-number">1.</span> <span class="toc-text">1000levels</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -424,15 +392,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/02/14/0x0F/" title="上一篇: Nebula Writeup">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2015/12/08/0x0D/" title="下一篇: HCTF之Black-Eat-Black总结">
+            <a href="/2017/08/29/0x38/" title="下一篇: Pwnhub之奇妙的巨蟒 Writeup">
                 <i class="fa fa-angle-right"></i>
             </a>
         
