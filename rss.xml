@@ -8,7 +8,7 @@
     <atom:link href="/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description>水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会</description>
-    <pubDate>Sat, 11 Nov 2017 06:35:02 GMT</pubDate>
+    <pubDate>Mon, 13 Nov 2017 02:00:04 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
@@ -26,16 +26,16 @@
 <a id="more"></a>
 <p>题目链接：<a href="https://github.com/Hcamael/CTF_repo/tree/master/CODE%20BLUE%20CTF%202017/Pwn" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/tree/master/CODE%20BLUE%20CTF%202017/Pwn</a></p>
 <p>在拿到这题的时候，看了下是32位的，canary都没开，本以为是很简单的题</p>
-<p>在<code>sub_8048ada</code>函数中发现了一个任意函数调用的漏洞，对于<code>filter</code>输入的数值只检测<code>v3&lt;=2</code>，而v3是int型，所以可以任意调用小于<code>0x804b048</code>的函数，但是参数却不能控制，第一个参数是<code>fopen(&quot;/dev/null&quot;)</code>的文件描述符，第二个参数是buf，第三个参数为长度</p>
+<p>在<code>sub_8048ada</code>函数中发现了一个任意函数调用的漏洞，对于<code>filter</code>输入的数值只检测<code>v3&lt;=2</code>，而v3是int型，所以可以任意调用小于<code>0x804b048</code>的函数，但是参数却不能控制，第一个参数是<code>fopen(&quot;/dev/null&quot;)</code>调用返回的文件流，第二个参数是buf，第三个参数为长度</p>
 <p>初次之外就找不到别的漏洞了，在参数无法控制的情况下，只能利用该bin中的本身函数，没有任何getshell的思路</p>
-<p>然后在大佬的教导下，我第一次注意到了<code>setbuf</code>函数，大部分pwn题都会有这个函数，用来设置IO缓冲区的，第一个参数是文件描述符，第二个参数表示缓冲区，一般在pwn题中的用法是<code>setbuf(stdin, 0)</code>表示标准输入取消缓冲区。</p>
-<p>仔细观察还会发现，stdin并不是0，而是在stdio库中设置的一个文件描述符，所以也是作用在stdio库中的函数，比如<code>gets</code>, <code>puts</code>, <code>fread</code>, <code>fwrite</code></p>
+<p>然后在大佬的教导下，我第一次注意到了<code>setbuf</code>函数，大部分pwn题都会有这个函数，用来设置IO缓冲区的，第一个参数是文件流，第二个参数表示缓冲区，一般在pwn题中的用法是<code>setbuf(stdin, 0)</code>表示标准输入取消缓冲区。</p>
+<p>仔细观察还会发现，stdin并不是0，而是在stdio库中设置的一个文件流，所以也是作用在stdio库中的函数，比如<code>gets</code>, <code>puts</code>, <code>fread</code>, <code>fwrite</code></p>
 <p>比如，<code>gets</code>函数使用的就是stdin描述符，如果设置了<code>setbuf(stdin, buf)</code>，<code>gets</code>函数则会先从buf中获取输入，自己也可以写个简单的代码测试一下</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">char</span> buf[<span class="number">10</span>];</div><div class="line">	<span class="built_in">memset</span>(buf, <span class="number">0</span>, <span class="number">10</span>);</div><div class="line">	buf[<span class="number">0</span>] = <span class="string">'1'</span>;</div><div class="line">	<span class="built_in">printf</span>(buf);</div><div class="line">	setbuf(<span class="built_in">stdout</span>, buf);</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"test"</span>);</div><div class="line">	write(<span class="number">1</span>, <span class="string">"\n====\n"</span>,<span class="number">6</span>);</div><div class="line">	write(<span class="number">1</span>, buf, <span class="number">10</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>然后运行一下</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ./a.out</span></div><div class="line">1</div><div class="line">====</div><div class="line">test</div></pre></td></tr></table></figure>
 <p>可以从结果看出，printf根本没有输出<code>test</code>，而是把这个字符串输出到buf缓冲区中了，从而修改了buf中的内容。</p>
-<p>因为设置的是stdout的缓冲区，而stdout是stdio库中的文件描述符，所以write并没有受到影响</p>
+<p>因为设置的是stdout的缓冲区，而stdout是stdio库中的文件流，所以write并没有受到影响</p>
 <p>还有一个问题，<code>setbuf</code>并没有设置长度的参数，设置长度的需要使用<code>setvbuf</code>，所以默认情况下setbuf设置的缓冲区长度为默认的4096，这样在该题中就形成了一个攻击链</p>
 <p>控制程序跳转到<code>setbuf</code>函数，简单的讲就是调用<code>setbuf(fd=fopen(&quot;/dev/null&quot;), buf1)</code>，然后在<code>sub_8048742(no_filter)</code>函数中调用了<code>fwrite(fd, 0, buf2, len)</code>，这样就能往buf1中写buf2的数据，而buf是存在栈中的，所以可以造成栈溢出，能栈溢出了，下面就是找ROP链了</p>
 <p>栈溢出构造逻辑：</p>
