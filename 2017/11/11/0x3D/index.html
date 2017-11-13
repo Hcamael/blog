@@ -12,7 +12,7 @@
 <meta property="og:url" content="http://0x48.pw/2017/11/11/0x3D/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="朋友让我一起看了一道32位的pwn题，好像是国外code blue 2017 ctf上的一道题，开始我感觉32位pwn的姿势我应该都会了吧，结果，又学到了新姿势……">
-<meta property="og:updated_time" content="2017-11-13T02:00:04.000Z">
+<meta property="og:updated_time" content="2017-11-13T02:20:52.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CTF PWN题之setbuf的利用">
 <meta name="twitter:description" content="朋友让我一起看了一道32位的pwn题，好像是国外code blue 2017 ctf上的一道题，开始我感觉32位pwn的姿势我应该都会了吧，结果，又学到了新姿势……">
@@ -299,7 +299,7 @@
 <p>初次之外就找不到别的漏洞了，在参数无法控制的情况下，只能利用该bin中的本身函数，没有任何getshell的思路</p>
 <p>然后在大佬的教导下，我第一次注意到了<code>setbuf</code>函数，大部分pwn题都会有这个函数，用来设置IO缓冲区的，第一个参数是文件流，第二个参数表示缓冲区，一般在pwn题中的用法是<code>setbuf(stdin, 0)</code>表示标准输入取消缓冲区。</p>
 <p>仔细观察还会发现，stdin并不是0，而是在stdio库中设置的一个文件流，所以也是作用在stdio库中的函数，比如<code>gets</code>, <code>puts</code>, <code>fread</code>, <code>fwrite</code></p>
-<p>比如，<code>gets</code>函数使用的就是stdin描述符，如果设置了<code>setbuf(stdin, buf)</code>，<code>gets</code>函数则会先从buf中获取输入，自己也可以写个简单的代码测试一下</p>
+<p>比如，<code>gets</code>函数使用的就是stdin文件流，如果设置了<code>setbuf(stdin, buf)</code>，<code>gets</code>函数则会先从buf中获取输入，自己也可以写个简单的代码测试一下</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">char</span> buf[<span class="number">10</span>];</div><div class="line">	<span class="built_in">memset</span>(buf, <span class="number">0</span>, <span class="number">10</span>);</div><div class="line">	buf[<span class="number">0</span>] = <span class="string">'1'</span>;</div><div class="line">	<span class="built_in">printf</span>(buf);</div><div class="line">	setbuf(<span class="built_in">stdout</span>, buf);</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"test"</span>);</div><div class="line">	write(<span class="number">1</span>, <span class="string">"\n====\n"</span>,<span class="number">6</span>);</div><div class="line">	write(<span class="number">1</span>, buf, <span class="number">10</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>然后运行一下</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ./a.out</span></div><div class="line">1</div><div class="line">====</div><div class="line">test</div></pre></td></tr></table></figure>
@@ -327,7 +327,7 @@
         <p><span>本文标题:</span><a href="/2017/11/11/0x3D/">CTF PWN题之setbuf的利用</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2017-11-11, 12:28:03</p>
-        <p><span>最后更新:</span>2017-11-13, 10:00:04</p>
+        <p><span>最后更新:</span>2017-11-13, 10:20:52</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/11/11/0x3D/" title="CTF PWN题之setbuf的利用">http://0x48.pw/2017/11/11/0x3D/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/11/11/0x3D/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
