@@ -28,7 +28,7 @@
 <meta property="og:image" content="http://qn.lazysheep.cc/img/secpost2.png">
 <meta property="og:image" content="http://qn.lazysheep.cc/img/secu1.png">
 <meta property="og:image" content="http://qn.lazysheep.cc/img/secu2.png">
-<meta property="og:updated_time" content="2017-08-08T10:02:30.000Z">
+<meta property="og:updated_time" content="2018-02-06T07:11:05.069Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HITCON 2016 Web 总结">
 <meta name="twitter:description" content="OTP和RSA遇到困难, 先发篇Web的出来本次HITCON, 我看了两题Web, Leaking和Secure Post, 都挺有意思的">
@@ -116,7 +116,7 @@
 <div class="intrude-less">
     <header id="header" class="inner">
         <a href="/" class="profilepic">
-            <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+            <img src="//qn.lazysheep.cc/img/author.png" class="animated zoomIn">
         </a>
         <hgroup>
           <h1 class="header-author"><a href="/">Hcamael</a></h1>
@@ -269,7 +269,7 @@
     <div class="intrude-less">
         <header id="header" class="inner">
             <a href="/" class="profilepic">
-                <img src="http://qn.lazysheep.cc/img/author.png" class="animated zoomIn">
+                <img src="//qn.lazysheep.cc/img/author.png" class="animated zoomIn">
             </a>
             <hgroup>
               <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
@@ -348,7 +348,7 @@
           
         <p>OTP和RSA遇到困难, 先发篇Web的出来<br>本次HITCON, 我看了两题Web, Leaking和Secure Post, 都挺有意思的</p>
 <a id="more"></a>
-<h1 id="Leaking-Web-200"><a href="#Leaking-Web-200" class="headerlink" title="Leaking(Web 200)"></a>Leaking(Web 200)</h1><p><img src="http://qn.lazysheep.cc/img/leak1.png" alt="leak1"></p>
+<h1 id="Leaking-Web-200"><a href="#Leaking-Web-200" class="headerlink" title="Leaking(Web 200)"></a>Leaking(Web 200)</h1><p><img src="//qn.lazysheep.cc/img/leak1.png" alt="leak1"></p>
 <blockquote>
 <p>源码: <a href="https://github.com/Hcamael/CTF_repo/blob/master/HITCON/Leaking/index.js" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/blob/master/HITCON/Leaking/index.js</a></p>
 </blockquote>
@@ -357,8 +357,8 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">/?data[]=for (var step = 0; step &lt; 100000; step++) &#123;var buf = (new Buffer(100)).toString(&apos;ascii&apos;);if (buf.indexOf(&quot;hitcon&#123;&quot;) !== -1) &#123;break;&#125;&#125;buf;</div></pre></td></tr></table></figure>
 <p>首先是通过数组bypass长度限制, 然后之后就是使用<code>Buffer</code>获取内存中的数据, 具体细节不是很清楚, 没有深入分析过, 感觉像是nodejs内存分配上的问题</p>
 <p>这个payload不是每次都可以成功泄露出flag, 所以需要运行多次</p>
-<p><img src="http://qn.lazysheep.cc/img/leak2.png" alt="leak2"></p>
-<h1 id="Secure-Post-Web-50-150"><a href="#Secure-Post-Web-50-150" class="headerlink" title="Secure Post(Web 50/150)"></a>Secure Post(Web 50/150)</h1><p><img src="http://qn.lazysheep.cc/img/secpost.png" alt="spost"><br><img src="http://qn.lazysheep.cc/img/secpost2.png" alt="spost2"></p>
+<p><img src="//qn.lazysheep.cc/img/leak2.png" alt="leak2"></p>
+<h1 id="Secure-Post-Web-50-150"><a href="#Secure-Post-Web-50-150" class="headerlink" title="Secure Post(Web 50/150)"></a>Secure Post(Web 50/150)</h1><p><img src="//qn.lazysheep.cc/img/secpost.png" alt="spost"><br><img src="//qn.lazysheep.cc/img/secpost2.png" alt="spost2"></p>
 <blockquote>
 <p>源码: <a href="https://github.com/Hcamael/CTF_repo/tree/master/HITCON/Secure%20Posts%20and%202" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/tree/master/HITCON/Secure%20Posts%20and%202</a></p>
 </blockquote>
@@ -368,8 +368,8 @@
 <p>但是文章中的payload明显不能用, 因为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">name = request.form.get(&apos;author&apos;, &apos;anonymous&apos;)[:10]</div></pre></td></tr></table></figure></p>
 <p>name字段限制了10个byte的长度, 第一题分低, 相对的也比较简单<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app.secret_key = config.flag1</div></pre></td></tr></table></figure></p>
 <p>所以可以读取配置信息:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;&#123;config&#125;&#125;</div></pre></td></tr></table></figure></p>
-<p><img src="http://qn.lazysheep.cc/img/secu1.png" alt="secu1"></p>
-<p><img src="http://qn.lazysheep.cc/img/secu2.png" alt="secu2"></p>
+<p><img src="//qn.lazysheep.cc/img/secu1.png" alt="secu1"></p>
+<p><img src="//qn.lazysheep.cc/img/secu2.png" alt="secu2"></p>
 <p>可以看到<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&apos;SECRET_KEY&apos;: &apos;hitcon&#123;&gt;_&lt;---Do-you-know-&lt;script&gt;alert(1)&lt;/script&gt;-is-very-fun?&#125;&apos;</div></pre></td></tr></table></figure></p>
 <p>flag1 get</p>
 <p>第二步根据经验可以判断出应该是执行命令, 读文件之类的.</p>
@@ -397,7 +397,7 @@
         <p><span>本文标题:</span><a href="/2016/10/14/0x24/">HITCON 2016 Web 总结</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2016-10-14, 16:32:06</p>
-        <p><span>最后更新:</span>2017-08-08, 18:02:30</p>
+        <p><span>最后更新:</span>2018-02-06, 15:11:05</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/10/14/0x24/" title="HITCON 2016 Web 总结">http://0x48.pw/2016/10/14/0x24/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/10/14/0x24/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -516,7 +516,7 @@
             }
             else {
                 var backgroundnum = 4;
-                var backgroundimg = "url(http://qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                var backgroundimg = "url(//qn.lazysheep.cc/bg/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
                 $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
             }
         })
