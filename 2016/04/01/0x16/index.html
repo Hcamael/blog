@@ -1,11 +1,21 @@
 <!DOCTYPE html>
-<html lang="default">
+<html >
 <head>
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
-  
-  <title>CRYPTO技能修正 | Hc1m1</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="关于前篇求模运算的修正">
+
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Hcamael" />
+
+
+
+<meta name="description" content="关于前篇求模运算的修正">
 <meta name="keywords" content="Crypto">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CRYPTO技能修正">
@@ -16,61 +26,81 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CRYPTO技能修正">
 <meta name="twitter:description" content="关于前篇求模运算的修正">
-  
-    <link rel="alternative" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/img/favicon.png">
-  
-  
-      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
-  
-  
-      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
-  
-  
-      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
-      <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
-  
-  <link rel="stylesheet" href="/css/style.css">
-  
-  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  
-  
-    <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  
-  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
-  <script>
-      var yiliaConfig = {
-          fancybox: true,
-          animate: true,
-          isHome: false,
-          isPost: true,
-          isArchive: false,
-          isTag: false,
-          isCategory: false,
-          open_in_new: false,
-      }
-  </script>
 
-  
-      <script>
-          yiliaConfig.rootUrl = "/";
-      </script>
-  
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
-  
-      <script>
-          var _hmt = _hmt || [];
-          (function() {
-              var hm = document.createElement("script");
-              hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
-              var s = document.getElementsByTagName("script")[0]; 
-              s.parentNode.insertBefore(hm, s);
-          })();
-      </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
-  
+
+    <link rel="alternate" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/img/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>CRYPTO技能修正 | Hc1m1</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: undefined
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
 </head>
 <body>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
@@ -88,7 +118,8 @@
         
         <p class="header-subtitle">Blog</p>
         
-                
+
+        
 
 
         
@@ -152,11 +183,11 @@
                     <nav class="header-nav">
                         <ul class="social">
                             
-                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                                <a class="fa Email" href="mailto: baiyjrh@gmail.com" title="Email"></a>
                             
-                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                                <a class="fa GitHub" href="https://github.com/Hcamael" title="GitHub"></a>
                             
-                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                                <a class="fa RSS" href="/rss.xml" title="RSS"></a>
                             
                         </ul>
                     </nav>
@@ -165,7 +196,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <a href="/tags/CTF/" style="font-size: 20px;">CTF</a> <a href="/tags/Crypto/" style="font-size: 17.5px;">Crypto</a> <a href="/tags/GIT/" style="font-size: 10px;">GIT</a> <a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/Pentest/" style="font-size: 10px;">Pentest</a> <a href="/tags/Python/" style="font-size: 13.75px;">Python</a> <a href="/tags/RE/" style="font-size: 12.5px;">RE</a> <a href="/tags/SQLi/" style="font-size: 11.25px;">SQLi</a> <a href="/tags/Web/" style="font-size: 16.25px;">Web</a> <a href="/tags/bin/" style="font-size: 18.75px;">bin</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/old-blog/" style="font-size: 10px;">old_blog</a> <a href="/tags/php/" style="font-size: 12.5px;">php</a> <a href="/tags/research/" style="font-size: 15px;">research</a> <a href="/tags/sb/" style="font-size: 10px;">sb</a> <a href="/tags/share/" style="font-size: 10px;">share</a> <a href="/tags/随笔/" style="font-size: 10px;">随笔</a>
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CTF/">CTF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Crypto/">Crypto</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GIT/">GIT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pentest/">Pentest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RE/">RE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQLi/">SQLi</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web/">Web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bin/">bin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/old-blog/">old_blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/research/">research</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sb/">sb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/share/">share</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/随笔/">随笔</a></li></ul>
                     </div>
                 </section>
                 
@@ -174,37 +205,37 @@
                 <section class="switch-part switch-part3">
                     <div id="js-friends">
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://vidar.club">Vidar-Team</a>
+                      <a class="main-nav-link switch-friends-link" href="http://vidar.club">Vidar-Team</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://wiki.vidar.club/doku.php">wiki</a>
+                      <a class="main-nav-link switch-friends-link" href="https://wiki.vidar.club/doku.php">wiki</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://drops.vidar.club/">Drops</a>
+                      <a class="main-nav-link switch-friends-link" href="https://drops.vidar.club/">Drops</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                      <a class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                      <a class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                      <a class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                      <a class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                      <a class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                      <a class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://misty.moe/">Misty</a>
+                      <a class="main-nav-link switch-friends-link" href="http://misty.moe/">Misty</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.venenof.com/">Veneno</a>
+                      <a class="main-nav-link switch-friends-link" href="http://www.venenof.com/">Veneno</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.wupco.cn">Wupco</a>
+                      <a class="main-nav-link switch-friends-link" href="http://www.wupco.cn">Wupco</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.scanfsec.com">scanf</a>
+                      <a class="main-nav-link switch-friends-link" href="http://www.scanfsec.com">scanf</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://repwn.com">Bird</a>
+                      <a class="main-nav-link switch-friends-link" href="http://repwn.com">Bird</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://pzhxbz.cn">pzhxbz</a>
+                      <a class="main-nav-link switch-friends-link" href="http://pzhxbz.cn">pzhxbz</a>
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://veritas501.space/">veritas</a>
+                      <a class="main-nav-link switch-friends-link" href="http://veritas501.space/">veritas</a>
                     
                     </div>
                 </section>
@@ -256,16 +287,17 @@
             <nav class="header-nav">
                         <ul class="social">
                             
-                                <li id="Email"><a class="Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a></li>
+                                <a class="fa Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a>
                             
-                                <li id="GitHub"><a class="GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a></li>
+                                <a class="fa GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a>
                             
-                                <li id="RSS"><a class="RSS" target="_blank" href="/rss.xml" title="RSS"></a></li>
+                                <a class="fa RSS" target="_blank" href="/rss.xml" title="RSS"></a>
                             
                         </ul>
             </nav>
         </header>                
     </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap"><article id="post-0x16" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -273,6 +305,8 @@
       <a href="/2016/04/01/0x16/" class="article-date">
       <time datetime="2016-04-01T11:57:39.000Z" itemprop="datePublished">2016-04-01</time>
 </a>
+
+
     </div>
   
   <div class="article-inner">
@@ -332,7 +366,7 @@
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/04/01/0x16/" title="CRYPTO技能修正">http://0x48.pw/2016/04/01/0x16/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/04/01/0x16/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
-            <script src="//qn.lazysheep.cc/js/clipboard.min.js"></script>
+
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -363,46 +397,27 @@
 </article>
 
     <div id="toc" class="toc-article">
-    <strong class="toc-title">文章目录</strong>
-    
-</div>
-<style>
-    .left-col .switch-btn {
-        display: none;
-    }
-    .left-col .switch-area {
-        display: none;
-    }
-</style>
-
-<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
-<script>
-    var valueHide = "隐藏目录";
-    var valueShow = "显示目录";
-
-    if ($(".left-col").is(":hidden")) {
-        $("#tocButton").attr("value", valueShow);
-    }
-
-    $("#tocButton").click(function() {
-        if ($("#toc").is(":hidden")) {
-            $("#tocButton").attr("value", valueHide);
-            $("#toc").slideDown(320);
-            $(".switch-btn, .switch-area").fadeOut(300);
+        <strong class="toc-title">文章目录</strong>
+        
+            
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
         }
-        else {
-            $("#tocButton").attr("value", valueShow);
-            $("#toc").slideUp(350);
-            $(".switch-btn, .switch-area").fadeIn(500);
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
         }
-    })
+    </style>
 
-    if ($(".toc").length < 1) {
-        $("#toc, #tocButton").hide();
-        $(".switch-btn, .switch-area").show();
-    }
-</script>
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
 
 
 
@@ -442,10 +457,11 @@
     <div class="outer">
         <div id="footer-info">
             <div class="footer-left">
-                &copy; 2018 Hcamael
+                <i class="fa fa-copyright"></i> 
+                2016-2018 Hcamael
             </div>
             <div class="footer-right">
-                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
             </div>
         </div>
         
@@ -453,7 +469,7 @@
 </footer>
     </div>
     
-<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -474,13 +490,33 @@
 
 
 
+
 <div class="scroll" id="scroll">
     <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
-    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
     <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
 </div>
-
-    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
 
 <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
