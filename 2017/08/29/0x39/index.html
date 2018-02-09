@@ -22,13 +22,13 @@
 <meta property="og:url" content="http://0x48.pw/2017/08/29/0x39/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="上周的HITB CTF 2017看了两道Pwn题，可是都没做出来，看了writeup后，发现又学到了新姿势了…..">
-<meta property="og:image" content="http://qn.lazysheep.cc/img/hitb1.png">
-<meta property="og:image" content="http://qn.lazysheep.cc/img/hitb2.png">
-<meta property="og:updated_time" content="2018-02-06T07:11:03.896Z">
+<meta property="og:image" content="http://0x48.pw/img/hitb1.png">
+<meta property="og:image" content="http://0x48.pw/img/hitb2.png">
+<meta property="og:updated_time" content="2018-02-09T04:18:59.986Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HITB CTF 2017 Pwn题研究🙉">
 <meta name="twitter:description" content="上周的HITB CTF 2017看了两道Pwn题，可是都没做出来，看了writeup后，发现又学到了新姿势了…..">
-<meta name="twitter:image" content="http://qn.lazysheep.cc/img/hitb1.png">
+<meta name="twitter:image" content="http://0x48.pw/img/hitb1.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -346,7 +346,7 @@
 <a id="more"></a>
 <p>题目在我GitHub上有：🔞<a href="https://github.com/Hcamael/CTF_repo/tree/master/HITB%20CTF%202017/Pwn2(1000levels)" target="_blank" rel="external">https://github.com/Hcamael/CTF_repo/tree/master/HITB%20CTF%202017/Pwn2(1000levels)</a></p>
 <h1 id="1000levels"><a href="#1000levels" class="headerlink" title="1000levels"></a>1000levels</h1><p>这题是一道栈溢出的题目，溢出点也很容易找到，但问题是开了EIP，当时的思路是想可能有啥骚操作可以让hint函数泄露出system地址……可惜一直想错了，最主要有一个知识点我不知道</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> cat /proc/self/maps</span></div><div class="line">ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> cat /proc/self/maps</div><div class="line">ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]</div></pre></td></tr></table></figure>
 <p>以前从来没注意到过，linux下的每个程序都有一个这样的虚拟地址，而且不管开没开EIP，这段地址都是不变的。</p>
 <p>再开看看这段地址是啥指令：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pwndbg&gt; x/5i 0xffffffffff600000</div><div class="line">   0xffffffffff600000:	mov    rax,0x60</div><div class="line">   0xffffffffff600007:	syscall </div><div class="line">   0xffffffffff600009:	ret</div></pre></td></tr></table></figure>
@@ -354,10 +354,10 @@
 <p>首先要先能理清楚栈结构，当我们的的流程是这样的时候：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">main -&gt; hint -&gt; main -&gt; go -&gt; level</div></pre></td></tr></table></figure>
 <p>首先我们调用hint函数时，栈是这样的：</p>
-<p><img src="//qn.lazysheep.cc/img/hitb1.png" alt="hitb1"></p>
+<p><img src="/img/hitb1.png" alt="hitb1"></p>
 <p>然后在hint函数中并没有输出system的地址，但是却把system的地址放入了栈中</p>
 <p>执行完hint函数后，返回main函数，然后再调用go函数，这个时候栈是这样的：</p>
-<p><img src="//qn.lazysheep.cc/img/hitb2.png" alt="hitb2"></p>
+<p><img src="/img/hitb2.png" alt="hitb2"></p>
 <p>在hint函数中存放system地址的栈是在上图中变量v6的位置，在go函数中还调用了level函数，而溢出正好就是在level函数中，所以如果我们溢出构造一个栈地址如下所示</p>
 <table>
 <thead>
@@ -385,7 +385,7 @@
 <p>v5和v6的地址是一样的，所以如果输入的v2值大于0，则会把system的地址覆盖掉，这很好解决，输入负数和0都行，然后通过v3的输入，我们能在system地址的基础上进行加减。</p>
 <p>因为有libc，所以我们可以先获取system的符号地址为<code>0x45390</code></p>
 <p>然后使用<code>one_gadget</code>工具：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> one_gadget libc.so.6 </span></div><div class="line">0x4526a	execve("/bin/sh", rsp+0x30, environ)</div><div class="line">constraints:</div><div class="line">  [rsp+0x30] == NULL</div><div class="line"></div><div class="line">0xcd0f3	execve("/bin/sh", rcx, r12)</div><div class="line">constraints:</div><div class="line">  [rcx] == NULL || rcx == NULL</div><div class="line">  [r12] == NULL || r12 == NULL</div><div class="line"></div><div class="line">0xcd1c8	execve("/bin/sh", rax, r12)</div><div class="line">constraints:</div><div class="line">  [rax] == NULL || rax == NULL</div><div class="line">  [r12] == NULL || r12 == NULL</div><div class="line"></div><div class="line">0xf0274	execve("/bin/sh", rsp+0x50, environ)</div><div class="line">constraints:</div><div class="line">  [rsp+0x50] == NULL</div><div class="line"></div><div class="line">0xf1117	execve("/bin/sh", rsp+0x70, environ)</div><div class="line">constraints:</div><div class="line">  [rsp+0x70] == NULL</div><div class="line"></div><div class="line">0xf66c0	execve("/bin/sh", rcx, [rbp-0xf8])</div><div class="line">constraints:</div><div class="line">  [rcx] == NULL || rcx == NULL</div><div class="line">  [[rbp-0xf8]] == NULL || [rbp-0xf8] == NULL</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> one_gadget libc.so.6 </div><div class="line">0x4526a	execve("/bin/sh", rsp+0x30, environ)</div><div class="line">constraints:</div><div class="line">  [rsp+0x30] == NULL</div><div class="line"></div><div class="line">0xcd0f3	execve("/bin/sh", rcx, r12)</div><div class="line">constraints:</div><div class="line">  [rcx] == NULL || rcx == NULL</div><div class="line">  [r12] == NULL || r12 == NULL</div><div class="line"></div><div class="line">0xcd1c8	execve("/bin/sh", rax, r12)</div><div class="line">constraints:</div><div class="line">  [rax] == NULL || rax == NULL</div><div class="line">  [r12] == NULL || r12 == NULL</div><div class="line"></div><div class="line">0xf0274	execve("/bin/sh", rsp+0x50, environ)</div><div class="line">constraints:</div><div class="line">  [rsp+0x50] == NULL</div><div class="line"></div><div class="line">0xf1117	execve("/bin/sh", rsp+0x70, environ)</div><div class="line">constraints:</div><div class="line">  [rsp+0x70] == NULL</div><div class="line"></div><div class="line">0xf66c0	execve("/bin/sh", rcx, [rbp-0xf8])</div><div class="line">constraints:</div><div class="line">  [rcx] == NULL || rcx == NULL</div><div class="line">  [[rbp-0xf8]] == NULL || [rbp-0xf8] == NULL</div></pre></td></tr></table></figure>
 <p>能获取到执行<code>execve(&#39;/bin/sh&#39;)</code>指令的地址，随便选一个和system地址相减得到差值，这个值就是v3，这样就把system的地址设置成执行<code>execve</code>的地址了，这样当rip跳到这里时就能直接执行系统命令了。</p>
 <p>但是还有一个小细节：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ( v6 &gt; <span class="number">0</span> )</div><div class="line">  &#123;</div><div class="line">    <span class="keyword">if</span> ( v6 &lt;= <span class="number">999</span> )</div><div class="line">    &#123;</div><div class="line">      v7 = v6;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">      <span class="built_in">puts</span>(<span class="string">"More levels than before!"</span>);</div><div class="line">      v7 = <span class="number">1000L</span>L;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">puts</span>(<span class="string">"Let's go!'"</span>);</div><div class="line">    v4 = time(<span class="number">0L</span>L);</div><div class="line">    <span class="keyword">if</span> ( (<span class="keyword">unsigned</span> <span class="keyword">int</span>)level(v7) != <span class="number">0</span> )</div><div class="line">    &#123;</div><div class="line">      v1 = time(<span class="number">0L</span>L);</div><div class="line">      <span class="built_in">sprintf</span>((<span class="keyword">char</span> *)&amp;v8, <span class="string">"Great job! You finished %d levels in %d seconds\n"</span>, v7, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)(v1 - v4), v3);</div><div class="line">      <span class="built_in">puts</span>((<span class="keyword">const</span> <span class="keyword">char</span> *)&amp;v8);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">      <span class="built_in">puts</span>(<span class="string">"You failed."</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">exit</span>(<span class="number">0</span>);</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
@@ -408,7 +408,7 @@
         <p><span>本文标题:</span><a href="/2017/08/29/0x39/">HITB CTF 2017 Pwn题研究🙉</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2017-08-29, 19:11:04</p>
-        <p><span>最后更新:</span>2018-02-06, 15:11:03</p>
+        <p><span>最后更新:</span>2018-02-09, 12:18:59</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/08/29/0x39/" title="HITB CTF 2017 Pwn题研究🙉">http://0x48.pw/2017/08/29/0x39/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/08/29/0x39/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -453,8 +453,8 @@
         .left-col .switch-area {
             display: none;
         }
-        .toc-level-3 i,
-        .toc-level-3 ol {
+        .toc-level-6 i,
+        .toc-level-6 ol {
             display: none !important;
         }
     </style>
@@ -504,7 +504,7 @@
         <div id="footer-info">
             <div class="footer-left">
                 <i class="fa fa-copyright"></i> 
-                2016-2018 Hcamael
+                2015-2018 Hcamael
             </div>
             <div class="footer-right">
                 <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
@@ -563,6 +563,23 @@
         }
     
 </script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
 
 <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>

