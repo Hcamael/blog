@@ -19,16 +19,16 @@
 <meta name="keywords" content="research">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Exim Off-by-one(CVE-2018-6789)漏洞复现分析">
-<meta property="og:url" content="http://0x48.pw/2018/03/30/0x42/index.html">
+<meta property="og:url" content="//0x48.pw/2018/03/30/0x42/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="前段时间meh又挖了一个Exim的RCE漏洞[1]，而且这次RCE的漏洞的约束更少了，就算开启了PIE仍然能被利用。虽然去年我研究过Exim，但是时间过去这么久了，所以这次复现还是花了大量时间在熟悉Exim源码上。">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/eximrce1.jpeg">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/exim_rce.png">
-<meta property="og:updated_time" content="2018-04-02T11:10:27.300Z">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/eximrce1.jpeg">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/exim_rce.png">
+<meta property="og:updated_time" content="2018-04-02T11:23:53.501Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Exim Off-by-one(CVE-2018-6789)漏洞复现分析">
 <meta name="twitter:description" content="前段时间meh又挖了一个Exim的RCE漏洞[1]，而且这次RCE的漏洞的约束更少了，就算开启了PIE仍然能被利用。虽然去年我研究过Exim，但是时间过去这么久了，所以这次复现还是花了大量时间在熟悉Exim源码上。">
-<meta name="twitter:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/eximrce1.jpeg">
+<meta name="twitter:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/eximrce1.jpeg">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -37,7 +37,7 @@
 
 
 
-    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="shortcut icon" href="//hcamael.oss-cn-beijing.aliyuncs.com/img/favicon.png">
 
 
 
@@ -112,7 +112,7 @@
 <div class="intrude-less">
     <header id="header" class="inner">
         <a href="/" class="profilepic">
-            <img src="/img/author.png" class="animated zoomIn">
+            <img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/author.png" class="animated zoomIn">
         </a>
         <hgroup>
           <h1 class="header-author"><a href="/">Hcamael</a></h1>
@@ -265,7 +265,7 @@
     <div class="intrude-less">
         <header id="header" class="inner">
             <a href="/" class="profilepic">
-                <img src="/img/author.png" class="animated zoomIn">
+                <img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/author.png" class="animated zoomIn">
             </a>
             <hgroup>
               <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
@@ -357,7 +357,7 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ /usr/exim/bin/exim -bdf -dd</div><div class="line"><span class="comment"># 输出完整debug信息使用的是-bdf -d+all</span></div><div class="line"><span class="comment"># 不开启debug模式使用的是-bdf</span></div></pre></td></tr></table></figure>
 <h1 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h1><p>因为我觉得meh的文章中，漏洞原理和相关函数的说明已经很详细，我也没啥要补充的，所以直接写我的复现过程</p>
 <h2 id="STEP-1"><a href="#STEP-1" class="headerlink" title="STEP 1"></a>STEP 1</h2><p>首先需要构造一个被释放的chunk，但是没必要像meh文章说的是一个0x6060大小的chunk，只需要满足几个条件:</p>
-<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/eximrce1.jpeg" alt="eximrce1"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/eximrce1.jpeg" alt="eximrce1"></p>
 <p>这个chunk要被分为三个部分，一个部分是通过<code>store_get</code>获取，用来存放base64解码的数据，用来造成<code>off by one</code>漏洞，覆盖下一个chunk的size，因为通过<code>store_get</code>获取的chunk最小值是0x2000，然后0x10的堆头和0x10的exim自己实现的堆头，所以是一个至少0x2020的堆块。</p>
 <p>第二部分用来放<code>sender_host_name</code>，因为该变量的内存是通过<code>store_malloc</code>获取的，所以没有大小限制</p>
 <p>第三部分因为需要构造一个fake chunk用来过free的检查，所以也是一个至少0x2020的堆块</p>
@@ -417,7 +417,7 @@
 <p>所以又有了另一个思路，因为exim是通过fork起子进程来处理每个socket连接的，所以我们可以爆破堆的基地址，只需要爆破2byte</p>
 <h2 id="STEP-8"><a href="#STEP-8" class="headerlink" title="STEP 8"></a>STEP 8</h2><p>在解决地址的问题后，就是对堆进行填充，然后修改相关<code>acl_check_xxx</code>指向的字符串</p>
 <p>然后附上利用截图：</p>
-<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/exim_rce.png" alt="exim_rce"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/exim_rce.png" alt="exim_rce"></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>坑踩的挺多，尤其是在纠结meh所说的<code>partial write</code>，之后在github上看到别人公布的exp<a href="#jump3">[3]</a>，同样也是使用爆破的方法，所以可能我对<code>partial write</code>的理解有问题吧</p>
 <p>另外，通过与github上的exp进行对比，发现不同版本的exim，<code>acl_check_xxx</code>的堆偏移也有差别，所以如果需要RCE exim，需要满足下面的条件：</p>
 <ol>
@@ -442,10 +442,10 @@
         <p><span>本文标题:</span><a href="/2018/03/30/0x42/">Exim Off-by-one(CVE-2018-6789)漏洞复现分析</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2018-03-30, 14:42:48</p>
-        <p><span>最后更新:</span>2018-04-02, 19:10:27</p>
+        <p><span>最后更新:</span>2018-04-02, 19:23:53</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/03/30/0x42/" title="Exim Off-by-one(CVE-2018-6789)漏洞复现分析">http://0x48.pw/2018/03/30/0x42/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2018/03/30/0x42/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/03/30/0x42/" title="Exim Off-by-one(CVE-2018-6789)漏洞复现分析">//0x48.pw/2018/03/30/0x42/</a>
+            <span class="copy-path" data-clipboard-text="原文: //0x48.pw/2018/03/30/0x42/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
 
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -553,7 +553,7 @@
             }
             else {
                 var backgroundnum = 4;
-                var backgroundimg = "url(/img/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                var backgroundimg = "url(//hcamael.oss-cn-beijing.aliyuncs.com/img/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
                 $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
             }
         })

