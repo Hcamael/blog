@@ -22,13 +22,13 @@
 <meta property="og:url" content="http://0x48.pw/2017/08/29/0x39/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="上周的HITB CTF 2017看了两道Pwn题，可是都没做出来，看了writeup后，发现又学到了新姿势了…..">
-<meta property="og:image" content="http://0x48.pw/img/hitb1.png">
-<meta property="og:image" content="http://0x48.pw/img/hitb2.png">
-<meta property="og:updated_time" content="2018-02-09T04:18:59.986Z">
+<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hitb1.png">
+<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hitb2.png">
+<meta property="og:updated_time" content="2018-04-02T11:10:24.158Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HITB CTF 2017 Pwn题研究🙉">
 <meta name="twitter:description" content="上周的HITB CTF 2017看了两道Pwn题，可是都没做出来，看了writeup后，发现又学到了新姿势了…..">
-<meta name="twitter:image" content="http://0x48.pw/img/hitb1.png">
+<meta name="twitter:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hitb1.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -354,10 +354,10 @@
 <p>首先要先能理清楚栈结构，当我们的的流程是这样的时候：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">main -&gt; hint -&gt; main -&gt; go -&gt; level</div></pre></td></tr></table></figure>
 <p>首先我们调用hint函数时，栈是这样的：</p>
-<p><img src="/img/hitb1.png" alt="hitb1"></p>
+<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hitb1.png" alt="hitb1"></p>
 <p>然后在hint函数中并没有输出system的地址，但是却把system的地址放入了栈中</p>
 <p>执行完hint函数后，返回main函数，然后再调用go函数，这个时候栈是这样的：</p>
-<p><img src="/img/hitb2.png" alt="hitb2"></p>
+<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hitb2.png" alt="hitb2"></p>
 <p>在hint函数中存放system地址的栈是在上图中变量v6的位置，在go函数中还调用了level函数，而溢出正好就是在level函数中，所以如果我们溢出构造一个栈地址如下所示</p>
 <table>
 <thead>
@@ -408,7 +408,7 @@
         <p><span>本文标题:</span><a href="/2017/08/29/0x39/">HITB CTF 2017 Pwn题研究🙉</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2017-08-29, 19:11:04</p>
-        <p><span>最后更新:</span>2018-02-09, 12:18:59</p>
+        <p><span>最后更新:</span>2018-04-02, 19:10:24</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/08/29/0x39/" title="HITB CTF 2017 Pwn题研究🙉">http://0x48.pw/2017/08/29/0x39/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/08/29/0x39/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

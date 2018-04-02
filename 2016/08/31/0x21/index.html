@@ -22,15 +22,15 @@
 <meta property="og:url" content="http://0x48.pw/2016/08/31/0x21/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="这几天在研究方程式泄露的EXTRABACON（EXBA）PoC, 网上没找到能成功的远程, 所以准备自己本地搭环境, 然后看到了这篇文章http://www.freebuf.com/vuls/112589.html">
-<meta property="og:image" content="http://0x48.pw/img/cisco1.png">
-<meta property="og:image" content="http://0x48.pw/img/cisco2.png">
-<meta property="og:image" content="http://0x48.pw/img/cisco3.png">
-<meta property="og:image" content="http://0x48.pw/img/cisco4.png">
-<meta property="og:updated_time" content="2018-02-09T04:18:56.105Z">
+<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/cisco1.png">
+<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/cisco2.png">
+<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/cisco3.png">
+<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/cisco4.png">
+<meta property="og:updated_time" content="2018-04-02T11:10:21.522Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cisco ASA RCE 环境搭建">
 <meta name="twitter:description" content="这几天在研究方程式泄露的EXTRABACON（EXBA）PoC, 网上没找到能成功的远程, 所以准备自己本地搭环境, 然后看到了这篇文章http://www.freebuf.com/vuls/112589.html">
-<meta name="twitter:image" content="http://0x48.pw/img/cisco1.png">
+<meta name="twitter:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/cisco1.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -351,15 +351,15 @@
 <p>首先是虚拟机镜像文件这些东西: <a href="http://l.0x48.pw/blackhat/ASA-8.4.zip" target="_blank" rel="external">http://l.0x48.pw/blackhat/ASA-8.4.zip</a></p>
 <p>解压出来， 里面有个<code>ASA-8.4.ovf</code>, 可直接用VBox的import applicace导入虚拟机</p>
 <p>讲道理, 应该导入后就可以使用了, 但是没人跟你讲道理, 所以接下来要做两件事, 或者可以说是一件事 —— 配网络, 配网络就需要使用Serial口连进去.</p>
-<h2 id="连接Serial口"><a href="#连接Serial口" class="headerlink" title="连接Serial口"></a>连接Serial口</h2><p>如下图所示:<br><img src="/img/cisco1.png" alt="cisco1"></p>
+<h2 id="连接Serial口"><a href="#连接Serial口" class="headerlink" title="连接Serial口"></a>连接Serial口</h2><p>如下图所示:<br><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/cisco1.png" alt="cisco1"></p>
 <p>基本默认就好, 重要的是<code>Path/Address: /tmp/gns3_vbox/5d5928d1-3cb9-46c6-85cb-b7e1121f188c</code></p>
 <p>这个地址自己填一个, 要写到VBox可写目录, 所以选择了/tmp</p>
 <p>然后在Ubuntu下连接Serial口的工具我选择了<code>minicom</code>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ sudo apt install minicom</div><div class="line">$ sudo vim /etc/minicom/minirc.dfl</div><div class="line">pu port			unix#/tmp/gns3_vbox/5d5928d1-3cb9-46c6-85cb-b7e1121f188c</div><div class="line"></div><div class="line">#后面跟的路径就是上面VBox的那个路径</div></pre></td></tr></table></figure></p>
 <p>然后就是启动虚拟机了, 不过在启动之前还有几个问题</p>
-<p>如图:<br><img src="/img/cisco2.png" alt="cisco2"></p>
+<p>如图:<br><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/cisco2.png" alt="cisco2"></p>
 <p>更大的那块硬盘要作为Master, 要设置成启动盘, 虚拟机导入后是500kb的那块是启动盘, 所以启动不起来</p>
-<p>然后是网络, 自己测试就开一块网卡就够了, 然后我使用only-host, 如图:<br><img src="/img/cisco3.png" alt="cisco3"></p>
-<p><img src="/img/cisco4.png" alt="cisco4"></p>
+<p>然后是网络, 自己测试就开一块网卡就够了, 然后我使用only-host, 如图:<br><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/cisco3.png" alt="cisco3"></p>
+<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/cisco4.png" alt="cisco4"></p>
 <p>然后可以开机了</p>
 <p>开机后选择<code>ASA 8.42</code> 启动, 然后会停在<code>Booting the kernel</code>, 然后别等了, 你等再久也是这页面(我最开始摸索的时候傻傻的等了半小时), 现在就可以使用<code>minicom</code>去连接ASA的Serial口了</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo minicom</div></pre></td></tr></table></figure>
@@ -407,7 +407,7 @@
         <p><span>本文标题:</span><a href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2016-08-31, 22:56:11</p>
-        <p><span>最后更新:</span>2018-02-09, 12:18:56</p>
+        <p><span>最后更新:</span>2018-04-02, 19:10:21</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/08/31/0x21/" title="Cisco ASA RCE 环境搭建">http://0x48.pw/2016/08/31/0x21/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/08/31/0x21/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

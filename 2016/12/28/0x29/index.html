@@ -22,17 +22,17 @@
 <meta property="og:url" content="http://0x48.pw/2016/12/28/0x29/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="最近报了个CVE-2016-10033, 是phpmailer 远程命令执行漏洞, 从昨天开始, 分析了一波">
-<meta property="og:image" content="http://0x48.pw/img/mail1.png">
-<meta property="og:image" content="http://0x48.pw/img/mail2.png">
-<meta property="og:image" content="http://0x48.pw/img/mail3.png">
-<meta property="og:image" content="http://0x48.pw/img/mail4.png">
-<meta property="og:image" content="http://0x48.pw/img/mail5.png">
-<meta property="og:image" content="http://0x48.pw/img/mail6.png">
-<meta property="og:updated_time" content="2018-02-09T04:19:00.641Z">
+<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/mail1.png">
+<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/mail2.png">
+<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/mail3.png">
+<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/mail4.png">
+<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/mail5.png">
+<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/mail6.png">
+<meta property="og:updated_time" content="2018-04-02T11:10:24.737Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="phpmailer RCE 分析">
 <meta name="twitter:description" content="最近报了个CVE-2016-10033, 是phpmailer 远程命令执行漏洞, 从昨天开始, 分析了一波">
-<meta name="twitter:image" content="http://0x48.pw/img/mail1.png">
+<meta name="twitter:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/mail1.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -355,16 +355,16 @@
 </blockquote>
 <p>看着这一些列限制感觉这洞挺鸡肋的, 尤其是上面两个限制, php版本小于5.2, 已经很少见了, 默认情况下php是会编译安装pcre扩展的</p>
 <p>接下来仔细分析下该漏洞, 看exp可知, 该漏洞和前段时间的<a href="http://blog.knownsec.com/2016/12/roundcube-1-2-2-%E8%BF%9C%E7%A8%8B%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E-%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" target="_blank" rel="external">Roundcube 1.2.2 远程命令执行漏洞</a> 相似, 都是由于php的mail函数的第5个参数的问题.</p>
-<p>然后开始定位:<br>代码位于文件class.phpmailer.php<br><img src="/img/mail1.png" alt="mail1"></p>
+<p>然后开始定位:<br>代码位于文件class.phpmailer.php<br><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/mail1.png" alt="mail1"></p>
 <p>从这里就可以看出上述第四个要求的原因, 如果开启了safe_mode, 则不会向mail函数传递第5个参数</p>
-<p>接下来跟踪变量<code>$params</code><br><img src="/img/mail2.png" alt="mail2"></p>
+<p>接下来跟踪变量<code>$params</code><br><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/mail2.png" alt="mail2"></p>
 <p>变量<code>$params</code>来自于<code>$this-&gt;Sender</code></p>
-<p>继续跟踪:<br><img src="/img/mail3.png" alt="mail3"></p>
+<p>继续跟踪:<br><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/mail3.png" alt="mail3"></p>
 <p>变量<code>$this-&gt;Sender</code>是通过<code>setFrom</code>函数的第一个参数进行设置的</p>
 <p>在之前, 函数对<code>$address</code>是进行有效性判断的, 接下来进入这个地址有效性判断的函数中去看看</p>
-<p><img src="/img/mail4.png" alt="mail4"></p>
+<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/mail4.png" alt="mail4"></p>
 <p>从这段代码我们能知道, 如果<code>php version &lt; 5.2.0</code> and <code>no pcre</code>, 则<code>$patternselect = &#39;noregex&#39;</code></p>
-<p>继续往下看<br><img src="/img/mail5.png" alt="mail5"></p>
+<p>继续往下看<br><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/mail5.png" alt="mail5"></p>
 <p>当<code>$patternselect = &#39;noregex&#39;</code>时, 这判断太好过了, 差不多只要字符串中含有<code>@</code>, 就能返回true</p>
 <p>这样mail函数的第5个参数<code>$params</code>, 就能随意构造了</p>
 <p>接下来说说这类漏洞的原理</p>
@@ -415,7 +415,7 @@
 <p>发现并跑不起来, 日志文件也没成功写入</p>
 <p>但是传入mail函数中, 却能成功写入日志文件</p>
 <p>之后对mail.c源码进行了研究, 发现:</p>
-<p><img src="/img/mail6.png" alt="mail6"></p>
+<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/mail6.png" alt="mail6"></p>
 <p>在mail函数中, 对参数使用<code>php_escape_shell_cmd</code>进行处理</p>
 <p>我们可以进行测试下:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># test.php</div><div class="line">&lt;?php</div><div class="line">$payload = &quot;a&apos;( -OQueueDirectory=/tmp -X/tmp/backdoor.php )@a.com&quot;;</div><div class="line">$earg = escapeshellarg($payload);</div><div class="line">var_dump($earg);</div><div class="line">$ecmd = escapeshellcmd($earg);</div><div class="line">var_dump($ecmd);</div><div class="line">?&gt;</div></pre></td></tr></table></figure>
@@ -450,7 +450,7 @@
         <p><span>本文标题:</span><a href="/2016/12/28/0x29/">phpmailer RCE 分析</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2016-12-28, 13:31:31</p>
-        <p><span>最后更新:</span>2018-02-09, 12:19:00</p>
+        <p><span>最后更新:</span>2018-04-02, 19:10:24</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/12/28/0x29/" title="phpmailer RCE 分析">http://0x48.pw/2016/12/28/0x29/</a>
             <span class="copy-path" data-clipboard-text="原文: http://0x48.pw/2016/12/28/0x29/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
