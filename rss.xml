@@ -8,7 +8,7 @@
     <atom:link href="/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description>水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会</description>
-    <pubDate>Mon, 02 Apr 2018 11:23:53 GMT</pubDate>
+    <pubDate>Tue, 03 Apr 2018 03:20:59 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
@@ -37,7 +37,7 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ /usr/exim/bin/exim -bdf -dd</div><div class="line"><span class="comment"># 输出完整debug信息使用的是-bdf -d+all</span></div><div class="line"><span class="comment"># 不开启debug模式使用的是-bdf</span></div></pre></td></tr></table></figure>
 <h1 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h1><p>因为我觉得meh的文章中，漏洞原理和相关函数的说明已经很详细，我也没啥要补充的，所以直接写我的复现过程</p>
 <h2 id="STEP-1"><a href="#STEP-1" class="headerlink" title="STEP 1"></a>STEP 1</h2><p>首先需要构造一个被释放的chunk，但是没必要像meh文章说的是一个0x6060大小的chunk，只需要满足几个条件:</p>
-<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/eximrce1.jpeg" alt="eximrce1"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/eximrce1.jpeg?x-oss-process=style/blog_sy" alt="eximrce1"></p>
 <p>这个chunk要被分为三个部分，一个部分是通过<code>store_get</code>获取，用来存放base64解码的数据，用来造成<code>off by one</code>漏洞，覆盖下一个chunk的size，因为通过<code>store_get</code>获取的chunk最小值是0x2000，然后0x10的堆头和0x10的exim自己实现的堆头，所以是一个至少0x2020的堆块。</p>
 <p>第二部分用来放<code>sender_host_name</code>，因为该变量的内存是通过<code>store_malloc</code>获取的，所以没有大小限制</p>
 <p>第三部分因为需要构造一个fake chunk用来过free的检查，所以也是一个至少0x2020的堆块</p>
@@ -97,7 +97,7 @@
 <p>所以又有了另一个思路，因为exim是通过fork起子进程来处理每个socket连接的，所以我们可以爆破堆的基地址，只需要爆破2byte</p>
 <h2 id="STEP-8"><a href="#STEP-8" class="headerlink" title="STEP 8"></a>STEP 8</h2><p>在解决地址的问题后，就是对堆进行填充，然后修改相关<code>acl_check_xxx</code>指向的字符串</p>
 <p>然后附上利用截图：</p>
-<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/exim_rce.png" alt="exim_rce"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/exim_rce.png?x-oss-process=style/blog_sy" alt="exim_rce"></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>坑踩的挺多，尤其是在纠结meh所说的<code>partial write</code>，之后在github上看到别人公布的exp<a href="#jump3">[3]</a>，同样也是使用爆破的方法，所以可能我对<code>partial write</code>的理解有问题吧</p>
 <p>另外，通过与github上的exp进行对比，发现不同版本的exim，<code>acl_check_xxx</code>的堆偏移也有差别，所以如果需要RCE exim，需要满足下面的条件：</p>
 <ol>

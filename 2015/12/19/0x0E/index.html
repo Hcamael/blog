@@ -20,14 +20,14 @@
 <meta property="og:title" content="12.19网络方向培训">
 <meta property="og:url" content="//0x48.pw/2015/12/19/0x0E/index.html">
 <meta property="og:site_name" content="Hc1m1">
-<meta property="og:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-isa.png">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/osi.jpg">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/TCPIP.png">
-<meta property="og:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-pro.png">
-<meta property="og:updated_time" content="2018-04-02T11:10:17.994Z">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/isa.png?x-oss-process=style/blog_sy">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/osi.jpg?x-oss-process=style/blog_sy">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/TCPIP.png?x-oss-process=style/blog_sy">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/pro.png?x-oss-process=style/blog_sy">
+<meta property="og:updated_time" content="2018-04-03T03:20:19.520Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="12.19网络方向培训">
-<meta name="twitter:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-isa.png">
+<meta name="twitter:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/isa.png?x-oss-process=style/blog_sy">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -341,13 +341,13 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-isa.png" alt="ISA"></p>
+        <p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/isa.png?x-oss-process=style/blog_sy" alt="ISA"></p>
 <a id="more"></a>
 <h1 id="OSI七层模型-Open-System-Interconnect-开放系统互连参考模型"><a href="#OSI七层模型-Open-System-Interconnect-开放系统互连参考模型" class="headerlink" title="OSI七层模型(Open System Interconnect 开放系统互连参考模型)"></a>OSI七层模型(Open System Interconnect 开放系统互连参考模型)</h1><p>国际标准化组织(ISO)和国际电报电话咨询委员会(CCITT)联合制定的开放系统互连参考模型</p>
-<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/osi.jpg" alt="osi"></p>
-<h1 id="TCP-IP-协议族"><a href="#TCP-IP-协议族" class="headerlink" title="TCP/IP 协议族"></a>TCP/IP 协议族</h1><p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/TCPIP.png" alt="TCP/IP"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/osi.jpg?x-oss-process=style/blog_sy" alt="osi"></p>
+<h1 id="TCP-IP-协议族"><a href="#TCP-IP-协议族" class="headerlink" title="TCP/IP 协议族"></a>TCP/IP 协议族</h1><p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/TCPIP.png?x-oss-process=style/blog_sy" alt="TCP/IP"></p>
 <h2 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h2><p>协议族</p>
-<p><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-pro.png" alt="协议族"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/pro.png?x-oss-process=style/blog_sy" alt="协议族"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python</div><div class="line">#-*- coding:utf-8 -*-</div><div class="line"></div><div class="line">import socket</div><div class="line"></div><div class="line">s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</div><div class="line"></div><div class="line">add = (&apos;127.0.0.1&apos;, 8888)</div><div class="line">s.bind(add)</div><div class="line">s.listen(1)</div><div class="line">while True:</div><div class="line">	conn, addr = s.accept();</div><div class="line">	print addr</div><div class="line">	buf = conn.recv(1024)</div><div class="line">	print buf</div><div class="line">	conn.sendall(&quot;HTTP/1.1 200 OK\n\r\n\n&quot;)</div><div class="line">	conn.close()</div></pre></td></tr></table></figure>
 <h2 id="端口"><a href="#端口" class="headerlink" title="端口"></a>端口</h2><p>大小：16bits  (0-65535)</p>
 <p>保留端口号：0-1024</p>
@@ -385,7 +385,7 @@
         <p><span>本文标题:</span><a href="/2015/12/19/0x0E/">12.19网络方向培训</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2015-12-19, 10:36:07</p>
-        <p><span>最后更新:</span>2018-04-02, 19:10:17</p>
+        <p><span>最后更新:</span>2018-04-03, 11:20:19</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2015/12/19/0x0E/" title="12.19网络方向培训">//0x48.pw/2015/12/19/0x0E/</a>
             <span class="copy-path" data-clipboard-text="原文: //0x48.pw/2015/12/19/0x0E/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

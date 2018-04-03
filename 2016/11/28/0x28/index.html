@@ -22,17 +22,17 @@
 <meta property="og:url" content="//0x48.pw/2016/11/28/0x28/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="今年犯懒了所以只出了3题RSA的密码学题目, 出题思路来源于协会上一届的学长 @Mystery Of Panda 关于RSA后门的毕业设计.">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa_1.png">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa1_2.png">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa2_1.png">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa2_2.png">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa_keng2.png">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa_keng1.png">
-<meta property="og:updated_time" content="2018-04-02T11:10:25.304Z">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa_1.png?x-oss-process=style/blog_sy">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa1_2.png?x-oss-process=style/blog_sy">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa2_1.png?x-oss-process=style/blog_sy">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa2_2.png?x-oss-process=style/blog_sy">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa_keng2.png?x-oss-process=style/blog_sy">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa_keng1.png?x-oss-process=style/blog_sy">
+<meta property="og:updated_time" content="2018-04-03T03:19:44.874Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2016 HCTF Crypto 出题总结">
 <meta name="twitter:description" content="今年犯懒了所以只出了3题RSA的密码学题目, 出题思路来源于协会上一届的学长 @Mystery Of Panda 关于RSA后门的毕业设计.">
-<meta name="twitter:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa_1.png">
+<meta name="twitter:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa_1.png?x-oss-process=style/blog_sy">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -353,11 +353,11 @@
 <p>本题思路来源: 基于隐藏指数的RSA-HSDβ算法, 全称为隐藏小私有指数δ的RSA后门密钥生成算法.</p>
 <p>该算法依赖于<a href="https://github.com/pablocelayes/rsa-wiener-attack" target="_blank" rel="external">wiener</a>小指数攻击方法</p>
 <p>后门生成流程:</p>
-<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa_1.png" alt="hctf_rsa1"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa_1.png?x-oss-process=style/blog_sy" alt="hctf_rsa1"></p>
 <p>其中<code>β</code>是在<code>2^(k-1) ± 2^(k/2)</code>范围内的素数, 转置函数的作用是在<code>β</code>非常大的情况下, 返回值可以认为是PRP(Pseudo-Random Permutation). 转置函数可以有好几种形式, 我选取的是一种比较简单的转置函数.</p>
 <p>从上面的流程可以看出这题非常的简单, 要逆向也是很容易的, 所以该题为本届HCTF密码学的签到题</p>
 <p>逆向思路:</p>
-<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa1_2.png" alt="hctf_rsa1_2"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa1_2.png?x-oss-process=style/blog_sy" alt="hctf_rsa1_2"></p>
 <p>从上图可以看出本题只涉及到了wiener算法, 难度差不多是150左右</p>
 <hr>
 <p>出题时本来是准备考两种算法的, 一种是wiener算法, 一种是<a href="https://www.cs.cmu.edu/~glmiller/Publications/Papers/Mi76.pdf" target="_blank" rel="external">Riemann’s hypothesis and tests for primality</a>, payload中的<code>divide_pq</code>函数, 已知e, d, n质因数分解p和q(<a href="http://www.di-mgt.com.au/rsa_factorize_n.html" target="_blank" rel="external">http://www.di-mgt.com.au/rsa_factorize_n.html</a>)</p>
@@ -372,7 +372,7 @@
 <p>出题时预测的分数在400分左右, 实际情况只有7个队解出了该题. 和预测差不多, 最后放了一波hint, 要不然可能会更少.</p>
 <p>本题思路来源: 基于隐藏素数因子的RSA-HPβ算法</p>
 <p>该后门算法依赖于<code>Coppersmith partial information attack</code>算法, <a href="http://inaz2.hatenablog.com/entries/2016/01/20" target="_blank" rel="external">sage实现该算法</a></p>
-<p>后门生成流程:<br><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa2_1.png" alt="hctf_rsa2_1"></p>
+<p>后门生成流程:<br><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa2_1.png?x-oss-process=style/blog_sy" alt="hctf_rsa2_1"></p>
 <p>该算法的核心在于把p的前半部分比特隐写到n中</p>
 <p>τ的长度为k/16比特</p>
 <p>μ的长度为5k/16比特</p>
@@ -381,7 +381,7 @@
 <p><code>p * (q xor random(k/8比特长度))</code>的前3k/8比特的值是不变的</p>
 <p>所以可以成功把τ, μ隐写到n中</p>
 <p>逆向思路:</p>
-<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa2_2.png" alt="hctf_rsa2_2"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa2_2.png?x-oss-process=style/blog_sy" alt="hctf_rsa2_2"></p>
 <p>该题的难点主要在于<code>Coppersmith partial information attack</code>算法, 能在放hint前做出的队伍都是在github上找到了该算法的脚本<a href="https://github.com/Gao-Chuan/RSA-and-LLL-attacks" target="_blank" rel="external">https://github.com/Gao-Chuan/RSA-and-LLL-attacks</a></p>
 <h1 id="Crypto-So-Amazing"><a href="#Crypto-So-Amazing" class="headerlink" title="Crypto So Amazing"></a>Crypto So Amazing</h1><p>题目: <a href="https://github.com/Hcamael/ctf-library/tree/master/RSA3" target="_blank" rel="external">https://github.com/Hcamael/ctf-library/tree/master/RSA3</a><br>payload:</p>
 <ul>
@@ -395,7 +395,7 @@
 <p>但是这题已知p的前576bit, github上的那个脚本就跑不出来了</p>
 <p>这部分是出题时无意间挖出的坑, 因为我并不知道github上的这个脚本, 在我预想中能做出rsa2的基本都是能做出rsa3的</p>
 <p>这题还有一个坑点</p>
-<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa_keng2.png" alt="hctf_rsa_keng2"><br><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa_keng1.png" alt="hctf_rsa_keng1"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa_keng2.png?x-oss-process=style/blog_sy" alt="hctf_rsa_keng2"><br><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/hctf_rsa_keng1.png?x-oss-process=style/blog_sy" alt="hctf_rsa_keng1"></p>
 <p>sage和python 用相同的seed生成的随机数不一样, 所以在payload中我使用了python生成随机数</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本届HCTF的Crypto计划的考点是<code>Coppersmith partial information attack</code>算法和<code>Riemann&#39;s hypothesis and tests for primality</code>算法, 不过无奈由于出题失误第二个算法没考成</p>
 <p>RSA后门相关的论文可参考: </p>
@@ -415,7 +415,7 @@
         <p><span>本文标题:</span><a href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2016-11-28, 20:26:26</p>
-        <p><span>最后更新:</span>2018-04-02, 19:10:25</p>
+        <p><span>最后更新:</span>2018-04-03, 11:19:44</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/11/28/0x28/" title="2016 HCTF Crypto 出题总结">//0x48.pw/2016/11/28/0x28/</a>
             <span class="copy-path" data-clipboard-text="原文: //0x48.pw/2016/11/28/0x28/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

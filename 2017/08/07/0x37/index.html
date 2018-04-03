@@ -22,13 +22,13 @@
 <meta property="og:url" content="//0x48.pw/2017/08/07/0x37/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="学堆的最好方式还是读malloc.c的源码，所以有了这篇文章，目前计划的是分两篇，一篇是读__libc_free函数，一篇是读__libc_malloc函数，本篇是读free函数的源码。之后有空可能还会写calloc或者realloc">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/free1.png">
-<meta property="og:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/heap.png">
-<meta property="og:updated_time" content="2018-04-02T11:10:26.837Z">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/free1.png?x-oss-process=style/blog_sy">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/heap.png?x-oss-process=style/blog_sy">
+<meta property="og:updated_time" content="2018-04-03T03:19:46.119Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="malloc.c源码阅读之__libc_free">
 <meta name="twitter:description" content="学堆的最好方式还是读malloc.c的源码，所以有了这篇文章，目前计划的是分两篇，一篇是读__libc_free函数，一篇是读__libc_malloc函数，本篇是读free函数的源码。之后有空可能还会写calloc或者realloc">
-<meta name="twitter:image" content="https://hcamael.oss-cn-beijing.aliyuncs.com/img/free1.png">
+<meta name="twitter:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/free1.png?x-oss-process=style/blog_sy">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -347,7 +347,7 @@
 <p>读代码使用的是<a href="https://code.woboq.org/userspace/glibc/malloc/malloc.c.html" target="_blank" rel="external">https://code.woboq.org/userspace/glibc/malloc/malloc.c.html</a></p>
 <p>PS: 默认研究64位</p>
 <p>首先是我画的总的流程图，顺着流程图来</p>
-<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/free1.png" alt="free1"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/free1.png?x-oss-process=style/blog_sy" alt="free1"></p>
 <h2 id="libc-free-void-mem"><a href="#libc-free-void-mem" class="headerlink" title="__libc_free(void *mem)"></a>__libc_free(void *mem)</h2><p><code>free</code>在malloc.c中定义在<code>__libc_free</code>函数中，只有一个参数<code>void *mem</code>，需要free的地址。</p>
 <p>首先是检查<code>__free_hook</code>，在<code>main_arena</code>前面有个地方是储存<code>malloc_hook</code>和<code>free_hook</code>的地方(0CTF 2017 Babyheap中有涉及)，如果该值不为NULL(0)，则把<code>mem</code>当做参数，执行<code>free_hook</code>，执行结束后直接return，就不执行<code>free</code>的后续代码了</p>
 <p>如果不存在<code>free_hook</code>，这一步是检查<code>mem == 0</code>，如果true，则直接return</p>
@@ -357,7 +357,7 @@
 <p>接下来把<code>ar_ptr</code>和<code>p</code>当做参数，去执行<code>_int_free</code>函数：<code>_int_free(ar_ptr, p, 0)</code></p>
 <h2 id="int-free-mstate-av-mchunkptr-p-int-have-lock"><a href="#int-free-mstate-av-mchunkptr-p-int-have-lock" class="headerlink" title="_int_free(mstate av, mchunkptr p, int have_lock)"></a>_int_free(mstate av, mchunkptr p, int have_lock)</h2><p>这里提一下，参数中的mstate表示的是<code>malloc_state</code>结构体也就是<code>main_arena</code>的结构体，<code>mchunkptr</code>表示的是<code>malloc_chunk</code>的结构体（PS：如果结构体还不知道，就别来学堆了）</p>
 <p>在写blog的过程中发现了一个别人做的流程图，而且做的挺不错了，所以我就懒得自己画了，而且画的挺全的，之后的malloc的流程图也直接用这个了：</p>
-<p><img src="https://hcamael.oss-cn-beijing.aliyuncs.com/img/heap.png" alt="free2"></p>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/heap.png?x-oss-process=style/blog_sy" alt="free2"></p>
 <h3 id="未区分bin之前"><a href="#未区分bin之前" class="headerlink" title="未区分bin之前"></a>未区分bin之前</h3><p>在未通过size来判断该chunk free之后是处于哪个bin之前，有进行一些通用检测，代码不长，也挺简单的。</p>
 <ol>
 <li>get chunksize，通过p-&gt;mchunksize，去掉标志位后获取chunk的size</li>
@@ -489,7 +489,7 @@
         <p><span>本文标题:</span><a href="/2017/08/07/0x37/">malloc.c源码阅读之__libc_free</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2017-08-07, 14:20:04</p>
-        <p><span>最后更新:</span>2018-04-02, 19:10:26</p>
+        <p><span>最后更新:</span>2018-04-03, 11:19:46</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/08/07/0x37/" title="malloc.c源码阅读之__libc_free">//0x48.pw/2017/08/07/0x37/</a>
             <span class="copy-path" data-clipboard-text="原文: //0x48.pw/2017/08/07/0x37/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>

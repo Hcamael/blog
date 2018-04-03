@@ -22,12 +22,12 @@
 <meta property="og:url" content="//0x48.pw/2015/12/01/0x0C/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="已经好久没更新过博客了，因为最近开始用为知笔记了，感觉每次发到blog的都太零散了，好多都还没完成，所以现在决定，零散的写到笔记里去，然后有一个完整的内容再发到blog里来。">
-<meta property="og:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-BaseHTTPServer.jpeg">
-<meta property="og:updated_time" content="2017-08-08T09:57:09.000Z">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/BaseHTTPServer.jpeg?x-oss-process=style/blog_sy">
+<meta property="og:updated_time" content="2018-04-03T03:21:00.226Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python 的 BaseHTTPServer模块分析小结">
 <meta name="twitter:description" content="已经好久没更新过博客了，因为最近开始用为知笔记了，感觉每次发到blog的都太零散了，好多都还没完成，所以现在决定，零散的写到笔记里去，然后有一个完整的内容再发到blog里来。">
-<meta name="twitter:image" content="http://7xscw6.com1.z0.glb.clouddn.com/hexo-BaseHTTPServer.jpeg">
+<meta name="twitter:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/BaseHTTPServer.jpeg?x-oss-process=style/blog_sy">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -345,7 +345,7 @@
 <p>已经好久没更新过博客了，因为最近开始用为知笔记了，感觉每次发到blog的都太零散了，好多都还没完成，所以现在决定，零散的写到笔记里去，然后有一个完整的内容再发到blog里来。</p>
 </blockquote>
 <a id="more"></a>
-<p>这次是一篇完整的BaseHTTPServer模块分析，花了几天时间研究该模块，先放上我的思维导图，由于是第一次使用思维导图，所以弄得不是很满意。<br><img src="http://7xscw6.com1.z0.glb.clouddn.com/hexo-BaseHTTPServer.jpeg" alt="BaseHTTPServer"></p>
+<p>这次是一篇完整的BaseHTTPServer模块分析，花了几天时间研究该模块，先放上我的思维导图，由于是第一次使用思维导图，所以弄得不是很满意。<br><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/BaseHTTPServer.jpeg?x-oss-process=style/blog_sy" alt="BaseHTTPServer"></p>
 <p>分析该模块的起因是该反代程序：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env Python</span></div><div class="line"><span class="comment">#-*- coding:utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> BaseHTTPServer</div><div class="line"><span class="keyword">import</span> hashlib</div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> urllib2</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">CacheHandler</span><span class="params">(BaseHTTPServer.BaseHTTPRequestHandler)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></div><div class="line">      m = hashlib.md5()</div><div class="line">      m.update(self.path)</div><div class="line">      cache_filename = m.hexdigest()</div><div class="line">      <span class="keyword">if</span> os.path.exists(cache_filename):</div><div class="line">          <span class="keyword">print</span> <span class="string">"Cache hit"</span></div><div class="line">          data = open(cache_filename).readlines()</div><div class="line">      <span class="keyword">else</span>:</div><div class="line">          <span class="keyword">print</span> <span class="string">"Cache miss"</span></div><div class="line">          data = urllib2.urlopen(<span class="string">"http://www.baidu.com"</span> + self.path).readlines()</div><div class="line">          open(cache_filename, <span class="string">'wb'</span>).writelines(data)</div><div class="line">      self.send_response(<span class="number">200</span>)</div><div class="line">      self.end_headers()</div><div class="line">      self.wfile.writelines(data)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">()</span>:</span></div><div class="line">    server_address = (<span class="string">''</span>, <span class="number">9999</span>)</div><div class="line">    httpd = BaseHTTPServer.HTTPServer(server_address, CacheHandler)</div><div class="line">    httpd.serve_forever()</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    run()</div></pre></td></tr></table></figure></p>
 <h1 id="BaseHTTPServer"><a href="#BaseHTTPServer" class="headerlink" title="BaseHTTPServer"></a>BaseHTTPServer</h1><p>在该模块中定义了两个类</p>
 <ul>
@@ -388,7 +388,7 @@
         <p><span>本文标题:</span><a href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2015-12-01, 13:02:30</p>
-        <p><span>最后更新:</span>2017-08-08, 17:57:09</p>
+        <p><span>最后更新:</span>2018-04-03, 11:21:00</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2015/12/01/0x0C/" title="Python 的 BaseHTTPServer模块分析小结">//0x48.pw/2015/12/01/0x0C/</a>
             <span class="copy-path" data-clipboard-text="原文: //0x48.pw/2015/12/01/0x0C/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
