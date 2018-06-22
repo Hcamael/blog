@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html >
+<head>
+
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="Hcamael" />
+
+
+
+<meta name="description" content="背景最近学习了下以太坊的智能合约，而且也看到挺多厂家pr智能合约相关的漏洞，其中《ERC20智能合约整数溢出系列漏洞披露》[1]文章中披露了6个CVE编号的漏洞，而这些漏洞都属于整型溢出漏洞范畴，其中5个漏洞均需要合约Owner才能触发利用。本文正是针对这些漏洞从合约代码及触发逻辑上做了详细分析，并提出了一些关于owner相关漏洞的思考。">
+<meta name="keywords" content="research,blockchain">
+<meta property="og:type" content="article">
+<meta property="og:title" content="以太坊智能合约Owner相关CVE漏洞分析">
+<meta property="og:url" content="//0x48.pw/2018/06/19/0x43/index.html">
+<meta property="og:site_name" content="Hc1m1">
+<meta property="og:description" content="背景最近学习了下以太坊的智能合约，而且也看到挺多厂家pr智能合约相关的漏洞，其中《ERC20智能合约整数溢出系列漏洞披露》[1]文章中披露了6个CVE编号的漏洞，而这些漏洞都属于整型溢出漏洞范畴，其中5个漏洞均需要合约Owner才能触发利用。本文正是针对这些漏洞从合约代码及触发逻辑上做了详细分析，并提出了一些关于owner相关漏洞的思考。">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/blockchain1.png?x-oss-process=style/blog_sy">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/blockchian2.png?x-oss-process=style/blog_sy">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/blockchain3.png?x-oss-process=style/blog_sy">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/blockchain4.png?x-oss-process=style/blog_sy">
+<meta property="og:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/blockchain5.png?x-oss-process=style/blog_sy">
+<meta property="og:updated_time" content="2018-06-22T10:33:51.656Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="以太坊智能合约Owner相关CVE漏洞分析">
+<meta name="twitter:description" content="背景最近学习了下以太坊的智能合约，而且也看到挺多厂家pr智能合约相关的漏洞，其中《ERC20智能合约整数溢出系列漏洞披露》[1]文章中披露了6个CVE编号的漏洞，而这些漏洞都属于整型溢出漏洞范畴，其中5个漏洞均需要合约Owner才能触发利用。本文正是针对这些漏洞从合约代码及触发逻辑上做了详细分析，并提出了一些关于owner相关漏洞的思考。">
+<meta name="twitter:image" content="//hcamael.oss-cn-beijing.aliyuncs.com/img/blockchain1.png?x-oss-process=style/blog_sy">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/rss.xml" title="Hc1m1" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="//hcamael.oss-cn-beijing.aliyuncs.com/img/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>以太坊智能合约Owner相关CVE漏洞分析 | Hc1m1</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: undefined
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?4b6b8b9a09d24f4d4e26c50bd1707fd7";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</head>
+<body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/author.png?x-oss-process=style/author_sf" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Hcamael</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Blog</p>
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto: baiyjrh@gmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/Hcamael" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/rss.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CTF/">CTF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Crypto/">Crypto</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GIT/">GIT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pentest/">Pentest</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RE/">RE</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SQLi/">SQLi</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web/">Web</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bin/">bin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blockchain/">blockchain</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/old-blog/">old_blog</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/research/">research</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sb/">sb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/share/">share</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/随笔/">随笔</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://vidar.club">Vidar-Team</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://wiki.vidar.club/doku.php">wiki</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="https://drops.vidar.club/">Drops</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://lightless.me">lightless</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://homeway.me">夏日小草</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://www.edwardl.xyz">Edward_L</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://aklis.info">Aklis</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://libc.pw">Explorer</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://lorexxar.cn">Lorexxar</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://misty.moe/">Misty</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://www.venenof.com/">Veneno</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://www.wupco.cn">Wupco</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://www.scanfsec.com">scanf</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://repwn.com">Bird</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://pzhxbz.cn">pzhxbz</a>
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://veritas501.space/">veritas</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">HDUISA, web狗, 菜鸡H, 正在向bin爷爷努力前进</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Hcamael</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/author.png?x-oss-process=style/author_sf" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Hcamael</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Blog</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto: baiyjrh@gmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/Hcamael" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/rss.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-0x43" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/06/19/0x43/" class="article-date">
+      <time datetime="2018-06-19T06:41:43.000Z" itemprop="datePublished">2018-06-19</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      以太坊智能合约Owner相关CVE漏洞分析
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/blockchain/">blockchain</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/research/">research</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>最近学习了下以太坊的智能合约，而且也看到挺多厂家pr智能合约相关的漏洞，其中《ERC20智能合约整数溢出系列漏洞披露》<a href="#jump1">[1]</a>文章中披露了6个CVE编号的漏洞，而这些漏洞都属于整型溢出漏洞范畴，其中5个漏洞均需要合约Owner才能触发利用。本文正是针对这些漏洞从合约代码及触发逻辑上做了详细分析，并提出了一些关于owner相关漏洞的思考。</p>
+<a id="more"></a>
+<p>#漏洞分析</p>
+<h2 id="1-CVE-2018-11809"><a href="#1-CVE-2018-11809" class="headerlink" title="1. CVE-2018-11809"></a>1. CVE-2018-11809</h2><p>该漏洞被称为“超额购币”，相关合约（EthLendToken）源码: <a href="https://etherscan.io/address/0x80fB784B7eD66730e8b1DBd9820aFD29931aab03#code" target="_blank" rel="external">https://etherscan.io/address/0x80fB784B7eD66730e8b1DBd9820aFD29931aab03#code</a></p>
+<p>在合约代码中，<code>buyTokensPresale</code>和<code>buyTokensICO</code>两个函数都是存在整型上溢出的情况：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">function buyTokensPresale() public payable onlyInState(State.PresaleRunning)</div><div class="line">    &#123;</div><div class="line">        // min - 1 ETH</div><div class="line">        require(msg.value &gt;= (1 ether / 1 wei));</div><div class="line">        uint newTokens = msg.value * PRESALE_PRICE;</div><div class="line"></div><div class="line">        require(presaleSoldTokens + newTokens &lt;= PRESALE_TOKEN_SUPPLY_LIMIT);</div><div class="line"></div><div class="line">        balances[msg.sender] += newTokens;</div><div class="line">        supply+= newTokens;</div><div class="line">        presaleSoldTokens+= newTokens;</div><div class="line">        totalSoldTokens+= newTokens;</div><div class="line"></div><div class="line">        LogBuy(msg.sender, newTokens);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    function buyTokensICO() public payable onlyInState(State.ICORunning)</div><div class="line">    &#123;</div><div class="line">        // min - 0.01 ETH</div><div class="line">        require(msg.value &gt;= ((1 ether / 1 wei) / 100));</div><div class="line">        uint newTokens = msg.value * getPrice();</div><div class="line"></div><div class="line">        require(totalSoldTokens + newTokens &lt;= TOTAL_SOLD_TOKEN_SUPPLY_LIMIT);</div><div class="line"></div><div class="line">        balances[msg.sender] += newTokens;</div><div class="line">        supply+= newTokens;</div><div class="line">        icoSoldTokens+= newTokens;</div><div class="line">        totalSoldTokens+= newTokens;</div><div class="line"></div><div class="line">        LogBuy(msg.sender, newTokens);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>溢出点：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">require(presaleSoldTokens + newTokens &lt;= PRESALE_TOKEN_SUPPLY_LIMIT);</div><div class="line">require(totalSoldTokens + newTokens &lt;= TOTAL_SOLD_TOKEN_SUPPLY_LIMIT);</div></pre></td></tr></table></figure>
+<p>拿<code>buyTokensPresale</code>函数举例，在理论上<code>presaleSoldTokens + newTokens</code>存在整型上溢出漏洞，会导致绕过<code>require</code>判断，造成超额购币。</p>
+<p>接下来，我们再仔细分析一下，如果造成整型上溢出，先来看看<code>presaleSoldTokens</code>变量的最大值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">uint public presaleSoldTokens = 0;</div><div class="line">require(presaleSoldTokens + newTokens &lt;= PRESALE_TOKEN_SUPPLY_LIMIT);</div><div class="line">presaleSoldTokens+= newTokens;</div></pre></td></tr></table></figure>
+<p>该合约代码中，<code>presaleSoldTokens</code>变量相关的代码只有这三行，因为存在着require判断，所以不论<code>presaleSoldTokens + newTokens</code>是否溢出，<code>presaleSoldTokens &lt;= PRESALE_TOKEN_SUPPLY_LIMIT</code>恒成立，因为有着断言代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">assert(PRESALE_TOKEN_SUPPLY_LIMIT==60000000 * (1 ether / 1 wei));</div></pre></td></tr></table></figure>
+<p>所以，<code>presaleSoldTokens &lt;= 60000000 * (1 ether / 1 wei)</code>，其中<code>1 ether / 1 wei = 1000000000000000000</code>，所以<code>max(presaleSoldTokens) == 6*(10^25)</code></p>
+<p>再来看看变量<code>newTokens</code>，该变量的值取决于用户输出，是用户可控变量，相关代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">uint newTokens = msg.value * PRESALE_PRICE;</div><div class="line">uint public constant PRESALE_PRICE = 30000;</div></pre></td></tr></table></figure>
+<p>如果我们向<code>buyTokensPresale</code>函数转账1 ether, <code>newTokens</code>的值为<code>1000000000000000000*30000=3*(10^22)</code></p>
+<p>下面来计算一下，需要向该函数转账多少以太币，才能造成溢出</p>
+<p>在以太坊智能合约中，<code>uint</code>默认代表的是<code>uint256</code>，取值范围是<code>0~2^256-1</code>，所以，需要<code>newTokens</code>的值大于<code>(2^256-1)-presaleSoldTokens</code>。</p>
+<p>最后计算出，我们需要向<code>buyTokensPresale</code>函数转账:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; (2**256-1)-(6*(10**25))/(3*(10**22))</div><div class="line">115792089237316195423570985008687907853269984665640564039457584007913129637935L</div></pre></td></tr></table></figure>
+<p>才可以造成整型上溢出，超额购币，整个以太坊公链，发展至今，以太币总余额有达到这个数吗？</p>
+<p>虽然理论上该合约的确存在漏洞，但是实际却无法利用该漏洞</p>
+<h2 id="2-CVE-2018-11810"><a href="#2-CVE-2018-11810" class="headerlink" title="2. CVE-2018-11810"></a>2. CVE-2018-11810</h2><p>该类漏洞被称为：“超额定向分配”</p>
+<p>相关事例（ LGO ）源码：<a href="https://etherscan.io/address/0x123ab195dd38b1b40510d467a6a359b201af056f#code" target="_blank" rel="external">https://etherscan.io/address/0x123ab195dd38b1b40510d467a6a359b201af056f#code</a></p>
+<p>根据该漏洞的描述：</p>
+<blockquote>
+<p>管理员绕过合约中规定的单地址发币上限，给指定地址分配超额的token</p>
+</blockquote>
+<p>跟上一个漏洞相比，因为该漏洞存在于<code>onlyOwner</code>的函数中，只能Owner(管理员)才能调用该漏洞，所以我认为该类漏洞可以算做是“后门“类漏洞。</p>
+<p>所以该类漏洞的利用有两个思路：</p>
+<ol>
+<li>Owner留下来的“后门”，供自己使用，专门用来坑合约的其他使用者(所谓的”蜜罐合约“，就是这种情况)</li>
+<li>该合约有其他漏洞，能让自己成为Owener，或者可以说，结合提权漏洞进行利用</li>
+</ol>
+<p>首先，我们先假设自己就是Owner，来研究该漏洞的利用流程，以下是存在漏洞的函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">function allocate(address _address, uint256 _amount, uint8 _type) public onlyOwner returns (bool success) &#123;</div><div class="line">        // one allocations by address</div><div class="line">        require(allocations[_address] == 0);</div><div class="line"></div><div class="line">        if (_type == 0) &#123; // advisor</div><div class="line">            // check allocated amount</div><div class="line">            require(advisorsAllocatedAmount + _amount &lt;= ADVISORS_AMOUNT);</div><div class="line">            // increase allocated amount</div><div class="line">            advisorsAllocatedAmount += _amount;</div><div class="line">            // mark address as advisor</div><div class="line">            advisors[_address] = true;</div><div class="line">        &#125; else if (_type == 1) &#123; // founder</div><div class="line">            // check allocated amount</div><div class="line">            require(foundersAllocatedAmount + _amount &lt;= FOUNDERS_AMOUNT);</div><div class="line">            // increase allocated amount</div><div class="line">            foundersAllocatedAmount += _amount;</div><div class="line">            // mark address as founder</div><div class="line">            founders[_address] = true;</div><div class="line">        &#125; else &#123;</div><div class="line">            // check allocated amount</div><div class="line">            require(holdersAllocatedAmount + _amount &lt;= HOLDERS_AMOUNT + RESERVE_AMOUNT);</div><div class="line">            // increase allocated amount</div><div class="line">            holdersAllocatedAmount += _amount;</div><div class="line">        &#125;</div><div class="line">        // set allocation</div><div class="line">        allocations[_address] = _amount;</div><div class="line">        initialAllocations[_address] = _amount;</div><div class="line"></div><div class="line">        // increase balance</div><div class="line">        balances[_address] += _amount;</div><div class="line"></div><div class="line">        // update variables for bonus distribution</div><div class="line">        for (uint8 i = 0; i &lt; 4; i++) &#123;</div><div class="line">            // increase unspent amount</div><div class="line">            unspentAmounts[BONUS_DATES[i]] += _amount;</div><div class="line">            // initialize bonus eligibility</div><div class="line">            eligibleForBonus[BONUS_DATES[i]][_address] = true;</div><div class="line">            bonusNotDistributed[BONUS_DATES[i]][_address] = true;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        // add to initial holders list</div><div class="line">        initialHolders.push(_address);</div><div class="line"></div><div class="line">        Allocate(_address, _amount);</div><div class="line"></div><div class="line">        return true;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>该合约相当于一个代币分配的协议，Owner可以随意给人分配代币，但是不能超过如下的限制：</p>
+<p>代币的总额: <code>uint256 constant INITIAL_AMOUNT  = 100 * onePercent;</code><br>给顾问5%: <code>uint256 constant ADVISORS_AMOUNT =   5 * onePercent;</code><br>创始人要15%: <code>uint256 constant FOUNDERS_AMOUNT =  15 * onePercent;</code><br>销售出了60%: <code>uint256 constant HOLDERS_AMOUNT  =  60 * onePercent;</code><br>保留了20%: <code>uint256 constant RESERVE_AMOUNT  =  20 * onePercent;</code></p>
+<p>对应到下面三个判断：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">require(advisorsAllocatedAmount + _amount &lt;= ADVISORS_AMOUNT);</div><div class="line">require(foundersAllocatedAmount + _amount &lt;= FOUNDERS_AMOUNT);</div><div class="line">require(holdersAllocatedAmount + _amount &lt;= HOLDERS_AMOUNT + RESERVE_AMOUNT);</div></pre></td></tr></table></figure>
+<p>跟上一个CVE一样，该漏洞本质上也是整型上溢出，但是上一个漏洞，用户可控的变量来至于向合约转账的以太币的数值，所以在实际情况中，基本不可能利用。但是在该漏洞中，用户可控的变量<code>_amount</code>，是由用户任意输入，使得该漏洞得以实现</p>
+<p>下面，利用漏洞给顾问分配超过5%的代币：</p>
+<ol>
+<li>给顾问A分配<code>2*onePercent</code>数量的代币：<code>allocte(&quot;0xbd08e0cddec097db7901ea819a3d1fd9de8951a2&quot;, 362830104000000, 0)</code></li>
+</ol>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/blockchain1.png?x-oss-process=style/blog_sy" alt="blockchain1"></p>
+<ol>
+<li><p>给顾问B分配一个巨大数量的代币，导致溢出：<code>allocte(&quot;0x63ac545c991243fa18aec41d4f6f598e555015dc&quot;, 115792089237316195423570985008687907853269984665640564039457583645083025639937, 0)</code></p>
+</li>
+<li><p>查看顾问B的代币数：<code>balanceOf(&quot;0x63ac545c991243fa18aec41d4f6f598e555015dc&quot;) =&gt; 115792089237316195423570985008687907853269984665640564039457583645083025639937</code></p>
+</li>
+</ol>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/blockchian2.png?x-oss-process=style/blog_sy" alt="blockchian2"></p>
+<p>经过后续的审计，发现该合约代码中的<code>own</code>变量只能由Owner修改，所以该漏洞只能被Owner利用</p>
+<h2 id="3-CVE-2018-11809"><a href="#3-CVE-2018-11809" class="headerlink" title="3. CVE-2018-11809"></a>3. CVE-2018-11809</h2><p>该漏洞被称为：”超额铸币“，但实际和之前的漏洞没啥区别</p>
+<p>含有该漏洞的合约Playkey (PKT）源码：<a href="https://etherscan.io/address/0x2604fa406be957e542beb89e6754fcde6815e83f#code" target="_blank" rel="external">https://etherscan.io/address/0x2604fa406be957e542beb89e6754fcde6815e83f#code</a></p>
+<p>存在漏洞的函数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">function mint(address _holder, uint256 _value) external icoOnly &#123;</div><div class="line">  require(_holder != address(0));</div><div class="line">  require(_value != 0);</div><div class="line">  require(totalSupply + _value &lt;= tokenLimit);</div><div class="line"></div><div class="line">  balances[_holder] += _value;</div><div class="line">  totalSupply += _value;</div><div class="line">  Transfer(0x0, _holder, _value);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>比上一个漏洞的代码还更简单，只有ico(相当于之前的owner)能执行该函数，阅读全篇代码，ico是在合约部署的时候由创建人设置的，后续无法更改，所以该漏洞只能被ico(owner)利用</p>
+<p>该合约本身的意图是，ico能随意给人分配代币，但是发行代币的总额度不能超过<code>tokenLimit</code>，但是通过整型上溢出漏洞，能让ico发行无限个代币，利用流程如下：</p>
+<ol>
+<li>部署合约，设置ico为自己账户地址，设置发行代币的上限为100000: <code>PTK(&quot;0x8a0b358029b81a52487acfc776fecca3ce2fbf4b&quot;, 100000)</code></li>
+</ol>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/blockchain3.png?x-oss-process=style/blog_sy" alt="blockchain3"></p>
+<ol>
+<li>给账户A分配一定额度的代币: <code>mint(&quot;0xbd08e0cddec097db7901ea819a3d1fd9de8951a2&quot;, 50000)</code></li>
+</ol>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/blockchain4.png?x-oss-process=style/blog_sy" alt="blockchain4"></p>
+<ol>
+<li>利用整型上溢出给账户B分配大量的代币: <code>mint(&quot;0x63ac545c991243fa18aec41d4f6f598e555015dc&quot;, 115792089237316195423570985008687907853269984665640564039457584007913129589938)</code></li>
+<li>查看账户B的余额: <code>balanceOf(&quot;0x63ac545c991243fa18aec41d4f6f598e555015dc&quot;) =&gt; 115792089237316195423570985008687907853269984665640564039457584007913129589938</code></li>
+</ol>
+<p><img src="//hcamael.oss-cn-beijing.aliyuncs.com/img/blockchain5.png?x-oss-process=style/blog_sy" alt="blockchain5"></p>
+<h2 id="4-CVE-2018-11812"><a href="#4-CVE-2018-11812" class="headerlink" title="4. CVE-2018-11812"></a>4. CVE-2018-11812</h2><p>该漏洞被称为：“随意铸币”</p>
+<p>相关漏洞合约 Polymath (POLY)源码：<a href="https://etherscan.io/address/0x9992ec3cf6a55b00978cddf2b27bc6882d88d1ec#code" target="_blank" rel="external">https://etherscan.io/address/0x9992ec3cf6a55b00978cddf2b27bc6882d88d1ec#code</a></p>
+<p>具有漏洞的函数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">function mintToken(address target, uint256 mintedAmount) onlyOwner &#123;</div><div class="line">    balanceOf[target] += mintedAmount;</div><div class="line">    Transfer(0, owner, mintedAmount);</div><div class="line">    Transfer(owner, target, mintedAmount);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个漏洞很简单，也很好理解，Owner可以随意增加任意账户的代币余额，可以想象成，银行不仅能随心所欲的印钞票，还能随心所以的扣你的钱</p>
+<p>因为Owner是在合约部署的时候被设置成合约部署者的账户地址，之后也只有Owner能修改Own账户地址，所以该漏洞只能被Owner利用</p>
+<p>这个我觉得与其说是漏洞，不如说是Owner留下的“后门”</p>
+<h2 id="5-CVE-2018-11687"><a href="#5-CVE-2018-11687" class="headerlink" title="5. CVE-2018-11687"></a>5. CVE-2018-11687</h2><p>该漏洞被称为：“下溢增持”</p>
+<p>相关漏洞合约Bitcoin Red (BTCR)源码：<a href="https://etherscan.io/address/0x6aac8cb9861e42bf8259f5abdc6ae3ae89909e11#code" target="_blank" rel="external">https://etherscan.io/address/0x6aac8cb9861e42bf8259f5abdc6ae3ae89909e11#code</a></p>
+<p>相关的漏洞函数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">function distributeBTR(address[] addresses) onlyOwner &#123;</div><div class="line">    for (uint i = 0; i &lt; addresses.length; i++) &#123;</div><div class="line">        balances[owner] -= 2000 * 10**8;</div><div class="line">        balances[addresses[i]] += 2000 * 10**8;</div><div class="line">        Transfer(owner, addresses[i], 2000 * 10**8);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该合约限制了发行代币的上限: <code>uint256 _totalSupply = 21000000 * 10**8;</code></p>
+<p>并且在合约部署的时候把能发行的合约都分配给了Owner: <code>balances[owner] = 21000000 * 10**8;</code></p>
+<p>然后Owner可以把自己账户的代币，任意分配给其他账户，分配的代码就是上面的函数，给别人分配一定额度的代币时，自己减去相应额度的代币，保证该合约总代币数不变</p>
+<p>但是因为没有判断Owner的账户是否有足够的余额，所以导致了减法的整型下溢出，同样也存在整型上溢出，但是因为uint256的上限是<code>2^256-1</code>，但是利用过于繁琐，需要运行非常多次的<code>balances[addresses[i]] += 2000 * 10**8;</code></p>
+<p>而减法的利用就很简单了，或者我们可以根本不考虑这个减法，Owner可以给任意账户分配<code>2000 * 10**8</code>倍数的代币，该漏洞的功能和上一个漏洞的基本一致，可以任意发行代币或者减少其他账户的代币数</p>
+<p>因为Owner是在合约部署的时候被设置为部署合约人的账户地址，后续没有修改own的功能，所以该漏洞也只有Owner可以利用</p>
+<h2 id="6-CVE-2018-11811"><a href="#6-CVE-2018-11811" class="headerlink" title="6. CVE-2018-11811"></a>6. CVE-2018-11811</h2><p>该漏洞被称为：“高卖低收”</p>
+<p>相关漏洞合约 Internet Node Token (INT)源码：<a href="https://etherscan.io/address/0x0b76544f6c413a555f309bf76260d1e02377c02a" target="_blank" rel="external">https://etherscan.io/address/0x0b76544f6c413a555f309bf76260d1e02377c02a</a></p>
+<p>在该CVE的描述中，存在漏洞的函数是:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">function sell(uint256 amount) &#123;</div><div class="line">  require(this.balance &gt;= amount * sellPrice);      // checks if the contract has enough ether to buy</div><div class="line">  _transfer(msg.sender, this, amount);              // makes the transfers</div><div class="line">  msg.sender.transfer(amount * sellPrice);          // sends ether to the seller. It&apos;s important to do this last to avoid recursion attacks</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>并且描述的漏洞原理是: </p>
+<blockquote>
+<p>sellPrice被修改为精心构造的大数后，可导致amount * sellPrice的结果大于整数变量(uint256)最大值，发生整数溢出，从而变为一个极小值甚至归零`</p>
+</blockquote>
+<p>相关函数如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">function buy() payable &#123;</div><div class="line">  uint amount = msg.value / buyPrice;               // calculates the amount</div><div class="line">  _transfer(this, msg.sender, amount);              // makes the transfers</div><div class="line">&#125;</div><div class="line">  </div><div class="line">function setPrices(uint256 newSellPrice, uint256 newBuyPrice) onlyOwner &#123;</div><div class="line">  sellPrice = newSellPrice;</div><div class="line">  buyPrice = newBuyPrice;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该漏洞的利用流程如下：</p>
+<ol>
+<li>管理员设置<code>buyPrice = 1 ether</code>, <code>sellPrice = 2^255</code></li>
+<li>用户A买了两个以太币价格的代币: buy({value:toWei(2)})</li>
+<li>用户A卖掉两个代币: send(2)</li>
+<li>用户A将会收到<code>2*sellPrice = 2^256</code>价格的Wei</li>
+<li>但是因为<code>transfer</code>的参数是uint256, 所以发生了溢出，用户A实际得到0Wei</li>
+</ol>
+<p>表面上看这个漏洞还是有危害的，但是我们仔细想想，这个漏洞其实是比较多余的，我们可以使用更简单的步骤达到相同的目的:</p>
+<ol>
+<li>管理员设置<code>buyPrice = 1 ether</code>, <code>sellPrice = 0</code></li>
+<li>用户A买了两个以太币价格的代币: buy({value:toWei(2)})</li>
+<li>用户A卖掉两个代币: send(2)</li>
+<li>用户A将会收到<code>2*sellPrice = 0</code>价格的Wei</li>
+</ol>
+<p>我认为该合约最大的问题在于Owner可以随意设置代币的买入和卖出价格。</p>
+<p>顺带提一下这个问题也是前面peckshield公布的“tradeTrap”漏洞(<a href="https://peckshield.com/2018/06/11/tradeTrap/" target="_blank" rel="external">https://peckshield.com/2018/06/11/tradeTrap/</a>)提到的“Security Issue 2: Manipulatable Prices and Unfair Arbitrage” 是同一个问题。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>经过上面的分析，在这6个CVE中，虽然都是整型溢出，但第一个CVE属于理论存在，但实际不可实现的整型上溢出漏洞，剩下5个CVE都属于对管理者有利，会损害用户利用的漏洞，或者可以称为“后门”，也正是这个原因也导致了一些关于需要Owner触发漏洞意义讨论<a href="#jump2">[2]</a> </p>
+<p>如果我们把智能合约类比为传统合同，智能合约代码就是传统合同的内容，但是和传统的合同相比，智能合约拥有三个利益团体，一个是编写合约代码的人(智能合约中的Owner，或者我们可以称为甲方)，使用该合约的其他人(我们可以称为乙方)，跟该智能合约无关的其他人(比如利用合约漏洞获利的黑客)。从这个角度来看Owner条件下触发的漏洞在理论上是可以损害到乙方的利益，如对于存在“恶意”的owner或者黑客配合其他漏洞获取到owner权限的场景上来说，还是有一定意义的。</p>
+<p>另外从整个上市交易流程来看，我们还需要关注到“交易所”这个环节，交易所的风控体系在某种程度上可以限制这种“恶意”的owner或黑客利用。</p>
+<p>由此可见合约审计对于“甲方”、“乙方”、交易所都有重要的意义。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ol>
+<li><span id="jump1"><a href="https://www.anquanke.com/post/id/147913" target="_blank" rel="external">https://www.anquanke.com/post/id/147913</a></span></li>
+<li><span id="jump2"><a href="https://mp.weixin.qq.com/s/6PKWXJXAKVCu5bJYlKy2Aw" target="_blank" rel="external">https://mp.weixin.qq.com/s/6PKWXJXAKVCu5bJYlKy2Aw</a></span></li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/06/19/0x43/">以太坊智能合约Owner相关CVE漏洞分析</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
+        <p><span>发布时间:</span>2018-06-19, 14:41:43</p>
+        <p><span>最后更新:</span>2018-06-22, 18:33:51</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/06/19/0x43/" title="以太坊智能合约Owner相关CVE漏洞分析">//0x48.pw/2018/06/19/0x43/</a>
+            <span class="copy-path" data-clipboard-text="原文: //0x48.pw/2018/06/19/0x43/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2018/06/22/0x44/">
+                    以太坊智能合约学习笔记1
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/03/30/0x42/">
+                    Exim Off-by-one(CVE-2018-6789)漏洞复现分析
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-CVE-2018-11809"><span class="toc-number">1.1.</span> <span class="toc-text">1. CVE-2018-11809</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-CVE-2018-11810"><span class="toc-number">1.2.</span> <span class="toc-text">2. CVE-2018-11810</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-CVE-2018-11809"><span class="toc-number">1.3.</span> <span class="toc-text">3. CVE-2018-11809</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-CVE-2018-11812"><span class="toc-number">1.4.</span> <span class="toc-text">4. CVE-2018-11812</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-CVE-2018-11687"><span class="toc-number">1.5.</span> <span class="toc-text">5. CVE-2018-11687</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-CVE-2018-11811"><span class="toc-number">1.6.</span> <span class="toc-text">6. CVE-2018-11811</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">1.7.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考链接"><span class="toc-number">2.</span> <span class="toc-text">参考链接</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-6 i,
+        .toc-level-6 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2018/06/22/0x44/" title="上一篇: 以太坊智能合约学习笔记1">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/03/30/0x42/" title="下一篇: Exim Off-by-one(CVE-2018-6789)漏洞复现分析">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/06/22/0x44/">以太坊智能合约学习笔记1</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/19/0x43/">以太坊智能合约Owner相关CVE漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/30/0x42/">Exim Off-by-one(CVE-2018-6789)漏洞复现分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/17/0x40/">34c3 ctf simpleGC writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/16/0x41/">Pwn学习之house of系列(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/08/0x3F/">CVE-2017-16943 Exim UAF漏洞分析--后续</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/01/0x3E/">CVE-2017-16943 Exim UAF漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/11/0x3D/">CTF PWN题之setbuf的利用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/03/0x3C/">看雪CTF 第四题club_pwn writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/30/0x3B/">TP-Link WR941N路由器研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/04/0x3A/">Pwnhub 2013的国庆 writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/0x39/">HITB CTF 2017 Pwn题研究🙉</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/29/0x38/">Pwnhub之奇妙的巨蟒 Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/07/0x37/">malloc.c源码阅读之__libc_free</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/01/0x36/">堆溢出学习之0CTF 2017 Babyheap</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/25/0x35/">glibc malloc学习笔记之fastbin🐦</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/07/12/0x34/">对虚拟机进行磁盘扩容🐥</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/23/0x33/">ROP小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/05/0x32/">Triton学习笔记(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/03/0x31/">Triton学习笔记(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/02/0x30/">Triton学习笔记(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/20/0x2f/">记一次手撸CPython bytecode</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/17/0x2e/">填坑</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/14/0x2d/">栈溢出之绕过CANARY保护</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/03/13/0x2c/">Linux系统下格式化字符串利用研究</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/17/0x2b/">Pwnhub之深入敌后writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/06/0x2a/">CVE-2016-6313 随机数预测分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/28/0x29/">phpmailer RCE 分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/28/0x28/">2016 HCTF Crypto 出题总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/21/0x27/">PWN学习总结之基础栈溢出2</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/11/03/0x26/">PWN学习总结之基础栈溢出</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/14/0x24/">HITCON 2016 Web 总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/10/12/0x23/">2016 HITCON Crypto -- PAKE(++)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/09/13/0x22/">php bugs 72663分析(CVE-2016-7124)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/31/0x21/">Cisco ASA RCE 环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/16/0x20/">LNMP + phpenv 实现不同虚拟主机使用不同版本的PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/10/0x1F/">CVE-2016-6174漏洞分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/07/14/0x1E/">三个白帽之火币网2W大挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/27/0x1D/">寻找来自星星的你第二期Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/17/0x1C/">三个白帽之招聘又开始了，你怕了吗？-Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/10/0x1B/">SCTF Code Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/03/0x1A/">GGCTF的对称密码学</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/17/0x19/">How old are Crypto?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/0x18/">MySQLi-Error Injection</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/04/0x17/">Python 使用dpkt分析数据包</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/01/0x16/">CRYPTO技能修正</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/21/0x15/">Pentester Lab Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/17/0x14/">0CTF RSA?总结 || RSA学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/15/0x13/">This is AliCTF?</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/14/0x12/">0CTF总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/03/07/0x11/">unholy Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/02/14/0x0F/">Nebula Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/19/0x0E/">12.19网络方向培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/08/0x0D/">HCTF之Black-Eat-Black总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/01/0x0C/">Python 的 BaseHTTPServer模块分析小结</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/31/0x0B/">10.31新生培训</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/05/0x09/">不使用select情况下的各种盲注</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/03/0x08/">2015XDCTF低分Web题writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/08/07/0x06/">WeChall Writeup</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/22/0x04/">git小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x02/">对于硬盘事件的随想</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x01/">对于这次硬盘坏掉事件小记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/07/19/0x00/">跳转到以前的博文</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2015-2018 Hcamael
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 4;
+                var backgroundimg = "url(//hcamael.oss-cn-beijing.aliyuncs.com/img/bg-xxxx.jpg)".replace(/xxxx/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
