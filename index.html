@@ -305,6 +305,71 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-0x45" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/07/09/0x45/" class="article-date">
+      <time datetime="2018-07-09T03:52:45.000Z" itemprop="datePublished">2018-07-09</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/09/0x45/">以太坊智能合约OPCODE逆向之理论基础篇</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <p>在我们对etherscan等平台上合约进行安全审查时，常常会遇到没有公布Solidity源代码的合约，只能获取到合约的OPCODE，所以一个智能合约的反编译器对审计无源码的智能合约起到了非常重要的作用。</p>
+<p>目前在互联网上常见的反编译工具只有porosity<a href="#jump1">[1]</a>，另外在Github上还找到另外的反编译工具ethdasm<a href="#jump2">[2]</a>，经过测试发现这两个编译器都有许多bug，无法满足我的工作需求。因此我开始尝试研究并开发能满足我们自己需求的反编译工具，在我看来如果要写出一个优秀的反汇编工具，首先需要有较强的OPCODE逆向能力，本篇Paper将对以太坊智能合约OPCODE的数据结构进行一次深入分析。</p>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/blockchain/">blockchain</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/research/">research</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2018/07/09/0x45/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-0x44" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -870,72 +935,6 @@
       
         <p class="article-more-link">
           <a href="/2017/11/03/0x3C/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-0x3B" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/10/30/0x3B/" class="article-date">
-      <time datetime="2017-10-30T03:07:10.000Z" itemprop="datePublished">2017-10-30</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/30/0x3B/">TP-Link WR941N路由器研究</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <p>之前看到了一个CVE, <a href="https://www.fidusinfosec.com/tp-link-remote-code-execution-cve-2017-13772/" target="_blank" rel="external">CVE-2017-13772</a></p>
-<p>是TP-Link WR940N后台的RCE, 手头上正好有一个TP-Link WR941N的设备，发现也存在相同的问题，但是<code>CVE-2017-13772</code>文章中给的EXP并不通用</p>
-<p>所以准备进行复现和exp的修改，折腾了将近4天，记录下过程和遇到的坑</p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/research/">research</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/10/30/0x3B/#more">more >></a>
         </p>
       
       <div class="clearfix"></div>
