@@ -8,7 +8,7 @@
     <atom:link href="/rss.xml" rel="self" type="application/rss+xml"/>
     
     <description>水平不济整日被虐这也不会那也得学脑子太蠢天天垫底这看不懂那学不会</description>
-    <pubDate>Wed, 11 Jul 2018 09:25:59 GMT</pubDate>
+    <pubDate>Thu, 12 Jul 2018 09:03:51 GMT</pubDate>
     <generator>http://hexo.io/</generator>
     
     <item>
@@ -90,6 +90,9 @@
 <p>根据映射变量的储存模型，或许我们真的可以在智能合约中隐藏私密信息，比如，有一个secret，只有知道key的人才能知道secret的内容，我们可以<code>b[key] = secret</code>, 虽然数据仍然是储存在storage中，但是在不知道key的情况下却无法获取到<code>secret</code>。</p>
 <p>不过，storage是存在于区块链之中，目前我猜测是通过智能合约可以映射到对应的storage，storage不可能会初始化256*256bits的内存空间，那样就太消耗硬盘空间了，所以可以通过解析区块链文件，获取到storage全部的数据。</p>
 <p>上面这些仅仅是个人猜想，会作为之后研究以太坊源码的一个研究方向。</p>
+<ul>
+<li>7/12更新: 区块的每个交易都是公开透明的，所以key也是公开透明的，不存在不知道key的情况</li>
+</ul>
 <ol>
 <li>变长变量</li>
 </ol>

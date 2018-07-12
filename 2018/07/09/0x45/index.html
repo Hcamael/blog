@@ -22,7 +22,7 @@
 <meta property="og:url" content="//0x48.pw/2018/07/09/0x45/index.html">
 <meta property="og:site_name" content="Hc1m1">
 <meta property="og:description" content="在我们对etherscan等平台上合约进行安全审查时，常常会遇到没有公布Solidity源代码的合约，只能获取到合约的OPCODE，所以一个智能合约的反编译器对审计无源码的智能合约起到了非常重要的作用。 目前在互联网上常见的反编译工具只有porosity[1]，另外在Github上还找到另外的反编译工具ethdasm[2]，经过测试发现这两个编译器都有许多bug，无法满足我的工作需求。因此我开始尝">
-<meta property="og:updated_time" content="2018-07-11T09:25:59.524Z">
+<meta property="og:updated_time" content="2018-07-12T09:03:51.386Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="以太坊智能合约OPCODE逆向之理论基础篇">
 <meta name="twitter:description" content="在我们对etherscan等平台上合约进行安全审查时，常常会遇到没有公布Solidity源代码的合约，只能获取到合约的OPCODE，所以一个智能合约的反编译器对审计无源码的智能合约起到了非常重要的作用。 目前在互联网上常见的反编译工具只有porosity[1]，另外在Github上还找到另外的反编译工具ethdasm[2]，经过测试发现这两个编译器都有许多bug，无法满足我的工作需求。因此我开始尝">
@@ -406,6 +406,9 @@
 <p>根据映射变量的储存模型，或许我们真的可以在智能合约中隐藏私密信息，比如，有一个secret，只有知道key的人才能知道secret的内容，我们可以<code>b[key] = secret</code>, 虽然数据仍然是储存在storage中，但是在不知道key的情况下却无法获取到<code>secret</code>。</p>
 <p>不过，storage是存在于区块链之中，目前我猜测是通过智能合约可以映射到对应的storage，storage不可能会初始化256*256bits的内存空间，那样就太消耗硬盘空间了，所以可以通过解析区块链文件，获取到storage全部的数据。</p>
 <p>上面这些仅仅是个人猜想，会作为之后研究以太坊源码的一个研究方向。</p>
+<ul>
+<li>7/12更新: 区块的每个交易都是公开透明的，所以key也是公开透明的，不存在不知道key的情况</li>
+</ul>
 <ol>
 <li>变长变量</li>
 </ol>
@@ -531,7 +534,7 @@
         <p><span>本文标题:</span><a href="/2018/07/09/0x45/">以太坊智能合约OPCODE逆向之理论基础篇</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">Hcamael</a></p>
         <p><span>发布时间:</span>2018-07-09, 11:52:45</p>
-        <p><span>最后更新:</span>2018-07-11, 17:25:59</p>
+        <p><span>最后更新:</span>2018-07-12, 17:03:51</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2018/07/09/0x45/" title="以太坊智能合约OPCODE逆向之理论基础篇">//0x48.pw/2018/07/09/0x45/</a>
             <span class="copy-path" data-clipboard-text="原文: //0x48.pw/2018/07/09/0x45/　　作者: Hcamael" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
